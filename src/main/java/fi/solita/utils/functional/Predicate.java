@@ -1,0 +1,30 @@
+package fi.solita.utils.functional;
+
+public abstract class Predicate<T> extends Function1<T, Boolean> {
+    @Override
+    public final Boolean apply(T t) {
+        return accept(t);
+    }
+    
+    public abstract boolean accept(T candidate);
+    
+    public final Predicate<T> and(final Predicate<T> other) {
+        final Predicate<T> self = this;
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return self.accept(candidate) && other.accept(candidate); 
+            }
+        };
+    }
+    
+    public final Predicate<T> or(final Predicate<T> other) {
+        final Predicate<T> self = this;
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return self.accept(candidate) || other.accept(candidate); 
+            }
+        };
+    }
+}
