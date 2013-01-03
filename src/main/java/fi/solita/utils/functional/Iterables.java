@@ -387,11 +387,11 @@ abstract class Iterables {
 
                 @Override
                 public Character next() {
-                    i++;
                     if (i >= charSeq.length()) {
                         throw new NoSuchElementException();
                     }
-                    return charSeq.charAt(i);
+                    i++;
+                    return charSeq.charAt(i-1);
                 }
 
                 @Override

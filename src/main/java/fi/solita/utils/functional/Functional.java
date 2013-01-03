@@ -216,7 +216,7 @@ public abstract class Functional {
         };
     }
 
-    public static <T> Iterable<T> takeWhile(final Iterable<T> elements, final Function1<? super T, Boolean> filter) {
+    public static <T> Iterable<T> takeWhile(final Iterable<T> elements, final Function1<? super T, Boolean> predicate) {
         return new Iterable<T>() {
             @Override
             public Iterator<T> iterator() {
@@ -233,11 +233,15 @@ public abstract class Functional {
                     }
 
                     private void readNext() {
-                        T n = source.next();
-                        if (filter.apply(n)) {
-                            next = Some(n);
-                        } else {
+                        if (!source.hasNext()) {
                             next = None();
+                        } else {
+                            T n = source.next();
+                            if (predicate.apply(n)) {
+                                next = Some(n);
+                            } else {
+                                next = None();
+                            }
                         }
                     }
 
@@ -260,28 +264,27 @@ public abstract class Functional {
         };
     }
 
-    public static <T> Iterable<T> dropWhile(final Iterable<T> elements, final Function1<? super T, Boolean> filter) {
+    public static <T> Iterable<T> dropWhile(final Iterable<T> elements, final Function1<? super T, Boolean> predicate) {
         return new Iterable<T>() {
             @Override
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private boolean dropping = true;
                     private Iterator<T> source = elements.iterator();
-                    private Option<T> next = source.hasNext() ? Some(source.next()) : Option.<T>None();
+                    private Option<T> next;
+                    {
+                        readNext();
+                    }
 
                     @Override
                     public boolean hasNext() {
-                        if (!next.isDefined()) {
-                            return false;
-                        }
-                        readNext();
                         return next.isDefined();
                     }
 
                     private void readNext() {
                         next = source.hasNext() ? Some(source.next()) : Option.<T>None();
-                        while (dropping && filter.apply(next.get()) && source.hasNext()) {
-                            next = Some(source.next());
+                        while (dropping && next.isDefined() && predicate.apply(next.get())) {
+                            next = source.hasNext() ? Some(source.next()) : Option.<T>None();
                         }
                         dropping = false;
                     }
@@ -303,6 +306,11 @@ public abstract class Functional {
                 };
             }
         };
+    }
+    
+    public static <T> Pair<Iterable<T>, Iterable<T>> span(final Iterable<T> elements, final Function1<? super T, Boolean> predicate) {
+        // TODO: a more efficient implementation
+        return Pair.of(takeWhile(elements, predicate), dropWhile(elements, predicate));
     }
 
     public static boolean isEmpty(Iterable<?> elements) {
