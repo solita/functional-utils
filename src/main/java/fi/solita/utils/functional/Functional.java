@@ -1,7 +1,11 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.equal;
+import static fi.solita.utils.functional.Transformers.keys;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -117,6 +121,26 @@ public abstract class Functional {
             if (!group.isEmpty()) {
                 target.add(group);
             }
+        }
+        return target;
+    }
+    
+    /**
+     * Non-lazy
+     */
+    public static <G, T> Map<G, List<T>> groupBy(Iterable<T> elements, Function1<T,G> f) {
+        Map<G, List<T>> target = newMap();
+        for (T t: elements) {
+            G g = f.apply(t);
+            Option<List<T>> groupOption = find(target, g);
+            List<T> group;
+            if (groupOption.isDefined()) {
+                group = groupOption.get();
+            } else {
+                group = Collections.newList();
+                target.put(g, group);
+            }
+            group.add(t);
         }
         return target;
     }

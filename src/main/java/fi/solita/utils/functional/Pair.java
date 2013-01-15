@@ -56,18 +56,18 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             try {
-                Field t1 = Pair.class.getField("t1");
-                Field t2 = Pair.class.getField("t2");
+                Field _1 = Pair.class.getField("_1");
+                Field _2 = Pair.class.getField("_2");
                 Field f1 = Pair.class.getField("left");
                 Field f2 = Pair.class.getField("right");
-                t1.setAccessible(true);
-                t2.setAccessible(true);
+                _1.setAccessible(true);
+                _2.setAccessible(true);
                 f1.setAccessible(true);
                 f2.setAccessible(true);
                 Object left = in.readObject();
                 Object right = in.readObject();
-                t1.set(this, left);
-                t2.set(this, right);
+                _1.set(this, left);
+                _2.set(this, right);
                 f1.set(this, left);
                 f2.set(this, right);
             } catch (RuntimeException e) {
