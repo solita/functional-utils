@@ -2,6 +2,8 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.forAll;
+import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.zip;
 
@@ -397,6 +399,11 @@ public abstract class Tuple {
     }
     
     public abstract Object[] toArray();
+    
+    @Override
+    public String toString() {
+        return "(" + mkString(",", map(toArray(), Transformers.toString)) + ")";
+    }
     
     @Override
     public int hashCode() {
