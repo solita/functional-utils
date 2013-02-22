@@ -40,12 +40,12 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     
     @Override
     public final Ordering<T> apply(Tuple2<Ordering<T>,Ordering<T>> t) {
-        return of(Monoid.ComparatorConcat.<Ordering<T>>of().apply(t));
+        return of(Monoid.comparatorConcat.<Ordering<T>>of().apply(t));
     }
 
     @Override
     public final Ordering<T> zero() {
-        return of(Monoid.ComparatorConcat.<Ordering<T>>of().zero());
+        return of(Monoid.comparatorConcat.<Ordering<T>>of().zero());
     }
     
     public final Ordering<T> then(Ordering<? super T> next) {

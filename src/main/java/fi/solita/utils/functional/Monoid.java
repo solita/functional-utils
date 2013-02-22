@@ -157,23 +157,23 @@ public interface Monoid<T> extends SemiGroup<T> {
         }
     }
 
-	public static final Monoid<Integer> IntSum = new IntSum();
+	public static final Monoid<Integer> intSum = new IntSum();
 
-	public static final Monoid<Integer> IntProduct = new IntProduct();
+	public static final Monoid<Integer> intProduct = new IntProduct();
 
-    public static final Monoid<Long> LongSum = new LongSum();
+    public static final Monoid<Long> longSum = new LongSum();
 
-    public static final Monoid<Long> LongProduct = new LongProduct();
+    public static final Monoid<Long> longProduct = new LongProduct();
 
-	public static final Monoid<String> StringConcat = new StringConcat();
+	public static final Monoid<String> stringConcat = new StringConcat();
 
-	public static final Monoid<Boolean> BooleanConjunction = new BooleanConjunction();
+	public static final Monoid<Boolean> booleanConjunction = new BooleanConjunction();
 
-    public static final Monoid<Boolean> BooleanDisjunction = new BooleanDisjunction();
+    public static final Monoid<Boolean> booleanDisjunction = new BooleanDisjunction();
     
-    public static final Monoid<Set<Object>> SetUnion = new SetUnion<Object>();
+    public static final Monoid<Set<Object>> setUnion = new SetUnion<Object>();
     
-    public static final Monoid<Set<Object>> SetIntersection = new SetIntersection<Object>();
+    public static final Monoid<Set<Object>> setIntersection = new SetIntersection<Object>();
     
-    public static final ComparatorConcat<Object> ComparatorConcat = new ComparatorConcat<Object>();
+    public static final ComparatorConcat<Object> comparatorConcat = new ComparatorConcat<Object>();
 }

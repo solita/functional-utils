@@ -101,23 +101,23 @@ public interface SemiGroup<T> extends Apply<Tuple2<T,T>, T> {
         }
     }
 
-    public static final SemiGroup<Integer> IntSum = Monoid.IntSum;
+    public static final SemiGroup<Integer> intSum = Monoid.intSum;
 
-    public static final SemiGroup<Integer> IntProduct = Monoid.IntProduct;
+    public static final SemiGroup<Integer> intProduct = Monoid.intProduct;
 
-    public static final SemiGroup<Long> LongSum = Monoid.LongSum;
+    public static final SemiGroup<Long> longSum = Monoid.longSum;
 
-    public static final SemiGroup<Long> LongProduct = Monoid.LongProduct;
+    public static final SemiGroup<Long> longProduct = Monoid.longProduct;
 
-    public static final SemiGroup<String> StringConcat = Monoid.StringConcat;
+    public static final SemiGroup<String> stringConcat = Monoid.stringConcat;
 
-    public static final SemiGroup<Boolean> BooleanConjunction = Monoid.BooleanConjunction;
+    public static final SemiGroup<Boolean> booleanConjunction = Monoid.booleanConjunction;
 
-    public static final SemiGroup<Boolean> BooleanDisjunction = Monoid.BooleanDisjunction;
+    public static final SemiGroup<Boolean> booleanDisjunction = Monoid.booleanDisjunction;
     
-    public static final SemiGroup<Set<Object>> SetUnion = Monoid.SetUnion;
+    public static final SemiGroup<Set<Object>> setUnion = Monoid.setUnion;
     
-    public static final SemiGroup<Set<Object>> SetIntersection = Monoid.SetIntersection;
+    public static final SemiGroup<Set<Object>> setIntersection = Monoid.setIntersection;
     
-    public static final SemiGroup<Comparator<Object>> ComparatorConcat = Monoid.ComparatorConcat;
+    public static final SemiGroup<Comparator<Object>> comparatorConcat = Monoid.comparatorConcat;
 }
