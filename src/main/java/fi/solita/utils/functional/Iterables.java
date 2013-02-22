@@ -5,11 +5,13 @@ import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
 
 abstract class Iterables {
     static final class RangeIterable extends PossiblySizeAwareIterable<Integer> {
@@ -404,6 +406,48 @@ abstract class Iterables {
         @Override
         public Option<Integer> size() {
             return Some(charSeq.length());
+        }
+    }
+    
+    static final class SortingIterable<T> extends PossiblySizeAwareIterable<T> {
+        private final Iterable<T> iterable;
+        private final Comparator<? super T> comparator;
+
+        public SortingIterable(Iterable<T> iterable, Comparator<? super T> comparator) {
+            this.iterable = iterable;
+            this.comparator = comparator;
+        }
+        @Override
+        public Iterator<T> iterator() {
+            int initialSize = Iterables.resolveSize(iterable).getOrElse(11);
+            if (initialSize == 0) {
+                return java.util.Collections.<T>emptyList().iterator();
+            }
+            final PriorityQueue<T> queue = new PriorityQueue<T>(initialSize, comparator);
+            for (T t: iterable) {
+                queue.add(t);
+            }
+            return new Iterator<T>() {
+                @Override
+                public boolean hasNext() {
+                    return !queue.isEmpty();
+                }
+
+                @Override
+                public T next() {
+                    return queue.remove();
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        @Override
+        public Option<Integer> size() {
+            return Iterables.resolveSize(iterable);
         }
     }
 

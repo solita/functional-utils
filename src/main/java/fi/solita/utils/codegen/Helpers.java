@@ -212,26 +212,26 @@ public abstract class Helpers {
         }, null);
     }
     
-    public static Function1<Element, List<VariableElement>> element2Fields = new Transformer<Element, List<VariableElement>>() {
+    public static Function1<Element, Iterable<VariableElement>> element2Fields = new Transformer<Element, Iterable<VariableElement>>() {
         @SuppressWarnings("unchecked")
         @Override
-        public List<VariableElement> transform(Element source) {
+        public Iterable<VariableElement> transform(Element source) {
             return sort((List<VariableElement>) newList(filter(source.getEnclosedElements(), fields)), variableElementComparator);
         }
     };
     
-    public static Function1<Element, List<ExecutableElement>> element2Methods = new Transformer<Element, List<ExecutableElement>>() {
+    public static Function1<Element, Iterable<ExecutableElement>> element2Methods = new Transformer<Element, Iterable<ExecutableElement>>() {
         @SuppressWarnings("unchecked")
         @Override
-        public List<ExecutableElement> transform(Element source) {
+        public Iterable<ExecutableElement> transform(Element source) {
             return sort((List<ExecutableElement>) newList(filter(source.getEnclosedElements(), methods)), executableElementComparator);
         }
     };
     
-    public static Function1<Element, List<ExecutableElement>> element2Constructors = new Transformer<Element, List<ExecutableElement>>() {
+    public static Function1<Element, Iterable<ExecutableElement>> element2Constructors = new Transformer<Element, Iterable<ExecutableElement>>() {
         @SuppressWarnings("unchecked")
         @Override
-        public List<ExecutableElement> transform(Element source) {
+        public Iterable<ExecutableElement> transform(Element source) {
             return sort((List<ExecutableElement>)newList(filter(source.getEnclosedElements(), constructors)), executableElementComparator);
         }
     };

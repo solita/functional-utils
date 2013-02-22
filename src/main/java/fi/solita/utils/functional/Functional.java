@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -404,26 +405,16 @@ public abstract class Functional {
     public static <T> Iterable<T> concat(final Iterable<? extends T> elements1, final Iterable<? extends T> elements2, final Iterable<? extends T> elements3, final Iterable<? extends T> elements4, final Iterable<? extends T> elements5, final Iterable<? extends T>... rest) {
         return concat(elements1, concat(elements2, concat(elements3, elements4, elements5, flatten(rest))));
     }
-
-    public static <T> List<T> sort(Iterable<T> elements, Comparator<? super T> comparator) {
-        List<T> ret = null;
-        for (int size: Iterables.resolveSize(elements)) {
-            ret = Collections.newListOfSize(size);
+    
+    public static <T extends Comparable<T>> Iterable<T> sort(final Iterable<T> elements) {
+        if (isEmpty(elements)) {
+            return newSet();
         }
-        if (ret == null) {
-            ret = Collections.newList();
-        }
+        return sort(elements, Ordering.Natural());
+    }
 
-        if (elements instanceof Collection) {
-            ret.addAll((Collection<? extends T>) elements);
-        } else {
-            for (T t: elements) {
-                ret.add(t);
-            }
-        }
-
-        java.util.Collections.sort(ret, comparator);
-        return ret;
+    public static <T> Iterable<T> sort(final Iterable<T> elements, final Comparator<? super T> comparator) {
+        return new Iterables.SortingIterable<T>(elements, comparator);
     }
     
     public static <T extends SemiGroup<T>> T reduce(T e1) {
@@ -532,13 +523,7 @@ public abstract class Functional {
     }
 
     public static <T extends Comparable<T>> Option<T> min(Iterable<T> elements) {
-        T minimum = null;
-        for (T number : elements) {
-            if (minimum == null || number.compareTo(minimum) < 0) {
-                minimum = number;
-            }
-        }
-        return Option.of(minimum);
+        return headOption(sort(elements));
     }
     
     @SuppressWarnings("unchecked")
@@ -547,13 +532,7 @@ public abstract class Functional {
     }
 
     public static <T extends Comparable<T>> Option<T> max(Iterable<T> elements) {
-        T maximum = null;
-        for (T number : elements) {
-            if (maximum == null || number.compareTo(maximum) > 0) {
-                maximum = number;
-            }
-        }
-        return Option.of(maximum);
+        return headOption(sort(elements, Ordering.Natural().reverse()));
     }
 
     public static <A,B> Iterable<Map.Entry<A, B>> zip(A[] a, B[] b) {
