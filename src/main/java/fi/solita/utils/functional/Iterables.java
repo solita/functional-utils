@@ -234,9 +234,9 @@ abstract class Iterables {
 
     static class FilteringIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<T> iterable;
-        private final Function1<? super T, Boolean> filter;
+        private final Apply<? super T, Boolean> filter;
 
-        public FilteringIterable(Iterable<T> iterable, Function1<? super T, Boolean> filter) {
+        public FilteringIterable(Iterable<T> iterable, Apply<? super T, Boolean> filter) {
             this.iterable = iterable;
             this.filter = filter;
         }
@@ -294,9 +294,9 @@ abstract class Iterables {
 
     static class TransformingIterable<S,T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<S> iterable;
-        private final Function1<? super S, ? extends T> transformer;
+        private final Apply<? super S, ? extends T> transformer;
 
-        public TransformingIterable(Iterable<S> iterable, Function1<? super S, ? extends T> transformer) {
+        public TransformingIterable(Iterable<S> iterable, Apply<? super S, ? extends T> transformer) {
             this.iterable = iterable;
             this.transformer = transformer;
         }

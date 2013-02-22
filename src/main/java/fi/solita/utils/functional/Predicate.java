@@ -8,22 +8,22 @@ public abstract class Predicate<T> extends Function1<T, Boolean> {
     
     public abstract boolean accept(T candidate);
     
-    public final Predicate<T> and(final Predicate<T> other) {
+    public final Predicate<T> and(final Function1<? super T, Boolean> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return self.accept(candidate) && other.accept(candidate); 
+                return self.accept(candidate) && other.apply(candidate); 
             }
         };
     }
     
-    public final Predicate<T> or(final Predicate<T> other) {
+    public final Predicate<T> or(final Function1<? super T, Boolean> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return self.accept(candidate) || other.accept(candidate); 
+                return self.accept(candidate) || other.apply(candidate); 
             }
         };
     }

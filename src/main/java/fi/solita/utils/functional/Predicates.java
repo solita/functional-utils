@@ -1,8 +1,12 @@
 package fi.solita.utils.functional;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.util.regex.Pattern;
+
 public abstract class Predicates {
 
-    public static final <T> Predicate<T> not(final Function1<T, Boolean> filter) {
+    public static final <T> Predicate<T> not(final Apply<T, Boolean> filter) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -20,6 +24,13 @@ public abstract class Predicates {
             }
         };
     }
+    
+    public static final Predicate<Integer> even = new Predicate<Integer>() {
+        @Override
+        public boolean accept(Integer candidate) {
+            return candidate % 2 == 0;
+        }
+    };
 
     public static <E, T extends Iterable<E>> Predicate<T> empty() {
         return new Predicate<T>() {
@@ -29,8 +40,15 @@ public abstract class Predicates {
             }
         };
     }
+    
+    public static final Predicate<String> empty = new Predicate<String>() {
+        @Override
+        public boolean accept(String candidate) {
+            return candidate.isEmpty();
+        }
+    };
 
-    public static <T> Predicate<T> equal(final T element) {
+    public static <T> Predicate<T> equalTo(final T element) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -38,12 +56,12 @@ public abstract class Predicates {
             }
         };
     }
-
-    public static <T, F> Predicate<T> equal(final Function1<? super T, ? extends F> transformer, final F value) {
+    
+    public static <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return transformer.apply(candidate).equals(value);
+                return candidate.compareTo(value) > 0;
             }
         };
     }
@@ -71,6 +89,33 @@ public abstract class Predicates {
             @Override
             public boolean accept(Option<?> candidate) {
                 return candidate.isDefined();
+            }
+        };
+    }
+    
+    public static <T extends AnnotatedElement> Predicate<T> hasAnnotation(final Class<? extends Annotation> annotation) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.isAnnotationPresent(annotation);
+            }
+        };
+    };
+    
+    public static final Predicate<String> matches(final Pattern pattern) {
+        return new Predicate<String>() {
+            @Override
+            public boolean accept(String candidate) {
+                return pattern.matcher(candidate).matches();
+            }
+        };
+    }
+    
+    public static final Predicate<String> lookingAt(final Pattern pattern) {
+        return new Predicate<String>() {
+            @Override
+            public boolean accept(String candidate) {
+                return pattern.matcher(candidate).lookingAt();
             }
         };
     }

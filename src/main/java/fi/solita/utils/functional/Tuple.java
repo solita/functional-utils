@@ -17,32 +17,30 @@ import java.util.Map;
 
 public abstract class Tuple {
     
-    @SuppressWarnings({ "unchecked"})
+    public static <T> List<T> asList(Tuple0 tuple) {
+        return newList();
+    }
+    
     public static <T> List<T> asList(Tuple1<T> tuple) {
         return newList(tuple._1);
     }
 
-    @SuppressWarnings({ "unchecked" })
     public static <T, T1 extends T, T2 extends T> List<T> asList(Tuple2<T1, T2> tuple) {
         return newList(tuple._1, tuple._2);
     }
     
-    @SuppressWarnings({ "unchecked" })
     public static <T, T1 extends T, T2 extends T, T3 extends T> List<T> asList(Tuple3<T1, T2, T3> tuple) {
         return newList(tuple._1, tuple._2, tuple._3);
     }
     
-    @SuppressWarnings({ "unchecked" })
     public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T> List<T> asList(Tuple4<T1, T2, T3, T4> tuple) {
         return newList(tuple._1, tuple._2, tuple._3, tuple._4);
     }
     
-    @SuppressWarnings({ "unchecked" })
     public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T> List<T> asList(Tuple5<T1, T2, T3, T4, T5> tuple) {
         return newList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5);
     }
     
-    @SuppressWarnings({ "unchecked" })
     public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T> List<T> asList(Tuple6<T1, T2, T3, T4, T5, T6> tuple) {
         return newList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6);
     }
@@ -133,6 +131,10 @@ public abstract class Tuple {
             return candidate instanceof Serializable || candidate.getClass().isPrimitive();
         }
     };
+    
+    public static Tuple0 of() {
+        return new Tuple0();
+    }
     
     @SuppressWarnings({ "unchecked" })
     public static <T1> Tuple1<T1> of(T1 _1) {
@@ -397,7 +399,7 @@ public abstract class Tuple {
     public interface _22<T> {
         T get_22();
     }
-    
+
     public abstract Object[] toArray();
     
     @Override

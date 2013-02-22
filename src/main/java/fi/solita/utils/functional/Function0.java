@@ -1,10 +1,12 @@
 package fi.solita.utils.functional;
 
-public abstract class Function0<R> {
+import java.io.Serializable;
+
+public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
 
     public abstract R apply();
     
-    public <U> Function0<U> andThen(final Function1<R, U> next) {
+    public <U> Function0<U> andThen(final Apply<? super R, ? extends U> next) {
         final Function0<R> self = this;
         return new Function0<U>() {
             @Override
@@ -12,5 +14,10 @@ public abstract class Function0<R> {
                 return next.apply(self.apply());
             }
         };
+    }
+    
+    @Override
+    public final R apply(Tuple0 t) {
+        return apply();
     }
 }

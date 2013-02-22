@@ -1,89 +1,179 @@
 package fi.solita.utils.functional;
 
-public abstract class Monoid<T> extends SemiGroup<T> {
-	public abstract T zero();
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Set;
+
+public interface Monoid<T> extends SemiGroup<T> {
+    T zero();
     
-	public static final Monoid<Integer> IntSum = new Monoid<Integer>() {
-	    @Override
-        public Integer apply(Integer first, Integer second) {
-            return SemiGroup.IntSum.apply(first, second);
-        }
-
-	    @Override
-        public Integer zero() {
-            return 0;
-        }
-	};
-
-	public static final Monoid<Integer> IntProduct = new Monoid<Integer>() {
-        @Override
-        public Integer apply(Integer first, Integer second) {
-            return SemiGroup.IntProduct.apply(first, second);
-        }
-
-        @Override
-        public Integer zero() {
-            return 1;
-        }
-    };
-
-    public static final Monoid<Long> LongSum = new Monoid<Long>() {
-        @Override
-        public Long apply(Long first, Long second) {
-            return SemiGroup.LongSum.apply(first, second);
-        }
-
-        @Override
-        public Long zero() {
-            return 0l;
-        }
-    };
-
-    public static final Monoid<Long> LongProduct = new Monoid<Long>() {
-        @Override
-        public Long apply(Long first, Long second) {
-            return SemiGroup.LongProduct.apply(first, second);
-        }
-
-        @Override
-        public Long zero() {
-            return 1l;
-        }
-    };
-
-	public static final Monoid<String> StringConcat = new Monoid<String>() {
-        @Override
-        public String apply(String first, String second) {
-            return SemiGroup.StringConcat.apply(first, second);
-        }
-
-        @Override
-        public String zero() {
-            return "";
-        }
-	};
-
-	public static final Monoid<Boolean> BooleanConjunction = new Monoid<Boolean>() {
-        @Override
-        public Boolean apply(Boolean first, Boolean second) {
-            return SemiGroup.BooleanConjunction.apply(first, second);
-        }
-
-        @Override
-        public Boolean zero() {
-            return true;
-        }
-    };
-
-    public static final Monoid<Boolean> BooleanDisjunction = new Monoid<Boolean>() {
-        @Override
-        public Boolean apply(Boolean first, Boolean second) {
-            return SemiGroup.BooleanDisjunction.apply(first, second);
-        }
-
+	public static class BooleanDisjunction extends SemiGroup.BooleanDisjunction implements Monoid<Boolean> {
         @Override
         public Boolean zero() {
             return false;
         }
-    };
+    }
+
+    public static class BooleanConjunction extends SemiGroup.BooleanConjunction implements Monoid<Boolean> {
+        @Override
+        public Boolean zero() {
+            return true;
+        }
+    }
+
+    public static class StringConcat extends SemiGroup.StringConcat implements Monoid<String> {
+        @Override
+        public String zero() {
+            return "";
+        }
+    }
+
+    public static class LongProduct extends SemiGroup.LongProduct implements Monoid<Long> {
+        @Override
+        public Long zero() {
+            return 1l;
+        }
+    }
+
+    public static class LongSum extends SemiGroup.LongSum implements Monoid<Long> {
+        @Override
+        public Long zero() {
+            return 0l;
+        }
+    }
+
+    public static class IntProduct extends SemiGroup.IntProduct implements Monoid<Integer> {
+        @Override
+        public Integer zero() {
+            return 1;
+        }
+    }
+
+    public static class IntSum extends SemiGroup.IntSum implements Monoid<Integer> {
+        @Override
+        public Integer zero() {
+            return 0;
+        }
+    }
+    
+    public static class SetUnion<T> extends SemiGroup.SetUnion<T> implements Monoid<Set<T>> {
+        @Override
+        public Set<T> zero() {
+            return java.util.Collections.emptySet();
+        }
+    }
+    
+    public static class SetIntersection<T> extends SemiGroup.SetIntersection<T> implements Monoid<Set<T>> {
+        private static final Set<?> AllContainingSet = new AllContainingSet<Object>();
+        static final class AllContainingSet<T> implements Set<T> {
+            @Override
+            public int size() {
+                return Integer.MAX_VALUE;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return true;
+            }
+
+            @Override
+            public boolean containsAll(Collection<?> c) {
+                return true;
+            }
+
+            @Override
+            public Iterator<T> iterator() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Object[] toArray() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public <S> S[] toArray(S[] a) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean add(T e) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends T> c) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean retainAll(Collection<?> c) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean removeAll(Collection<?> c) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void clear() {
+                throw new UnsupportedOperationException();
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Set<T> zero() {
+            return (Set<T>) AllContainingSet;
+        }
+    }
+    
+    public static class ComparatorConcat<T> extends SemiGroup.ComparatorConcat<T> implements Monoid<Comparator<T>> {
+        @SuppressWarnings("unchecked")
+        public <C extends Comparator<?>> Monoid<C> of() {
+            return (Monoid<C>)(Object)this;
+        }
+        
+        @Override
+        public Comparator<T> zero() {
+            return new Comparator<T>() {
+                @Override
+                public int compare(T o1, T o2) {
+                    return 0;
+                }
+            };
+        }
+    }
+
+	public static final Monoid<Integer> IntSum = new IntSum();
+
+	public static final Monoid<Integer> IntProduct = new IntProduct();
+
+    public static final Monoid<Long> LongSum = new LongSum();
+
+    public static final Monoid<Long> LongProduct = new LongProduct();
+
+	public static final Monoid<String> StringConcat = new StringConcat();
+
+	public static final Monoid<Boolean> BooleanConjunction = new BooleanConjunction();
+
+    public static final Monoid<Boolean> BooleanDisjunction = new BooleanDisjunction();
+    
+    public static final Monoid<Set<Object>> SetUnion = new SetUnion<Object>();
+    
+    public static final Monoid<Set<Object>> SetIntersection = new SetIntersection<Object>();
+    
+    public static final ComparatorConcat<Object> ComparatorConcat = new ComparatorConcat<Object>();
 }

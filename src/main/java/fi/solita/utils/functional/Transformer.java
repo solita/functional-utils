@@ -12,7 +12,7 @@ public abstract class Transformer<SOURCE, TARGET> extends Function1<SOURCE, TARG
      * Overridden to specialize return type
      */
     @Override
-    public final <U> Transformer<SOURCE, U> andThen(final Function1<TARGET,U> next) {
+    public final <U> Transformer<SOURCE, U> andThen(final Apply<? super TARGET, ? extends U> next) {
         final Transformer<SOURCE, TARGET> self = this;
         return new Transformer<SOURCE, U>() {
             @Override

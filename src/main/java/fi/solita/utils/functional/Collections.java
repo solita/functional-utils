@@ -1,5 +1,7 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Functional.concat;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,9 +120,43 @@ public abstract class Collections {
     	}
         return java.util.Collections.unmodifiableList(ret);
     }
-
-    public static <T> List<T> newList(T... elements) {
+    
+    public static <T> List<T> newList(T[] elements) {
         return newList(Arrays.asList(elements));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1) {
+        return newList(Arrays.asList(e1));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1, T e2) {
+        return newList(Arrays.asList(e1, e2));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1, T e2, T e3) {
+        return newList(Arrays.asList(e1, e2, e3));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1, T e2, T e3, T e4) {
+        return newList(Arrays.asList(e1, e2, e3, e4));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5) {
+        return newList(Arrays.asList(e1, e2, e3, e4, e5));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6) {
+        return newList(Arrays.asList(e1, e2, e3, e4, e5, e6));
+    }
+    
+    public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T... elements) {
+        return newList(concat(newList(e1, e2, e3, e4, e5, e6), elements));
     }
 
     public static <T> Set<T> newSet(Iterable<T> elements) {
