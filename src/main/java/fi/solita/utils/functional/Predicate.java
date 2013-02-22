@@ -8,7 +8,7 @@ public abstract class Predicate<T> extends Function1<T, Boolean> {
     
     public abstract boolean accept(T candidate);
     
-    public final Predicate<T> and(final Function1<? super T, Boolean> other) {
+    public final Predicate<T> and(final Apply<? super T, Boolean> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override
@@ -18,7 +18,7 @@ public abstract class Predicate<T> extends Function1<T, Boolean> {
         };
     }
     
-    public final Predicate<T> or(final Function1<? super T, Boolean> other) {
+    public final Predicate<T> or(final Apply<? super T, Boolean> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override

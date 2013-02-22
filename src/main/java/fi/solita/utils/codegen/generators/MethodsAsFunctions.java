@@ -59,10 +59,11 @@ import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
 
 public class MethodsAsFunctions extends Function3<ProcessingEnvironment, MethodsAsFunctions.Options, TypeElement, Iterable<String>> {
-    
+
+    @SuppressWarnings("rawtypes")
     public static interface Options {
-        @SuppressWarnings("rawtypes")
         Class<? extends Apply> getClassForMethods(int argCount);
+        Class<? extends Apply> getPredicateClassForMethods();
         List<String> getAdditionalBodyLinesForMethods(ExecutableElement element);
         boolean generateMemberInitializerForMethods();
         boolean generateMemberAccessorForMethods();
@@ -123,11 +124,12 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnType + ")" : "");
 
+            Class<?> fieldClass = !handleAsInstanceMethod && returnType.equals(Boolean.class.getName()) && argCount == 1 ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount);
             String fundef = (Function0.class.getPackage().getName() + ".Function" + argCount) + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">";
-            String instanceMethodFundef = options.getClassForMethods(argCount).getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + ", " + fundef + "> ";
+            String instanceMethodFundef = fieldClass.getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + ", " + fundef + "> ";
             String declaration = modifiers + " " + relevantTypeParamsString + " " + (handleAsInstanceMethod ? instanceMethodFundef : fundef) + " " + methodName + (index == 0 ? "" : index);
             
-            String fundefPrefix = !handleAsInstanceMethod ? "" : instanceMethodFundef + "() { public " + fundef + " apply(final " + enclosingElementGenericQualifiedName + " $self) { return new ";
+            String fundefPrefix = !handleAsInstanceMethod ? "" : instanceMethodFundef + "() { protected " + fundef + " $do(final " + enclosingElementGenericQualifiedName + " $self) { return new ";
             
             Iterable<String> tryBlock = concat(
                 isPrivate

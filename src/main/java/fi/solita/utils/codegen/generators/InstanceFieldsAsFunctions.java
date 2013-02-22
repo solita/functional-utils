@@ -44,9 +44,10 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
     
     public static final Function1<Options, Function1<TypeElement, Iterable<String>>> instance = new InstanceFieldsAsFunctions().curried();
     
+    @SuppressWarnings("rawtypes")
     public static interface Options {
-        @SuppressWarnings("rawtypes")
         Class<? extends Apply> getClassForInstanceFields();
+        Class<? extends Apply> getPredicateClassForInstanceFields();
         List<String> getAdditionalBodyLinesForInstanceFields();
         boolean generateMemberAccessorForFields();
         boolean generateMemberInitializerForFields();
@@ -81,7 +82,8 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
             
             String returnClause = "return " + (isPrivate ? "(" + returnType + ")" : "");
             
-            String fundef = options.getClassForInstanceFields().getName() + "<" + enclosingElementGenericQualifiedName + ", " + returnType + ">";
+            Class<?> fieldClass = returnType.equals(Boolean.class.getName()) ? options.getPredicateClassForInstanceFields() : options.getClassForInstanceFields();
+            String fundef = fieldClass.getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + ", " + returnType + ">";
             String declaration = modifiers + " " + (needsToBeFunction ? relevantTypeParamsString + " ": "") + fundef + " " + fieldName;
 
             Iterable<String> tryBlock = isPrivate
@@ -97,7 +99,7 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
                 : tryBlock;
                         
             Iterable<String> applyBlock = concat(
-                Some("public " + returnType + " apply(" + enclosingElementGenericQualifiedName + " $self) {"),
+                Some("protected " + returnType + " $do(" + enclosingElementGenericQualifiedName + " $self) {"),
                 map(tryCatchBlock, prepend("    ")),
                 Some("}")
             );

@@ -100,7 +100,12 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForInstanceFields() {
-            return (Class<? extends Apply>) DefaultMeta_.class;
+            return (Class<? extends Apply>) DefaultMeta.DefaultMeta_.class;
+        }
+        @SuppressWarnings("rawtypes")
+        @Override
+        public Class<? extends Apply> getPredicateClassForInstanceFields() {
+            return (Class<? extends Apply>) DefaultMeta.DefaultPredicateMeta_.class; 
         }
         @Override
         public List<String> getAdditionalBodyLinesForInstanceFields() {
@@ -121,13 +126,18 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForMethods(int argCount) {
-            return (Class<? extends Apply>) DefaultMethodMeta_.class; 
+            return (Class<? extends Apply>) DefaultMeta.DefaultMethodMeta_.class; 
+        }
+        @SuppressWarnings("rawtypes")
+        @Override
+        public Class<? extends Apply> getPredicateClassForMethods() {
+            return (Class<? extends Apply>) DefaultMeta.DefaultMethodPredicateMeta_.class; 
         }
         @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
         public Class<? extends Apply> getClassForConstructors(int argCount) {
             try {
-                return (Class<? extends Apply>) Class.forName(DefaultConstructorMeta_.class.getName() + "$F" + argCount);
+                return (Class<? extends Apply>) Class.forName(DefaultMeta.DefaultConstructorMeta_.class.getName() + "$F" + argCount);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -160,5 +170,6 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         public boolean generateMemberAccessorForConstructors() {
             return true;
         }
+        
     }
 }
