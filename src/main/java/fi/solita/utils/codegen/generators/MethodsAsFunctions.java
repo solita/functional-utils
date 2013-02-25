@@ -93,6 +93,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             List<String> relevantTypeParams = newList(map(relevantTypeParams(method), typeParameter2String));
             List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParams(method), simpleName));
             String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
+            String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
             
             String modifiers = resolveVisibility(method) + " static final";
             String methodName = method.getSimpleName().toString();
@@ -134,7 +135,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             Iterable<String> tryBlock = concat(
                 isPrivate
                     ? Some(returnClause + "$getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", map(parameterNames, prepend("(Object)")))) + ");")
-                    : Some(returnClause + instanceName + "." + methodName + "(" + mkString(", ", parameterNames) + ");"),
+                    : Some(returnClause + instanceName + "." + methodTypeParamsWithoutConstraintsString + methodName + "(" + mkString(", ", parameterNames) + ");"),
                 returnsVoid
                     ? Some("return null;")
                     : None
