@@ -193,37 +193,7 @@ public abstract class Functional {
     }
 
     public static <T> Iterable<T> take(final Iterable<T> elements, final int amount) {
-    	if (amount < 0) {
-    	    throw new IllegalArgumentException("amount must be gte 0");
-    	}
-    	return new Iterable<T>() {
-            @Override
-            public Iterator<T> iterator() {
-                return new Iterator<T>() {
-                    int left = amount;
-                    Iterator<T> it = elements.iterator();
-
-                    @Override
-                    public boolean hasNext() {
-                        return left > 0 && it.hasNext();
-                    }
-
-                    @Override
-                    public T next() {
-                        if (left == 0) {
-                            throw new NoSuchElementException();
-                        }
-                        left--;
-                        return it.next();
-                    }
-
-                    @Override
-                    public void remove() {
-                        it.remove();
-                    }
-                };
-            }
-        };
+    	return new Iterables.TakingIterable<T>(elements, amount);
     }
 
     public static <T> Iterable<T> drop(final Iterable<T> elements, final int amount) {

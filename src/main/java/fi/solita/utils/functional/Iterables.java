@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -448,6 +449,59 @@ abstract class Iterables {
         @Override
         public Option<Integer> size() {
             return Iterables.resolveSize(iterable);
+        }
+    }
+    
+    static final class TakingIterable<T> extends PossiblySizeAwareIterable<T> {
+        private final Iterable<T> elements;
+        private final int amount;
+
+        public TakingIterable(Iterable<T> elements, int amount) {
+            if (amount < 0) {
+                throw new IllegalArgumentException("amount must be >= 0");
+            }
+            this.elements = elements;
+            this.amount = amount;
+        }
+        
+        @Override
+        public Iterator<T> iterator() {
+            return new Iterator<T>() {
+                int left = amount;
+                Iterator<T> it = elements.iterator();
+
+                @Override
+                public boolean hasNext() {
+                    return left > 0 && it.hasNext();
+                }
+
+                @Override
+                public T next() {
+                    if (left == 0) {
+                        throw new NoSuchElementException();
+                    }
+                    left--;
+                    return it.next();
+                }
+
+                @Override
+                public void remove() {
+                    it.remove();
+                }
+            };
+        }
+
+        @Override
+        public Option<Integer> size() {
+            Option<Integer> s = resolveSize(elements);
+            if (s.isDefined()) {
+                return Some(min(s.get(), amount));
+            } else {
+                // a good guess, since it's probably rare that 'take' is
+                // called with an amount of significantly larger than the size
+                // of the iterable. Right?
+                return Some(amount);
+            }
         }
     }
 
