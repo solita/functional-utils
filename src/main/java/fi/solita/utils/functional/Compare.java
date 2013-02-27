@@ -53,10 +53,14 @@ public abstract class Compare {
     }
     
     public static final <S, T> Ordering<S> byOption(final Function1<? super S, Option<T>> f, final Comparator<? super T> c) {
-        return by(f, Compare.<T>optionOrdering().then(by(Transformers.<T>optionGet(), c)));
+        return by(f, Compare.<T>byOption(c));
     }
     
-    public static final <T> Ordering<Option<T>> optionOrdering() {
+    public static final <T extends Comparable<T>> Ordering<Option<T>> byOption() {
+        return byOption(Ordering.<T>Natural());
+    }
+    
+    public static final <T> Ordering<Option<T>> byOption(final Comparator<? super T> c) {
         return new Ordering<Option<T>>() {
             @Override
             public int compare(Option<T> o1, Option<T> o2) {
@@ -67,7 +71,7 @@ public abstract class Compare {
                 } else if (!o1.isDefined() && o2.isDefined()) {
                     return 1;
                 } else {
-                    return 0;
+                    return c.compare(o1.get(), o2.get());
                 }
             }
         };
