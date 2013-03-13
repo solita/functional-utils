@@ -10,17 +10,15 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 >>>>>>> updated eclipse project files
+=======
+>>>>>>> removed maven-stuff from eclipse project file
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 </projectDescription>
