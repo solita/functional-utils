@@ -3,12 +3,6 @@ bin
 .gradle
 build
 build.gradle
-<<<<<<< HEAD
 .hg
 target
-
-=======
-target
-.hg
->>>>>>> updated eclipse project files
 .DS_Store

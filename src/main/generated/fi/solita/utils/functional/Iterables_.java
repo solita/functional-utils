@@ -1212,5 +1212,143 @@ public final class Iterables_ implements java.io.Serializable {
         }
         
         }
+         static final class TakingIterable_ implements java.io.Serializable {
+        public enum Fields {
+            amount,
+            elements,
+        }
+        
+         static final fi.solita.utils.codegen.DefaultMeta.DefaultMeta_<fi.solita.utils.functional.Iterables.TakingIterable<?>, java.lang.Integer> amount = new fi.solita.utils.codegen.DefaultMeta.DefaultMeta_<fi.solita.utils.functional.Iterables.TakingIterable<?>, java.lang.Integer>() {
+            private transient java.lang.reflect.Field $r;
+            
+            
+            private java.lang.reflect.Field $getMember() {
+                if ($r == null) {
+                    try {
+                        $r = (java.lang.reflect.Field)(Object)fi.solita.utils.functional.Iterables.TakingIterable.class.getDeclaredField("amount");
+                        $r.setAccessible(true);
+                    } catch (RuntimeException $e) {
+                        throw $e;
+                    } catch (Error $e) {
+                        throw $e;
+                    } catch (Throwable $e) {
+                        throw new RuntimeException($e);
+                    }
+                }
+                return $r;
+            }
+        
+            public java.lang.reflect.Field getMember() {
+                return $getMember();
+            }
+        
+            public String getName() {
+                return "amount";
+            }
+        
+        
+            protected java.lang.Integer $do(fi.solita.utils.functional.Iterables.TakingIterable<?> $self) {
+                try {
+                    return (java.lang.Integer)$getMember().get($self);
+                } catch (RuntimeException $e) {
+                    throw $e;
+                } catch (Error $e) {
+                    throw $e;
+                } catch (Throwable $e) {
+                    throw new RuntimeException($e);
+                }
+            }
+        };
+        
+         static final <T> fi.solita.utils.codegen.DefaultMeta.DefaultMeta_<fi.solita.utils.functional.Iterables.TakingIterable<T>, java.lang.Iterable<T>> elements() { return new fi.solita.utils.codegen.DefaultMeta.DefaultMeta_<fi.solita.utils.functional.Iterables.TakingIterable<T>, java.lang.Iterable<T>>() {
+            private transient java.lang.reflect.Field $r;
+            
+            
+            private java.lang.reflect.Field $getMember() {
+                if ($r == null) {
+                    try {
+                        $r = (java.lang.reflect.Field)(Object)fi.solita.utils.functional.Iterables.TakingIterable.class.getDeclaredField("elements");
+                        $r.setAccessible(true);
+                    } catch (RuntimeException $e) {
+                        throw $e;
+                    } catch (Error $e) {
+                        throw $e;
+                    } catch (Throwable $e) {
+                        throw new RuntimeException($e);
+                    }
+                }
+                return $r;
+            }
+        
+            public java.lang.reflect.Field getMember() {
+                return $getMember();
+            }
+        
+            public String getName() {
+                return "elements";
+            }
+        
+        
+            @SuppressWarnings("unchecked")
+            protected java.lang.Iterable<T> $do(fi.solita.utils.functional.Iterables.TakingIterable<T> $self) {
+                try {
+                    return (java.lang.Iterable<T>)$getMember().get($self);
+                } catch (RuntimeException $e) {
+                    throw $e;
+                } catch (Error $e) {
+                    throw $e;
+                } catch (Throwable $e) {
+                    throw new RuntimeException($e);
+                }
+            }
+        };
+        }
+        
+        public static final <T> fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Iterable<T>, java.lang.Integer, fi.solita.utils.functional.Iterables.TakingIterable<T>> $() { return new fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Iterable<T>, java.lang.Integer, fi.solita.utils.functional.Iterables.TakingIterable<T>>() {
+            public fi.solita.utils.functional.Iterables.TakingIterable<T> apply(java.lang.Iterable<T> elements, java.lang.Integer amount) {
+                return new fi.solita.utils.functional.Iterables.TakingIterable<T>(elements, amount);
+            }
+        
+            private transient java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.TakingIterable<T>> $r;
+            
+            @SuppressWarnings("unchecked")
+            private java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.TakingIterable<T>> $getMember() {
+                if ($r == null) {
+                    try {
+                        $r = (java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.TakingIterable<T>>)(Object)fi.solita.utils.functional.Iterables.TakingIterable.class.getDeclaredConstructor(java.lang.Iterable.class, int.class);
+                        $r.setAccessible(true);
+                    } catch (RuntimeException $e) {
+                        throw $e;
+                    } catch (Error $e) {
+                        throw $e;
+                    } catch (Throwable $e) {
+                        throw new RuntimeException($e);
+                    }
+                }
+                return $r;
+            }
+        
+            public java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.TakingIterable<T>> getMember() {
+                return $getMember();
+            }
+        
+        };
+        }
+        
+        public static final <T> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.TakingIterable<T>, java.util.Iterator<T>> iterator() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.TakingIterable<T>, java.util.Iterator<T>>() {
+            public java.util.Iterator<T> apply(fi.solita.utils.functional.Iterables.TakingIterable<T> $self) {
+                return $self.iterator();
+            }
+        };
+        }
+        
+        public static final <T> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.TakingIterable<?>, fi.solita.utils.functional.Option<java.lang.Integer>> size() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.TakingIterable<?>, fi.solita.utils.functional.Option<java.lang.Integer>>() {
+            public fi.solita.utils.functional.Option<java.lang.Integer> apply(fi.solita.utils.functional.Iterables.TakingIterable<?> $self) {
+                return $self.size();
+            }
+        };
+        }
+        
+        }
 
 }
