@@ -64,6 +64,6 @@ Bug reports, feature requests and opinionated recommendations are highly welcome
 
 ## License
 
-Copyright © Solita Oy
+Copyright Â© Solita Oy
 
 Distributed under the MIT License.
