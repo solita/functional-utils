@@ -10,25 +10,37 @@ and use as a regular java project. Eclipse project/classpath files are included.
 
 ...or include as a jar file in the classpath. Bundled pom.xml can be used to package the jar, or just use [the latest ready-made file](functional-utils.jar)
 
+You might also want to use *Eclipse favorites* (any similar thing in Idea?) so that you never have to write a single import clause.
+Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> Content Assist -> Favorites*:
+![](Favorites.png)
+
+## Examples
+
+TODO
+
+
 ## Code generation
 
 ### Eclipse
 
 Create (or open an existing) Java project.
 
-![Add functional-utils as a project dependency (as a jar file or a project)][JavaBuildPath.png]
+Add functional-utils as a project dependency (as a jar file or a project):
+![](JavaBuildPath.png)
 
-![Project properties -> Java Compiler -> Annotation Processing][AnnotationProcessing.png]
+Project properties -> Java Compiler -> Annotation Processing:
 <ul>
   <li>Enable project specific settings</li>
 	<li>Enable annotation processing</li>
 </ul>
+![](AnnotationProcessing.png)
 
-![Project properties -> Java Compiler -> Annotation Processing -> Factory Path][FactoryPath.png]
+Project properties -> Java Compiler -> Annotation Processing -> Factory Path:
 <ul>
 	<li>Enable project specific settings</li>
 	<li>Add JARs... and select functiona-utils.jar</li>
 </ul>
+![](FactoryPath.png)
 
 Now whenever you save a file the metadata classes are automatically generated and immediately ready for use.
 
@@ -39,11 +51,6 @@ TODO: Anyone know how Idea supports Annotation Processors?
 ### Maven/Gradle/...
 
 Please consult the documentation of your build tool on how to enable and control annotation processing.
-
-
-## Examples
-
-TODO
 
 
 ## Word of warning
@@ -57,6 +64,6 @@ Bug reports, feature requests and opinionated recommendations are highly welcome
 
 ## License
 
-Copyright © 2012 Solita Oy
+Copyright © Solita Oy
 
 Distributed under the MIT License.
