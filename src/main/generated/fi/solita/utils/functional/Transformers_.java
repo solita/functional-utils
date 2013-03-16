@@ -13,13 +13,6 @@ public final class Transformers_ implements java.io.Serializable {
         }
     };
     
-    public static final <ID> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Identifiable<? extends ID>,ID>> id() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Identifiable<? extends ID>,ID>>() {
-        public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Identifiable<? extends ID>,ID> apply() {
-            return fi.solita.utils.functional.Transformers.<ID>id();
-        }
-    };
-    }
-    
     public static final <T> fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Option<T>,T>> optionGetOrElse() { return new fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Option<T>,T>>() {
         public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Option<T>,T> apply(T orElse) {
             return fi.solita.utils.functional.Transformers.<T>optionGetOrElse(orElse);

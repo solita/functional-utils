@@ -34,15 +34,6 @@ import fi.solita.utils.functional.Tuple._9;
 
 public abstract class Transformers {
     
-    public static final <ID> Transformer<Identifiable<? extends ID>, ID> id() {
-        return new Transformer<Identifiable<? extends ID>, ID>() {
-            @Override
-            public ID transform(Identifiable<? extends ID> source) {
-                return source.getId();
-            }
-        };
-    }
-    
     public static final Transformer<String, String> append(final String suffix) { 
         return new Transformer<String, String>() {
             @Override
