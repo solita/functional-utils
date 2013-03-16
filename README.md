@@ -16,7 +16,56 @@ Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> C
 
 ## Examples
 
-TODO
+### fi.solita.utils.functional.Collections
+
+	List<Integer> emptyList = newList();
+	Set<String> emptySet = newSet();
+	Map<Long, Integer> emptyMap = newMap();
+
+	int[] primitiveArray = new int[]{1, 2, 3};
+	List<Integer> listFromPrimitives = newList(primitiveArray);
+	Set<Integer> setFromPrimitives = newSet(primitiveArray);
+
+	Iterable<Integer> iterable = newList(1, 2, 3);
+	List<Integer> listFromIterable = newList(iterable);
+	Set<Integer> setFromIterable = newSet(iterable);
+
+	List<? extends Map.Entry<String, Integer>> entries = newList(Pair.of("foo", 1), Pair.of("bar", 2));
+	Map<String, Integer> mapFromIterableEntries = newMap(entries);
+	Map<String, Integer> mapFromEntries = newMap(Pair.of("foo", 1), Pair.of("bar", 2));
+
+	Character[] arrayFromPrimitives = newArray('a', 'b', 'c');
+	char[] primitiveArrayFromObjectArray = newArray(arrayFromPrimitives);
+	Character[] objectArrayFromPrimitiveArray = newArray(primitiveArrayFromObjectArray);
+
+	Iterable<Character> charSequenceToIterable = it("foo");
+
+### fi.solita.utils.functional.Option
+
+	Option<String> optionContainingFoo = Some("foo");
+	Option<String> emptyOption = None();
+
+	Option<String> valueResultsInSome = Option.of("foo");
+	Option<Object> nullResultsInNone = Option.of(null);
+
+	String string = optionContainingFoo.get();
+	try { 
+	    emptyOption.get();
+	} catch (UnsupportedOperationException e) {}
+
+	String foo = optionContainingFoo.getOrElse("bar");
+	String bar = emptyOption.getOrElse("bar");
+
+	boolean someIsDefined = Some("foo").isDefined();
+	boolean noneIsNotDefined = None().isDefined();
+
+	for (String str: optionContainingFoo) {
+	    // executed once
+	}
+
+	for (String str: emptyOption) {
+	    // never executed
+	}
 
 
 ## Code generation
