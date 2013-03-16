@@ -50,35 +50,35 @@ public abstract class Collections {
         return new HashMap<K,V>(initialSize);
     }
     
-    public static List<Boolean> newList(boolean... array) {
+    public static List<Boolean> newList(boolean[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Byte> newList(byte... array) {
+    public static List<Byte> newList(byte[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Character> newList(char... array) {
+    public static List<Character> newList(char[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Double> newList(double... array) {
+    public static List<Double> newList(double[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Float> newList(float... array) {
+    public static List<Float> newList(float[] array) {
         return newList(newArray(array));
     }
 
-    public static List<Integer> newList(int... array) {
+    public static List<Integer> newList(int[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Long> newList(long... array) {
+    public static List<Long> newList(long[] array) {
         return newList(newArray(array));
     }
     
-    public static List<Short> newList(short... array) {
+    public static List<Short> newList(short[] array) {
         return newList(newArray(array));
     }
     
@@ -120,35 +120,35 @@ public abstract class Collections {
         return newList(concat(newList(e1, e2, e3, e4, e5, e6), elements));
     }
     
-    public static Set<Boolean> newSet(boolean... array) {
+    public static Set<Boolean> newSet(boolean[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Byte> newSet(byte... array) {
+    public static Set<Byte> newSet(byte[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Character> newSet(char... array) {
+    public static Set<Character> newSet(char[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Double> newSet(double... array) {
+    public static Set<Double> newSet(double[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Float> newSet(float... array) {
+    public static Set<Float> newSet(float[] array) {
         return newSet(newArray(array));
     }
 
-    public static Set<Integer> newSet(int... array) {
+    public static Set<Integer> newSet(int[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Long> newSet(long... array) {
+    public static Set<Long> newSet(long[] array) {
         return newSet(newArray(array));
     }
     
-    public static Set<Short> newSet(short... array) {
+    public static Set<Short> newSet(short[] array) {
         return newSet(newArray(array));
     }
     
