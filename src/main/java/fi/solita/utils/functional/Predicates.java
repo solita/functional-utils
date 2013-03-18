@@ -65,6 +65,33 @@ public abstract class Predicates {
             }
         };
     }
+    
+    public static <T extends Comparable<T>> Predicate<T> lessThan(final T value) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.compareTo(value) < 0;
+            }
+        };
+    }
+    
+    public static <T extends Comparable<T>> Predicate<T> greaterThanOrEqualTo(final T value) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.compareTo(value) >= 0;
+            }
+        };
+    }
+    
+    public static <T extends Comparable<T>> Predicate<T> lessThanOrEqualTo(final T value) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.compareTo(value) <= 0;
+            }
+        };
+    }
 
     public static <T> Predicate<Class<?>> isInstance(final Class<T> clazz) {
         return new Predicate<Class<?>>() {
