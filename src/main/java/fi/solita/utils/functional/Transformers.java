@@ -215,12 +215,28 @@ public abstract class Transformers {
         }
     };
     
+    public static Transformer<Integer, Integer> mod(final Integer mod) {
+    		return new Transformer<Integer, Integer>() {
+		        @Override
+		        public Integer transform(Integer source) {
+		        	  return source % mod;
+		        }
+    		};
+	  }
+    
     public static final Transformer<Member, String> memberNames = new Transformer<Member, String>() {
         @Override
         public String transform(Member source) {
             return source.getName();
         }
     };
+    
+    public static final Transformer<String, Integer> length = new Transformer<String, Integer>() {
+      @Override
+      public Integer transform(String source) {
+          return source.length();
+      }
+  };
     
     public static final <T> Transformer<_1<T>, T> _1() {
         return new Transformer<_1<T>, T>() {

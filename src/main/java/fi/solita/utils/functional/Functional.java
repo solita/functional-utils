@@ -132,6 +132,13 @@ public abstract class Functional {
     /**
      * Non-lazy
      */
+    public static <G, T> Map<G, List<T>> groupBy(T[] elements, Apply<? super T,G> f) {
+    	  return groupBy(Arrays.asList(elements), f);
+    }
+    
+    /**
+     * Non-lazy
+     */
     public static <G, T> Map<G, List<T>> groupBy(Iterable<T> elements, Apply<? super T,G> f) {
         Map<G, List<T>> target = newMap();
         for (T t: elements) {
@@ -148,9 +155,17 @@ public abstract class Functional {
         }
         return target;
     }
+    
+    public static <T> T head(T[] elements) {
+    	  return head(Arrays.asList(elements));
+    }
 
     public static <T> T head(Iterable<T> elements) {
     	return elements.iterator().next();
+    }
+    
+    public static <T> Option<T> headOption(T[] elements) {
+    	  return headOption(Arrays.asList(elements));
     }
 
     public static <T> Option<T> headOption(Iterable<T> elements) {
@@ -161,9 +176,17 @@ public abstract class Functional {
     	    return None();
     	}
     }
+    
+    public static <T> Iterable<T> tail(T[] elements) {
+    	  return tail(Arrays.asList(elements));
+    }
 
     public static <T> Iterable<T> tail(Iterable<T> elements) {
     	return drop(elements, 1);
+    }
+    
+    public static <T> T last(T[] elements) {
+    	  return last(Arrays.asList(elements));
     }
 
     public static <T> T last(Iterable<T> elements) {
@@ -173,6 +196,10 @@ public abstract class Functional {
             ret = it.next();
         }
         return ret;
+    }
+    
+    public static <T> Option<T> lastOption(T[] elements) {
+    	  return lastOption(Arrays.asList(elements));
     }
 
     public static <T> Option<T> lastOption(Iterable<T> elements) {
@@ -187,13 +214,25 @@ public abstract class Functional {
             return None();
         }
     }
+    
+    public static <T> Iterable<T> init(T[] elements) {
+    	  return init(Arrays.asList(elements));
+    }
 
     public static <T> Iterable<T> init(Iterable<T> elements) {
         return take(elements, size(elements)-1);
     }
+    
+    public static <T> Iterable<T> take(T[] elements, int amount) {
+    	  return take(Arrays.asList(elements), amount);
+    }
 
     public static <T> Iterable<T> take(final Iterable<T> elements, final int amount) {
     	return new Iterables.TakingIterable<T>(elements, amount);
+    }
+    
+    public static <T> Iterable<T> drop(T[] elements, int amount) {
+    	  return drop(Arrays.asList(elements), amount);
     }
 
     public static <T> Iterable<T> drop(final Iterable<T> elements, final int amount) {
@@ -212,6 +251,10 @@ public abstract class Functional {
                 return it;
             }
         };
+    }
+    
+    public static <T> Iterable<T> takeWhile(T[] elements, Apply<? super T, Boolean> predicate) {
+    	  return takeWhile(Arrays.asList(elements), predicate);
     }
 
     public static <T> Iterable<T> takeWhile(final Iterable<T> elements, final Apply<? super T, Boolean> predicate) {
@@ -260,6 +303,10 @@ public abstract class Functional {
                 };
             }
         };
+    }
+    
+    public static <T> Iterable<T> dropWhile(T[] elements, Apply<? super T, Boolean> predicate) {
+    	  return dropWhile(Arrays.asList(elements), predicate);
     }
 
     public static <T> Iterable<T> dropWhile(final Iterable<T> elements, final Apply<? super T, Boolean> predicate) {
@@ -376,11 +423,19 @@ public abstract class Functional {
         return concat(elements1, concat(elements2, concat(elements3, elements4, elements5, flatten(rest))));
     }
     
+    public static <T extends Comparable<T>> Iterable<T> sort(final T[] elements) {
+    	  return sort(Arrays.asList(elements));
+    }
+    
     public static <T extends Comparable<T>> Iterable<T> sort(final Iterable<T> elements) {
         if (isEmpty(elements)) {
             return newSet();
         }
         return sort(elements, Ordering.Natural());
+    }
+    
+    public static <T> Iterable<T> sort(T[] elements, Comparator<? super T> comparator) {
+    	  return sort(Arrays.asList(elements), comparator);
     }
 
     public static <T> Iterable<T> sort(final Iterable<T> elements, final Comparator<? super T> comparator) {
