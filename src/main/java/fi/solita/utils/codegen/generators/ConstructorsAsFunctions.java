@@ -20,6 +20,7 @@ import static fi.solita.utils.codegen.generators.Content.memberAccessor;
 import static fi.solita.utils.codegen.generators.Content.memberInitializer;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
@@ -35,13 +36,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
+import fi.solita.utils.functional.Predicate;
 
 public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, ConstructorsAsFunctions.Options, TypeElement, Iterable<String>> {
     
@@ -51,6 +55,7 @@ public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, Co
         List<String> getAdditionalBodyLinesForConstructors(ExecutableElement element);
         boolean generateMemberInitializerForConstructors();
         boolean generateMemberAccessorForConstructors();
+        boolean onlyPublicMembers();
     }
     
     public static Function1<ProcessingEnvironment, Function1<Options, Function1<TypeElement, Iterable<String>>>> instance = new ConstructorsAsFunctions().curried();
@@ -61,8 +66,18 @@ public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, Co
             return newList();
         }
         
+        Iterable<ExecutableElement> elements = element2Constructors.apply(source);
+        if (options.onlyPublicMembers()) {
+            elements = filter(elements, new Predicate<Element>() {
+              @Override
+              public boolean accept(Element candidate) {
+                  return candidate.getModifiers().contains(Modifier.PUBLIC);
+              }
+            });
+        }
+        
         Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = constructorGen.curried().apply(processingEnv).apply(options);
-        return flatMap(zipWithIndex(element2Constructors.apply(source)), singleElementTransformer);
+        return flatMap(zipWithIndex(elements), singleElementTransformer);
     }
     
     public static boolean needsToBeFunction(ExecutableElement constructor) {

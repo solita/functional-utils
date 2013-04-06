@@ -30,6 +30,7 @@ import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.exists;
+import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.groupBy;
 import static fi.solita.utils.functional.Functional.intersection;
@@ -47,8 +48,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import fi.solita.utils.functional.Apply;
@@ -57,6 +61,7 @@ import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
+import fi.solita.utils.functional.Predicate;
 
 public class MethodsAsFunctions extends Function3<ProcessingEnvironment, MethodsAsFunctions.Options, TypeElement, Iterable<String>> {
 
@@ -68,13 +73,24 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
         boolean generateMemberInitializerForMethods();
         boolean generateMemberAccessorForMethods();
         boolean generateMemberNameAccessorForMethods();
+        boolean onlyPublicMembers();
     }
     
     public static Function1<ProcessingEnvironment, Function1<Options, Function1<TypeElement, Iterable<String>>>> instance = new MethodsAsFunctions().curried();
     
     @Override
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
-        Iterable<List<ExecutableElement>> elementsByName = groupBy(element2Methods.apply(source), simpleName).values();
+        Iterable<ExecutableElement> elements = element2Methods.apply(source);
+        if (options.onlyPublicMembers()) {
+            elements = filter(elements, new Predicate<Element>() {
+                @Override
+                public boolean accept(Element candidate) {
+                    return candidate.getModifiers().contains(Modifier.PUBLIC);
+                }
+            });
+        }
+      
+        Iterable<List<ExecutableElement>> elementsByName = groupBy(elements, simpleName).values();
         Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = executableElementGen.curried().apply(processingEnv).apply(options);
         
         return flatMap(flatMap(elementsByName, zipWithIndex), singleElementTransformer);

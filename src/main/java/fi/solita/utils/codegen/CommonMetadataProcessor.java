@@ -53,6 +53,7 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         static final String generatedClassNamePattern = "generatedClassNamePattern";
         static final String includesRegex = "includesRegex";
         static final String excludesRegex = "excludesRegex";
+        static final String onlyPublicMembers = "onlyPublicMembers";
     }
     
     public Map<String, String> options() { return processingEnv.getOptions(); }
@@ -67,10 +68,14 @@ public class CommonMetadataProcessor extends AbstractProcessor {
                                                                                          not(matches(excludesPattern()))))).and(
                                                            simpleName.andThen(not(equalTo("package-info")))); }
 
-    public GeneratorOptions generatorOptions = new GeneratorOptions();
+    public GeneratorOptions generatorOptions = new GeneratorOptions() {
+    	  public boolean onlyPublicMembers() {
+    	  	  return options().containsKey(Options.onlyPublicMembers);
+    	  };
+    };
     
     public List<Function1<TypeElement,Iterable<String>>> generators() {
-        return newList(InstanceFieldsAsEnum.instance,
+        return newList(InstanceFieldsAsEnum.instance.apply(generatorOptions),
                        InstanceFieldsAsFunctions.instance.apply(generatorOptions),
                        ConstructorsAsFunctions.instance.apply(processingEnv).apply(generatorOptions),
                        MethodsAsFunctions.instance.apply(processingEnv).apply(generatorOptions));
@@ -92,7 +97,7 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         return false;
     }
 
-    public static class GeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options {
+    public static class GeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options, InstanceFieldsAsEnum.Options {
         @Override
         public boolean generateMemberNameAccessorForMethods() {
             return true;
@@ -170,6 +175,10 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         public boolean generateMemberAccessorForConstructors() {
             return true;
         }
+				@Override
+				public boolean onlyPublicMembers() {
+					  return false;
+				}
         
     }
 }
