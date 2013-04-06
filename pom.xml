@@ -7,6 +7,24 @@
         <defaultGoal>package</defaultGoal>
         <finalName>${project.artifactId}</finalName>
         
+        <resources>
+        		<resource>
+		            <directory>${basedir}/src/main/resources</directory>
+		        </resource>
+		        <resource>
+		            <directory>${basedir}/src/main/java</directory>
+		            <includes>
+		                <include>**/*.java</include>
+		            </includes>
+		        </resource>
+		        <resource>
+		            <directory>${basedir}/src/main/generated</directory>
+		            <includes>
+		                <include>**/*.java</include>
+		            </includes>
+		        </resource>
+        </resources>
+        
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
