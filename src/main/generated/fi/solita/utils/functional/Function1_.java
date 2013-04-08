@@ -49,6 +49,41 @@ public final class Function1_ implements java.io.Serializable {
     };
     }
     
+    public static final <T, R> fi.solita.utils.codegen.DefaultMeta.DefaultMethodMeta_<fi.solita.utils.functional.Function1<T, R>, fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Function0<R>>>  applyPartial() { return new fi.solita.utils.codegen.DefaultMeta.DefaultMethodMeta_<fi.solita.utils.functional.Function1<T, R>, fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Function0<R>>> () { protected fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Function0<R>> $do(final fi.solita.utils.functional.Function1<T, R> $self) { return new fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Function0<R>>() {
+        public fi.solita.utils.functional.Function0<R> apply(T t) {
+            return $self.applyPartial(t);
+        }
+        };}
+        private transient java.lang.reflect.Method $r;
+        
+        
+        private java.lang.reflect.Method $getMember() {
+            if ($r == null) {
+                try {
+                    $r = (java.lang.reflect.Method)(Object)fi.solita.utils.functional.Function1.class.getDeclaredMethod("applyPartial", java.lang.Object.class);
+                    $r.setAccessible(true);
+                } catch (RuntimeException $e) {
+                    throw $e;
+                } catch (Error $e) {
+                    throw $e;
+                } catch (Throwable $e) {
+                    throw new RuntimeException($e);
+                }
+            }
+            return $r;
+        }
+    
+        public java.lang.reflect.Method getMember() {
+            return $getMember();
+        }
+    
+        public String getName() {
+            return "applyPartial";
+        }
+    
+    };
+    }
+    
     public static final <T, R> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Function1<T, R>, fi.solita.utils.functional.Function1<fi.solita.utils.functional.Tuple1<T>,R>> tuppled() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Function1<T, R>, fi.solita.utils.functional.Function1<fi.solita.utils.functional.Tuple1<T>,R>>() {
         public fi.solita.utils.functional.Function1<fi.solita.utils.functional.Tuple1<T>,R> apply(fi.solita.utils.functional.Function1<T, R> $self) {
             return $self.tuppled();
