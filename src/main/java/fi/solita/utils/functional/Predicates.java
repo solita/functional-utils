@@ -153,4 +153,31 @@ public abstract class Predicates {
             return Character.isWhitespace(candidate);
         }
     };
+    
+    public static final Predicate<String> contains(final CharSequence infix) {
+    	return new Predicate<String>() {
+				@Override
+				public boolean accept(String candidate) {
+					return candidate.contains(infix);
+				}
+    	};
+    }
+    
+    public static final Predicate<String> startsWith(final String prefix) {
+    	return new Predicate<String>() {
+				@Override
+				public boolean accept(String candidate) {
+					return candidate.startsWith(prefix);
+				}
+    	};
+    }
+    
+    public static final Predicate<String> endsWith(final String prefix) {
+    	return new Predicate<String>() {
+				@Override
+				public boolean accept(String candidate) {
+					return candidate.endsWith(prefix);
+				}
+    	};
+    }
 }

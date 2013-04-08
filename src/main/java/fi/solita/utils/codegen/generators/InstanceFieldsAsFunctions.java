@@ -1,5 +1,6 @@
 package fi.solita.utils.codegen.generators;
 
+import static fi.solita.utils.codegen.Helpers.element2Constructors;
 import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.elementClass;
@@ -31,6 +32,9 @@ import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.List;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -39,6 +43,7 @@ import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
+import fi.solita.utils.functional.Predicate;
 
 public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctions.Options, TypeElement, Iterable<String>> {
     
@@ -53,11 +58,22 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
         boolean generateMemberInitializerForFields();
         boolean generateMemberNameAccessorForFields();
         boolean makeFieldsPublic();
+        boolean onlyPublicMembers();
     }
     
     @Override
     public Iterable<String> apply(Options options, TypeElement source) {
-        return flatMap(filter(element2Fields.apply(source), not(staticElements)), variableElementGen.curried().apply(options));
+        Iterable<VariableElement> elements = element2Fields.apply(source);
+        if (options.onlyPublicMembers()) {
+            elements = filter(elements, new Predicate<Element>() {
+                @Override
+                public boolean accept(Element candidate) {
+                    return candidate.getModifiers().contains(Modifier.PUBLIC);
+                }
+            });
+        }
+      
+        return flatMap(filter(elements, not(staticElements)), variableElementGen.curried().apply(options));
     }
     
     public static Function2<Options, VariableElement, Iterable<String>> variableElementGen = new Function2<InstanceFieldsAsFunctions.Options, VariableElement, Iterable<String>>() {
