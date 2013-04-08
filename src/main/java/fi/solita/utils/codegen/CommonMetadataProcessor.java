@@ -46,7 +46,7 @@ import fi.solita.utils.functional.Predicates;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({CommonMetadataProcessor.Options.generatedClassNamePattern, CommonMetadataProcessor.Options.includesRegex, CommonMetadataProcessor.Options.excludesRegex})
+@SupportedOptions({CommonMetadataProcessor.Options.generatedClassNamePattern, CommonMetadataProcessor.Options.includesRegex, CommonMetadataProcessor.Options.excludesRegex, CommonMetadataProcessor.Options.onlyPublicMembers})
 public class CommonMetadataProcessor extends AbstractProcessor {
 
     static class Options {

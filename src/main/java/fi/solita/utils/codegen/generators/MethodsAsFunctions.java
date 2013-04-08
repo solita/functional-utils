@@ -11,6 +11,7 @@ import static fi.solita.utils.codegen.Helpers.hasTypeParameters;
 import static fi.solita.utils.codegen.Helpers.isInstanceMethod;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
+import static fi.solita.utils.codegen.Helpers.paramsWithCast;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
@@ -52,11 +53,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
@@ -117,7 +116,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             List<String> argumentTypes = newList(map(method.getParameters(), qualifiedName.andThen(boxed)));
             
             boolean needsToBeFunction = !isEmpty(relevantTypeParams);
-            boolean isPrivate = isPrivate(method);
+            final boolean isPrivate = isPrivate(method);
             boolean isInstanceMethod = isInstanceMethod(method);
             boolean zeroArgInstanceMethod = isInstanceMethod && method.getParameters().isEmpty(); // handle no-arg methods like static functions
             boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
@@ -137,7 +136,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
                     
             List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
             List<String> argNames = zeroArgInstanceMethod ? newList("$self")                              : newList(map(method.getParameters(), simpleName));
-            List<String> parameterNames = zeroArgInstanceMethod ? Collections.<String>newList() : argNames;
+            List<String> argNamesWithCast = newList(paramsWithCast(method, isPrivate));
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnType + ")" : "");
 
@@ -150,8 +149,8 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             
             Iterable<String> tryBlock = concat(
                 isPrivate
-                    ? Some(returnClause + "$getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", map(parameterNames, prepend("(Object)")))) + ");")
-                    : Some(returnClause + instanceName + "." + methodTypeParamsWithoutConstraintsString + methodName + "(" + mkString(", ", parameterNames) + ");"),
+                    ? Some(returnClause + "$getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
+                    : Some(returnClause + instanceName + "." + methodTypeParamsWithoutConstraintsString + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
                 returnsVoid
                     ? Some("return null;")
                     : None

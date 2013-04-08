@@ -2,15 +2,16 @@ package fi.solita.utils.codegen.generators;
 
 import static fi.solita.utils.codegen.Helpers.boxed;
 import static fi.solita.utils.codegen.Helpers.element2Constructors;
-import static fi.solita.utils.codegen.Helpers.qualifiedName;
-import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasRawTypes;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
+import static fi.solita.utils.codegen.Helpers.paramsWithCast;
+import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
+import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.throwsCheckedExceptions;
 import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
@@ -41,7 +42,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
@@ -104,14 +104,15 @@ public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, Co
             int argCount = constructor.getParameters().size();
             List<String> argTypes = newList(map(constructor.getParameters(), qualifiedName.andThen(boxed)));
             List<String> argNames = newList(map(constructor.getParameters(), simpleName));
+            List<String> argNamesWithCast = newList(paramsWithCast(constructor, isPrivate));
 
             String constructorClass = options.getClassForConstructors(argCount).getName().replace('$', '.');
             String fundef = constructorClass + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">";
             String declaration = resolveVisibility(constructor) + " static final " + relevantTypeParamsString + " " + fundef + " $" + (index == 0 ? "" : index);
             
             Iterable<String> tryBlock = isPrivate 
-                    ? Some("return (" + returnType + ")$getMember().newInstance(" + mkString(", ", map(argNames, prepend("(Object)"))) + ");")
-                    : Some("return new " + returnType + "(" + mkString(", ", argNames) + ");");
+                    ? Some("return (" + returnType + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
+                    : Some("return new " + returnType + "(" + mkString(", ", argNamesWithCast) + ");");
             
             Iterable<String> tryCatchBlock = isPrivate || throwsChecked
                 ? concat(

@@ -12,10 +12,12 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.sort;
+import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Predicates.empty;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.append;
+import static fi.solita.utils.functional.Transformers.mkString;
 import static fi.solita.utils.functional.Transformers.replaceAll;
 import static fi.solita.utils.functional.Transformers.toString;
 
@@ -421,5 +423,17 @@ public abstract class Helpers {
     
     public static String elementGenericQualifiedName(TypeElement enclosingElement) {
         return qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(enclosingElement.getTypeParameters(), qualifiedName)) + ">");
+    }
+    
+    public static Iterable<String> paramsWithCast(ExecutableElement e, final boolean isPrivate) {
+        Iterable<String> argCasts = newList(map(e.getParameters(), new Transformer<VariableElement, String>() {
+            @Override
+            public String transform(VariableElement source) {
+                return isPrivate ? "(Object)" :
+                       source.asType().getKind().isPrimitive() ? "(" + qualifiedName.apply(source) + ")" :
+                       "";
+            }
+        }));
+        return map(zip(argCasts, map(e.getParameters(), simpleName)), mkString(""));
     }
 }
