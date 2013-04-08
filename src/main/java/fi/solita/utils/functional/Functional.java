@@ -97,6 +97,16 @@ public abstract class Functional {
     public static <T> Iterable<T> flatten(Iterable<? extends Iterable<? extends T>> elements) {
         return new ConcatenatingIterable<T>(elements);
     }
+    
+    public static <T> void foreach(T[] elements, Apply<? super T, Void> procedure) {
+        foreach(Arrays.asList(elements), procedure);
+    }
+    
+    public static <T> void foreach(Iterable<T> elements, Apply<? super T, Void> procedure) {
+        for (T t: elements) {
+            procedure.apply(t);
+        }
+    }
 
     /**
      * Non-lazy
@@ -560,27 +570,64 @@ public abstract class Functional {
         return headOption(sort(elements, Ordering.Natural().reverse()));
     }
 
-    public static <A,B> Iterable<Map.Entry<A, B>> zip(A[] a, B[] b) {
+    public static <A,B> Iterable<Tuple2<A, B>> zip(A[] a, B[] b) {
         return zip(Arrays.asList(a), Arrays.asList(b));
     }
 
-    public static <A,B> Iterable<Map.Entry<A, B>> zip(A[] a, Iterable<B> b) {
+    public static <A,B> Iterable<Tuple2<A, B>> zip(A[] a, Iterable<B> b) {
         return zip(Arrays.asList(a), b);
     }
 
-    public static <A,B> Iterable<Map.Entry<A, B>> zip(Iterable<A> a, B[] b) {
+    public static <A,B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, B[] b) {
         return zip(a, Arrays.asList(b));
     }
 
-    public static <A,B> Iterable<Map.Entry<A, B>> zip(Iterable<A> a, Iterable<B> b) {
+    public static <A,B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, Iterable<B> b) {
         return new ZippingIterable<A,B>(a, b);
     }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, B[] b, C[] c) {
+        return zip(Arrays.asList(a), Arrays.asList(b), Arrays.asList(c));
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<B> b, Iterable<C> c) {
+        return zip(Arrays.asList(a), b, c);
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, B[] b, Iterable<C> c) {
+        return zip(a, Arrays.asList(b), c);
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, Iterable<B> b, C[] c) {
+        return zip(a, b, Arrays.asList(c));
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, B[] b, Iterable<C> c) {
+        return zip(Arrays.asList(a), Arrays.asList(b), c);
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, B[] b, C[] c) {
+        return zip(a, Arrays.asList(b), Arrays.asList(c));
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<B> b, C[] c) {
+        return zip(Arrays.asList(a), b, Arrays.asList(c));
+    }
+   
+    public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c) {
+        return map(zip(zip(a, b), c), new Transformer<Tuple2<Tuple2<A, B>, C>, Tuple3<A, B, C>>() {
+            @Override
+            public Tuple3<A, B, C> transform(Tuple2<Tuple2<A, B>, C> source) {
+                return source._1.append(source._2);
+            }
+        });
+  }
 
-    public static <A> Iterable<Map.Entry<Integer, A>> zipWithIndex(Iterable<A> a) {
+    public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
         return new ZippingIterable<Integer,A>(new RangeIterable(0), a);
     }
 
-    public static <A> Iterable<Map.Entry<Integer, A>> zipWithIndex(A[] a) {
+    public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(A[] a) {
         return new ZippingIterable<Integer,A>(new RangeIterable(0), Arrays.asList(a));
     }
 
@@ -602,6 +649,10 @@ public abstract class Functional {
     
     public static String mkString(Iterable<Character> elements) {
         return mkString("", map(elements, Transformers.toString));
+    }
+    
+    public static String mkString(String delim, String[] elements) {
+        return mkString(delim, Arrays.asList(elements));
     }
 
     public static String mkString(String delim, Iterable<String> elements) {

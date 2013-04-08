@@ -131,20 +131,6 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <A> fi.solita.utils.functional.Function1<A[], java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>>> zipWithIndex() { return new fi.solita.utils.functional.Function1<A[], java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>> apply(A[] a) {
-            return fi.solita.utils.functional.Functional.<A>zipWithIndex(a);
-        }
-    };
-    }
-    
-    public static final <A> fi.solita.utils.functional.Function1<java.lang.Iterable<A>, java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>>> zipWithIndex1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<A>, java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<java.lang.Integer,A>> apply(java.lang.Iterable<A> a) {
-            return fi.solita.utils.functional.Functional.<A>zipWithIndex(a);
-        }
-    };
-    }
-    
     public static final  fi.solita.utils.functional.Function1<java.lang.Iterable<?>, java.lang.Boolean> isEmpty = new fi.solita.utils.functional.Function1<java.lang.Iterable<?>, java.lang.Boolean>() {
         public java.lang.Boolean apply(java.lang.Iterable<?> elements) {
             return fi.solita.utils.functional.Functional.isEmpty(elements);
@@ -300,34 +286,6 @@ public final class Functional_ implements java.io.Serializable {
     public static final <T> fi.solita.utils.functional.Function3<java.util.Set<T>, java.util.Set<T>, java.util.Set<T>[], java.util.Set<T>> intersection1() { return new fi.solita.utils.functional.Function3<java.util.Set<T>, java.util.Set<T>, java.util.Set<T>[], java.util.Set<T>>() {
         public java.util.Set<T> apply(java.util.Set<T> e1, java.util.Set<T> e2, java.util.Set<T>[] e) {
             return fi.solita.utils.functional.Functional.<T>intersection(e1, e2, e);
-        }
-    };
-    }
-    
-    public static final <A, B> fi.solita.utils.functional.Function2<A[], B[], java.lang.Iterable<java.util.Map.Entry<A,B>>> zip() { return new fi.solita.utils.functional.Function2<A[], B[], java.lang.Iterable<java.util.Map.Entry<A,B>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<A,B>> apply(A[] a, B[] b) {
-            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
-        }
-    };
-    }
-    
-    public static final <A, B> fi.solita.utils.functional.Function2<A[], java.lang.Iterable<B>, java.lang.Iterable<java.util.Map.Entry<A,B>>> zip1() { return new fi.solita.utils.functional.Function2<A[], java.lang.Iterable<B>, java.lang.Iterable<java.util.Map.Entry<A,B>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<A,B>> apply(A[] a, java.lang.Iterable<B> b) {
-            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
-        }
-    };
-    }
-    
-    public static final <A, B> fi.solita.utils.functional.Function2<java.lang.Iterable<A>, B[], java.lang.Iterable<java.util.Map.Entry<A,B>>> zip2() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<A>, B[], java.lang.Iterable<java.util.Map.Entry<A,B>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<A,B>> apply(java.lang.Iterable<A> a, B[] b) {
-            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
-        }
-    };
-    }
-    
-    public static final <A, B> fi.solita.utils.functional.Function2<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<java.util.Map.Entry<A,B>>> zip3() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<java.util.Map.Entry<A,B>>>() {
-        public java.lang.Iterable<java.util.Map.Entry<A,B>> apply(java.lang.Iterable<A> a, java.lang.Iterable<B> b) {
-            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
         }
     };
     }

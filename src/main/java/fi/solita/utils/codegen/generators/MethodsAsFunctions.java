@@ -61,6 +61,7 @@ import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
 import fi.solita.utils.functional.Predicate;
+import fi.solita.utils.functional.Tuple2;
 
 public class MethodsAsFunctions extends Function3<ProcessingEnvironment, MethodsAsFunctions.Options, TypeElement, Iterable<String>> {
 
@@ -206,9 +207,9 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
         }
     };
     
-    public static Function1<Iterable<ExecutableElement>, Iterable<Map.Entry<Integer,ExecutableElement>>> zipWithIndex = new Function1<Iterable<ExecutableElement>, Iterable<Map.Entry<Integer,ExecutableElement>>>() {
+    public static Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>> zipWithIndex = new Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>>() {
         @Override
-        public Iterable<Map.Entry<Integer, ExecutableElement>> apply(Iterable<ExecutableElement> t) {
+        public Iterable<Tuple2<Integer, ExecutableElement>> apply(Iterable<ExecutableElement> t) {
             return Functional.zipWithIndex(t);
         }
     };

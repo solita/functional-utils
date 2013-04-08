@@ -10,7 +10,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
@@ -120,7 +119,7 @@ abstract class Iterables {
         }
     }
 
-    static class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Map.Entry<A, B>> {
+    static class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Tuple2<A, B>> {
         private final Iterable<A> elements1;
         private final Iterable<B> elements2;
 
@@ -130,8 +129,8 @@ abstract class Iterables {
         }
 
         @Override
-        public Iterator<Map.Entry<A, B>> iterator() {
-            return new Iterator<Map.Entry<A, B>>() {
+        public Iterator<Tuple2<A, B>> iterator() {
+            return new Iterator<Tuple2<A, B>>() {
                 Iterator<A> it1 = elements1.iterator();
                 Iterator<B> it2 = elements2.iterator();
                 @Override
@@ -140,25 +139,8 @@ abstract class Iterables {
                 }
 
                 @Override
-                public Map.Entry<A, B> next() {
-                    return new Map.Entry<A, B>() {
-                        private A key = it1.next();
-                        private B value = it2.next();
-                        @Override
-                        public A getKey() {
-                            return key;
-                        }
-
-                        @Override
-                        public B getValue() {
-                            return value;
-                        }
-
-                        @Override
-                        public B setValue(Object value) {
-                            throw new UnsupportedOperationException();
-                        }
-                    };
+                public Tuple2<A, B> next() {
+                    return Tuple.of(it1.next(), it2.next());
                 }
 
                 @Override

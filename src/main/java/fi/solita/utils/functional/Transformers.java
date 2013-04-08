@@ -137,7 +137,7 @@ public abstract class Transformers {
         }
     };
 
-    public static Transformer<Map.Entry<?, ?>, String> mkString(final String delim) {
+    public static Transformer<Map.Entry<?, ?>, String> join(final String delim) {
         return new Transformer<Map.Entry<?, ?>, String>() {
             @Override
             public String transform(Map.Entry<?, ?> source) {
@@ -145,6 +145,15 @@ public abstract class Transformers {
             }
         };
     }
+    
+    public static Transformer<Tuple, String> mkString(final String delim) {
+      return new Transformer<Tuple, String>() {
+          @Override
+          public String transform(Tuple source) {
+              return Functional.mkString(delim, map(source.toArray(), toString));
+          }
+      };
+  }
 
     public static final <K> Transformer<Map.Entry<K, ?>, K> keys() {
         return new Transformer<Map.Entry<K, ?>, K>() {

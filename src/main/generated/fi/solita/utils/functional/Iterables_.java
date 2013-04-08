@@ -490,13 +490,6 @@ public final class Iterables_ implements java.io.Serializable {
         };
         }
         
-        public static final <A, B> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<A, B>, java.util.Iterator<java.util.Map.Entry<A,B>>> iterator() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<A, B>, java.util.Iterator<java.util.Map.Entry<A,B>>>() {
-            public java.util.Iterator<java.util.Map.Entry<A,B>> apply(fi.solita.utils.functional.Iterables.ZippingIterable<A, B> $self) {
-                return $self.iterator();
-            }
-        };
-        }
-        
         public static final <A, B> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<?, ?>, fi.solita.utils.functional.Option<java.lang.Integer>> size() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<?, ?>, fi.solita.utils.functional.Option<java.lang.Integer>>() {
             public fi.solita.utils.functional.Option<java.lang.Integer> apply(fi.solita.utils.functional.Iterables.ZippingIterable<?, ?> $self) {
                 return $self.size();

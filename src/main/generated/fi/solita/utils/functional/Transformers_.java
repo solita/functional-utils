@@ -7,9 +7,9 @@ public final class Transformers_ implements java.io.Serializable {
     public enum Fields {
     }
     
-    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>> mkString = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>>() {
+    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>> join = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>>() {
         public fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String> apply(java.lang.String delim) {
-            return fi.solita.utils.functional.Transformers.mkString(delim);
+            return fi.solita.utils.functional.Transformers.join(delim);
         }
     };
     
