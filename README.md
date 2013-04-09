@@ -1,6 +1,6 @@
 # A more-or-less functional util library for general use. Now with added code generation.
 
-Code generation is highly recommended since it provides kind of poor-mans-first-class-functions in regular java code, thus greatly lessening the pain of using functional constructs. See examples (todo) for more info.
+Code generation is highly recommended since it provides kind of poor-mans-first-class-functions in regular java code, thus greatly lessening the pain of using functional constructs. See examples for more info.
 
 ## Installing
 
@@ -14,7 +14,52 @@ You might also want to use *Eclipse favorites* (any similar thing in Idea?) so t
 Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> Content Assist -> Favorites*:
 ![](Favorites.png)
 
+If (and when) you want to use the standard Java library as first class functions, add [the ready-made metaclasses for JavaSE6](javase6meta.jar) to your classpath.
+TODO: JavaSE7. 
+
+
+## Code generation
+
+### Eclipse (tested in Juno)
+
+Create (or open an existing) Java project.
+
+Add functional-utils as a project dependency (as a jar file or a project):
+![](JavaBuildPath.png)
+
+Project properties -> Java Compiler -> Annotation Processing:
+<ul>
+  <li>Enable project specific settings</li>
+	<li>Enable annotation processing</li>
+</ul>
+![](AnnotationProcessing.png)
+
+Project properties -> Java Compiler -> Annotation Processing -> Factory Path:
+<ul>
+	<li>Enable project specific settings</li>
+	<li>Add JARs... and select functiona-utils.jar</li>
+</ul>
+![](FactoryPath.png)
+
+Now whenever you save a file the metadata classes are automatically generated and immediately ready for use.
+
+### IntelliJ Idea
+
+TODO: Anyone know how Idea supports Annotation Processors?
+
+### Maven/Gradle/...
+
+Please consult the documentation of your build tool on how to enable and control annotation processing.
+
+### Metaclasses for 3rd party libraries?
+
+Since I was able to generate the metaclasses for the standard Java library,
+there's a good chance that it will also work for whichever 3rd party library where the source code is available.
+
+
 ## Examples
+
+Just a few examples of using these utils.
 
 ### fi.solita.utils.functional.Collections
 
@@ -68,38 +113,9 @@ Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> C
 	}
 
 
-## Code generation
+### fi.solita.utils.functional.Functional
 
-### Eclipse
-
-Create (or open an existing) Java project.
-
-Add functional-utils as a project dependency (as a jar file or a project):
-![](JavaBuildPath.png)
-
-Project properties -> Java Compiler -> Annotation Processing:
-<ul>
-  <li>Enable project specific settings</li>
-	<li>Enable annotation processing</li>
-</ul>
-![](AnnotationProcessing.png)
-
-Project properties -> Java Compiler -> Annotation Processing -> Factory Path:
-<ul>
-	<li>Enable project specific settings</li>
-	<li>Add JARs... and select functiona-utils.jar</li>
-</ul>
-![](FactoryPath.png)
-
-Now whenever you save a file the metadata classes are automatically generated and immediately ready for use.
-
-### IntelliJ Idea
-
-TODO: Anyone know how Idea supports Annotation Processors?
-
-### Maven/Gradle/...
-
-Please consult the documentation of your build tool on how to enable and control annotation processing.
+TODO
 
 
 ## Word of warning
@@ -107,6 +123,9 @@ Please consult the documentation of your build tool on how to enable and control
 This package comes with no warranty what-so-ever. It's higly experimental, might contain loads of bugs and needs more testing.
 Packages and classes may get renamed or moved, and things may suddenly break.
 Use at your own risk!
+
+And no, I honestly do not believe that Java is the language of the future. Please use a "real" language if you can.
+But if you are stuck in the enterprise world, this project might just make your life worth living.
 
 Bug reports, feature requests and opinionated recommendations are highly welcome ;)
 
