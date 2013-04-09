@@ -34,6 +34,10 @@ public abstract class Compare {
         }; 
     }
     
+    public static final <T extends Comparable<?>> Ordering<T> byNatural() {
+        return Ordering.Natural();
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <T> Ordering<T> by(final Function1<? super T, ? extends Comparable<?>> f) {
         return by(f, (Comparator<Object>)(Object)Ordering.Natural());
