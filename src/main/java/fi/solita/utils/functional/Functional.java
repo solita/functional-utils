@@ -36,6 +36,18 @@ public abstract class Functional {
             }
         });
     }
+    
+    public static <T> Iterable<T> subtract(T[] a, final Collection<T> b) {
+        return subtract(newList(a), b);
+    }
+    
+    public static <T> Iterable<T> subtract(Iterable<T> a, final T[] b) {
+        return subtract(a, newSet(b));
+    }
+    
+    public static <T> Iterable<T> subtract(T[] a, final T[] b) {
+        return subtract(newList(a), newSet(b));
+    }
 
     public static <K, V> Option<V> find(Map<? extends K, V> map, K key) {
         return Option.of(map.get(key));
