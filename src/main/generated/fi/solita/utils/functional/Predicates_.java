@@ -7,6 +7,12 @@ public final class Predicates_ implements java.io.Serializable {
     public enum Fields {
     }
     
+    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Predicate<java.lang.String>> startsWith = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Predicate<java.lang.String>>() {
+        public fi.solita.utils.functional.Predicate<java.lang.String> apply(java.lang.String prefix) {
+            return fi.solita.utils.functional.Predicates.startsWith(prefix);
+        }
+    };
+    
     public static final  fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<fi.solita.utils.functional.Option<?>>> defined = new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<fi.solita.utils.functional.Option<?>>>() {
         public fi.solita.utils.functional.Predicate<fi.solita.utils.functional.Option<?>> apply() {
             return fi.solita.utils.functional.Predicates.defined();
@@ -33,6 +39,12 @@ public final class Predicates_ implements java.io.Serializable {
         }
     };
     }
+    
+    public static final  fi.solita.utils.functional.Function1<java.lang.CharSequence, fi.solita.utils.functional.Predicate<java.lang.String>> contains = new fi.solita.utils.functional.Function1<java.lang.CharSequence, fi.solita.utils.functional.Predicate<java.lang.String>>() {
+        public fi.solita.utils.functional.Predicate<java.lang.String> apply(java.lang.CharSequence infix) {
+            return fi.solita.utils.functional.Predicates.contains(infix);
+        }
+    };
     
     public static final <T extends java.lang.reflect.AnnotatedElement> fi.solita.utils.functional.Function1<java.lang.Class<? extends java.lang.annotation.Annotation>, fi.solita.utils.functional.Predicate<T>> hasAnnotation() { return new fi.solita.utils.functional.Function1<java.lang.Class<? extends java.lang.annotation.Annotation>, fi.solita.utils.functional.Predicate<T>>() {
         public fi.solita.utils.functional.Predicate<T> apply(java.lang.Class<? extends java.lang.annotation.Annotation> annotation) {
@@ -75,16 +87,16 @@ public final class Predicates_ implements java.io.Serializable {
     };
     }
     
-    public static final <E, T extends java.lang.Iterable<E>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<T>> empty1() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<T>>() {
-        public fi.solita.utils.functional.Predicate<T> apply() {
-            return fi.solita.utils.functional.Predicates.<E, T>empty();
+    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Predicate<T>> greaterThan() { return new fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Predicate<T>>() {
+        public fi.solita.utils.functional.Predicate<T> apply(T value) {
+            return fi.solita.utils.functional.Predicates.<T>greaterThan(value);
         }
     };
     }
     
-    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Predicate<T>> greaterThan() { return new fi.solita.utils.functional.Function1<T, fi.solita.utils.functional.Predicate<T>>() {
-        public fi.solita.utils.functional.Predicate<T> apply(T value) {
-            return fi.solita.utils.functional.Predicates.<T>greaterThan(value);
+    public static final <E, T extends java.lang.Iterable<E>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<T>> empty1() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Predicate<T>>() {
+        public fi.solita.utils.functional.Predicate<T> apply() {
+            return fi.solita.utils.functional.Predicates.<E, T>empty();
         }
     };
     }
@@ -95,6 +107,12 @@ public final class Predicates_ implements java.io.Serializable {
         }
     };
     }
+    
+    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Predicate<java.lang.String>> endsWith = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Predicate<java.lang.String>>() {
+        public fi.solita.utils.functional.Predicate<java.lang.String> apply(java.lang.String prefix) {
+            return fi.solita.utils.functional.Predicates.endsWith(prefix);
+        }
+    };
     
     public static final  fi.solita.utils.functional.Function1<java.util.regex.Pattern, fi.solita.utils.functional.Predicate<java.lang.String>> lookingAt = new fi.solita.utils.functional.Function1<java.util.regex.Pattern, fi.solita.utils.functional.Predicate<java.lang.String>>() {
         public fi.solita.utils.functional.Predicate<java.lang.String> apply(java.util.regex.Pattern pattern) {

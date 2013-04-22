@@ -7,9 +7,9 @@ public final class Transformers_ implements java.io.Serializable {
     public enum Fields {
     }
     
-    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>> join = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>>() {
-        public fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String> apply(java.lang.String delim) {
-            return fi.solita.utils.functional.Transformers.join(delim);
+    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple,java.lang.String>> mkString = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple,java.lang.String>>() {
+        public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple,java.lang.String> apply(java.lang.String delim) {
+            return fi.solita.utils.functional.Transformers.mkString(delim);
         }
     };
     
@@ -104,16 +104,16 @@ public final class Transformers_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T>> _1() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T>>() {
-        public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T> apply() {
-            return fi.solita.utils.functional.Transformers.<T>_1();
+    public static final <K, V> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>>> flip() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>>>() {
+        public fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>> apply() {
+            return fi.solita.utils.functional.Transformers.<K, V>flip();
         }
     };
     }
     
-    public static final <K, V> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>>> flip() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>>>() {
-        public fi.solita.utils.functional.Transformer<java.util.Map.Entry<K,V>,java.util.Map.Entry<V,K>> apply() {
-            return fi.solita.utils.functional.Transformers.<K, V>flip();
+    public static final <T> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T>> _1() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T>>() {
+        public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._1<T>,T> apply() {
+            return fi.solita.utils.functional.Transformers.<T>_1();
         }
     };
     }
@@ -151,6 +151,12 @@ public final class Transformers_ implements java.io.Serializable {
         }
     };
     
+    public static final  fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.Integer,java.lang.Integer>> mod = new fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.Integer,java.lang.Integer>>() {
+        public fi.solita.utils.functional.Transformer<java.lang.Integer,java.lang.Integer> apply(java.lang.Integer mod) {
+            return fi.solita.utils.functional.Transformers.mod(mod);
+        }
+    };
+    
     public static final <T> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._18<T>,T>> _18() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._18<T>,T>>() {
         public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._18<T>,T> apply() {
             return fi.solita.utils.functional.Transformers.<T>_18();
@@ -171,6 +177,12 @@ public final class Transformers_ implements java.io.Serializable {
         }
     };
     }
+    
+    public static final  fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>> join = new fi.solita.utils.functional.Function1<java.lang.String, fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String>>() {
+        public fi.solita.utils.functional.Transformer<java.util.Map.Entry<?,?>,java.lang.String> apply(java.lang.String delim) {
+            return fi.solita.utils.functional.Transformers.join(delim);
+        }
+    };
     
     public static final <T> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._17<T>,T>> _17() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._17<T>,T>>() {
         public fi.solita.utils.functional.Transformer<fi.solita.utils.functional.Tuple._17<T>,T> apply() {
@@ -230,14 +242,14 @@ public final class Transformers_ implements java.io.Serializable {
     
     public static final <T> fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.Iterable<T>,java.lang.Iterable<T>>> take() { return new fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.Iterable<T>,java.lang.Iterable<T>>>() {
         public fi.solita.utils.functional.Transformer<java.lang.Iterable<T>,java.lang.Iterable<T>> apply(java.lang.Integer amount) {
-            return fi.solita.utils.functional.Transformers.<T>take(amount);
+            return fi.solita.utils.functional.Transformers.<T>take((int)amount);
         }
     };
     }
     
     public static final <T> fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.String,java.lang.String>> prefix() { return new fi.solita.utils.functional.Function1<java.lang.Integer, fi.solita.utils.functional.Transformer<java.lang.String,java.lang.String>>() {
         public fi.solita.utils.functional.Transformer<java.lang.String,java.lang.String> apply(java.lang.Integer chars) {
-            return fi.solita.utils.functional.Transformers.<T>prefix(chars);
+            return fi.solita.utils.functional.Transformers.<T>prefix((int)chars);
         }
     };
     }

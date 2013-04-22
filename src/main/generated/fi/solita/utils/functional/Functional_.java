@@ -7,6 +7,22 @@ public final class Functional_ implements java.io.Serializable {
     public enum Fields {
     }
     
+    public static final <T> fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Void>, java.lang.Void> foreach() { return new fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Void>, java.lang.Void>() {
+        public java.lang.Void apply(T[] elements, fi.solita.utils.functional.Apply<? super T,java.lang.Void> procedure) {
+            fi.solita.utils.functional.Functional.<T>foreach(elements, procedure);
+            return null;
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Void>, java.lang.Void> foreach1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Void>, java.lang.Void>() {
+        public java.lang.Void apply(java.lang.Iterable<T> elements, fi.solita.utils.functional.Apply<? super T,java.lang.Void> procedure) {
+            fi.solita.utils.functional.Functional.<T>foreach(elements, procedure);
+            return null;
+        }
+    };
+    }
+    
     public static final <S, T> fi.solita.utils.functional.Function2<S[], fi.solita.utils.functional.Apply<? super S,? extends java.lang.Iterable<T>>, java.lang.Iterable<T>> flatMap() { return new fi.solita.utils.functional.Function2<S[], fi.solita.utils.functional.Apply<? super S,? extends java.lang.Iterable<T>>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(S[] elements, fi.solita.utils.functional.Apply<? super S,? extends java.lang.Iterable<T>> transformer) {
             return fi.solita.utils.functional.Functional.<S, T>flatMap(elements, transformer);
@@ -21,14 +37,28 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> sort() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
+    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>> sort() { return new fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>sort(elements);
+        }
+    };
+    }
+    
+    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> sort1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>sort(elements);
         }
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Comparator<? super T>, java.lang.Iterable<T>> sort1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Comparator<? super T>, java.lang.Iterable<T>>() {
+    public static final <T> fi.solita.utils.functional.Function2<T[], java.util.Comparator<? super T>, java.lang.Iterable<T>> sort2() { return new fi.solita.utils.functional.Function2<T[], java.util.Comparator<? super T>, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements, java.util.Comparator<? super T> comparator) {
+            return fi.solita.utils.functional.Functional.<T>sort(elements, comparator);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Comparator<? super T>, java.lang.Iterable<T>> sort3() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Comparator<? super T>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, java.util.Comparator<? super T> comparator) {
             return fi.solita.utils.functional.Functional.<T>sort(elements, comparator);
         }
@@ -47,7 +77,20 @@ public final class Functional_ implements java.io.Serializable {
         }
     };
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T> last() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T>() {
+    public static final  fi.solita.utils.functional.Function2<java.lang.String, java.lang.String[], java.lang.String> mkString2 = new fi.solita.utils.functional.Function2<java.lang.String, java.lang.String[], java.lang.String>() {
+        public java.lang.String apply(java.lang.String delim, java.lang.String[] elements) {
+            return fi.solita.utils.functional.Functional.mkString(delim, elements);
+        }
+    };
+    
+    public static final <T> fi.solita.utils.functional.Function1<T[], T> last() { return new fi.solita.utils.functional.Function1<T[], T>() {
+        public T apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>last(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T> last1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T>() {
         public T apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>last(elements);
         }
@@ -56,26 +99,33 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final  fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Iterable<java.lang.Integer>> range = new fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Iterable<java.lang.Integer>>() {
         public java.lang.Iterable<java.lang.Integer> apply(java.lang.Integer from) {
-            return fi.solita.utils.functional.Functional.range(from);
+            return fi.solita.utils.functional.Functional.range((int)from);
         }
     };
     
     public static final  fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Iterable<java.lang.Integer>> range1 = new fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Iterable<java.lang.Integer>>() {
         public java.lang.Iterable<java.lang.Integer> apply(java.lang.Integer from, java.lang.Integer toInclusive) {
-            return fi.solita.utils.functional.Functional.range(from, toInclusive);
+            return fi.solita.utils.functional.Functional.range((int)from, (int)toInclusive);
         }
     };
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>> drop() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>>() {
+    public static final <T> fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<T>> drop() { return new fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements, java.lang.Integer amount) {
+            return fi.solita.utils.functional.Functional.<T>drop(elements, (int)amount);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>> drop1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, java.lang.Integer amount) {
-            return fi.solita.utils.functional.Functional.<T>drop(elements, amount);
+            return fi.solita.utils.functional.Functional.<T>drop(elements, (int)amount);
         }
     };
     }
     
     public static final  fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Long> sum = new fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1) {
-            return fi.solita.utils.functional.Functional.sum(e1);
+            return fi.solita.utils.functional.Functional.sum((int)e1);
         }
     };
     
@@ -87,19 +137,19 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final  fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Long> sum2 = new fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2) {
-            return fi.solita.utils.functional.Functional.sum(e1, e2);
+            return fi.solita.utils.functional.Functional.sum((int)e1, (int)e2);
         }
     };
     
     public static final  fi.solita.utils.functional.Function3<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Long> sum3 = new fi.solita.utils.functional.Function3<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2, java.lang.Integer e3) {
-            return fi.solita.utils.functional.Functional.sum(e1, e2, e3);
+            return fi.solita.utils.functional.Functional.sum((int)e1, (int)e2, (int)e3);
         }
     };
     
     public static final  fi.solita.utils.functional.Function4<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer[], java.lang.Long> sum4 = new fi.solita.utils.functional.Function4<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer[], java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2, java.lang.Integer e3, java.lang.Integer[] rest) {
-            return fi.solita.utils.functional.Functional.sum(e1, e2, e3, rest);
+            return fi.solita.utils.functional.Functional.sum((int)e1, (int)e2, (int)e3, rest);
         }
     };
     
@@ -126,7 +176,21 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final <T> fi.solita.utils.functional.Function2<T, java.lang.Integer, java.lang.Iterable<T>> repeat1() { return new fi.solita.utils.functional.Function2<T, java.lang.Integer, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(T value, java.lang.Integer amount) {
-            return fi.solita.utils.functional.Functional.<T>repeat(value, amount);
+            return fi.solita.utils.functional.Functional.<T>repeat(value, (int)amount);
+        }
+    };
+    }
+    
+    public static final <A> fi.solita.utils.functional.Function1<A[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>>> zipWithIndex() { return new fi.solita.utils.functional.Function1<A[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>> apply(A[] a) {
+            return fi.solita.utils.functional.Functional.<A>zipWithIndex(a);
+        }
+    };
+    }
+    
+    public static final <A> fi.solita.utils.functional.Function1<java.lang.Iterable<A>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>>> zipWithIndex1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<A>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<java.lang.Integer,A>> apply(java.lang.Iterable<A> a) {
+            return fi.solita.utils.functional.Functional.<A>zipWithIndex(a);
         }
     };
     }
@@ -164,14 +228,28 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>> headOption() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>>() {
+    public static final <T> fi.solita.utils.functional.Function1<T[], fi.solita.utils.functional.Option<T>> headOption() { return new fi.solita.utils.functional.Function1<T[], fi.solita.utils.functional.Option<T>>() {
+        public fi.solita.utils.functional.Option<T> apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>headOption(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>> headOption1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>>() {
         public fi.solita.utils.functional.Option<T> apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>headOption(elements);
         }
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> takeWhile() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
+    public static final <T> fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> takeWhile() { return new fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean> predicate) {
+            return fi.solita.utils.functional.Functional.<T>takeWhile(elements, predicate);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> takeWhile1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean> predicate) {
             return fi.solita.utils.functional.Functional.<T>takeWhile(elements, predicate);
         }
@@ -180,14 +258,14 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final <T> fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<java.util.List<T>>> grouped() { return new fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<java.util.List<T>>>() {
         public java.lang.Iterable<java.util.List<T>> apply(T[] elements, java.lang.Integer size) {
-            return fi.solita.utils.functional.Functional.<T>grouped(elements, size);
+            return fi.solita.utils.functional.Functional.<T>grouped(elements, (int)size);
         }
     };
     }
     
     public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<java.util.List<T>>> grouped1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<java.util.List<T>>>() {
         public java.lang.Iterable<java.util.List<T>> apply(java.lang.Iterable<T> elements, java.lang.Integer size) {
-            return fi.solita.utils.functional.Functional.<T>grouped(elements, size);
+            return fi.solita.utils.functional.Functional.<T>grouped(elements, (int)size);
         }
     };
     }
@@ -227,7 +305,14 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T> head() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T>() {
+    public static final <T> fi.solita.utils.functional.Function1<T[], T> head() { return new fi.solita.utils.functional.Function1<T[], T>() {
+        public T apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>head(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T> head1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, T>() {
         public T apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>head(elements);
         }
@@ -290,7 +375,98 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> dropWhile() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
+    public static final <A, B> fi.solita.utils.functional.Function2<A[], B[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>> zip() { return new fi.solita.utils.functional.Function2<A[], B[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>> apply(A[] a, B[] b) {
+            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
+        }
+    };
+    }
+    
+    public static final <A, B> fi.solita.utils.functional.Function2<A[], java.lang.Iterable<B>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>> zip1() { return new fi.solita.utils.functional.Function2<A[], java.lang.Iterable<B>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>> apply(A[] a, java.lang.Iterable<B> b) {
+            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
+        }
+    };
+    }
+    
+    public static final <A, B> fi.solita.utils.functional.Function2<java.lang.Iterable<A>, B[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>> zip2() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<A>, B[], java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>> apply(java.lang.Iterable<A> a, B[] b) {
+            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
+        }
+    };
+    }
+    
+    public static final <A, B> fi.solita.utils.functional.Function2<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>> zip3() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple2<A,B>> apply(java.lang.Iterable<A> a, java.lang.Iterable<B> b) {
+            return fi.solita.utils.functional.Functional.<A, B>zip(a, b);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<A[], B[], C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip4() { return new fi.solita.utils.functional.Function3<A[], B[], C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(A[] a, B[] b, C[] c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<A[], B[], java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip5() { return new fi.solita.utils.functional.Function3<A[], B[], java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(A[] a, B[] b, java.lang.Iterable<C> c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<A[], java.lang.Iterable<B>, C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip6() { return new fi.solita.utils.functional.Function3<A[], java.lang.Iterable<B>, C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(A[] a, java.lang.Iterable<B> b, C[] c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<A[], java.lang.Iterable<B>, java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip7() { return new fi.solita.utils.functional.Function3<A[], java.lang.Iterable<B>, java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(A[] a, java.lang.Iterable<B> b, java.lang.Iterable<C> c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<java.lang.Iterable<A>, B[], C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip8() { return new fi.solita.utils.functional.Function3<java.lang.Iterable<A>, B[], C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(java.lang.Iterable<A> a, B[] b, C[] c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<java.lang.Iterable<A>, B[], java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip9() { return new fi.solita.utils.functional.Function3<java.lang.Iterable<A>, B[], java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(java.lang.Iterable<A> a, B[] b, java.lang.Iterable<C> c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<java.lang.Iterable<A>, java.lang.Iterable<B>, C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip10() { return new fi.solita.utils.functional.Function3<java.lang.Iterable<A>, java.lang.Iterable<B>, C[], java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(java.lang.Iterable<A> a, java.lang.Iterable<B> b, C[] c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <A, B, C> fi.solita.utils.functional.Function3<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>> zip11() { return new fi.solita.utils.functional.Function3<java.lang.Iterable<A>, java.lang.Iterable<B>, java.lang.Iterable<C>, java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>>>() {
+        public java.lang.Iterable<fi.solita.utils.functional.Tuple3<A,B,C>> apply(java.lang.Iterable<A> a, java.lang.Iterable<B> b, java.lang.Iterable<C> c) {
+            return fi.solita.utils.functional.Functional.<A, B, C>zip(a, b, c);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> dropWhile() { return new fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean> predicate) {
+            return fi.solita.utils.functional.Functional.<T>dropWhile(elements, predicate);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>> dropWhile1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, fi.solita.utils.functional.Apply<? super T,java.lang.Boolean> predicate) {
             return fi.solita.utils.functional.Functional.<T>dropWhile(elements, predicate);
         }
@@ -318,14 +494,28 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>> lastOption() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>>() {
+    public static final <T> fi.solita.utils.functional.Function1<T[], fi.solita.utils.functional.Option<T>> lastOption() { return new fi.solita.utils.functional.Function1<T[], fi.solita.utils.functional.Option<T>>() {
+        public fi.solita.utils.functional.Option<T> apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>lastOption(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>> lastOption1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, fi.solita.utils.functional.Option<T>>() {
         public fi.solita.utils.functional.Option<T> apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>lastOption(elements);
         }
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> init() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
+    public static final <T> fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>> init() { return new fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>init(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> init1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>init(elements);
         }
@@ -395,7 +585,14 @@ public final class Functional_ implements java.io.Serializable {
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> tail() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
+    public static final <T> fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>> tail() { return new fi.solita.utils.functional.Function1<T[], java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements) {
+            return fi.solita.utils.functional.Functional.<T>tail(elements);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>> tail1() { return new fi.solita.utils.functional.Function1<java.lang.Iterable<T>, java.lang.Iterable<T>>() {
         public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements) {
             return fi.solita.utils.functional.Functional.<T>tail(elements);
         }
@@ -471,7 +668,14 @@ public final class Functional_ implements java.io.Serializable {
         }
     };
     
-    public static final <G, T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>> groupBy() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>>() {
+    public static final <G, T> fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>> groupBy() { return new fi.solita.utils.functional.Function2<T[], fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>>() {
+        public java.util.Map<G,java.util.List<T>> apply(T[] elements, fi.solita.utils.functional.Apply<? super T,G> f) {
+            return fi.solita.utils.functional.Functional.<G, T>groupBy(elements, f);
+        }
+    };
+    }
+    
+    public static final <G, T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>> groupBy1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, fi.solita.utils.functional.Apply<? super T,G>, java.util.Map<G,java.util.List<T>>>() {
         public java.util.Map<G,java.util.List<T>> apply(java.lang.Iterable<T> elements, fi.solita.utils.functional.Apply<? super T,G> f) {
             return fi.solita.utils.functional.Functional.<G, T>groupBy(elements, f);
         }
@@ -480,7 +684,7 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final  fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Long> product = new fi.solita.utils.functional.Function1<java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1) {
-            return fi.solita.utils.functional.Functional.product(e1);
+            return fi.solita.utils.functional.Functional.product((int)e1);
         }
     };
     
@@ -492,32 +696,46 @@ public final class Functional_ implements java.io.Serializable {
     
     public static final  fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Long> product2 = new fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2) {
-            return fi.solita.utils.functional.Functional.product(e1, e2);
+            return fi.solita.utils.functional.Functional.product((int)e1, (int)e2);
         }
     };
     
     public static final  fi.solita.utils.functional.Function3<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Long> product3 = new fi.solita.utils.functional.Function3<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2, java.lang.Integer e3) {
-            return fi.solita.utils.functional.Functional.product(e1, e2, e3);
+            return fi.solita.utils.functional.Functional.product((int)e1, (int)e2, (int)e3);
         }
     };
     
     public static final  fi.solita.utils.functional.Function4<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer[], java.lang.Long> product4 = new fi.solita.utils.functional.Function4<java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer[], java.lang.Long>() {
         public java.lang.Long apply(java.lang.Integer e1, java.lang.Integer e2, java.lang.Integer e3, java.lang.Integer[] rest) {
-            return fi.solita.utils.functional.Functional.product(e1, e2, e3, rest);
+            return fi.solita.utils.functional.Functional.product((int)e1, (int)e2, (int)e3, rest);
         }
     };
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Collection<T>, java.lang.Iterable<T>> subtract() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Collection<T>, java.lang.Iterable<T>>() {
-        public java.lang.Iterable<T> apply(java.lang.Iterable<T> a, java.util.Collection<T> b) {
+    public static final <T> fi.solita.utils.functional.Function2<T[], T[], java.lang.Iterable<T>> subtract() { return new fi.solita.utils.functional.Function2<T[], T[], java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] a, T[] b) {
             return fi.solita.utils.functional.Functional.<T>subtract(a, b);
         }
     };
     }
     
-    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>> take() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>>() {
-        public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, java.lang.Integer amount) {
-            return fi.solita.utils.functional.Functional.<T>take(elements, amount);
+    public static final <T> fi.solita.utils.functional.Function2<T[], java.util.Collection<T>, java.lang.Iterable<T>> subtract1() { return new fi.solita.utils.functional.Function2<T[], java.util.Collection<T>, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] a, java.util.Collection<T> b) {
+            return fi.solita.utils.functional.Functional.<T>subtract(a, b);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, T[], java.lang.Iterable<T>> subtract2() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, T[], java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(java.lang.Iterable<T> a, T[] b) {
+            return fi.solita.utils.functional.Functional.<T>subtract(a, b);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Collection<T>, java.lang.Iterable<T>> subtract3() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.util.Collection<T>, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(java.lang.Iterable<T> a, java.util.Collection<T> b) {
+            return fi.solita.utils.functional.Functional.<T>subtract(a, b);
         }
     };
     }
@@ -525,6 +743,20 @@ public final class Functional_ implements java.io.Serializable {
     public static final <T, R> fi.solita.utils.functional.Function2<java.lang.Iterable<? extends fi.solita.utils.functional.Apply<? super T,? extends R>>, T, java.lang.Iterable<R>> sequence() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<? extends fi.solita.utils.functional.Apply<? super T,? extends R>>, T, java.lang.Iterable<R>>() {
         public java.lang.Iterable<R> apply(java.lang.Iterable<? extends fi.solita.utils.functional.Apply<? super T,? extends R>> elements, T t) {
             return fi.solita.utils.functional.Functional.<T, R>sequence(elements, t);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<T>> take() { return new fi.solita.utils.functional.Function2<T[], java.lang.Integer, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(T[] elements, java.lang.Integer amount) {
+            return fi.solita.utils.functional.Functional.<T>take(elements, (int)amount);
+        }
+    };
+    }
+    
+    public static final <T> fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>> take1() { return new fi.solita.utils.functional.Function2<java.lang.Iterable<T>, java.lang.Integer, java.lang.Iterable<T>>() {
+        public java.lang.Iterable<T> apply(java.lang.Iterable<T> elements, java.lang.Integer amount) {
+            return fi.solita.utils.functional.Functional.<T>take(elements, (int)amount);
         }
     };
     }

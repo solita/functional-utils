@@ -133,7 +133,7 @@ public final class Collections_ implements java.io.Serializable {
     
     public static final <T> fi.solita.utils.functional.Function1<java.lang.Integer, java.util.List<T>> newListOfSize() { return new fi.solita.utils.functional.Function1<java.lang.Integer, java.util.List<T>>() {
         public java.util.List<T> apply(java.lang.Integer initialSize) {
-            return fi.solita.utils.functional.Collections.<T>newListOfSize(initialSize);
+            return fi.solita.utils.functional.Collections.<T>newListOfSize((int)initialSize);
         }
     };
     }
@@ -285,7 +285,7 @@ public final class Collections_ implements java.io.Serializable {
     
     public static final <T> fi.solita.utils.functional.Function1<java.lang.Integer, java.util.Set<T>> newSetOfSize() { return new fi.solita.utils.functional.Function1<java.lang.Integer, java.util.Set<T>>() {
         public java.util.Set<T> apply(java.lang.Integer initialSize) {
-            return fi.solita.utils.functional.Collections.<T>newSetOfSize(initialSize);
+            return fi.solita.utils.functional.Collections.<T>newSetOfSize((int)initialSize);
         }
     };
     }
@@ -299,7 +299,7 @@ public final class Collections_ implements java.io.Serializable {
     
     public static final <K, V> fi.solita.utils.functional.Function1<java.lang.Integer, java.util.Map<K,V>> newMapOfSize() { return new fi.solita.utils.functional.Function1<java.lang.Integer, java.util.Map<K,V>>() {
         public java.util.Map<K,V> apply(java.lang.Integer initialSize) {
-            return fi.solita.utils.functional.Collections.<K, V>newMapOfSize(initialSize);
+            return fi.solita.utils.functional.Collections.<K, V>newMapOfSize((int)initialSize);
         }
     };
     }

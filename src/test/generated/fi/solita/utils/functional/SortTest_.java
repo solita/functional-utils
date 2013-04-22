@@ -74,7 +74,7 @@ public final class SortTest_ implements java.io.Serializable {
     
     public static final  fi.solita.utils.codegen.DefaultMeta.DefaultMethodMeta_<fi.solita.utils.functional.SortTest, fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Void>>  runSortOnce = new fi.solita.utils.codegen.DefaultMeta.DefaultMethodMeta_<fi.solita.utils.functional.SortTest, fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Void>> () { protected fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Void> $do(final fi.solita.utils.functional.SortTest $self) { return new fi.solita.utils.functional.Function2<java.lang.Integer, java.lang.Integer, java.lang.Void>() {
         public java.lang.Void apply(java.lang.Integer size, java.lang.Integer firstToTake) {
-            $self.runSortOnce(size, firstToTake);
+            $self.runSortOnce((int)size, (int)firstToTake);
             return null;
         }
         };}

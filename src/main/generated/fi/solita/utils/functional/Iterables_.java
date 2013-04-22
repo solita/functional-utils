@@ -105,7 +105,7 @@ public final class Iterables_ implements java.io.Serializable {
         
         public static final  fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F1<java.lang.Integer, fi.solita.utils.functional.Iterables.RangeIterable> $ = new fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F1<java.lang.Integer, fi.solita.utils.functional.Iterables.RangeIterable>() {
             public fi.solita.utils.functional.Iterables.RangeIterable apply(java.lang.Integer from) {
-                return new fi.solita.utils.functional.Iterables.RangeIterable(from);
+                return new fi.solita.utils.functional.Iterables.RangeIterable((int)from);
             }
         
             private transient java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.RangeIterable> $r;
@@ -135,7 +135,7 @@ public final class Iterables_ implements java.io.Serializable {
         
         public static final  fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Integer, java.lang.Integer, fi.solita.utils.functional.Iterables.RangeIterable> $1 = new fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Integer, java.lang.Integer, fi.solita.utils.functional.Iterables.RangeIterable>() {
             public fi.solita.utils.functional.Iterables.RangeIterable apply(java.lang.Integer from, java.lang.Integer toInclusive) {
-                return new fi.solita.utils.functional.Iterables.RangeIterable(from, toInclusive);
+                return new fi.solita.utils.functional.Iterables.RangeIterable((int)from, (int)toInclusive);
             }
         
             private transient java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.RangeIterable> $r;
@@ -302,7 +302,7 @@ public final class Iterables_ implements java.io.Serializable {
         
         public static final <T> fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<T, java.lang.Integer, fi.solita.utils.functional.Iterables.RepeatingIterable<T>> $1() { return new fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<T, java.lang.Integer, fi.solita.utils.functional.Iterables.RepeatingIterable<T>>() {
             public fi.solita.utils.functional.Iterables.RepeatingIterable<T> apply(T value, java.lang.Integer amount) {
-                return new fi.solita.utils.functional.Iterables.RepeatingIterable<T>(value, amount);
+                return new fi.solita.utils.functional.Iterables.RepeatingIterable<T>(value, (int)amount);
             }
         
             private transient java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.RepeatingIterable<T>> $r;
@@ -487,6 +487,13 @@ public final class Iterables_ implements java.io.Serializable {
                 return $getMember();
             }
         
+        };
+        }
+        
+        public static final <A, B> fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<A, B>, java.util.Iterator<fi.solita.utils.functional.Tuple2<A,B>>> iterator() { return new fi.solita.utils.functional.Function1<fi.solita.utils.functional.Iterables.ZippingIterable<A, B>, java.util.Iterator<fi.solita.utils.functional.Tuple2<A,B>>>() {
+            public java.util.Iterator<fi.solita.utils.functional.Tuple2<A,B>> apply(fi.solita.utils.functional.Iterables.ZippingIterable<A, B> $self) {
+                return $self.iterator();
+            }
         };
         }
         
@@ -1299,7 +1306,7 @@ public final class Iterables_ implements java.io.Serializable {
         
         public static final <T> fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Iterable<T>, java.lang.Integer, fi.solita.utils.functional.Iterables.TakingIterable<T>> $() { return new fi.solita.utils.codegen.DefaultMeta.DefaultConstructorMeta_.F2<java.lang.Iterable<T>, java.lang.Integer, fi.solita.utils.functional.Iterables.TakingIterable<T>>() {
             public fi.solita.utils.functional.Iterables.TakingIterable<T> apply(java.lang.Iterable<T> elements, java.lang.Integer amount) {
-                return new fi.solita.utils.functional.Iterables.TakingIterable<T>(elements, amount);
+                return new fi.solita.utils.functional.Iterables.TakingIterable<T>(elements, (int)amount);
             }
         
             private transient java.lang.reflect.Constructor<fi.solita.utils.functional.Iterables.TakingIterable<T>> $r;
