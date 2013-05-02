@@ -35,9 +35,9 @@ public final class Compare_ implements java.io.Serializable {
     };
     }
     
-    public static final <S extends java.lang.Comparable<S>, T extends java.lang.Iterable<S>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>> byIterable() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>>() {
-        public fi.solita.utils.functional.Ordering<T> apply() {
-            return fi.solita.utils.functional.Compare.<S, T>byIterable();
+    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<java.lang.Iterable<T>>> byIterable() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<java.lang.Iterable<T>>>() {
+        public fi.solita.utils.functional.Ordering<java.lang.Iterable<T>> apply() {
+            return fi.solita.utils.functional.Compare.<T>byIterable();
         }
     };
     }
@@ -59,6 +59,13 @@ public final class Compare_ implements java.io.Serializable {
     public static final <T, S> fi.solita.utils.functional.Function2<fi.solita.utils.functional.Function1<? super S,T>, java.util.Comparator<? super T>, fi.solita.utils.functional.Ordering<S>> by1() { return new fi.solita.utils.functional.Function2<fi.solita.utils.functional.Function1<? super S,T>, java.util.Comparator<? super T>, fi.solita.utils.functional.Ordering<S>>() {
         public fi.solita.utils.functional.Ordering<S> apply(fi.solita.utils.functional.Function1<? super S,T> f, java.util.Comparator<? super T> c) {
             return fi.solita.utils.functional.Compare.<T, S>by(f, c);
+        }
+    };
+    }
+    
+    public static final <T extends java.lang.Comparable<?>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>> byNatural() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>>() {
+        public fi.solita.utils.functional.Ordering<T> apply() {
+            return fi.solita.utils.functional.Compare.<T>byNatural();
         }
     };
     }
