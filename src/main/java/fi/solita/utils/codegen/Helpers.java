@@ -80,30 +80,32 @@ public abstract class Helpers {
     public static Transformer<TypeParameterElement,String> typeParameter2String = new Transformer<TypeParameterElement,String>() {
         @Override
         public String transform(TypeParameterElement source) {
-            String bound = mkString(" & ", map(source.getBounds(), new Transformer<TypeMirror,String>() {
-                @Override
-                public String transform(TypeMirror source) {
-                    String type = typeMirror2QualifiedName.apply(source);
-                    List<? extends TypeMirror> params = source.accept(new SimpleTypeVisitor6<List<? extends TypeMirror>, Object>() {
-                        @Override
-                        public List<? extends TypeMirror> visitDeclared(DeclaredType t, Object p) {
-                            return t.getTypeArguments();
-                        }
-                    }, null);
-                    
-                    if (params == null) {
-                        return type;
-                    } else {
-                        List<String> p = newList(filter(map(params, this), not(empty)));
-                        if (p.isEmpty()) {
-                            return type;
-                        } else {
-                            return type + "<" + mkString(", ", p) + ">";
-                        }
-                    }
-                }
-            }));
+            String bound = mkString(" & ", map(source.getBounds(), typeMirror2GenericQualifiedName));
             return source.getSimpleName().toString() + (bound.equals(Object.class.getName()) ? "" : " extends " + bound);
+        }
+    };
+    
+    public static Function1<TypeMirror, String> typeMirror2GenericQualifiedName = new Transformer<TypeMirror,String>() {
+        @Override
+        public String transform(TypeMirror source) {
+            String type = typeMirror2QualifiedName.apply(source);
+            List<? extends TypeMirror> params = source.accept(new SimpleTypeVisitor6<List<? extends TypeMirror>, Object>() {
+                @Override
+                public List<? extends TypeMirror> visitDeclared(DeclaredType t, Object p) {
+                    return t.getTypeArguments();
+                }
+            }, null);
+            
+            if (params == null) {
+                return type;
+            } else {
+                List<String> p = newList(filter(map(params, this), not(empty)));
+                if (p.isEmpty()) {
+                    return type;
+                } else {
+                    return type + "<" + mkString(", ", p) + ">";
+                }
+            }
         }
     };
     
@@ -121,8 +123,8 @@ public abstract class Helpers {
                 }
                 @Override
                 public String visitWildcard(WildcardType t, Object p) {
-                    String ext = t.getExtendsBound() != null ? transform(t.getExtendsBound()) : Object.class.getName();
-                    String sup = t.getSuperBound() != null ? transform(t.getSuperBound()) : Object.class.getName();
+                    String ext = t.getExtendsBound() != null ? typeMirror2GenericQualifiedName.apply(t.getExtendsBound()) : Object.class.getName();
+                    String sup = t.getSuperBound() != null ? typeMirror2GenericQualifiedName.apply(t.getSuperBound()) : Object.class.getName();
                     return !ext.equals(Object.class.getName()) ? "? extends " + ext : !sup.equals(Object.class.getName()) ? "? super " + sup : "?";
                 }
             }, null);

@@ -63,5 +63,12 @@ public final class Compare_ implements java.io.Serializable {
     };
     }
     
+    public static final <T extends java.lang.Comparable<?>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>> byNatural() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>>() {
+        public fi.solita.utils.functional.Ordering<T> apply() {
+            return fi.solita.utils.functional.Compare.<T>byNatural();
+        }
+    };
+    }
+    
 
 }
