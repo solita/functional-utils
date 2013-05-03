@@ -5,8 +5,8 @@ import java.util.Iterator;
 
 public abstract class Compare {
     
-    public static final <S extends Comparable<S>, T extends Iterable<S>> Ordering<T> byIterable() {
-        return byIterable(Ordering.<S>Natural());
+    public static final <T extends Comparable<T>> Ordering<Iterable<T>> byIterable() {
+        return byIterable(Ordering.<T>Natural());
     }
     
     public static final <S, T extends Iterable<? extends S>> Ordering<T> byIterable(final Comparator<S> c) {

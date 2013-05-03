@@ -35,9 +35,9 @@ public final class Compare_ implements java.io.Serializable {
     };
     }
     
-    public static final <S extends java.lang.Comparable<S>, T extends java.lang.Iterable<S>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>> byIterable() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<T>>() {
-        public fi.solita.utils.functional.Ordering<T> apply() {
-            return fi.solita.utils.functional.Compare.<S, T>byIterable();
+    public static final <T extends java.lang.Comparable<T>> fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<java.lang.Iterable<T>>> byIterable() { return new fi.solita.utils.functional.Function0<fi.solita.utils.functional.Ordering<java.lang.Iterable<T>>>() {
+        public fi.solita.utils.functional.Ordering<java.lang.Iterable<T>> apply() {
+            return fi.solita.utils.functional.Compare.<T>byIterable();
         }
     };
     }
