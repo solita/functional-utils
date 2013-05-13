@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.FilerException;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
@@ -49,11 +50,11 @@ import fi.solita.utils.functional.Predicates;
 @SupportedOptions({CommonMetadataProcessor.Options.generatedClassNamePattern, CommonMetadataProcessor.Options.includesRegex, CommonMetadataProcessor.Options.excludesRegex, CommonMetadataProcessor.Options.onlyPublicMembers})
 public class CommonMetadataProcessor extends AbstractProcessor {
 
-    static class Options {
-        static final String generatedClassNamePattern = "generatedClassNamePattern";
-        static final String includesRegex = "includesRegex";
-        static final String excludesRegex = "excludesRegex";
-        static final String onlyPublicMembers = "onlyPublicMembers";
+    protected static class Options {
+        public static final String generatedClassNamePattern = "generatedClassNamePattern";
+        public static final String includesRegex = "includesRegex";
+        public static final String excludesRegex = "excludesRegex";
+        public static final String onlyPublicMembers = "onlyPublicMembers";
     }
     
     public Map<String, String> options() { return processingEnv.getOptions(); }
@@ -69,9 +70,9 @@ public class CommonMetadataProcessor extends AbstractProcessor {
                                                            simpleName.andThen(not(equalTo("package-info")))); }
 
     public GeneratorOptions generatorOptions = new GeneratorOptions() {
-    	  public boolean onlyPublicMembers() {
-    	  	  return options().containsKey(Options.onlyPublicMembers);
-    	  };
+          public boolean onlyPublicMembers() {
+                return options().containsKey(Options.onlyPublicMembers);
+          };
     };
     
     public List<Function1<TypeElement,Iterable<String>>> generators() {
@@ -91,7 +92,17 @@ public class CommonMetadataProcessor extends AbstractProcessor {
             Iterable<String> nestedData = flatMap(filter(element2NestedClasses.apply(element), predicate), Content.withNestedClasses.curried().apply(generatedClassNamePattern()).apply(predicate).apply(generators));
             List<String> content = newList(map(concat(elemData, map(nestedData, prepend("    "))), prepend("    ")));
             if (!isEmpty(content)) {
-                ClassFileWriter.writeClassFile(getPackageName(element), generatedClassNamePattern().replace("{}", element.getSimpleName().toString()), content, getClass(), processingEnv.getFiler());
+                String genClassName = generatedClassNamePattern().replace("{}", element.getSimpleName().toString());
+                try {
+                    ClassFileWriter.writeClassFile(getPackageName(element), genClassName, content, getClass(), processingEnv.getFiler());
+                } catch (RuntimeException e) {
+                    // if file already exists, try appending an underscore
+                    if (e.getCause() instanceof FilerException) {
+                        ClassFileWriter.writeClassFile(getPackageName(element), genClassName + "_", content, getClass(), processingEnv.getFiler());
+                    } else {
+                        throw e;
+                    }
+                }
             }
         }
         return false;
@@ -175,10 +186,9 @@ public class CommonMetadataProcessor extends AbstractProcessor {
         public boolean generateMemberAccessorForConstructors() {
             return true;
         }
-				@Override
-				public boolean onlyPublicMembers() {
-					  return false;
-				}
-        
+        @Override
+        public boolean onlyPublicMembers() {
+              return false;
+        }
     }
 }
