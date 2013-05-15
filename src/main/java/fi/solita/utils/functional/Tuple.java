@@ -128,7 +128,7 @@ public abstract class Tuple {
     private static Predicate<Object> isSerializable = new Predicate<Object>() {
         @Override
         public boolean accept(Object candidate) {
-            return candidate instanceof Serializable || candidate.getClass().isPrimitive();
+            return candidate instanceof Serializable || candidate != null && candidate.getClass().isPrimitive();
         }
     };
     
