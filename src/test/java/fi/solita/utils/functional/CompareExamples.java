@@ -8,6 +8,7 @@ import fi.solita.utils.functional.Tuple._1;
 import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Collections.newList;
 
+@SuppressWarnings("unused")
 public class CompareExamples {
   
     static class Employee {

@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.forAll;
 import static fi.solita.utils.functional.Functional.map;
@@ -18,7 +19,7 @@ import java.util.Map;
 public abstract class Tuple {
     
     public static <T> List<T> asList(Tuple0 tuple) {
-        return newList();
+        return emptyList();
     }
     
     public static <T> List<T> asList(Tuple1<T> tuple) {
