@@ -312,91 +312,91 @@ public abstract class Tuple {
         return new Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22);
     }
     
-    public interface _1<T> {
+    public static interface _1<T> {
         T get_1();
     }
     
-    public interface _2<T> {
+    public static interface _2<T> {
         T get_2();
     }
     
-    public interface _3<T> {
+    public static interface _3<T> {
         T get_3();
     }
     
-    public interface _4<T> {
+    public static interface _4<T> {
         T get_4();
     }
     
-    public interface _5<T> {
+    public static interface _5<T> {
         T get_5();
     }
     
-    public interface _6<T> {
+    public static interface _6<T> {
         T get_6();
     }
     
-    public interface _7<T> {
+    public static interface _7<T> {
         T get_7();
     }
     
-    public interface _8<T> {
+    public static interface _8<T> {
         T get_8();
     }
     
-    public interface _9<T> {
+    public static interface _9<T> {
         T get_9();
     }
     
-    public interface _10<T> {
+    public static interface _10<T> {
         T get_10();
     }
     
-    public interface _11<T> {
+    public static interface _11<T> {
         T get_11();
     }
     
-    public interface _12<T> {
+    public static interface _12<T> {
         T get_12();
     }
     
-    public interface _13<T> {
+    public static interface _13<T> {
         T get_13();
     }
     
-    public interface _14<T> {
+    public static interface _14<T> {
         T get_14();
     }
     
-    public interface _15<T> {
+    public static interface _15<T> {
         T get_15();
     }
     
-    public interface _16<T> {
+    public static interface _16<T> {
         T get_16();
     }
     
-    public interface _17<T> {
+    public static interface _17<T> {
         T get_17();
     }
     
-    public interface _18<T> {
+    public static interface _18<T> {
         T get_18();
     }
     
-    public interface _19<T> {
+    public static interface _19<T> {
         T get_19();
     }
     
-    public interface _20<T> {
+    public static interface _20<T> {
         T get_20();
     }
     
-    public interface _21<T> {
+    public static interface _21<T> {
         T get_21();
     }
     
-    public interface _22<T> {
+    public static interface _22<T> {
         T get_22();
     }
 

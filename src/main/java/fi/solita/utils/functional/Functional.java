@@ -89,7 +89,7 @@ public abstract class Functional {
         return flatMap(Arrays.asList(elements), transformer);
     }
 
-    public static <S, T> Iterable<T> flatMap(Iterable<S> elements, Apply<? super S, ? extends Iterable<T>> transformer) {
+    public static <S, T> Iterable<T> flatMap(Iterable<S> elements, Apply<? super S, ? extends Iterable<? extends T>> transformer) {
         return flatten(map(elements, transformer));
     }
 

@@ -1,10 +1,11 @@
 package fi.solita.utils.codegen;
 
-import static fi.solita.utils.codegen.Helpers.*;
+import static fi.solita.utils.codegen.Helpers.element2NestedClasses;
+import static fi.solita.utils.codegen.Helpers.getPackageName;
+import static fi.solita.utils.codegen.Helpers.nonGeneratedElements;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.simpleName;
-import static fi.solita.utils.codegen.Helpers.elementsMarkedToBeSkipped;
-import static fi.solita.utils.codegen.Helpers.nonGeneratedElements;
+import static fi.solita.utils.codegen.Helpers.withAnnotation;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
@@ -47,39 +48,58 @@ import fi.solita.utils.functional.Predicates;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({CommonMetadataProcessor.Options.generatedClassNamePattern, CommonMetadataProcessor.Options.includesRegex, CommonMetadataProcessor.Options.excludesRegex, CommonMetadataProcessor.Options.onlyPublicMembers})
+@SupportedOptions({"CommonMetadataProcessor." + CommonMetadataProcessor.Options.generatedClassNamePattern,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.includesRegex,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.excludesRegex,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.onlyPublicMembers,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.includesAnnotation,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.excludesAnnotation})
 public class CommonMetadataProcessor extends AbstractProcessor {
 
-    protected static class Options {
+    public static class Options {
         public static final String generatedClassNamePattern = "generatedClassNamePattern";
         public static final String includesRegex = "includesRegex";
         public static final String excludesRegex = "excludesRegex";
         public static final String onlyPublicMembers = "onlyPublicMembers";
+        public static final String includesAnnotation = "includesAnnotation";
+        public static final String excludesAnnotation = "excludesAnnotation";
     }
     
     public Map<String, String> options() { return processingEnv.getOptions(); }
-    public Pattern includesPattern() { return Pattern.compile(find(options(), Options.includesRegex).getOrElse(".*")); }
-    public Pattern excludesPattern() { return Pattern.compile(find(options(), Options.excludesRegex).getOrElse("")); }
-    public String generatedClassNamePattern() { return find(options(), Options.generatedClassNamePattern).getOrElse("{}_"); }
+    public Pattern includesRegex() { return Pattern.compile(find(options(), getClass().getSimpleName() + "." + Options.includesRegex).getOrElse(".*")); }
+    public Pattern excludesRegex() { return Pattern.compile(find(options(), getClass().getSimpleName() + "." + Options.excludesRegex).getOrElse("")); }
+    public boolean onlyPublicMembers() { return Boolean.parseBoolean(find(options(), getClass().getSimpleName() + "." + Options.onlyPublicMembers).getOrElse("false")); }
+    public String generatedClassNamePattern() { return find(options(), getClass().getSimpleName() + "." + Options.generatedClassNamePattern).getOrElse("{}_"); }
+    public String includesAnnotation() { return find(options(), getClass().getSimpleName() + "." + Options.includesAnnotation).getOrElse(""); }
+    public String excludesAnnotation() { return find(options(), getClass().getSimpleName() + "." + Options.excludesAnnotation).getOrElse(NoMetadataGeneration.class.getName()); }
     
     public Predicate<Element> elementsToProcess() { return Predicates.<Element>instanceOf(TypeElement.class).and(
                                                            nonGeneratedElements).and(
-                                                           not(elementsMarkedToBeSkipped)).and(
-                                                           qualifiedName.andThen(matches(includesPattern()).and(
-                                                                                         not(matches(excludesPattern()))))).and(
+                                                           (includeAllByAnnotation.or(withAnnotation(includesAnnotation())))).and(
+                                                           not(withAnnotation(excludesAnnotation()))).and(
+                                                           qualifiedName.andThen(matches(includesRegex()).and(
+                                                                                 not(matches(excludesRegex()))))).and(
                                                            simpleName.andThen(not(equalTo("package-info")))); }
 
-    public GeneratorOptions generatorOptions = new GeneratorOptions() {
-          public boolean onlyPublicMembers() {
-                return options().containsKey(Options.onlyPublicMembers);
-          };
+    private final Predicate<Element> includeAllByAnnotation = new Predicate<Element>() {
+        public boolean accept(Element candidate) {
+            return includesAnnotation().isEmpty();
+        };
     };
     
+    public GeneratorOptions generatorOptions() {
+        return new GeneratorOptions() {
+          public boolean onlyPublicMembers() {
+                return CommonMetadataProcessor.this.onlyPublicMembers();
+          }
+        };
+    }
+    
     public List<Function1<TypeElement,Iterable<String>>> generators() {
-        return newList(InstanceFieldsAsEnum.instance.apply(generatorOptions),
-                       InstanceFieldsAsFunctions.instance.apply(generatorOptions),
-                       ConstructorsAsFunctions.instance.apply(processingEnv).apply(generatorOptions),
-                       MethodsAsFunctions.instance.apply(processingEnv).apply(generatorOptions));
+        return newList(InstanceFieldsAsEnum.instance.apply(generatorOptions()),
+                       InstanceFieldsAsFunctions.instance.apply(generatorOptions()),
+                       ConstructorsAsFunctions.instance.apply(processingEnv).apply(generatorOptions()),
+                       MethodsAsFunctions.instance.apply(processingEnv).apply(generatorOptions()));
     }
     
     @SuppressWarnings("unchecked")

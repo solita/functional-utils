@@ -27,6 +27,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,13 +52,14 @@ import javax.lang.model.util.SimpleElementVisitor6;
 import javax.lang.model.util.SimpleTypeVisitor6;
 import javax.lang.model.util.Types;
 
+import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Compare;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 
 public abstract class Helpers {
-    
+
     public static Predicate<String> hasTypeParameters = new Predicate<String>() {
         @Override
         public boolean accept(String candidate) {
@@ -250,7 +252,7 @@ public abstract class Helpers {
         @SuppressWarnings("unchecked")
         @Override
         public List<TypeElement> transform(Element source) {
-            return (List<TypeElement>) newList(filter(source.getEnclosedElements(), classes.and(staticElements)));
+            return (List<TypeElement>) newList(filter(source.getEnclosedElements(), (classes.or(interfaces)).and(staticElements)));
         }
     };
     
@@ -294,6 +296,13 @@ public abstract class Helpers {
         }
     };
     
+    public static Predicate<Element> interfaces = new Predicate<Element>() {
+        @Override
+        public boolean accept(Element candidate) {
+            return candidate.getKind() == ElementKind.INTERFACE;
+        }
+    };
+    
     public static Predicate<ExecutableElement> objectMethod = new Predicate<ExecutableElement>() {
         @Override
         public boolean accept(ExecutableElement candidate) {
@@ -330,19 +339,6 @@ public abstract class Helpers {
         @Override
         public boolean accept(Element candidate) {
             return candidate.getAnnotation(Generated.class) == null;
-        }
-    };
-    
-    public static Predicate<Element> elementsMarkedToBeSkipped = new Predicate<Element>() {
-        @Override
-        public boolean accept(Element candidate) {
-            return candidate.getAnnotation(NoMetadataGeneration.class) != null ||
-                   exists(candidate.getAnnotationMirrors(), new Predicate<AnnotationMirror>() {
-                    @Override
-                    public boolean accept(AnnotationMirror candidate) {
-                        return candidate.getAnnotationType().asElement().getAnnotation(NoMetadataGeneration.class) != null;
-                    }
-                });
         }
     };
 
@@ -437,5 +433,28 @@ public abstract class Helpers {
             }
         }));
         return map(zip(argCasts, map(e.getParameters(), simpleName)), mkString(""));
+    }
+    
+    public static Predicate<Element> withAnnotation(final String className) {
+        return new Predicate<Element>() {
+            @Override
+            public boolean accept(final Element e) {
+                return acc(e, Collections.<Element>newSet());
+            }
+            
+            private boolean acc(final Element e, final Set<Element> visited) {
+                if (visited.contains(e)) {
+                    return false;
+                }
+                visited.add(e);
+                return exists(e.getAnnotationMirrors(), new Predicate<AnnotationMirror>() {
+                    @Override
+                    public boolean accept(AnnotationMirror m) {
+                        Element elem = m.getAnnotationType().asElement();
+                        return qualifiedName.apply(elem).equals(className) || !elem.equals(e) && acc(elem, visited);
+                    }
+                });
+            }
+        };
     }
 }
