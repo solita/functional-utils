@@ -6,3 +6,4 @@ build.gradle
 .hg
 target
 .DS_Store
+.apt_generated

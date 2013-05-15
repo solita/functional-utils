@@ -8,33 +8,44 @@
         <finalName>${project.artifactId}</finalName>
         
         <resources>
-        		<resource>
-		            <directory>${basedir}/src/main/resources</directory>
-		        </resource>
-		        <resource>
-		            <directory>${basedir}/src/main/java</directory>
-		            <includes>
-		                <include>**/*.java</include>
-		            </includes>
-		        </resource>
-		        <resource>
-		            <directory>${basedir}/src/main/generated</directory>
-		            <includes>
-		                <include>**/*.java</include>
-		            </includes>
-		        </resource>
+                <resource>
+                    <directory>${basedir}/src/main/resources</directory>
+                </resource>
+                <resource>
+                    <directory>${basedir}/src/main/java</directory>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </resource>
+                <resource>
+                    <directory>${project.build.directory}/generated-sources/annotations</directory>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </resource>
         </resources>
         
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
+                <executions>
+                    <execution>
+                        <id>compileProcessorForAnnotationProcessing</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <proc>none</proc>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
-                    <proc>none</proc>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                 </configuration>
             </plugin>
             <plugin>
@@ -43,35 +54,6 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/generated</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-test-source</id>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/test/generated</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -88,7 +70,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
