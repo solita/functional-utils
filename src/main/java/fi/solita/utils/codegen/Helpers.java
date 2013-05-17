@@ -1,8 +1,10 @@
 package fi.solita.utils.codegen;
 
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Compare.byIterable;
 import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
@@ -42,6 +44,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -123,6 +126,9 @@ public abstract class Helpers {
                 public String visitTypeVariable(TypeVariable t, Object p) {
                     return qualifiedName.apply(t.asElement());
                 }
+                public String visitArray(ArrayType t, Object p) {
+                    return t.getComponentType().accept(this, p) + "[]";
+                };
                 @Override
                 public String visitWildcard(WildcardType t, Object p) {
                     String ext = t.getExtendsBound() != null ? typeMirror2GenericQualifiedName.apply(t.getExtendsBound()) : Object.class.getName();
@@ -389,14 +395,43 @@ public abstract class Helpers {
             default: throw new RuntimeException("only suitable for members");
         }
     }
+    
+    public static Iterable<? extends TypeParameterElement> allTypeParams(ExecutableElement e) {
+        return staticElements.accept(e)
+                ? e.getTypeParameters()
+                : (Set<TypeParameterElement>)newSet(concat(((TypeElement)e.getEnclosingElement()).getTypeParameters(), e.getTypeParameters()));
+    }
 
     /**
      * Relevant type parameters are (those present on the element itself) and (those present on enclosing type if the element is not a nested static class)
      */
     public static Iterable<? extends TypeParameterElement> relevantTypeParams(ExecutableElement e) {
-        return staticElements.accept(e)
-                ? e.getTypeParameters()
-                : concat(((TypeElement)e.getEnclosingElement()).getTypeParameters(), e.getTypeParameters());
+        List<? extends TypeParameterElement> enclosingTypeVars = ((TypeElement)e.getEnclosingElement()).getTypeParameters();
+        return staticElements.accept(e)               ? e.getTypeParameters() :
+               e.getKind() == ElementKind.CONSTRUCTOR ? concat(enclosingTypeVars, e.getTypeParameters()) :
+                                                        concat(filter(enclosingTypeVars, usedIn(e)), e.getTypeParameters());
+    }
+
+    private static Predicate<TypeParameterElement> usedIn(final ExecutableElement e) {
+        Iterable<TypeMirror> allTypeMirrors = cons(e.getReturnType(), map(e.getParameters(), new Transformer<VariableElement,TypeMirror>(){
+            @Override
+            public TypeMirror transform(VariableElement source) {
+                return source.asType();
+            }
+        }));
+        Iterable<String> typeVars = map(e.getTypeParameters(), new Transformer<TypeParameterElement,String>() {
+            @Override
+            public String transform(TypeParameterElement source) {
+                return source.getSimpleName() + "<" + mkString("-", map(source.getBounds(), typeMirror2GenericQualifiedName)) + ">";
+            }
+        });
+        final String s = "." + mkString(".", concat(typeVars, map(allTypeMirrors, typeMirror2GenericQualifiedName))) + ".";
+        return new Predicate<TypeParameterElement>() {
+            @Override
+            public boolean accept(TypeParameterElement candidate) {
+                return s.matches(".*[^a-zA-Z0-9_]" + Pattern.quote(simpleName.apply(candidate)) + "[^a-zA-Z0-9_].*");
+            }
+        };
     }
 
     public static String resolveVisibility(Element e) {

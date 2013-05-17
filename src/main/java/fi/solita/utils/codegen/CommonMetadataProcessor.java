@@ -183,7 +183,9 @@ public class CommonMetadataProcessor extends AbstractProcessor {
                 }
             }));
         }
-        System.out.println(getClass().getName() + " processed " + elements.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(gens, nanosToMillis)) + " ms)");
+        if (!elements.isEmpty()) {
+            System.out.println(getClass().getName() + " processed " + elements.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(gens, nanosToMillis)) + " ms)");
+        }
         return false;
     }
     

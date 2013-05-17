@@ -1,5 +1,6 @@
 package fi.solita.utils.codegen.generators;
 
+import static fi.solita.utils.codegen.Helpers.allTypeParams;
 import static fi.solita.utils.codegen.Helpers.boxed;
 import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.element2Methods;
@@ -39,6 +40,7 @@ import static fi.solita.utils.functional.Functional.intersection;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.repeat;
+import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Transformers.mkString;
@@ -47,6 +49,7 @@ import static fi.solita.utils.functional.Transformers.prepend;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -63,6 +66,7 @@ import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
 import fi.solita.utils.functional.Predicate;
+import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
 
 public class MethodsAsFunctions extends Function3<ProcessingEnvironment, MethodsAsFunctions.Options, TypeElement, Iterable<String>> {
@@ -106,16 +110,29 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             
             int index = entry.getKey() + (contains(map(element2Fields.apply(enclosingElement), simpleName), simpleName.apply(method)) ? 1 : 0);
             
+            List<? extends TypeParameterElement> allTypeParamsForMethod = newList(allTypeParams(method));
             List<? extends TypeParameterElement> relevantTypeParamsForMethod = newList(relevantTypeParams(method));
-            List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
-            Iterable<String> relevantTypeParamsWithoutConstraints = map(relevantTypeParamsForMethod, simpleName);
+            final List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
+            final List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamsForMethod, simpleName));
+            final List<String> allTypeParamsWithoutConstraints = newList(map(allTypeParamsForMethod, simpleName));
             String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
             String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
             List<? extends VariableElement> methodParameters = method.getParameters();
             
+            Transformer<String,String> doReplace = new Transformer<String,String>() {
+                private List<String> toReplace = newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints));
+                @Override
+                public String transform(String candidate) {
+                    for (String r: toReplace) {
+                        candidate = candidate.replaceAll("([^a-zA-Z0-9_])([?]\\s*(?:extends|super)\\s+)?" + Pattern.quote(r) + "([^a-zA-Z0-9_])", "$1?$3");
+                    }
+                    return candidate;
+                }
+            };
+            
             String modifiers = resolveVisibility(method) + " static final";
             String methodName = method.getSimpleName().toString();
-            String returnType = resolveBoxedGenericType(method.getReturnType());
+            String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType()));
             List<String> argumentTypes = newList(map(methodParameters, qualifiedName.andThen(boxed)));
             
             boolean needsToBeFunction = !relevantTypeParams.isEmpty();
@@ -133,12 +150,14 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             
             String instanceName = isInstanceMethod ? "$self" : qualifiedName.apply(enclosingElement);
             
-            String enclosingElementGenericQualifiedName = needsTypeArguments
+            String enclosingElementGenericQualifiedName = doReplace.transform(needsTypeArguments
                     ? elementGenericQualifiedName(enclosingElement)
-                    : qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElement.getTypeParameters().size())) + ">");
-                    
+                    : qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElement.getTypeParameters().size())) + ">"));
+            
+            argumentTypes = newList(map(argumentTypes, doReplace));
+            
             List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
-            Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self")                              : map(methodParameters, simpleName);
+            Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self") : map(methodParameters, simpleName);
             List<String> argNamesWithCast = newList(paramsWithCast(method, isPrivate));
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnType + ")" : "");
