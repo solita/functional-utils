@@ -1,7 +1,12 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.filter;
+import static fi.solita.utils.functional.Functional.forAll;
+import static fi.solita.utils.functional.Functional.headOption;
+import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.min;
+import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -118,6 +123,72 @@ abstract class Iterables {
             return getClass().getName() + Collections.newList(this).toString();
         }
     }
+    
+    static class TransposingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
+        private final Iterable<? extends Iterable<T>> elements;
+
+        public TransposingIterable(Iterable<? extends Iterable<T>> elements) {
+            this.elements = elements;
+        }
+        
+        private static Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
+            @Override
+            public Boolean transform(Iterator<?> source) {
+                return source.hasNext();
+            }
+        };
+        
+        private Transformer<Iterator<T>,T> next = new Transformer<Iterator<T>,T>() {
+            @Override
+            public T transform(Iterator<T> source) {
+                return source.next();
+            }
+        };
+        
+        @Override
+        public Iterator<Iterable<T>> iterator() {
+            return new Iterator<Iterable<T>>() {
+                List<Iterator<T>> iterators = newList(map(elements, new Transformer<Iterable<T>,Iterator<T>>() {
+                    @Override
+                    public Iterator<T> transform(Iterable<T> source) {
+                        return source.iterator();
+                    }
+                }));
+                @Override
+                public boolean hasNext() {
+                    return !iterators.isEmpty() && forAll(iterators, hasNext);
+                }
+
+                @Override
+                public Iterable<T> next() {
+                    return map(iterators, next);
+                }
+
+                @Override
+                public void remove() {
+                    for (Iterator<?> it: iterators) {
+                        it.remove();
+                    }
+                }
+            };
+        }
+
+        @Override
+        public Option<Integer> size() {
+            Iterable<Option<Integer>> resolvedSizes = filter(map(elements, resolveSize), new Predicate<Option<?>>() {
+                @Override
+                public boolean accept(Option<?> candidate) {
+                    return candidate.isDefined();
+                }
+            });
+            return headOption(sort(map(resolvedSizes, new Transformer<Option<Integer>,Integer>() {
+                @Override
+                public Integer transform(Option<Integer> source) {
+                    return source.get();
+                }
+            })));
+        }
+    }
 
     static class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Tuple2<A, B>> {
         private final Iterable<A> elements1;
@@ -153,8 +224,8 @@ abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            for (int a: Iterables.resolveSize(elements1)) {
-                for (int b: Iterables.resolveSize(elements2)) {
+            for (int a: resolveSize.apply(elements1)) {
+                for (int b: resolveSize.apply(elements2)) {
                     return Some(Functional.min(a,b));
                 }
             }
@@ -173,7 +244,7 @@ abstract class Iterables {
         public Option<Integer> size() {
             int size = 0;
             for (Iterable<? extends T> it: elements) {
-                Option<Integer> resolvedSize = Iterables.resolveSize(it);
+                Option<Integer> resolvedSize = resolveSize.apply(it);
                 if (resolvedSize.isDefined()) {
                     size += resolvedSize.get();
                 } else {
@@ -288,7 +359,7 @@ abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            return Iterables.resolveSize(iterable);
+            return resolveSize.apply(iterable);
         }
 
         @Override
@@ -323,7 +394,7 @@ abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            return Iterables.resolveSize(iterable);
+            return resolveSize.apply(iterable);
         }
 
         @Override
@@ -402,7 +473,7 @@ abstract class Iterables {
         }
         @Override
         public Iterator<T> iterator() {
-            int initialSize = Iterables.resolveSize(iterable).getOrElse(11);
+            int initialSize = resolveSize.apply(iterable).getOrElse(11);
             if (initialSize == 0) {
                 return java.util.Collections.<T>emptyList().iterator();
             }
@@ -430,7 +501,7 @@ abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            return Iterables.resolveSize(iterable);
+            return resolveSize.apply(iterable);
         }
     }
     
@@ -475,7 +546,7 @@ abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            Option<Integer> s = resolveSize(elements);
+            Option<Integer> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(min(s.get(), amount));
             } else {
@@ -486,14 +557,17 @@ abstract class Iterables {
             }
         }
     }
-
-    static Option<Integer> resolveSize(Iterable<?> iterable) {
-        if (iterable instanceof Collection) {
-            return Some(((Collection<?>)iterable).size());
+    
+    static Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
+        @Override
+        public Option<Integer> transform(Iterable<?> source) {
+            if (source instanceof Collection) {
+                return Some(((Collection<?>)source).size());
+            }
+            if (source instanceof PossiblySizeAwareIterable) {
+                return ((PossiblySizeAwareIterable<?>)source).size();
+            }
+            return None();
         }
-        if (iterable instanceof PossiblySizeAwareIterable) {
-            return ((PossiblySizeAwareIterable<?>)iterable).size();
-        }
-        return None();
-    }
+    };
 }

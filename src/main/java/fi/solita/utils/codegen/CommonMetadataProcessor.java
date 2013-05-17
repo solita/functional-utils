@@ -8,13 +8,17 @@ import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.withAnnotation;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.find;
 import static fi.solita.utils.functional.Functional.flatMap;
-import static fi.solita.utils.functional.Functional.flatten;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.reduce;
+import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.sequence;
+import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.matches;
 import static fi.solita.utils.functional.Predicates.not;
@@ -26,6 +30,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.FilerException;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -43,8 +48,13 @@ import fi.solita.utils.codegen.generators.InstanceFieldsAsFunctions;
 import fi.solita.utils.codegen.generators.MethodsAsFunctions;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
+import fi.solita.utils.functional.Monoid;
+import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Predicates;
+import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Transformers;
+import fi.solita.utils.functional.Tuple2;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -102,31 +112,87 @@ public class CommonMetadataProcessor extends AbstractProcessor {
                        MethodsAsFunctions.instance.apply(processingEnv).apply(generatorOptions()));
     }
     
+    static Transformer<Function1<TypeElement,Iterable<String>>, Function1<TypeElement,Pair<Long,List<String>>>> timed = new Transformer<Function1<TypeElement,Iterable<String>>, Function1<TypeElement,Pair<Long,List<String>>>>() {
+        @Override
+        public Function1<TypeElement, Pair<Long, List<String>>> transform(final Function1<TypeElement, Iterable<String>> source) {
+            return new Function1<TypeElement, Pair<Long,List<String>>>() {
+                @Override
+                public Pair<Long, List<String>> apply(TypeElement t) {
+                    long start = System.nanoTime();
+                    List<String> result = newList(map(source.apply(t), prepend("    ")));
+                    return Pair.of(System.nanoTime() - start, result);
+                }
+            };
+        }
+    };
+    
     @SuppressWarnings("unchecked")
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        final List<Function1<TypeElement,Iterable<String>>> generators = generators();
+        List<Function1<TypeElement, Pair<Long, List<String>>>> generators = newList(map(generators(), timed));
+        String genClassNamePat = generatedClassNamePattern();
+        Filer filer = processingEnv.getFiler();
+        
+        long started = System.nanoTime();
+        long generation = 0;
+        long nestedGeneration = 0;
+        long fileWriting = 0;
+        List<Long> gens = newList(repeat(0l, generators.size()));
+        
         Predicate<Element> predicate = elementsToProcess();
-        for (TypeElement element: (Iterable<TypeElement>)filter(roundEnv.getRootElements(), predicate)) {
-            Iterable<String> elemData = flatten(sequence(generators, element));
-            Iterable<String> nestedData = flatMap(filter(element2NestedClasses.apply(element), predicate), Content.withNestedClasses.curried().apply(generatedClassNamePattern()).apply(predicate).apply(generators));
-            List<String> content = newList(map(concat(elemData, map(nestedData, prepend("    "))), prepend("    ")));
+        List<TypeElement> elements = newList((Iterable<TypeElement>)filter(roundEnv.getRootElements(), predicate));
+        Function1<TypeElement, Pair<List<Long>, List<String>>> nestedDataProducer = Content.withNestedClasses.curried().apply(genClassNamePat).apply(predicate).apply(generators);
+        for (TypeElement element: elements) {
+            long time = System.nanoTime();
+            List<Pair<Long, List<String>>> elemData = newList(sequence(generators, element));
+            long time2 = System.nanoTime();
+            List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(element), predicate), nestedDataProducer));
+            
+            Iterable<String> content = map(concat(flatMap(elemData, Transformers.<List<String>>right()), flatMap(nestedData, Transformers.<Iterable<String>>right())), prepend("    "));
+            long time3 = System.nanoTime();
             if (!isEmpty(content)) {
-                String genClassName = generatedClassNamePattern().replace("{}", element.getSimpleName().toString());
+                String genClassName = genClassNamePat.replace("{}", element.getSimpleName().toString());
                 try {
-                    ClassFileWriter.writeClassFile(getPackageName(element), genClassName, content, getClass(), processingEnv.getFiler());
+                    ClassFileWriter.writeClassFile(getPackageName(element), genClassName, content, getClass(), filer);
                 } catch (RuntimeException e) {
                     // if file already exists, try appending an underscore
                     if (e.getCause() instanceof FilerException) {
-                        ClassFileWriter.writeClassFile(getPackageName(element), genClassName + "_", content, getClass(), processingEnv.getFiler());
+                        ClassFileWriter.writeClassFile(getPackageName(element), genClassName + "_", content, getClass(), filer);
                     } else {
                         throw e;
                     }
                 }
             }
+            
+            generation += time2 - time;
+            nestedGeneration += time3 - time2;
+            fileWriting += System.nanoTime() - time3;
+
+            Iterable<Long> contentTimes = map(elemData, Transformers.<Long>left());
+            Iterable<List<Long>> nestedTimes = map(nestedData, Transformers.<List<Long>>left());
+            List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
+                @Override
+                public Long transform(Iterable<Long> source) {
+                    return reduce(source, Monoid.longSum);
+                }
+            }));
+            gens = newList(map(zip(gens, totalTimesPerGenerator), new Transformer<Tuple2<Long,Long>,Long>() {
+                @Override
+                public Long transform(Tuple2<Long, Long> source) {
+                    return source._1 + source._2;
+                }
+            }));
         }
+        System.out.println(getClass().getName() + " processed " + elements.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(gens, nanosToMillis)) + " ms)");
         return false;
     }
+    
+    private static Transformer<Long,Long> nanosToMillis = new Transformer<Long,Long>() {
+        @Override
+        public Long transform(Long source) {
+            return source/1000/1000;
+        }
+    };
 
     public static class GeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options, InstanceFieldsAsEnum.Options {
         @Override

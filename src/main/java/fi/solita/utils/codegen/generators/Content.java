@@ -9,10 +9,11 @@ import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
-import static fi.solita.utils.functional.Functional.flatten;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
+import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.sequence;
+import static fi.solita.utils.functional.Functional.transpose;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Transformers.prepend;
@@ -28,9 +29,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function4;
+import fi.solita.utils.functional.Monoid;
+import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
+import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Transformers;
 
 public abstract class Content {
 
@@ -88,20 +94,36 @@ public abstract class Content {
         "    throw new RuntimeException($e);"
     );
     
-    public static Function4<String,Predicate<Element>,List<Function1<TypeElement, Iterable<String>>>, TypeElement, Iterable<String>> withNestedClasses = new Function4<String, Predicate<Element>, List<Function1<TypeElement, Iterable<String>>>, TypeElement, Iterable<String>>() {
+    public static Function4<String,Predicate<Element>,List<Function1<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Function1<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
         @Override
-        public Iterable<String> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Function1<TypeElement, Iterable<String>>> generators, TypeElement source) {
+        public Pair<List<Long>,List<String>> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Function1<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
             if (contains(source.getModifiers(), Modifier.PRIVATE)) {
                 // cannot refer to private classes
-                return None;
+                return Pair.of(Collections.<Long>emptyList(), Collections.<String>emptyList());
             }
-            String visibility = resolveVisibility(source);
-            Iterable<String> elemData = flatten(sequence(generators, source));
-            Iterable<String> nestedData = flatMap(filter(element2NestedClasses.apply(source), predicate), withNestedClasses.curried().apply(generatedClassNamePattern).apply(predicate).apply(generators));
-            return concat(Some(visibility + " static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + Serializable.class.getName() + " {"),
-                          elemData,
-                          map(nestedData, prepend("    ")),
-                          Some("}"));
+            List<Pair<Long, List<String>>> elemData = newList(sequence(generators, source));
+            List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(source), predicate), withNestedClasses.curried().apply(generatedClassNamePattern).apply(predicate).apply(generators)));
+            
+            Iterable<Long> contentTimes = map(elemData, Transformers.<Long>left());
+            Iterable<List<Long>> nestedTimes = map(nestedData, Transformers.<List<Long>>left());
+            Iterable<String> elemContents = flatMap(elemData, Transformers.<List<String>>right());
+            Iterable<String> nestedContents = flatMap(nestedData, Transformers.<Iterable<String>>right());
+            
+            List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
+                @Override
+                public Long transform(Iterable<Long> source) {
+                    return reduce(source, Monoid.longSum);
+                }
+            }));
+            if (totalTimesPerGenerator.size() != generators.size()) {
+                throw new RuntimeException("whoops...");
+            }
+            
+            List<String> allContents = newList(concat(Some(resolveVisibility(source) + " static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + Serializable.class.getName() + " {"),
+                          elemContents,
+                          map(nestedContents, prepend("    ")),
+                          Some("}")));
+            return Pair.of(totalTimesPerGenerator, allContents);
         }
     };
 }

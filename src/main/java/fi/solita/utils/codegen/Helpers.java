@@ -222,7 +222,7 @@ public abstract class Helpers {
         @SuppressWarnings("unchecked")
         @Override
         public Iterable<VariableElement> transform(Element source) {
-            return sort((List<VariableElement>) newList(filter(source.getEnclosedElements(), fields)), variableElementComparator);
+            return sort((Iterable<VariableElement>) filter(source.getEnclosedElements(), fields), variableElementComparator);
         }
     };
     
@@ -230,7 +230,7 @@ public abstract class Helpers {
         @SuppressWarnings("unchecked")
         @Override
         public Iterable<ExecutableElement> transform(Element source) {
-            return sort((List<ExecutableElement>) newList(filter(source.getEnclosedElements(), methods)), executableElementComparator);
+            return sort((Iterable<ExecutableElement>) filter(source.getEnclosedElements(), methods), executableElementComparator);
         }
     };
     
@@ -238,7 +238,7 @@ public abstract class Helpers {
         @SuppressWarnings("unchecked")
         @Override
         public Iterable<ExecutableElement> transform(Element source) {
-            return sort((List<ExecutableElement>)newList(filter(source.getEnclosedElements(), constructors)), executableElementComparator);
+            return sort((Iterable<ExecutableElement>)filter(source.getEnclosedElements(), constructors), executableElementComparator);
         }
     };
 
@@ -248,11 +248,11 @@ public abstract class Helpers {
                                                                                       Compare.<ExecutableElement>by(enclosingElement.andThen(qualifiedName)),
                                                                                       Compare.by(parameters, byIterable(variableElementComparator)));
     
-    public static Function1<Element, List<TypeElement>> element2NestedClasses = new Transformer<Element, List<TypeElement>>() {
+    public static Function1<Element, Iterable<TypeElement>> element2NestedClasses = new Transformer<Element, Iterable<TypeElement>>() {
         @SuppressWarnings("unchecked")
         @Override
-        public List<TypeElement> transform(Element source) {
-            return (List<TypeElement>) newList(filter(source.getEnclosedElements(), (classes.or(interfaces)).and(staticElements)));
+        public Iterable<TypeElement> transform(Element source) {
+            return (Iterable<TypeElement>) filter(source.getEnclosedElements(), (classes.or(interfaces)).and(staticElements));
         }
     };
     
@@ -395,7 +395,7 @@ public abstract class Helpers {
      */
     public static Iterable<? extends TypeParameterElement> relevantTypeParams(ExecutableElement e) {
         return staticElements.accept(e)
-                ? newList(e.getTypeParameters())
+                ? e.getTypeParameters()
                 : concat(((TypeElement)e.getEnclosingElement()).getTypeParameters(), e.getTypeParameters());
     }
 
@@ -415,8 +415,8 @@ public abstract class Helpers {
         return typeUtils.isSubtype(typeUtils.erasure(elem.asType()), typeUtils.erasure(processingEnv.getElementUtils().getTypeElement(parentClassName).asType()));
     }
     
-    public static List<String> parameterTypesAsClasses(ExecutableElement element) {
-        return newList(map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(newList(relevantTypeParams(element))).andThen(replaceAll(typeArgs, "")).andThen(append(".class")))));
+    public static Iterable<String> parameterTypesAsClasses(ExecutableElement element) {
+        return map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(newList(relevantTypeParams(element))).andThen(replaceAll(typeArgs, "")).andThen(append(".class"))));
     }
     
     public static String elementGenericQualifiedName(TypeElement enclosingElement) {
@@ -424,14 +424,14 @@ public abstract class Helpers {
     }
     
     public static Iterable<String> paramsWithCast(ExecutableElement e, final boolean isPrivate) {
-        Iterable<String> argCasts = newList(map(e.getParameters(), new Transformer<VariableElement, String>() {
+        Iterable<String> argCasts = map(e.getParameters(), new Transformer<VariableElement, String>() {
             @Override
             public String transform(VariableElement source) {
                 return isPrivate ? "(Object)" :
                        source.asType().getKind().isPrimitive() ? "(" + qualifiedName.apply(source) + ")" :
                        "";
             }
-        }));
+        });
         return map(zip(argCasts, map(e.getParameters(), simpleName)), mkString(""));
     }
     

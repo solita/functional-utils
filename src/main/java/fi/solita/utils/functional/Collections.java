@@ -193,7 +193,7 @@ public abstract class Collections {
     
     public static <T> List<T> newList(Iterable<T> elements) {
         List<T> ret = null;
-        for (int size: Iterables.resolveSize(elements)) {
+        for (int size: Iterables.resolveSize.apply(elements)) {
             ret = newListOfSize(size);
         }
         if (ret == null) {
@@ -212,7 +212,7 @@ public abstract class Collections {
 
     public static <T> Set<T> newSet(Iterable<T> elements) {
         Set<T> ret = null;
-        for (int size: Iterables.resolveSize(elements)) {
+        for (int size: Iterables.resolveSize.apply(elements)) {
             ret = newSetOfSize((int)(size*1.5));
         }
         if (ret == null) {
@@ -230,7 +230,7 @@ public abstract class Collections {
 
     public static <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         Map<K, V> ret = null;
-        for (int size: Iterables.resolveSize(elements)) {
+        for (int size: Iterables.resolveSize.apply(elements)) {
             ret = newMapOfSize((int)(size*1.5));
         }
         if (ret == null) {

@@ -15,12 +15,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
-import fi.solita.utils.functional.Iterables.FilteringIterable;
-import fi.solita.utils.functional.Iterables.RangeIterable;
-import fi.solita.utils.functional.Iterables.RepeatingIterable;
-import fi.solita.utils.functional.Iterables.TransformingIterable;
-import fi.solita.utils.functional.Iterables.ZippingIterable;
+import fi.solita.utils.functional.Iterables.*;
 
 public abstract class Functional {
 
@@ -385,7 +380,7 @@ public abstract class Functional {
     }
 
     public static int size(Iterable<?> elements) {
-        return Iterables.resolveSize(elements).getOrElse(Collections.newList(elements).size());
+        return Iterables.resolveSize.apply(elements).getOrElse(Collections.newList(elements).size());
     }
 
     public static <T> boolean contains(T[] elements, T element) {
@@ -409,7 +404,7 @@ public abstract class Functional {
     }
 
     public static <T> boolean forAll(Iterable<T> elements, Apply<? super T, Boolean> filter) {
-    	return isEmpty(filter(elements, Predicates.not(filter)));
+        return !exists(elements, Predicates.not(filter));
     }
     
     @SuppressWarnings("unchecked")
@@ -514,14 +509,15 @@ public abstract class Functional {
      * @return <i>None</i> if <i>elements</i> is empty
      */
     public static <T> Option<T> fold(Iterable<? extends T> elements, Apply<Tuple2<T,T>, T> f) {
-        if (isEmpty(elements)) {
-            return None();
+        Option<? extends T> h = headOption(elements);
+        if (h.isDefined()) {
+            T ret = h.get();
+            for (T t : drop(elements, 1)) {
+                ret = f.apply(Tuple.of(ret, t));
+            }
+            return Some(ret);
         }
-        T ret = head(elements);
-        for (T t : drop(elements, 1)) {
-            ret = f.apply(Tuple.of(ret, t));
-        }
-        return Some(ret);
+        return None();
     }
     
     public static long sum(int e1) {
@@ -633,7 +629,7 @@ public abstract class Functional {
                 return source._1.append(source._2);
             }
         });
-  }
+    }
 
     public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
         return new ZippingIterable<Integer,A>(new RangeIterable(0), a);
@@ -689,6 +685,10 @@ public abstract class Functional {
                 return source.apply(t);
             }
         });
+    }
+    
+    public static <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> elements) {
+        return new TransposingIterable<T>(elements);
     }
     
     private static final String LINE_SEP = System.getProperty("line.separator");

@@ -30,12 +30,12 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
+import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.groupBy;
 import static fi.solita.utils.functional.Functional.intersection;
-import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.repeat;
@@ -53,6 +53,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import fi.solita.utils.functional.Apply;
@@ -102,24 +104,24 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             ExecutableElement method = entry.getValue();
             TypeElement enclosingElement = (TypeElement) method.getEnclosingElement();
             
-            List<String> fieldNames = newList(map(element2Fields.apply(enclosingElement), simpleName));
+            int index = entry.getKey() + (contains(map(element2Fields.apply(enclosingElement), simpleName), simpleName.apply(method)) ? 1 : 0);
             
-            int index = entry.getKey() + (fieldNames.contains(simpleName.apply(method)) ? 1 : 0);
-            
-            List<String> relevantTypeParams = newList(map(relevantTypeParams(method), typeParameter2String));
-            List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParams(method), simpleName));
+            List<? extends TypeParameterElement> relevantTypeParamsForMethod = newList(relevantTypeParams(method));
+            List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
+            Iterable<String> relevantTypeParamsWithoutConstraints = map(relevantTypeParamsForMethod, simpleName);
             String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
             String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
+            List<? extends VariableElement> methodParameters = method.getParameters();
             
             String modifiers = resolveVisibility(method) + " static final";
             String methodName = method.getSimpleName().toString();
             String returnType = resolveBoxedGenericType(method.getReturnType());
-            List<String> argumentTypes = newList(map(method.getParameters(), qualifiedName.andThen(boxed)));
+            List<String> argumentTypes = newList(map(methodParameters, qualifiedName.andThen(boxed)));
             
-            boolean needsToBeFunction = !isEmpty(relevantTypeParams);
+            boolean needsToBeFunction = !relevantTypeParams.isEmpty();
             final boolean isPrivate = isPrivate(method);
             boolean isInstanceMethod = isInstanceMethod(method);
-            boolean zeroArgInstanceMethod = isInstanceMethod && method.getParameters().isEmpty(); // handle no-arg methods like static functions
+            boolean zeroArgInstanceMethod = isInstanceMethod && methodParameters.isEmpty(); // handle no-arg methods like static functions
             boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
             boolean returnsVoid = returnsVoid(method);
             boolean needsTypeArguments = !intersection(newSet(relevantTypeParamsWithoutConstraints), newSet(cons(returnType, argumentTypes))).isEmpty() || exists(cons(returnType, argumentTypes), hasTypeParameters);
@@ -127,7 +129,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             boolean throwsChecked = throwsCheckedExceptions(method, processingEnv);
             boolean hasRawTypes = hasRawTypes(method);
             
-            int argCount = zeroArgInstanceMethod ? 1 : method.getParameters().size(); // no-arg instance methods need $self parameter
+            int argCount = zeroArgInstanceMethod ? 1 : methodParameters.size(); // no-arg instance methods need $self parameter
             
             String instanceName = isInstanceMethod ? "$self" : qualifiedName.apply(enclosingElement);
             
@@ -136,7 +138,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
                     : qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElement.getTypeParameters().size())) + ">");
                     
             List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
-            List<String> argNames = zeroArgInstanceMethod ? newList("$self")                              : newList(map(method.getParameters(), simpleName));
+            Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self")                              : map(methodParameters, simpleName);
             List<String> argNamesWithCast = newList(paramsWithCast(method, isPrivate));
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnType + ")" : "");
