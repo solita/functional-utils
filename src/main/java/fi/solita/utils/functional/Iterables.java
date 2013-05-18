@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.forAll;
 import static fi.solita.utils.functional.Functional.headOption;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.max;
 import static fi.solita.utils.functional.Functional.min;
 import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Option.None;
@@ -554,6 +555,40 @@ abstract class Iterables {
                 // called with an amount of significantly larger than the size
                 // of the iterable. Right?
                 return Some(amount);
+            }
+        }
+    }
+    
+    static final class DroppingIterable<T> extends PossiblySizeAwareIterable<T> {
+        private final Iterable<T> elements;
+        private final int amount;
+
+        public DroppingIterable(Iterable<T> elements, int amount) {
+            if (amount < 0) {
+                throw new IllegalArgumentException("amount must be >= 0");
+            }
+            this.elements = elements;
+            this.amount = amount;
+        }
+        
+        @Override
+        public Iterator<T> iterator() {
+            Iterator<T> it = elements.iterator();
+            int left = amount;
+            while (left > 0 && it.hasNext()) {
+                it.next();
+                left--;
+            }
+            return it;
+        }
+
+        @Override
+        public Option<Integer> size() {
+            Option<Integer> s = resolveSize.apply(elements);
+            if (s.isDefined()) {
+                return Some(max(s.get() - amount, 0));
+            } else {
+                return None();
             }
         }
     }

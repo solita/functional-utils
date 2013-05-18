@@ -15,7 +15,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import fi.solita.utils.functional.Iterables.*;
+import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
+import fi.solita.utils.functional.Iterables.FilteringIterable;
+import fi.solita.utils.functional.Iterables.RangeIterable;
+import fi.solita.utils.functional.Iterables.RepeatingIterable;
+import fi.solita.utils.functional.Iterables.TransformingIterable;
+import fi.solita.utils.functional.Iterables.TransposingIterable;
+import fi.solita.utils.functional.Iterables.ZippingIterable;
 
 public abstract class Functional {
 
@@ -61,7 +67,7 @@ public abstract class Functional {
     }
 
     public static <T> Iterable<T> filter(Iterable<T> elements, Apply<? super T, Boolean> filter) {
-    	return new FilteringIterable<T>(elements, filter);
+        return new FilteringIterable<T>(elements, filter);
     }
 
     public static <T, E> Map<T, E> filter(Map<T, E> map, Apply<Map.Entry<? super T, ? super E>, Boolean> filter) {
@@ -73,7 +79,7 @@ public abstract class Functional {
     }
 
     public static <S, T> Iterable<T> map(Iterable<S> elements, Apply<? super S, ? extends T> transformer) {
-    	return new TransformingIterable<S,T>(elements, transformer);
+        return new TransformingIterable<S,T>(elements, transformer);
     }
 
     public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> source, Apply<Map.Entry<K1, V1>, Map.Entry<K2, V2>> transformer) {
@@ -150,7 +156,7 @@ public abstract class Functional {
      * Non-lazy
      */
     public static <G, T> Map<G, List<T>> groupBy(T[] elements, Apply<? super T,G> f) {
-    	  return groupBy(Arrays.asList(elements), f);
+          return groupBy(Arrays.asList(elements), f);
     }
     
     /**
@@ -174,36 +180,36 @@ public abstract class Functional {
     }
     
     public static <T> T head(T[] elements) {
-    	  return head(Arrays.asList(elements));
+          return head(Arrays.asList(elements));
     }
 
     public static <T> T head(Iterable<T> elements) {
-    	return elements.iterator().next();
+        return elements.iterator().next();
     }
     
     public static <T> Option<T> headOption(T[] elements) {
-    	  return headOption(Arrays.asList(elements));
+          return headOption(Arrays.asList(elements));
     }
 
     public static <T> Option<T> headOption(Iterable<T> elements) {
-    	Iterator<T> it = elements.iterator();
-    	if (it.hasNext()) {
-    	    return Some(it.next());
-    	} else {
-    	    return None();
-    	}
+        Iterator<T> it = elements.iterator();
+        if (it.hasNext()) {
+            return Some(it.next());
+        } else {
+            return None();
+        }
     }
     
     public static <T> Iterable<T> tail(T[] elements) {
-    	  return tail(Arrays.asList(elements));
+          return tail(Arrays.asList(elements));
     }
 
     public static <T> Iterable<T> tail(Iterable<T> elements) {
-    	return drop(elements, 1);
+        return drop(elements, 1);
     }
     
     public static <T> T last(T[] elements) {
-    	  return last(Arrays.asList(elements));
+          return last(Arrays.asList(elements));
     }
 
     public static <T> T last(Iterable<T> elements) {
@@ -216,7 +222,7 @@ public abstract class Functional {
     }
     
     public static <T> Option<T> lastOption(T[] elements) {
-    	  return lastOption(Arrays.asList(elements));
+          return lastOption(Arrays.asList(elements));
     }
 
     public static <T> Option<T> lastOption(Iterable<T> elements) {
@@ -233,7 +239,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> init(T[] elements) {
-    	  return init(Arrays.asList(elements));
+          return init(Arrays.asList(elements));
     }
 
     public static <T> Iterable<T> init(Iterable<T> elements) {
@@ -241,37 +247,23 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> take(T[] elements, int amount) {
-    	  return take(Arrays.asList(elements), amount);
+          return take(Arrays.asList(elements), amount);
     }
 
     public static <T> Iterable<T> take(final Iterable<T> elements, final int amount) {
-    	return new Iterables.TakingIterable<T>(elements, amount);
+        return new Iterables.TakingIterable<T>(elements, amount);
     }
     
     public static <T> Iterable<T> drop(T[] elements, int amount) {
-    	  return drop(Arrays.asList(elements), amount);
+          return drop(Arrays.asList(elements), amount);
     }
 
     public static <T> Iterable<T> drop(final Iterable<T> elements, final int amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("amount must be gte 0");
-        }
-        return new Iterable<T>() {
-            @Override
-            public Iterator<T> iterator() {
-                Iterator<T> it = elements.iterator();
-                int left = amount;
-                while (left > 0 && it.hasNext()) {
-                    it.next();
-                    left--;
-                }
-                return it;
-            }
-        };
+        return new Iterables.DroppingIterable<T>(elements, amount);
     }
     
     public static <T> Iterable<T> takeWhile(T[] elements, Apply<? super T, Boolean> predicate) {
-    	  return takeWhile(Arrays.asList(elements), predicate);
+          return takeWhile(Arrays.asList(elements), predicate);
     }
 
     public static <T> Iterable<T> takeWhile(final Iterable<T> elements, final Apply<? super T, Boolean> predicate) {
@@ -323,7 +315,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> dropWhile(T[] elements, Apply<? super T, Boolean> predicate) {
-    	  return dropWhile(Arrays.asList(elements), predicate);
+          return dropWhile(Arrays.asList(elements), predicate);
     }
 
     public static <T> Iterable<T> dropWhile(final Iterable<T> elements, final Apply<? super T, Boolean> predicate) {
@@ -376,7 +368,7 @@ public abstract class Functional {
     }
 
     public static boolean isEmpty(Iterable<?> elements) {
-    	return !elements.iterator().hasNext();
+        return !elements.iterator().hasNext();
     }
 
     public static int size(Iterable<?> elements) {
@@ -425,7 +417,7 @@ public abstract class Functional {
     }
 
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2) {
-    	return new ConcatenatingIterable<T>(Collections.newList(elements1, elements2));
+        return new ConcatenatingIterable<T>(Collections.newList(elements1, elements2));
     }
 
     public static <T> Iterable<T> concat(final Iterable<? extends T> elements1, final Iterable<? extends T> elements2, final Iterable<? extends T> elements3) {
@@ -441,7 +433,7 @@ public abstract class Functional {
     }
     
     public static <T extends Comparable<T>> Iterable<T> sort(final T[] elements) {
-    	  return sort(Arrays.asList(elements));
+          return sort(Arrays.asList(elements));
     }
     
     public static <T extends Comparable<T>> Iterable<T> sort(final Iterable<T> elements) {
@@ -452,7 +444,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> sort(T[] elements, Comparator<? super T> comparator) {
-    	  return sort(Arrays.asList(elements), comparator);
+          return sort(Arrays.asList(elements), comparator);
     }
 
     public static <T> Iterable<T> sort(final Iterable<T> elements, final Comparator<? super T> comparator) {
