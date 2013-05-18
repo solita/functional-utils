@@ -1,6 +1,10 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.*;
+import static fi.solita.utils.functional.Functional.drop;
+import static fi.solita.utils.functional.Functional.head;
+import static fi.solita.utils.functional.Functional.range;
+import static fi.solita.utils.functional.Functional.reverse;
+import static fi.solita.utils.functional.Functional.take;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;

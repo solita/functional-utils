@@ -19,7 +19,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
-abstract class Iterables {
+public abstract class Iterables {
     static final class RangeIterable extends PossiblySizeAwareIterable<Integer> {
         private final int from;
         private final int toInclusive;
@@ -593,7 +593,7 @@ abstract class Iterables {
         }
     }
     
-    static Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
+    public static Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
         @Override
         public Option<Integer> transform(Iterable<?> source) {
             if (source instanceof Collection) {

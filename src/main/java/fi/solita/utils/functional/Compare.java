@@ -82,69 +82,69 @@ public abstract class Compare {
     }
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._1<? extends Comparable<?>>> by_1 = (Ordering<Tuple._1<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_1());
+    public static final Ordering<Tuple._1<? extends Comparable<?>>> by_1 = (Ordering<Tuple._1<? extends Comparable<?>>>)(Object)by(Tuple1_.<Comparable<?>>_1());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._2<? extends Comparable<?>>> by_2 = (Ordering<Tuple._2<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_2());
+    public static final Ordering<Tuple._2<? extends Comparable<?>>> by_2 = (Ordering<Tuple._2<? extends Comparable<?>>>)(Object)by(Tuple2_.<Comparable<?>>_2());
 
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._3<? extends Comparable<?>>> by_3 = (Ordering<Tuple._3<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_3());
+    public static final Ordering<Tuple._3<? extends Comparable<?>>> by_3 = (Ordering<Tuple._3<? extends Comparable<?>>>)(Object)by(Tuple3_.<Comparable<?>>_3());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._4<? extends Comparable<?>>> by_4 = (Ordering<Tuple._4<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_4());
+    public static final Ordering<Tuple._4<? extends Comparable<?>>> by_4 = (Ordering<Tuple._4<? extends Comparable<?>>>)(Object)by(Tuple4_.<Comparable<?>>_4());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._5<? extends Comparable<?>>> by_5 = (Ordering<Tuple._5<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_5());
+    public static final Ordering<Tuple._5<? extends Comparable<?>>> by_5 = (Ordering<Tuple._5<? extends Comparable<?>>>)(Object)by(Tuple5_.<Comparable<?>>_5());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._6<? extends Comparable<?>>> by_6 = (Ordering<Tuple._6<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_6());
+    public static final Ordering<Tuple._6<? extends Comparable<?>>> by_6 = (Ordering<Tuple._6<? extends Comparable<?>>>)(Object)by(Tuple6_.<Comparable<?>>_6());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._7<? extends Comparable<?>>> by_7 = (Ordering<Tuple._7<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_7());
+    public static final Ordering<Tuple._7<? extends Comparable<?>>> by_7 = (Ordering<Tuple._7<? extends Comparable<?>>>)(Object)by(Tuple7_.<Comparable<?>>_7());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._8<? extends Comparable<?>>> by_8 = (Ordering<Tuple._8<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_8());
+    public static final Ordering<Tuple._8<? extends Comparable<?>>> by_8 = (Ordering<Tuple._8<? extends Comparable<?>>>)(Object)by(Tuple8_.<Comparable<?>>_8());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._9<? extends Comparable<?>>> by_9 = (Ordering<Tuple._9<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_9());
+    public static final Ordering<Tuple._9<? extends Comparable<?>>> by_9 = (Ordering<Tuple._9<? extends Comparable<?>>>)(Object)by(Tuple9_.<Comparable<?>>_9());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._10<? extends Comparable<?>>> by_10 = (Ordering<Tuple._10<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_10());
+    public static final Ordering<Tuple._10<? extends Comparable<?>>> by_10 = (Ordering<Tuple._10<? extends Comparable<?>>>)(Object)by(Tuple10_.<Comparable<?>>_10());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._11<? extends Comparable<?>>> by_11 = (Ordering<Tuple._11<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_11());
+    public static final Ordering<Tuple._11<? extends Comparable<?>>> by_11 = (Ordering<Tuple._11<? extends Comparable<?>>>)(Object)by(Tuple11_.<Comparable<?>>_11());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._12<? extends Comparable<?>>> by_12 = (Ordering<Tuple._12<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_12());
+    public static final Ordering<Tuple._12<? extends Comparable<?>>> by_12 = (Ordering<Tuple._12<? extends Comparable<?>>>)(Object)by(Tuple12_.<Comparable<?>>_12());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._13<? extends Comparable<?>>> by_13 = (Ordering<Tuple._13<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_13());
+    public static final Ordering<Tuple._13<? extends Comparable<?>>> by_13 = (Ordering<Tuple._13<? extends Comparable<?>>>)(Object)by(Tuple13_.<Comparable<?>>_13());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._14<? extends Comparable<?>>> by_14 = (Ordering<Tuple._14<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_14());
+    public static final Ordering<Tuple._14<? extends Comparable<?>>> by_14 = (Ordering<Tuple._14<? extends Comparable<?>>>)(Object)by(Tuple14_.<Comparable<?>>_14());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._15<? extends Comparable<?>>> by_15 = (Ordering<Tuple._15<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_15());
+    public static final Ordering<Tuple._15<? extends Comparable<?>>> by_15 = (Ordering<Tuple._15<? extends Comparable<?>>>)(Object)by(Tuple15_.<Comparable<?>>_15());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._16<? extends Comparable<?>>> by_16 = (Ordering<Tuple._16<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_16());
+    public static final Ordering<Tuple._16<? extends Comparable<?>>> by_16 = (Ordering<Tuple._16<? extends Comparable<?>>>)(Object)by(Tuple16_.<Comparable<?>>_16());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._17<? extends Comparable<?>>> by_17 = (Ordering<Tuple._17<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_17());
+    public static final Ordering<Tuple._17<? extends Comparable<?>>> by_17 = (Ordering<Tuple._17<? extends Comparable<?>>>)(Object)by(Tuple17_.<Comparable<?>>_17());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._18<? extends Comparable<?>>> by_18 = (Ordering<Tuple._18<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_18());
+    public static final Ordering<Tuple._18<? extends Comparable<?>>> by_18 = (Ordering<Tuple._18<? extends Comparable<?>>>)(Object)by(Tuple18_.<Comparable<?>>_18());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._19<? extends Comparable<?>>> by_19 = (Ordering<Tuple._19<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_19());
+    public static final Ordering<Tuple._19<? extends Comparable<?>>> by_19 = (Ordering<Tuple._19<? extends Comparable<?>>>)(Object)by(Tuple19_.<Comparable<?>>_19());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._20<? extends Comparable<?>>> by_20 = (Ordering<Tuple._20<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_20());
+    public static final Ordering<Tuple._20<? extends Comparable<?>>> by_20 = (Ordering<Tuple._20<? extends Comparable<?>>>)(Object)by(Tuple20_.<Comparable<?>>_20());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._21<? extends Comparable<?>>> by_21 = (Ordering<Tuple._21<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_21());
+    public static final Ordering<Tuple._21<? extends Comparable<?>>> by_21 = (Ordering<Tuple._21<? extends Comparable<?>>>)(Object)by(Tuple21_.<Comparable<?>>_21());
     
     @SuppressWarnings("unchecked")
-    public static final Ordering<Tuple._22<? extends Comparable<?>>> by_22 = (Ordering<Tuple._22<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_22());
+    public static final Ordering<Tuple._22<? extends Comparable<?>>> by_22 = (Ordering<Tuple._22<? extends Comparable<?>>>)(Object)by(Tuple22_.<Comparable<?>>_22());
 
 }

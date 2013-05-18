@@ -1,12 +1,7 @@
 package fi.solita.utils.functional;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import fi.solita.utils.functional.Tuple;
-import fi.solita.utils.functional.Tuple2;
-import fi.solita.utils.functional.Tuple3;
-import fi.solita.utils.functional.Tuple4;
 
 
 public class TupleTests {

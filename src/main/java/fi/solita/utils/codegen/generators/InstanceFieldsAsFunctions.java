@@ -38,13 +38,13 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
+import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
-import fi.solita.utils.functional.Transformers;
 import fi.solita.utils.functional.Tuple2;
 
 public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctions.Options, TypeElement, Iterable<String>> {
@@ -95,8 +95,8 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
                 }
             }));
             
-            List<String> relevantTypeParams = newList(map(relevantTypeParamPairs, Transformers.<String>_1()));
-            List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamPairs, Transformers.<String>_2()));
+            List<String> relevantTypeParams = newList(map(relevantTypeParamPairs, Helpers.<String>left()));
+            List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamPairs, Helpers.<String>right()));
 
             final List<String> toReplace = newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints));
             Transformer<String,String> doReplace = new Transformer<String,String>() {

@@ -2,7 +2,6 @@ package fi.solita.utils.codegen;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Compare.byIterable;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.contains;
@@ -21,14 +20,15 @@ import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.append;
 import static fi.solita.utils.functional.Transformers.mkString;
 import static fi.solita.utils.functional.Transformers.replaceAll;
-import static fi.solita.utils.functional.Transformers.toString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,8 +56,9 @@ import javax.lang.model.util.SimpleTypeVisitor6;
 import javax.lang.model.util.Types;
 
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Compare;
 import fi.solita.utils.functional.Function1;
+import fi.solita.utils.functional.Iterables;
+import fi.solita.utils.functional.Ordering;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 
@@ -248,11 +249,63 @@ public abstract class Helpers {
         }
     };
 
-    public static Comparator<Element> variableElementComparator = Compare.by(simpleName).then(Compare.by(type.andThen(toString)));
+    public static Comparator<Element> variableElementComparator = new Ordering<Element>() {
+        @Override
+        public int compare(Element o1, Element o2) {
+            return simpleName.apply(o1).compareTo(simpleName.apply(o2));
+        }
+    }.then(new Ordering<Element>() {
+        @Override
+        public int compare(Element o1, Element o2) {
+            return type.apply(o1).toString().compareTo(type.apply(o2).toString());
+        }
+    });
     
-    public static Comparator<ExecutableElement> executableElementComparator =  reduce(Compare.<ExecutableElement>by(enclosingElement.andThen(kind)),
-                                                                                      Compare.<ExecutableElement>by(enclosingElement.andThen(qualifiedName)),
-                                                                                      Compare.by(parameters, byIterable(variableElementComparator)));
+    public static Comparator<ExecutableElement> executableElementComparator =  reduce(
+        new Ordering<ExecutableElement>() {
+            @Override
+            public int compare(ExecutableElement o1, ExecutableElement o2) {
+                return enclosingElement.andThen(kind).apply(o1).compareTo(enclosingElement.andThen(kind).apply(o2));
+            }
+        },
+        new Ordering<ExecutableElement>() {
+            @Override
+            public int compare(ExecutableElement o1, ExecutableElement o2) {
+                return enclosingElement.andThen(qualifiedName).apply(o1).compareTo(enclosingElement.andThen(qualifiedName).apply(o2));
+            }
+        },
+        new Ordering<ExecutableElement>() {
+            @Override
+            public int compare(ExecutableElement o1, ExecutableElement o2) {
+                return byIterable(variableElementComparator).compare(o1.getParameters(), o2.getParameters());
+            }
+        }
+    );
+    
+    private static final <S, T extends Iterable<? extends S>> Ordering<T> byIterable(final Comparator<S> c) {
+        return new Ordering<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                for (Integer s1: Iterables.resolveSize.apply(o1)) {
+                    for (Integer s2: Iterables.resolveSize.apply(o2)) {
+                        int s = s1.compareTo(s2);
+                        if (s != 0) {
+                            return s;
+                        }
+                    }
+                }
+                Iterator<? extends S> it1 = o1.iterator();
+                Iterator<? extends S> it2 = o2.iterator();
+                while (it1.hasNext() && it2.hasNext()) {
+                    int i = c.compare(it1.next(), it2.next());
+                    if (i != 0) {
+                        return i;
+                    }
+                }
+                return it1.hasNext() ? 1 : it2.hasNext() ? -1 : 0;
+            }
+        };
+    }
     
     public static Function1<Element, Iterable<TypeElement>> element2NestedClasses = new Transformer<Element, Iterable<TypeElement>>() {
         @SuppressWarnings("unchecked")
@@ -489,6 +542,24 @@ public abstract class Helpers {
                         return qualifiedName.apply(elem).equals(className) || !elem.equals(e) && acc(elem, visited);
                     }
                 });
+            }
+        };
+    }
+    
+    public static final <LEFT> Transformer<Map.Entry<? extends LEFT, ?>, LEFT> left() {
+        return new Transformer<Map.Entry<? extends LEFT, ?>, LEFT>() {
+            @Override
+            public LEFT transform(Map.Entry<? extends LEFT, ?> source) {
+                return source.getKey();
+            }
+        };
+    }
+
+    public static final <RIGHT> Transformer<Map.Entry<?, ? extends RIGHT>, RIGHT> right() {
+        return new Transformer<Map.Entry<?, ? extends RIGHT>, RIGHT>() {
+            @Override
+            public RIGHT transform(Map.Entry<?, ? extends RIGHT> source) {
+                return source.getValue();
             }
         };
     }

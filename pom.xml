@@ -38,6 +38,9 @@
                         </goals>
                         <inherited>false</inherited>
                         <configuration>
+                            <includes>
+                                <include>fi/solita/utils/codegen/**.*</include>
+                            </includes>
                             <proc>none</proc>
                         </configuration>
                     </execution>

@@ -1,12 +1,13 @@
 package fi.solita.utils.functional;
+import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.sort;
+
 import java.util.List;
 
 import org.junit.Test;
 
 import fi.solita.utils.functional.CompareExamples_.Employee_;
 import fi.solita.utils.functional.Tuple._1;
-import static fi.solita.utils.functional.Functional.sort;
-import static fi.solita.utils.functional.Collections.newList;
 
 @SuppressWarnings("unused")
 public class CompareExamples {

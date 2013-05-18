@@ -53,7 +53,6 @@ import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Predicates;
 import fi.solita.utils.functional.Transformer;
-import fi.solita.utils.functional.Transformers;
 import fi.solita.utils.functional.Tuple2;
 
 @SupportedAnnotationTypes("*")
@@ -148,7 +147,7 @@ public class CommonMetadataProcessor extends AbstractProcessor {
             long time2 = System.nanoTime();
             List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(element), predicate), nestedDataProducer));
             
-            Iterable<String> content = map(concat(flatMap(elemData, Transformers.<List<String>>right()), flatMap(nestedData, Transformers.<Iterable<String>>right())), prepend("    "));
+            Iterable<String> content = map(concat(flatMap(elemData, Helpers.<List<String>>right()), flatMap(nestedData, Helpers.<List<String>>right())), prepend("    "));
             long time3 = System.nanoTime();
             if (!isEmpty(content)) {
                 String genClassName = genClassNamePat.replace("{}", element.getSimpleName().toString());
@@ -168,8 +167,8 @@ public class CommonMetadataProcessor extends AbstractProcessor {
             nestedGeneration += time3 - time2;
             fileWriting += System.nanoTime() - time3;
 
-            Iterable<Long> contentTimes = map(elemData, Transformers.<Long>left());
-            Iterable<List<Long>> nestedTimes = map(nestedData, Transformers.<List<Long>>left());
+            Iterable<Long> contentTimes = map(elemData, Helpers.<Long>left());
+            Iterable<List<Long>> nestedTimes = map(nestedData, Helpers.<List<Long>>left());
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
                 @Override
                 public Long transform(Iterable<Long> source) {

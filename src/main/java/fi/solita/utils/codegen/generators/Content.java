@@ -29,6 +29,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function4;
@@ -36,7 +37,6 @@ import fi.solita.utils.functional.Monoid;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
-import fi.solita.utils.functional.Transformers;
 
 public abstract class Content {
 
@@ -104,10 +104,10 @@ public abstract class Content {
             List<Pair<Long, List<String>>> elemData = newList(sequence(generators, source));
             List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(source), predicate), withNestedClasses.curried().apply(generatedClassNamePattern).apply(predicate).apply(generators)));
             
-            Iterable<Long> contentTimes = map(elemData, Transformers.<Long>left());
-            Iterable<List<Long>> nestedTimes = map(nestedData, Transformers.<List<Long>>left());
-            Iterable<String> elemContents = flatMap(elemData, Transformers.<List<String>>right());
-            Iterable<String> nestedContents = flatMap(nestedData, Transformers.<Iterable<String>>right());
+            Iterable<Long> contentTimes = map(elemData, Helpers.<Long>left());
+            Iterable<List<Long>> nestedTimes = map(nestedData, Helpers.<List<Long>>left());
+            Iterable<String> elemContents = flatMap(elemData, Helpers.<List<String>>right());
+            Iterable<String> nestedContents = flatMap(nestedData, Helpers.<List<String>>right());
             
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
                 @Override

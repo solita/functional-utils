@@ -8,7 +8,7 @@ import java.util.Set;
 public interface Monoid<T> extends SemiGroup<T> {
     T zero();
     
-	public static class BooleanDisjunction extends SemiGroup.BooleanDisjunction implements Monoid<Boolean> {
+    public static class BooleanDisjunction extends SemiGroup.BooleanDisjunction implements Monoid<Boolean> {
         @Override
         public Boolean zero() {
             return false;
@@ -157,17 +157,17 @@ public interface Monoid<T> extends SemiGroup<T> {
         }
     }
 
-	public static final Monoid<Integer> intSum = new IntSum();
+    public static final Monoid<Integer> intSum = new IntSum();
 
-	public static final Monoid<Integer> intProduct = new IntProduct();
+    public static final Monoid<Integer> intProduct = new IntProduct();
 
     public static final Monoid<Long> longSum = new LongSum();
 
     public static final Monoid<Long> longProduct = new LongProduct();
 
-	public static final Monoid<String> stringConcat = new StringConcat();
+    public static final Monoid<String> stringConcat = new StringConcat();
 
-	public static final Monoid<Boolean> booleanConjunction = new BooleanConjunction();
+    public static final Monoid<Boolean> booleanConjunction = new BooleanConjunction();
 
     public static final Monoid<Boolean> booleanDisjunction = new BooleanDisjunction();
     

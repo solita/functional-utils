@@ -14,8 +14,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import fi.solita.utils.functional.Pair;
-
 public class PairTests {
     
     class NonSerializable {}
