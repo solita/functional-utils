@@ -27,7 +27,7 @@ public class CompareExamples {
         List<Tuple2<String, Employee>> listOfTuples = newList();
         sort(listOfTuples, by_1);
         // Employee does not implement comparable, but we can first map to _2 and then to salary
-        sort(listOfTuples, Compare.by(Tuple2_.<String,Employee>_2().andThen(Employee_.salary)));
+        sort(listOfTuples, Compare.by(Tuple2_.<Employee>_2().andThen(Employee_.salary)));
         
         // sorted by the contents of an iterable
         sort(Collections.<List<String>>newList(), Compare.<String>byIterable());

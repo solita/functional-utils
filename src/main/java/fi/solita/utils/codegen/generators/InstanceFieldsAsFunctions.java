@@ -4,11 +4,10 @@ import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasNonQmarkGenerics;
-import static fi.solita.utils.codegen.Helpers.hasTypeParameters;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
-import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
+import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.staticElements;
 import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
@@ -24,12 +23,14 @@ import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
-import static fi.solita.utils.functional.Functional.repeat;
+import static fi.solita.utils.functional.Functional.subtract;
+import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -42,6 +43,9 @@ import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
+import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Transformers;
+import fi.solita.utils.functional.Tuple2;
 
 public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctions.Options, TypeElement, Iterable<String>> {
     
@@ -79,17 +83,39 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
         public Iterable<String> apply(Options options, VariableElement field) {
             TypeElement enclosingElement = (TypeElement) field.getEnclosingElement();
             
-            List<String> relevantTypeParams = newList(map(enclosingElement.getTypeParameters(), typeParameter2String));
-            String relevantTypeParamsString = isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
-
             String returnType = resolveBoxedGenericType(field.asType());
             
-            boolean isPrivate = isPrivate(field);
-            boolean needsToBeFunction = relevantTypeParamsString.contains(returnType) || hasTypeParameters.accept(returnType);
+            Iterable<String> allTypeParams = map(enclosingElement.getTypeParameters(), typeParameter2String);
+            List<String> allTypeParamsWithoutConstraints = newList(map(enclosingElement.getTypeParameters(), simpleName));
+            final String rett = ("." + returnType + ".");
+            List<Tuple2<String, String>> relevantTypeParamPairs = newList(filter(zip(allTypeParams, allTypeParamsWithoutConstraints), new Predicate<Tuple2<String,String>>() {
+                @Override
+                public boolean accept(Tuple2<String,String> candidate) {
+                    return rett.matches(".*[^a-zA-Z0-9_]" + Pattern.quote(candidate._2) + "[^a-zA-Z0-9_].*");
+                }
+            }));
             
-            String enclosingElementGenericQualifiedName = needsToBeFunction
-                    ? elementGenericQualifiedName(enclosingElement)
-                    : qualifiedName.apply(enclosingElement) + (relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", repeat("?", relevantTypeParams.size())) + ">");
+            List<String> relevantTypeParams = newList(map(relevantTypeParamPairs, Transformers.<String>_1()));
+            List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamPairs, Transformers.<String>_2()));
+
+            final List<String> toReplace = newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints));
+            Transformer<String,String> doReplace = new Transformer<String,String>() {
+                @Override
+                public String transform(String candidate) {
+                    for (String r: toReplace) {
+                        candidate = candidate.replaceAll("([^a-zA-Z0-9_])([?]\\s*(?:extends|super)\\s+)?" + Pattern.quote(r) + "([^a-zA-Z0-9_])", "$1?$3");
+                    }
+                    return candidate;
+                }
+            };
+            
+            boolean isPrivate = isPrivate(field);
+            boolean needsToBeFunction = !relevantTypeParams.isEmpty();
+            
+            String relevantTypeParamsString = isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", map(relevantTypeParams, doReplace)) + ">";
+            returnType = doReplace.apply(returnType);
+            
+            String enclosingElementGenericQualifiedName = doReplace.apply(elementGenericQualifiedName(enclosingElement));
             
             String modifiers = (options.makeFieldsPublic() ? "public" : resolveVisibility(field)) + " static final";
             String fieldName = field.getSimpleName().toString();

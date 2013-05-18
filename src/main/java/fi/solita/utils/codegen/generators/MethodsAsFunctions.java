@@ -115,7 +115,6 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             final List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
             final List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamsForMethod, simpleName));
             final List<String> allTypeParamsWithoutConstraints = newList(map(allTypeParamsForMethod, simpleName));
-            String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
             String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
             List<? extends VariableElement> methodParameters = method.getParameters();
             
@@ -155,6 +154,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
                     : qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElement.getTypeParameters().size())) + ">"));
             
             argumentTypes = newList(map(argumentTypes, doReplace));
+            String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", map(relevantTypeParams, doReplace)) + ">";
             
             List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
             Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self") : map(methodParameters, simpleName);
