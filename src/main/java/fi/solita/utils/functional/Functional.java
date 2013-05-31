@@ -70,7 +70,7 @@ public abstract class Functional {
         return new FilteringIterable<T>(elements, filter);
     }
 
-    public static <T, E> Map<T, E> filter(Map<T, E> map, Apply<Map.Entry<? super T, ? super E>, Boolean> filter) {
+    public static <T, E> Map<T, E> filter(Map<T, E> map, Apply<Map.Entry<T, E>, Boolean> filter) {
         return Collections.newMap(filter(map.entrySet(), filter));
     }
 

@@ -126,12 +126,34 @@ public abstract class Tuple {
         return newList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22);
     }
     
-    private static Predicate<Object> isSerializable = new Predicate<Object>() {
-        @Override
-        public boolean accept(Object candidate) {
-            return candidate instanceof Serializable || candidate != null && candidate.getClass().isPrimitive();
+    public static Tuple of(Object... ts) {
+        switch (ts.length) {
+            case 0: return Tuple.of();
+            case 1: return Tuple.of(ts[0]);
+            case 2: return Tuple.of(ts[0], ts[1]);
+            case 3: return Tuple.of(ts[0], ts[1], ts[2]);
+            case 4: return Tuple.of(ts[0], ts[1], ts[2], ts[3]);
+            case 5: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4]);
+            case 6: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5]);
+            case 7: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6]);
+            case 8: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7]);
+            case 9: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8]);
+            case 10: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9]);
+            case 11: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10]);
+            case 12: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11]);
+            case 13: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12]);
+            case 14: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13]);
+            case 15: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14]);
+            case 16: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15]);
+            case 17: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16]);
+            case 18: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17]);
+            case 19: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18]);
+            case 20: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19]);
+            case 21: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20]);
+            case 22: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21]);
         }
-    };
+        throw new UnsupportedOperationException("Tuple23 not implemented");
+    }
     
     public static Tuple0 of() {
         return new Tuple0();
@@ -139,7 +161,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1> Tuple1<T1> of(T1 _1) {
-        if (forAll(newList(_1), isSerializable)) {
+        if (forAll(newList(_1), Predicates.serializable)) {
             return (Tuple1<T1>) new Tuple1.SerializableTuple<Serializable>((Serializable)_1);
         }
         return new Tuple1<T1>(_1);
@@ -147,7 +169,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2> Tuple2<T1, T2> of(T1 _1, T2 _2) {
-        if (forAll(newList(_1, _2), isSerializable)) {
+        if (forAll(newList(_1, _2), Predicates.serializable)) {
             return (Tuple2<T1, T2>) new Tuple2.SerializableTuple<Serializable, Serializable>((Serializable)_1, (Serializable)_2);
         }
         return new Tuple2<T1, T2>(_1, _2);
@@ -155,7 +177,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3> Tuple3<T1, T2, T3> of(T1 _1, T2 _2, T3 _3) {
-        if (forAll(newList(_1, _2, _3), isSerializable)) {
+        if (forAll(newList(_1, _2, _3), Predicates.serializable)) {
             return (Tuple3<T1, T2, T3>) new Tuple3.SerializableTuple<Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3);
         }
         return new Tuple3<T1, T2, T3>(_1, _2, _3);
@@ -163,7 +185,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> of(T1 _1, T2 _2, T3 _3, T4 _4) {
-        if (forAll(newList(_1, _2, _3, _4), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4), Predicates.serializable)) {
             return (Tuple4<T1, T2, T3, T4>) new Tuple4.SerializableTuple<Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4);
         }
         return new Tuple4<T1, T2, T3, T4>(_1, _2, _3, _4);
@@ -171,7 +193,7 @@ public abstract class Tuple {
 
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5) {
-        if (forAll(newList(_1, _2, _3, _4, _5), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5), Predicates.serializable)) {
             return (Tuple5<T1, T2, T3, T4, T5>) new Tuple5.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5);
         }
         return new Tuple5<T1, T2, T3, T4, T5>(_1, _2, _3, _4, _5);
@@ -179,7 +201,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6> Tuple6<T1, T2, T3, T4, T5, T6> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6), Predicates.serializable)) {
             return (Tuple6<T1, T2, T3, T4, T5, T6>) new Tuple6.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6);
         }
         return new Tuple6<T1, T2, T3, T4, T5, T6>(_1, _2, _3, _4, _5, _6);
@@ -187,7 +209,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7> Tuple7<T1, T2, T3, T4, T5, T6, T7> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7), Predicates.serializable)) {
             return (Tuple7<T1, T2, T3, T4, T5, T6, T7>) new Tuple7.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7);
         }
         return new Tuple7<T1, T2, T3, T4, T5, T6, T7>(_1, _2, _3, _4, _5, _6, _7);
@@ -195,7 +217,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8> Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8), Predicates.serializable)) {
             return (Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>) new Tuple8.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8);
         }
         return new Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>(_1, _2, _3, _4, _5, _6, _7, _8);
@@ -203,7 +225,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9), Predicates.serializable)) {
             return (Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>) new Tuple9.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9);
         }
         return new Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(_1, _2, _3, _4, _5, _6, _7, _8, _9);
@@ -211,7 +233,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10), Predicates.serializable)) {
             return (Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>) new Tuple10.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10);
         }
         return new Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10);
@@ -219,7 +241,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11), Predicates.serializable)) {
             return (Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>) new Tuple11.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11);
         }
         return new Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11);
@@ -227,7 +249,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12), Predicates.serializable)) {
             return (Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>) new Tuple12.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12);
         }
         return new Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12);
@@ -235,7 +257,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13), Predicates.serializable)) {
             return (Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>) new Tuple13.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13);
         }
         return new Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13);
@@ -243,7 +265,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14), Predicates.serializable)) {
             return (Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>) new Tuple14.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14);
         }
         return new Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14);
@@ -251,7 +273,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15), Predicates.serializable)) {
             return (Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>) new Tuple15.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15);
         }
         return new Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15);
@@ -259,7 +281,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16), Predicates.serializable)) {
             return (Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>) new Tuple16.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16);
         }
         return new Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16);
@@ -267,7 +289,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17), Predicates.serializable)) {
             return (Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>) new Tuple17.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17);
         }
         return new Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17);
@@ -275,7 +297,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18), Predicates.serializable)) {
             return (Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>) new Tuple18.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17, (Serializable)_18);
         }
         return new Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18);
@@ -283,7 +305,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19), Predicates.serializable)) {
             return (Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>) new Tuple19.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17, (Serializable)_18, (Serializable)_19);
         }
         return new Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19);
@@ -291,7 +313,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20), Predicates.serializable)) {
             return (Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>) new Tuple20.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17, (Serializable)_18, (Serializable)_19, (Serializable)_20);
         }
         return new Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20);
@@ -299,7 +321,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21), Predicates.serializable)) {
             return (Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>) new Tuple21.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17, (Serializable)_18, (Serializable)_19, (Serializable)_20, (Serializable)_21);
         }
         return new Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21);
@@ -307,7 +329,7 @@ public abstract class Tuple {
     
     @SuppressWarnings({ "unchecked" })
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22) {
-        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22), isSerializable)) {
+        if (forAll(newList(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22), Predicates.serializable)) {
             return (Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22>) new Tuple22.SerializableTuple<Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable, Serializable>((Serializable)_1, (Serializable)_2, (Serializable)_3, (Serializable)_4, (Serializable)_5, (Serializable)_6, (Serializable)_7, (Serializable)_8, (Serializable)_9, (Serializable)_10, (Serializable)_11, (Serializable)_12, (Serializable)_13, (Serializable)_14, (Serializable)_15, (Serializable)_16, (Serializable)_17, (Serializable)_18, (Serializable)_19, (Serializable)_20, (Serializable)_21, (Serializable)_22);
         }
         return new Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22);

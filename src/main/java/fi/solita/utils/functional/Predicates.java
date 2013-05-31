@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.regex.Pattern;
@@ -180,4 +181,11 @@ public abstract class Predicates {
                 }
         };
     }
+    
+    public static final Predicate<Object> serializable = new Predicate<Object>() {
+        @Override
+        public boolean accept(Object candidate) {
+            return candidate instanceof Serializable || candidate != null && candidate.getClass().isPrimitive();
+        }
+    };
 }
