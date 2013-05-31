@@ -241,7 +241,7 @@ public abstract class Collections {
         }
         return java.util.Collections.unmodifiableMap(ret);
     }
-
+    
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1) {
         return newMap(Arrays.asList(e1));
@@ -254,6 +254,25 @@ public abstract class Collections {
 
     public static <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V>... elements) {
         return newMap(Arrays.asList(elements));
+    }
+    
+    public static <K, V> Map<K, List<V>> newMultimap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        Map<K, List<V>> ret = null;
+        for (int size: Iterables.resolveSize.apply(elements)) {
+            ret = newMapOfSize((int)(size*1.5));
+        }
+        if (ret == null) {
+            ret = newMap();
+        }
+        for (Map.Entry<? extends K, ? extends V> e: elements) {
+            List<V> values = ret.get(e.getKey());
+            if (values == null) {
+                values = newList();
+                ret.put(e.getKey(), values);
+            }
+            values.add(e.getValue());
+        }
+        return java.util.Collections.unmodifiableMap(ret);
     }
     
     public static Boolean[] newArray(boolean... array) {
