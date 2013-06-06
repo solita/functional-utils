@@ -36,4 +36,21 @@ public abstract class Function4<T1, T2, T3, T4, R> extends MultiParamFunction<Tu
             }
         };
     }
+    
+    public final Function1<T4,R> ap(final T1 t1, final T2 t2, final T3 t3) {
+        return ap(t1).ap(t2).ap(t3);
+    }
+    
+    public final Function2<T3,T4,R> ap(final T1 t1, final T2 t2) {
+        return ap(t1).ap(t2);
+    }
+    
+    public final Function3<T2,T3,T4,R> ap(final T1 t) {
+        return new Function3<T2,T3,T4,R>() {
+            @Override
+            public R apply(T2 t2, T3 t3, T4 t4) {
+                return Function4.this.apply(t, t2, t3, t4);
+            }
+        };
+    }
 }

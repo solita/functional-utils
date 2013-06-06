@@ -16,13 +16,12 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
 
 public class InstanceFieldsAsEnum extends Function2<InstanceFieldsAsEnum.Options, TypeElement, Iterable<String>> {
     
-    public static final Function1<Options, Function1<TypeElement, Iterable<String>>> instance = new InstanceFieldsAsEnum().curried();
+    public static final InstanceFieldsAsEnum instance = new InstanceFieldsAsEnum();
     
     public static interface Options {
         boolean onlyPublicMembers();

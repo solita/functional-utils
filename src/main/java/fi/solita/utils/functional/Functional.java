@@ -403,6 +403,11 @@ public abstract class Functional {
     public static <T> Iterable<T> cons(T element, Iterable<? extends T> elements) {
         return concat(Arrays.asList(element), elements);
     }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> Iterable<T> cons(T element, T[] elements) {
+        return concat(Arrays.asList(element), elements);
+    }
 
     public static <T> Iterable<T> concat(T[] elements1, Iterable<? extends T> elements2) {
         return concat(Arrays.asList(elements1), elements2);
@@ -681,6 +686,15 @@ public abstract class Functional {
     
     public static <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> elements) {
         return new TransposingIterable<T>(elements);
+    }
+    
+    public static <T> Iterable<Iterable<T>> transpose2(Iterable<T[]> elements) {
+        return transpose(map(elements, new Transformer<T[], Iterable<T>>() {
+            @Override
+            public Iterable<T> transform(T[] source) {
+                return Arrays.asList(source);
+            }
+        }));
     }
     
     private static final String LINE_SEP = System.getProperty("line.separator");

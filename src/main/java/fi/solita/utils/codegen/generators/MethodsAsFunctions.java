@@ -82,7 +82,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
         boolean onlyPublicMembers();
     }
     
-    public static Function1<ProcessingEnvironment, Function1<Options, Function1<TypeElement, Iterable<String>>>> instance = new MethodsAsFunctions().curried();
+    public static MethodsAsFunctions instance = new MethodsAsFunctions();
     
     @Override
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
@@ -97,7 +97,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
         }
       
         Iterable<List<ExecutableElement>> elementsByName = groupBy(elements, simpleName).values();
-        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = executableElementGen.curried().apply(processingEnv).apply(options);
+        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = executableElementGen.ap(processingEnv, options);
         
         return flatMap(flatMap(elementsByName, zipWithIndex), singleElementTransformer);
     }

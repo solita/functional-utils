@@ -1,3 +1,4 @@
 <factorypath>
     <factorypathentry kind="WKSPJAR" id="/functional-utils/functional-utils.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="PLUGIN" id="oracle.eclipse.tools.weblogic" enabled="false" runInBatchMode="false"/>
 </factorypath>

@@ -58,7 +58,7 @@ public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, Co
         boolean onlyPublicMembers();
     }
     
-    public static Function1<ProcessingEnvironment, Function1<Options, Function1<TypeElement, Iterable<String>>>> instance = new ConstructorsAsFunctions().curried();
+    public static ConstructorsAsFunctions instance = new ConstructorsAsFunctions();
     
     @Override
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
@@ -76,7 +76,7 @@ public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, Co
             });
         }
         
-        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = constructorGen.curried().apply(processingEnv).apply(options);
+        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = constructorGen.ap(processingEnv, options);
         return flatMap(zipWithIndex(elements), singleElementTransformer);
     }
     

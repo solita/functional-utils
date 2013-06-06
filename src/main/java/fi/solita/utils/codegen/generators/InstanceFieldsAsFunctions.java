@@ -41,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
@@ -49,7 +48,7 @@ import fi.solita.utils.functional.Tuple2;
 
 public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctions.Options, TypeElement, Iterable<String>> {
     
-    public static final Function1<Options, Function1<TypeElement, Iterable<String>>> instance = new InstanceFieldsAsFunctions().curried();
+    public static final InstanceFieldsAsFunctions instance = new InstanceFieldsAsFunctions();
     
     @SuppressWarnings("rawtypes")
     public static interface Options {
@@ -75,7 +74,7 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
             });
         }
       
-        return flatMap(filter(elements, not(staticElements)), variableElementGen.curried().apply(options));
+        return flatMap(filter(elements, not(staticElements)), variableElementGen.ap(options));
     }
     
     public static Function2<Options, VariableElement, Iterable<String>> variableElementGen = new Function2<InstanceFieldsAsFunctions.Options, VariableElement, Iterable<String>>() {

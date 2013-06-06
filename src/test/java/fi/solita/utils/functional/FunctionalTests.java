@@ -2,9 +2,12 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.head;
+import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.reverse;
 import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.Functional.transpose;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
@@ -47,5 +50,29 @@ public class FunctionalTests {
         
         assertThat(reversed, equalTo(newList(3, 2, 1)));
         assertThat(reversed, not(equalTo(original)));
+    }
+    
+    @Test
+    public void testTranspose() {
+         List<String> row1 = newList("1","2");
+         List<String> row2 = newList("3","4");
+         List<List<String>> m = newList(row1, row2);
+         
+         Iterable<Iterable<String>> t = transpose(m);
+         
+         assertThat(mkString("", map(m, Transformers.toString)), equalTo("[1, 2][3, 4]"));
+         assertThat(mkString("", map(t, Transformers.toString)), equalTo("[1, 3][2, 4]"));
+    }
+    
+    @Test
+    public void testTranspose2() {
+        List<String> row1 = newList("1","2");
+        @SuppressWarnings("unchecked")
+        List<List<String>> m = newList((List<String>[])new List[]{row1});
+        
+        Iterable<Iterable<String>> t = transpose(m);
+        
+        assertThat(mkString("", map(m, Transformers.toString)), equalTo("[1, 2]"));
+        assertThat(mkString("", map(t, Transformers.toString)), equalTo("[1][2]"));
     }
 }

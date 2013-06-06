@@ -403,7 +403,7 @@ public abstract class Collections {
         return result;
     }
 
-    public static <T> T[] newArray(Iterable<T> elements, Class<T> clazz) {
+    public static <T> T[] newArray(Class<T> clazz, Iterable<T> elements) {
         List<T> list = newList(elements);
         @SuppressWarnings("unchecked")
         T[] ret = (T[])Array.newInstance(clazz, list.size());

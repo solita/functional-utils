@@ -121,7 +121,7 @@ public abstract class Iterables {
         
         @Override
         public String toString() {
-            return getClass().getName() + Collections.newList(this).toString();
+            return getClass().getSimpleName() + Collections.newList(this).toString();
         }
     }
     
@@ -162,7 +162,7 @@ public abstract class Iterables {
 
                 @Override
                 public Iterable<T> next() {
-                    return map(iterators, next);
+                    return newList(map(iterators, next));
                 }
 
                 @Override

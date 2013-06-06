@@ -44,7 +44,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
-    public final Function0<R> applyPartial(final T t) {
+    public final Function0<R> ap(final T t) {
         return new Function0<R>() {
             @Override
             public R apply() {

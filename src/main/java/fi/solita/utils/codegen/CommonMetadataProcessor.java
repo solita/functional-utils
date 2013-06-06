@@ -105,10 +105,10 @@ public class CommonMetadataProcessor extends AbstractProcessor {
     }
     
     public List<Function1<TypeElement,Iterable<String>>> generators() {
-        return newList(InstanceFieldsAsEnum.instance.apply(generatorOptions()),
-                       InstanceFieldsAsFunctions.instance.apply(generatorOptions()),
-                       ConstructorsAsFunctions.instance.apply(processingEnv).apply(generatorOptions()),
-                       MethodsAsFunctions.instance.apply(processingEnv).apply(generatorOptions()));
+        return newList(InstanceFieldsAsEnum.instance.ap(generatorOptions()),
+                       InstanceFieldsAsFunctions.instance.ap(generatorOptions()),
+                       ConstructorsAsFunctions.instance.ap(processingEnv, generatorOptions()),
+                       MethodsAsFunctions.instance.ap(processingEnv, generatorOptions()));
     }
     
     static Transformer<Function1<TypeElement,Iterable<String>>, Function1<TypeElement,Pair<Long,List<String>>>> timed = new Transformer<Function1<TypeElement,Iterable<String>>, Function1<TypeElement,Pair<Long,List<String>>>>() {

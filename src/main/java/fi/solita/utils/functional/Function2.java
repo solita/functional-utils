@@ -37,4 +37,13 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
             }
         };
     }
+    
+    public final Function1<T2,R> ap(final T1 t) {
+        return new Function1<T2,R>() {
+            @Override
+            public R apply(T2 t2) {
+                return Function2.this.apply(t, t2);
+            }
+        };
+    }
 }
