@@ -8,6 +8,7 @@ import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.find;
+import static fi.solita.utils.functional.Functional.groupBy;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
@@ -460,9 +461,16 @@ public abstract class Helpers {
      */
     public static Iterable<? extends TypeParameterElement> relevantTypeParams(ExecutableElement e) {
         List<? extends TypeParameterElement> enclosingTypeVars = ((TypeElement)e.getEnclosingElement()).getTypeParameters();
-        return staticElements.accept(e)               ? e.getTypeParameters() :
+        Iterable<? extends TypeParameterElement> ret = staticElements.accept(e)               ? e.getTypeParameters() :
                e.getKind() == ElementKind.CONSTRUCTOR ? concat(enclosingTypeVars, e.getTypeParameters()) :
                                                         concat(filter(enclosingTypeVars, usedIn(e)), e.getTypeParameters());
+        // remove duplicate names
+        return map(groupBy(ret, typeParameter2String).values(), new Transformer<List<? extends TypeParameterElement>,TypeParameterElement>() {
+            @Override
+            public TypeParameterElement transform(List<? extends TypeParameterElement> source) {
+                return head(source);
+            }
+        });
     }
 
     private static Predicate<TypeParameterElement> usedIn(final ExecutableElement e) {
