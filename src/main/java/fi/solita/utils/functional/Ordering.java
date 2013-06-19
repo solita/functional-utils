@@ -48,7 +48,7 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(Monoids.comparatorConcat().zero());
     }
     
-    public final Ordering<T> then(Ordering<? super T> next) {
+    public final Ordering<T> then(Comparator<? super T> next) {
         return reduce(this, of(next));
     }
 }
