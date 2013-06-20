@@ -28,8 +28,9 @@ public abstract class Functional {
      * Returns a new iterable <code>a - b</code>, i.e. one that contains all elements of <code>a</code> that
      * don't exist in <code>b</code>.
      */
-    public static <T> Iterable<T> subtract(Iterable<T> a, final Collection<T> b) {
-        return filter(a, new Predicate<T>() {
+    @SuppressWarnings("unchecked")
+    public static <T> Iterable<T> subtract(Iterable<? extends T> a, final Collection<? extends T> b) {
+        return (Iterable<T>) filter(a, new Predicate<T>() {
             @Override
             public boolean accept(T object) {
                 return !b.contains(object);
