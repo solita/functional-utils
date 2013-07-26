@@ -22,4 +22,18 @@ public abstract class Function7<T1, T2, T3, T4, T5, T6, T7, R> extends MultiPara
             }
         };
     }
+    
+    public Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, Function1<T6, Function1<T7, R>>>>>>> curried() {
+        return new Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, Function1<T6, Function1<T7, R>>>>>>>() {
+            @Override
+            public Function1<T2, Function1<T3, Function1<T4, Function1<T5, Function1<T6, Function1<T7, R>>>>>> apply(final T1 t1) {
+                return new Function6<T2, T3, T4, T5, T6, T7, R>() {
+                    @Override
+                    public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+                        return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
+                    }
+                }.curried();
+            }
+        };
+    }
 }
