@@ -191,7 +191,7 @@ Just a few examples of using these utils.
 		return i % modulus;
 	}
   
-  //...  
+	//...  
 
 	// Apply<T,R> is a function from T to R
 	Apply<String,Integer> f = length;
