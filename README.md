@@ -177,6 +177,83 @@ Just a few examples of using these utils.
 	List<Pair<String,Integer>> listOfTuples = newList();
 	Iterable<Integer> projection = map(listOfTuples, Tuple_._2_.<Integer>get_2());
 
+### fi.solita.utils.functional.Function
+
+	static int constant() {
+		return 42;
+	}
+	
+	static int length(String s) {
+		return s.length();
+	}
+	
+	static int mod(int modulus, int i) {
+		return i % modulus;
+	}
+  
+  //...  
+
+	// Apply<T,R> is a function from T to R
+	Apply<String,Integer> f = length;
+	
+	// Function0 ia a 0-arg function, Function1 1-arg, Function2 2-arg, etc.
+	Function0<Integer> zeroArg = constant;
+	Function1<String,Integer> oneArg = length;
+	Function2<Integer, Integer, Integer> twoArg = mod;
+	
+	int applied = length.apply("foo");
+	Iterable<Integer> mappedOverFunction = map(newList("a", "aa"), f);
+	
+	// partial application:
+	Function0<Integer> partiallyApplied = length.ap("foo");
+	int result = partiallyApplied.apply();
+	Function1<Integer, Integer> modulo42 = mod.ap(42);
+	
+	// function composition, one way or the other
+	Function1<String, String> func = Function1.id();
+	Function1<String, Integer> composed = func.andThen(length);
+	Function1<String, Integer> composed2 = length.compose(func);
+	
+	// multi-param function can be views as a 1-arg function of a Tuple:
+	Function2<Integer,Integer,Integer> m = mod;
+	Function1<Tuple2<Integer,Integer>,Integer> tuppled = m.tuppled();
+
+	Function2<Integer,Integer,Integer> twoArgFunction = mod;
+	Function1<Integer,Function1<Integer,Integer>> curried = twoArgFunction.curried();
+}
+
+### fi.solita.utils.functional.Monoid
+
+	static class Distance implements SemiGroup<Distance> {
+		public final int meters;
+		
+		public Distance(int meters) {
+			this.meters = meters;
+		}
+		
+		@Override
+		public Distance apply(final Tuple2<Distance, Distance> t) {
+			return new Distance(t._1.meters + t._2.meters);
+		}
+	}
+	
+	//...
+	
+	List<Integer> ints = newList(1, 2);
+	
+	// Integers, Booleans and Strings are monoids,
+	// but they do not have "default instances of Monoid typeclass" so we
+	// must give one as a parameter.
+	int three = reduce(ints, Monoid.intSum);
+	int two = reduce(ints, Monoid.intProduct);
+	boolean notTrue = reduce(newList(true, false), Monoid.booleanConjunction);
+	String foobar = reduce(newList("foo", "bar"), Monoid.stringConcat);
+	
+	// For classes having a default (SemiGroup) instance,
+	// no parameter is needed.
+	List<Distance> distances = newList(new Distance(1), new Distance(2));
+	Option<Distance> reduced = reduce(distances);
+
 ### fi.solita.utils.functional.Functional
 
 TODO
