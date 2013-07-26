@@ -3,34 +3,35 @@ package fi.solita.utils.functional;
 import java.io.Serializable;
 
 public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
+	
+    private static final Function1<?,?> ID = new Function1<Object,Object>() {
+        @Override
+        public Object apply(Object t) {
+            return t;
+        }
+    };
 
-    public static final <T> Function1<T, T> id() {
-        return new Function1<T,T>() {
-            @Override
-            public T apply(T t) {
-                return t;
-            }
-        };
+    @SuppressWarnings("unchecked")
+		public static final <T> Function1<T, T> id() {
+        return (Function1<T, T>) ID;
     }
 
     public abstract R apply(T t);
 
     public <U> Function1<T, U> andThen(final Apply<? super R, ? extends U> next) {
-        final Function1<T, R> self = this;
         return new Function1<T, U>() {
             @Override
             public U apply(T source) {
-                return next.apply(self.apply(source));
+                return next.apply(Function1.this.apply(source));
             }
         };
     }
     
     public <U> Function1<U, R> compose(final Apply<? super U, ? extends T> next) {
-        final Function1<T, R> self = this;
         return new Function1<U, R>() {
             @Override
             public R apply(U source) {
-                return self.apply(next.apply(source));
+                return Function1.this.apply(next.apply(source));
             }
         };
     }
