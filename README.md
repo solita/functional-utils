@@ -220,7 +220,6 @@ Just a few examples of using these utils.
 
 	Function2<Integer,Integer,Integer> twoArgFunction = mod;
 	Function1<Integer,Function1<Integer,Integer>> curried = twoArgFunction.curried();
-}
 
 ### fi.solita.utils.functional.Monoid
 
