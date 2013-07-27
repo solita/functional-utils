@@ -48,7 +48,7 @@ import fi.solita.utils.codegen.generators.InstanceFieldsAsFunctions;
 import fi.solita.utils.codegen.generators.MethodsAsFunctions;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
-import fi.solita.utils.functional.Monoid;
+import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Predicates;
@@ -172,7 +172,7 @@ public class CommonMetadataProcessor extends AbstractProcessor {
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
                 @Override
                 public Long transform(Iterable<Long> source) {
-                    return reduce(source, Monoid.longSum);
+                    return reduce(source, Monoids.longSum);
                 }
             }));
             gens = newList(map(zip(gens, totalTimesPerGenerator), new Transformer<Tuple2<Long,Long>,Long>() {

@@ -33,7 +33,7 @@ import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function4;
-import fi.solita.utils.functional.Monoid;
+import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
@@ -112,7 +112,7 @@ public abstract class Content {
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
                 @Override
                 public Long transform(Iterable<Long> source) {
-                    return reduce(source, Monoid.longSum);
+                    return reduce(source, Monoids.longSum);
                 }
             }));
             if (totalTimesPerGenerator.size() != generators.size()) {

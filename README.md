@@ -252,6 +252,10 @@ Just a few examples of using these utils.
 	// no parameter is needed.
 	List<Distance> distances = newList(new Distance(1), new Distance(2));
 	Option<Distance> reduced = reduce(distances);
+	
+	Map<String, Integer> first = newMap();
+	Map<String, Integer> second = newMap();
+	Map<String, Integer> valuesSummed = reduce(newList(first, second), Monoids.<String,Integer>mapCombine(SemiGroups.intSum));
 
 ### fi.solita.utils.functional.Functional
 

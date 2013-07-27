@@ -36,9 +36,9 @@ import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.groupBy;
-import static fi.solita.utils.functional.Functional.intersection;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
+import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
@@ -65,6 +65,7 @@ import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
+import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
@@ -140,7 +141,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             boolean zeroArgInstanceMethod = isInstanceMethod && methodParameters.isEmpty(); // handle no-arg methods like static functions
             boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
             boolean returnsVoid = returnsVoid(method);
-            boolean needsTypeArguments = !intersection(newSet(relevantTypeParamsWithoutConstraints), newSet(cons(returnType, argumentTypes))).isEmpty() || exists(cons(returnType, argumentTypes), hasTypeParameters);
+            boolean needsTypeArguments = !reduce(newList(newSet(relevantTypeParamsWithoutConstraints), newSet(cons(returnType, argumentTypes))), Monoids.<String>setIntersection()).isEmpty() || exists(cons(returnType, argumentTypes), hasTypeParameters);
             
             boolean throwsChecked = throwsCheckedExceptions(method, processingEnv);
             boolean hasRawTypes = hasRawTypes(method);

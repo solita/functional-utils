@@ -1,8 +1,10 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Functional.reduce;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -16,15 +18,19 @@ public class MonoidExamples {
         // Integers, Booleans and Strings are monoids,
         // but they do not have "default instances of Monoid typeclass" so we
         // must give one as a parameter.
-        int three = reduce(ints, Monoid.intSum);
-        int two = reduce(ints, Monoid.intProduct);
-        boolean notTrue = reduce(newList(true, false), Monoid.booleanConjunction);
-        String foobar = reduce(newList("foo", "bar"), Monoid.stringConcat);
+        int three = reduce(ints, Monoids.intSum);
+        int two = reduce(ints, Monoids.intProduct);
+        boolean notTrue = reduce(newList(true, false), Monoids.booleanConjunction);
+        String foobar = reduce(newList("foo", "bar"), Monoids.stringConcat);
         
         // For classes having a default (SemiGroup) instance,
         // no parameter is needed.
         List<Distance> distances = newList(new Distance(1), new Distance(2));
         Option<Distance> reduced = reduce(distances);
+        
+        Map<String, Integer> first = newMap();
+        Map<String, Integer> second = newMap();
+        Map<String, Integer> valuesSummed = reduce(newList(first, second), Monoids.<String,Integer>mapCombine(SemiGroups.intSum));
     }
     
     static class Distance implements SemiGroup<Distance> {

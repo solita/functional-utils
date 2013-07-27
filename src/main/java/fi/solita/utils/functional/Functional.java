@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -534,7 +533,7 @@ public abstract class Functional {
     }
 
     public static long sum(Iterable<Integer> elements) {
-        return reduce(map(elements, Transformers.int2long), Monoid.longSum);
+        return reduce(map(elements, Transformers.int2long), Monoids.longSum);
     }
 
     public static long product(int e1) {
@@ -554,7 +553,7 @@ public abstract class Functional {
     }
     
     public static long product(Iterable<Integer> elements) {
-        return reduce(map(elements, Transformers.int2long), Monoid.longProduct);
+        return reduce(map(elements, Transformers.int2long), Monoids.longProduct);
     }
     
     @SuppressWarnings("unchecked")
@@ -701,25 +700,5 @@ public abstract class Functional {
     
     public static final String unlines(Iterable<String> elements) {
         return mkString(LINE_SEP, elements);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> Set<T> union(Set<T> e1, Set<T> e2) {
-        return reduce(newList(e1, e2), (Monoid<Set<T>>)(Object)Monoid.setUnion);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T>... e) {
-        return reduce(concat(newList(e1, e2), e), (Monoid<Set<T>>)(Object)Monoid.setUnion);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> Set<T> intersection(Set<T> e1, Set<T> e2) {
-        return reduce(newList(e1, e2), (Monoid<Set<T>>)(Object)Monoid.setIntersection);
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T>... e) {
-        return reduce(concat(newList(e1, e2), e), (Monoid<Set<T>>)(Object)Monoid.setIntersection);
     }
 }
