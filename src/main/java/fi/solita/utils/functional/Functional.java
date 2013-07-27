@@ -489,7 +489,7 @@ public abstract class Functional {
     public static <T> T reduce(T[] elements, Monoid<T> m) {
         return reduce(Arrays.asList(elements), m);
     }
-    
+  
     public static <T> T reduce(Iterable<? extends T> elements, Monoid<T> m) {
         return fold(cons(m.zero(), elements), m).get();
     }
@@ -516,58 +516,40 @@ public abstract class Functional {
         return None();
     }
     
-    public static long sum(int e1) {
-        return sum(Arrays.asList(e1));
-    }
-    
-    public static long sum(int e1, int e2) {
-        return sum(Arrays.asList(e1, e2));
-    }
-    
-    public static long sum(int e1, int e2, int e3) {
-        return sum(Arrays.asList(e1, e2, e3));
-    }
-    
-    public static long sum(int e1, int e2, int e3, Integer... rest) {
-        return sum(concat(Arrays.asList(e1, e2, e3), rest));
+    public static long sum(Integer... elements) {
+        return sum(Arrays.asList(elements));
     }
 
     public static long sum(Iterable<Integer> elements) {
         return reduce(map(elements, Transformers.int2long), Monoids.longSum);
     }
 
-    public static long product(int e1) {
-        return product(Arrays.asList(e1));
-    }
-    
-    public static long product(int e1, int e2) {
-        return product(Arrays.asList(e1, e2));
-    }
-    
-    public static long product(int e1, int e2, int e3) {
-        return product(Arrays.asList(e1, e2, e3));
-    }
-    
-    public static long product(int e1, int e2, int e3, Integer... rest) {
-        return product(concat(Arrays.asList(e1, e2, e3), rest));
+    public static long product(Integer... elements) {
+        return product(Arrays.asList(elements));
     }
     
     public static long product(Iterable<Integer> elements) {
         return reduce(map(elements, Transformers.int2long), Monoids.longProduct);
     }
     
-    @SuppressWarnings("unchecked")
     public static <T extends Comparable<T>> T min(T e1, T... elements) {
-        return min(concat(Arrays.asList(e1), elements)).get();
+        return min(cons(e1, elements)).get();
     }
 
+    public static <T extends Comparable<T>> Option<T> min(T[] elements) {
+        return min(Arrays.asList(elements));
+    }
+    
     public static <T extends Comparable<T>> Option<T> min(Iterable<T> elements) {
         return headOption(sort(elements));
     }
     
-    @SuppressWarnings("unchecked")
     public static <T extends Comparable<T>> T max(T e1, T... elements) {
-        return max(concat(Arrays.asList(e1), elements)).get();
+        return max(cons(e1, elements)).get();
+    }
+    
+    public static <T extends Comparable<T>> Option<T> max(T[] elements) {
+        return max(Arrays.asList(elements));
     }
 
     public static <T extends Comparable<T>> Option<T> max(Iterable<T> elements) {
