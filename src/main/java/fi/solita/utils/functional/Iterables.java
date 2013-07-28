@@ -20,38 +20,49 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 public abstract class Iterables {
-    static final class RangeIterable extends PossiblySizeAwareIterable<Integer> {
-        private final int from;
-        private final int toInclusive;
+    static final class RangeIterable<T> extends PossiblySizeAwareIterable<T> {
+    	  private final Enumerable<T> enumeration;
+        private final T from;
+        private final Option<T> toInclusive;
+				private final Option<Integer> knownSize;
+				
+				public RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive) {
+				    this(enumeration, from, toInclusive, Option.<Integer>None());
+				}
+				
+				public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, int knownSize) {
+			      this(enumeration, from, Some(toInclusive), Some(knownSize));
+			  }
 
-        public RangeIterable(int from) {
-            this.from = from;
-            this.toInclusive = Integer.MAX_VALUE;
-        }
-
-        public RangeIterable(int from, int toInclusive) {
-            if (toInclusive < from) {
-                throw new IllegalArgumentException("toInclusive must be gte from");
-            }
+        private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Integer> knownSize) {
+        	  this.enumeration = enumeration;
             this.from = from;
             this.toInclusive = toInclusive;
+            this.knownSize = knownSize;
         }
 
         @Override
-        public Iterator<Integer> iterator() {
-            return new Iterator<Integer>() {
-                int i = from;
+        public Iterator<T> iterator() {
+            return new Iterator<T>() {
+                Option<T> i = Some(from);
                 @Override
                 public boolean hasNext() {
-                    return i <= toInclusive;
+                    return i.isDefined() && (!toInclusive.isDefined() || !i.get().equals(toInclusive.get()));
                 }
 
                 @Override
-                public Integer next() {
-                    if (i > toInclusive) {
-                        throw new NoSuchElementException();
-                    }
-                    return i++;
+                public T next() {
+                	  if (!i.isDefined()) {
+                		  	throw new NoSuchElementException();
+                	  }
+                	  for (T to: toInclusive) {
+	                      if (enumeration.pred(i.get()).equals(to)) {
+	                          throw new NoSuchElementException();
+	                      }
+                	  }
+                    T ret = i.get();
+                    i = enumeration.succ(ret);
+                    return ret;
                 }
 
                 @Override
@@ -63,11 +74,7 @@ public abstract class Iterables {
 
         @Override
         public Option<Integer> size() {
-            if (toInclusive == Integer.MAX_VALUE) {
-                return None();
-            } else {
-                return Some(toInclusive - from + 1);
-            }
+            return knownSize;
         }
     }
 

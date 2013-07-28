@@ -179,7 +179,7 @@ public abstract class Functional {
     }
     
     public static <T> T head(T[] elements) {
-          return head(Arrays.asList(elements));
+        return head(Arrays.asList(elements));
     }
 
     public static <T> T head(Iterable<T> elements) {
@@ -238,7 +238,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> init(T[] elements) {
-          return init(Arrays.asList(elements));
+        return init(Arrays.asList(elements));
     }
 
     public static <T> Iterable<T> init(Iterable<T> elements) {
@@ -246,7 +246,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> take(T[] elements, int amount) {
-          return take(Arrays.asList(elements), amount);
+        return take(Arrays.asList(elements), amount);
     }
 
     public static <T> Iterable<T> take(final Iterable<T> elements, final int amount) {
@@ -254,7 +254,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> drop(T[] elements, int amount) {
-          return drop(Arrays.asList(elements), amount);
+        return drop(Arrays.asList(elements), amount);
     }
 
     public static <T> Iterable<T> drop(final Iterable<T> elements, final int amount) {
@@ -262,7 +262,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> takeWhile(T[] elements, Apply<? super T, Boolean> predicate) {
-          return takeWhile(Arrays.asList(elements), predicate);
+        return takeWhile(Arrays.asList(elements), predicate);
     }
 
     public static <T> Iterable<T> takeWhile(final Iterable<T> elements, final Apply<? super T, Boolean> predicate) {
@@ -424,23 +424,23 @@ public abstract class Functional {
         return new ConcatenatingIterable<T>(Collections.newList(elements1, elements2));
     }
 
-    public static <T> Iterable<T> concat(final Iterable<? extends T> elements1, final Iterable<? extends T> elements2, final Iterable<? extends T> elements3) {
+    public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2, Iterable<? extends T> elements3) {
         return concat(elements1, concat(elements2, elements3));
     }
     
-    public static <T> Iterable<T> concat(final Iterable<? extends T> elements1, final Iterable<? extends T> elements2, final Iterable<? extends T> elements3, final Iterable<? extends T> elements4) {
+    public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2, Iterable<? extends T> elements3, Iterable<? extends T> elements4) {
         return concat(elements1, concat(elements2, elements3, elements4));
     }
     
-    public static <T> Iterable<T> concat(final Iterable<? extends T> elements1, final Iterable<? extends T> elements2, final Iterable<? extends T> elements3, final Iterable<? extends T> elements4, final Iterable<? extends T> elements5, final Iterable<? extends T>... rest) {
+    public static <T> Iterable<T> concat(Iterable<? extends T> elements1, final Iterable<? extends T> elements2, Iterable<? extends T> elements3, Iterable<? extends T> elements4, Iterable<? extends T> elements5, Iterable<? extends T>... rest) {
         return concat(elements1, concat(elements2, concat(elements3, elements4, elements5, flatten(rest))));
     }
     
-    public static <T extends Comparable<T>> Iterable<T> sort(final T[] elements) {
+    public static <T extends Comparable<T>> Iterable<T> sort(T[] elements) {
           return sort(Arrays.asList(elements));
     }
     
-    public static <T extends Comparable<T>> Iterable<T> sort(final Iterable<T> elements) {
+    public static <T extends Comparable<T>> Iterable<T> sort(Iterable<T> elements) {
         if (isEmpty(elements)) {
             return newSet();
         }
@@ -451,7 +451,7 @@ public abstract class Functional {
           return sort(Arrays.asList(elements), comparator);
     }
 
-    public static <T> Iterable<T> sort(final Iterable<T> elements, final Comparator<? super T> comparator) {
+    public static <T> Iterable<T> sort(Iterable<T> elements, Comparator<? super T> comparator) {
         return new Iterables.SortingIterable<T>(elements, comparator);
     }
     
@@ -610,19 +610,31 @@ public abstract class Functional {
     }
 
     public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
-        return new ZippingIterable<Integer,A>(new RangeIterable(0), a);
+        return new ZippingIterable<Integer,A>(range(0), a);
     }
 
     public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(A[] a) {
-        return new ZippingIterable<Integer,A>(new RangeIterable(0), Arrays.asList(a));
+        return new ZippingIterable<Integer,A>(range(0), Arrays.asList(a));
     }
 
     public static Iterable<Integer> range(int from) {
-        return new RangeIterable(from);
+        return range(Enumerables.ints, from);
     }
 
     public static Iterable<Integer> range(int from, int toInclusive) {
-        return new RangeIterable(from, toInclusive);
+    	  return new RangeIterable<Integer>(Enumerables.ints, from, toInclusive, toInclusive - from + 1);
+    }
+    
+    public static <T, S extends Enumerable<T> & Bounded<T>> Iterable<T> range(S enumeration) {
+    	  return range(enumeration, enumeration.minBound());
+    }
+    
+    public static <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
+        return new RangeIterable<T>(enumeration, from, Option.<T>None());
+    }
+    
+    public static <T> Iterable<T> range(Enumerable<T> enumeration, T from, T toInclusive) {
+        return new RangeIterable<T>(enumeration, from, Some(toInclusive));
     }
 
     public static <T> Iterable<T> repeat(T value) {
