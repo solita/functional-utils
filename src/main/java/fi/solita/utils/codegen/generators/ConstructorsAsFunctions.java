@@ -47,9 +47,9 @@ import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Predicate;
 
-public class ConstructorsAsFunctions extends Function3<ProcessingEnvironment, ConstructorsAsFunctions.Options, TypeElement, Iterable<String>> {
+public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.Options> {
     
-    public static interface Options {
+    public static interface Options extends GeneratorOptions {
         @SuppressWarnings("rawtypes")
         Class<? extends Apply> getClassForConstructors(int argCount);
         List<String> getAdditionalBodyLinesForConstructors(ExecutableElement element);

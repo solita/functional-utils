@@ -11,24 +11,24 @@ import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.append;
 import static fi.solita.utils.functional.Transformers.prepend;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
 
-public class InstanceFieldsAsEnum extends Function2<InstanceFieldsAsEnum.Options, TypeElement, Iterable<String>> {
+public class InstanceFieldsAsEnum extends Generator<InstanceFieldsAsEnum.Options>{
     
     public static final InstanceFieldsAsEnum instance = new InstanceFieldsAsEnum();
     
-    public static interface Options {
+    public static interface Options extends GeneratorOptions {
         boolean onlyPublicMembers();
     }
     
     @Override
-    public Iterable<String> apply(Options options, TypeElement source) {
+    public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
         Iterable<VariableElement> elements = element2Fields.apply(source);
         if (options.onlyPublicMembers()) {
             elements = filter(elements, new Predicate<Element>() {

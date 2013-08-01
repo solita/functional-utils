@@ -30,8 +30,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 import fi.solita.utils.codegen.Helpers;
+import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function4;
 import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Pair;
@@ -94,9 +94,9 @@ public abstract class Content {
         "    throw new RuntimeException($e);"
     );
     
-    public static Function4<String,Predicate<Element>,List<Function1<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Function1<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
+    public static Function4<String,Predicate<Element>,List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
         @Override
-        public Pair<List<Long>,List<String>> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Function1<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
+        public Pair<List<Long>,List<String>> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Apply<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
             if (contains(source.getModifiers(), Modifier.PRIVATE)) {
                 // cannot refer to private classes
                 return Pair.of(Collections.<Long>emptyList(), Collections.<String>emptyList());

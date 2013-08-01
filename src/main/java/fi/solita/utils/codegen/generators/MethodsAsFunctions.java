@@ -21,6 +21,7 @@ import static fi.solita.utils.codegen.Helpers.returnsVoid;
 import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.throwsCheckedExceptions;
 import static fi.solita.utils.codegen.Helpers.typeParameter2String;
+import static fi.solita.utils.codegen.Helpers.typeVariableReplacer;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
@@ -49,7 +50,6 @@ import static fi.solita.utils.functional.Transformers.prepend;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -70,10 +70,10 @@ import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
 
-public class MethodsAsFunctions extends Function3<ProcessingEnvironment, MethodsAsFunctions.Options, TypeElement, Iterable<String>> {
+public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
 
     @SuppressWarnings("rawtypes")
-    public static interface Options {
+    public static interface Options extends GeneratorOptions {
         Class<? extends Apply> getClassForMethods(int argCount);
         Class<? extends Apply> getPredicateClassForMethods();
         List<String> getAdditionalBodyLinesForMethods(ExecutableElement element);
@@ -119,16 +119,7 @@ public class MethodsAsFunctions extends Function3<ProcessingEnvironment, Methods
             String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
             List<? extends VariableElement> methodParameters = method.getParameters();
             
-            Transformer<String,String> doReplace = new Transformer<String,String>() {
-                private List<String> toReplace = newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints));
-                @Override
-                public String transform(String candidate) {
-                    for (String r: toReplace) {
-                        candidate = candidate.replaceAll("([^a-zA-Z0-9_])([?]\\s*(?:extends|super)\\s+)?" + Pattern.quote(r) + "([^a-zA-Z0-9_])", "$1?$3");
-                    }
-                    return candidate;
-                }
-            };
+            Transformer<String, String> doReplace = typeVariableReplacer(newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints)));
             
             String modifiers = resolveVisibility(method) + " static final";
             String methodName = method.getSimpleName().toString();

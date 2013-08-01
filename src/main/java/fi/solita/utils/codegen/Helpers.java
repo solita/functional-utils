@@ -46,6 +46,7 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
@@ -109,7 +110,7 @@ public abstract class Helpers {
                 if (p.isEmpty()) {
                     return type;
                 } else {
-                    return type + "<" + mkString(", ", p) + ">";
+                    return type + "<" + mkString(", ", map(p, boxed)) + ">";
                 }
             }
         }
@@ -129,7 +130,11 @@ public abstract class Helpers {
                 }
                 public String visitArray(ArrayType t, Object p) {
                     return t.getComponentType().accept(this, p) + "[]";
-                };
+                }
+                @Override
+                public String visitPrimitive(PrimitiveType t, Object p) {
+                    return t.toString();
+                }
                 @Override
                 public String visitWildcard(WildcardType t, Object p) {
                     String ext = t.getExtendsBound() != null ? typeMirror2GenericQualifiedName.apply(t.getExtendsBound()) : Object.class.getName();
@@ -494,13 +499,13 @@ public abstract class Helpers {
                "";
     }
     
-    public static boolean isSubtype(Element elem, Class<?> parent, ProcessingEnvironment processingEnv) {
-        return isSubtype(elem, parent.getName(), processingEnv);
+    public static boolean isSubtype(TypeMirror type, Class<?> parent, ProcessingEnvironment processingEnv) {
+        return isSubtype(type, parent.getName(), processingEnv);
     }
     
-    public static boolean isSubtype(Element elem, String parentClassName, ProcessingEnvironment processingEnv) {
+    public static boolean isSubtype(TypeMirror type, String parentClassName, ProcessingEnvironment processingEnv) {
         Types typeUtils = processingEnv.getTypeUtils();
-        return typeUtils.isSubtype(typeUtils.erasure(elem.asType()), typeUtils.erasure(processingEnv.getElementUtils().getTypeElement(parentClassName).asType()));
+        return typeUtils.isSubtype(typeUtils.erasure(type), typeUtils.erasure(processingEnv.getElementUtils().getTypeElement(parentClassName).asType()));
     }
     
     public static Iterable<String> parameterTypesAsClasses(ExecutableElement element) {
@@ -560,6 +565,18 @@ public abstract class Helpers {
             @Override
             public RIGHT transform(Map.Entry<?, ? extends RIGHT> source) {
                 return source.getValue();
+            }
+        };
+    }
+
+    public static Transformer<String, String> typeVariableReplacer(final List<String> toReplace) {
+        return new Transformer<String,String>() {
+            @Override
+            public String transform(String candidate) {
+                for (String r: toReplace) {
+                    candidate = candidate.replaceAll("([^a-zA-Z0-9_])([?]\\s*(?:extends|super)\\s+)?" + Pattern.quote(r) + "([^a-zA-Z0-9_])", "$1?$3");
+                }
+                return candidate;
             }
         };
     }

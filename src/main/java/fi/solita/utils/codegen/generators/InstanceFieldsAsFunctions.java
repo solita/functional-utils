@@ -32,6 +32,7 @@ import static fi.solita.utils.functional.Transformers.prepend;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -46,12 +47,12 @@ import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
 
-public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctions.Options, TypeElement, Iterable<String>> {
+public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctions.Options> {
     
     public static final InstanceFieldsAsFunctions instance = new InstanceFieldsAsFunctions();
     
     @SuppressWarnings("rawtypes")
-    public static interface Options {
+    public static interface Options extends GeneratorOptions {
         Class<? extends Apply> getClassForInstanceFields();
         Class<? extends Apply> getPredicateClassForInstanceFields();
         List<String> getAdditionalBodyLinesForInstanceFields();
@@ -63,7 +64,7 @@ public class InstanceFieldsAsFunctions extends Function2<InstanceFieldsAsFunctio
     }
     
     @Override
-    public Iterable<String> apply(Options options, TypeElement source) {
+    public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
         Iterable<VariableElement> elements = element2Fields.apply(source);
         if (options.onlyPublicMembers()) {
             elements = filter(elements, new Predicate<Element>() {

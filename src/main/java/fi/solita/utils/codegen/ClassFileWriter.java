@@ -9,9 +9,11 @@ import java.io.Writer;
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 
+import fi.solita.utils.functional.Option;
+
 public class ClassFileWriter {
 
-    public static void writeClassFile(String packageName, String classSimpleName, Iterable<String> content, Class<?> generator, Filer filer) {
+    public static void writeClassFile(String packageName, String classSimpleName, Option<String> extendedClassName, Iterable<String> content, Class<?> generator, Filer filer) {
         try {
             FileObject fo = filer.createSourceFile((packageName.isEmpty() ? "" : packageName + ".") + classSimpleName);
             Writer pw = fo.openWriter();
@@ -19,12 +21,13 @@ public class ClassFileWriter {
             if (!packageName.isEmpty()) {
                 pw.append("package " + packageName + ";" + System.getProperty("line.separator"));
             }
+            String extend = extendedClassName.isDefined() ? " extends " + extendedClassName.get() : "";
             pw.append(unlines(concat(
                 newList(
                     "",
                     "",
                     "@" + javax.annotation.Generated.class.getName() + "(\"" + generator.getName() + "\")",
-                    "public final class " + classSimpleName + " implements " + java.io.Serializable.class.getName() + " {",
+                    "public class " + classSimpleName + extend + " implements " + java.io.Serializable.class.getName() + " {",
                     ""
                 ),
                 content,
