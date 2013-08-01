@@ -21,21 +21,21 @@ import java.util.PriorityQueue;
 
 public abstract class Iterables {
     static final class RangeIterable<T> extends PossiblySizeAwareIterable<T> {
-    	  private final Enumerable<T> enumeration;
+        private final Enumerable<T> enumeration;
         private final T from;
         private final Option<T> toInclusive;
-				private final Option<Integer> knownSize;
-				
-				public RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive) {
-				    this(enumeration, from, toInclusive, Option.<Integer>None());
-				}
-				
-				public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, int knownSize) {
-			      this(enumeration, from, Some(toInclusive), Some(knownSize));
-			  }
+        private final Option<Integer> knownSize;
+        
+        public RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive) {
+            this(enumeration, from, toInclusive, Option.<Integer>None());
+        }
+        
+        public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, int knownSize) {
+            this(enumeration, from, Some(toInclusive), Some(knownSize));
+        }
 
         private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Integer> knownSize) {
-        	  this.enumeration = enumeration;
+            this.enumeration = enumeration;
             this.from = from;
             this.toInclusive = toInclusive;
             this.knownSize = knownSize;
@@ -44,24 +44,25 @@ public abstract class Iterables {
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                Option<T> i = Some(from);
+                Option<T> nextToReturn = Some(from);
                 @Override
                 public boolean hasNext() {
-                    return i.isDefined() && (!toInclusive.isDefined() || !i.get().equals(toInclusive.get()));
+                    return nextToReturn.isDefined();
                 }
 
                 @Override
                 public T next() {
-                	  if (!i.isDefined()) {
-                		  	throw new NoSuchElementException();
-                	  }
-                	  for (T to: toInclusive) {
-	                      if (enumeration.pred(i.get()).equals(to)) {
-	                          throw new NoSuchElementException();
-	                      }
-                	  }
-                    T ret = i.get();
-                    i = enumeration.succ(ret);
+                    if (!nextToReturn.isDefined()) {
+                        throw new NoSuchElementException();
+                    }
+                    T ret = nextToReturn.get();
+                    
+                    if (toInclusive.isDefined() && ret.equals(toInclusive.get())) {
+                        nextToReturn = None();
+                    } else {
+                        nextToReturn = enumeration.succ(ret);
+                    }
+                    
                     return ret;
                 }
 
