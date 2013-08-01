@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -623,11 +624,11 @@ public abstract class Functional {
     }
 
     public static Iterable<Integer> range(int from, int toInclusive) {
-    	  return new RangeIterable<Integer>(Enumerables.ints, from, toInclusive, toInclusive - from + 1);
+        return new RangeIterable<Integer>(Enumerables.ints, from, toInclusive, toInclusive - from + 1);
     }
     
     public static <T, S extends Enumerable<T> & Bounded<T>> Iterable<T> range(S enumeration) {
-    	  return range(enumeration, enumeration.minBound());
+        return range(enumeration, enumeration.minBound());
     }
     
     public static <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
@@ -695,5 +696,21 @@ public abstract class Functional {
     
     public static final String unlines(Iterable<String> elements) {
         return mkString(LINE_SEP, elements);
+    }
+    
+    public static <T> Set<T> union(Set<T> e1, Set<T> e2) {
+        return reduce(newList(e1, e2), Monoids.<T>setUnion());
+    }
+    
+    public static <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T>... e) {
+        return reduce(concat(newList(e1, e2), e), Monoids.<T>setUnion());
+    }
+    
+    public static <T> Set<T> intersection(Set<T> e1, Set<T> e2) {
+        return reduce(newList(e1, e2), Monoids.<T>setIntersection());
+    }
+    
+    public static <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T>... e) {
+        return reduce(concat(newList(e1, e2), e), Monoids.<T>setIntersection());
     }
 }
