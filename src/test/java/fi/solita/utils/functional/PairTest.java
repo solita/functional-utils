@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class PairTests {
+public class PairTest {
     
     class NonSerializable {}
 

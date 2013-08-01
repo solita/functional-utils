@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.reverse;
+import static fi.solita.utils.functional.Functional.size;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.transpose;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class FunctionalTests {
+public class FunctionalTest {
     
     @Test
     public void testTake() {
@@ -74,5 +75,10 @@ public class FunctionalTests {
         
         assertThat(mkString("", map(m, Transformers.toString)), equalTo("[1, 2]"));
         assertThat(mkString("", map(t, Transformers.toString)), equalTo("[1][2]"));
+    }
+    
+    @Test
+    public void testRange() {
+        assertThat(size(range(1, 2)), equalTo(2));
     }
 }
