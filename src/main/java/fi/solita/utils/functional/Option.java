@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -41,9 +42,6 @@ public abstract class Option<T> implements Iterable<T> {
     public abstract T getOrElse(T orElse);
 
     public abstract boolean isDefined();
-
-    public static abstract class SerializableOption<T extends Serializable> extends Option<T> {
-    }
 }
 
 final class NoneImpl<T> extends Option<T> implements Serializable {
@@ -77,10 +75,11 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
 
 class SomeImpl<T> extends Option<T> {
 
-    protected T t;
+    protected final T t;
 
     // needed for SerializableSome deserialization
     SomeImpl() {
+        t = null;
     }
 
     SomeImpl(T t) {
@@ -135,6 +134,11 @@ class SomeImpl<T> extends Option<T> {
     static final class SerializableSomeImpl<T extends Serializable> extends SomeImpl<T> implements Serializable {
         private static final long serialVersionUID = 1L;
 
+        public SerializableSomeImpl() {
+            // for deserialization
+            super();
+        }
+        
         SerializableSomeImpl(T t) {
             super(t);
         }
@@ -143,9 +147,16 @@ class SomeImpl<T> extends Option<T> {
             out.writeObject(t);
         }
 
-        @SuppressWarnings("unchecked")
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-            t = (T)in.readObject();
+            try {
+                Field f = getClass().getSuperclass().getDeclaredField("t");
+                f.setAccessible(true);
+                f.set(this, in.readObject());
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

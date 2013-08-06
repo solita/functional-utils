@@ -1,13 +1,10 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.forAll;
-import static fi.solita.utils.functional.Functional.headOption;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.max;
 import static fi.solita.utils.functional.Functional.min;
-import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -20,9 +17,52 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 public abstract class Iterables {
+    public static final Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
+        @Override
+        public Option<Integer> transform(Iterable<?> source) {
+            if (source instanceof Collection) {
+                return Some(((Collection<?>)source).size());
+            }
+            if (source instanceof PossiblySizeAwareIterable) {
+                return ((PossiblySizeAwareIterable<?>)source).sizeEstimate();
+            }
+            return None();
+        }
+    };
+    
+    private static final Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
+        @Override
+        public Boolean transform(Iterator<?> source) {
+            return source.hasNext();
+        }
+    };
+    
+    private static final Transformer<Iterator<Object>, Object> next = new Transformer<Iterator<Object>,Object>() {
+        @Override
+        public Object transform(Iterator<Object> source) {
+            return source.next();
+        }
+    };
+    
+    private static final Transformer<Iterable<Object>,Iterator<Object>> toIterator = new Transformer<Iterable<Object>,Iterator<Object>>() {
+        @Override
+        public Iterator<Object> transform(Iterable<Object> source) {
+            return source.iterator();
+        }
+    };
+    
+    static abstract class PossiblySizeAwareIterable<T> implements Iterable<T> {
+        public abstract Option<Integer> sizeEstimate();
+        
+        @Override
+        public String toString() {
+            return getClass().getSimpleName() + Collections.newList(this).toString();
+        }
+    }
+    
     static final class RangeIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Enumerable<T> enumeration;
-        private final T from;
+        private final Option<T> from;
         private final Option<T> toInclusive;
         private final Option<Integer> knownSize;
         
@@ -36,7 +76,7 @@ public abstract class Iterables {
 
         private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Integer> knownSize) {
             this.enumeration = enumeration;
-            this.from = from;
+            this.from = Some(from);
             this.toInclusive = toInclusive;
             this.knownSize = knownSize;
         }
@@ -44,7 +84,8 @@ public abstract class Iterables {
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                Option<T> nextToReturn = Some(from);
+                private Option<T> nextToReturn = from;
+                
                 @Override
                 public boolean hasNext() {
                     return nextToReturn.isDefined();
@@ -52,10 +93,12 @@ public abstract class Iterables {
 
                 @Override
                 public T next() {
-                    if (!nextToReturn.isDefined()) {
+                    T ret;
+                    try {
+                        ret = nextToReturn.get();
+                    } catch (RuntimeException e) {
                         throw new NoSuchElementException();
                     }
-                    T ret = nextToReturn.get();
                     
                     if (toInclusive.isDefined() && ret.equals(toInclusive.get())) {
                         nextToReturn = None();
@@ -74,42 +117,42 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return knownSize;
         }
     }
 
     static final class RepeatingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final T value;
-        private final Option<Integer> amount;
+        private final Integer amount;
 
         public RepeatingIterable(T value) {
             this.value = value;
-            this.amount = None();
+            this.amount = null;
         }
 
         public RepeatingIterable(T value, int amount) {
             this.value = value;
-            this.amount = Some(amount);
+            this.amount = amount;
         }
 
         @Override
-        public Option<Integer> size() {
-            return amount.isDefined() ? amount : Option.<Integer>None();
+        public Option<Integer> sizeEstimate() {
+            return amount != null ? Some(amount) : Option.<Integer>None();
         }
 
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                int current = 0;
+                private int current = 0;
                 @Override
                 public boolean hasNext() {
-                    return current < amount.getOrElse(Integer.MAX_VALUE);
+                    return current < amount;
                 }
 
                 @Override
                 public T next() {
-                    if (!hasNext()) {
+                    if (current == amount) {
                         throw new NoSuchElementException();
                     }
                     current++;
@@ -124,82 +167,47 @@ public abstract class Iterables {
         }
     }
 
-    static abstract class PossiblySizeAwareIterable<T> implements Iterable<T> {
-        public abstract Option<Integer> size();
-        
-        @Override
-        public String toString() {
-            return getClass().getSimpleName() + Collections.newList(this).toString();
-        }
-    }
-    
-    static class TransposingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
+    static final class TransposingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
         private final Iterable<? extends Iterable<T>> elements;
 
         public TransposingIterable(Iterable<? extends Iterable<T>> elements) {
             this.elements = elements;
         }
         
-        private static Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
-            @Override
-            public Boolean transform(Iterator<?> source) {
-                return source.hasNext();
-            }
-        };
-        
-        private Transformer<Iterator<T>,T> next = new Transformer<Iterator<T>,T>() {
-            @Override
-            public T transform(Iterator<T> source) {
-                return source.next();
-            }
-        };
-        
         @Override
         public Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
-                List<Iterator<T>> iterators = newList(map(elements, new Transformer<Iterable<T>,Iterator<T>>() {
-                    @Override
-                    public Iterator<T> transform(Iterable<T> source) {
-                        return source.iterator();
-                    }
-                }));
+                @SuppressWarnings("unchecked")
+                private final List<Iterator<T>> iterators = newList(map(elements, (Transformer<Iterable<T>,Iterator<T>>)(Object)toIterator));
+                
                 @Override
                 public boolean hasNext() {
                     return !iterators.isEmpty() && forAll(iterators, hasNext);
                 }
 
+                @SuppressWarnings("unchecked")
                 @Override
                 public Iterable<T> next() {
-                    return newList(map(iterators, next));
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    return newList(map(iterators, (Transformer<Iterator<T>, T>)(Object)next));
                 }
 
                 @Override
                 public void remove() {
-                    for (Iterator<?> it: iterators) {
-                        it.remove();
-                    }
+                    throw new UnsupportedOperationException();
                 }
             };
         }
 
         @Override
-        public Option<Integer> size() {
-            Iterable<Option<Integer>> resolvedSizes = filter(map(elements, resolveSize), new Predicate<Option<?>>() {
-                @Override
-                public boolean accept(Option<?> candidate) {
-                    return candidate.isDefined();
-                }
-            });
-            return headOption(sort(map(resolvedSizes, new Transformer<Option<Integer>,Integer>() {
-                @Override
-                public Integer transform(Option<Integer> source) {
-                    return source.get();
-                }
-            })));
+        public Option<Integer> sizeEstimate() {
+            return None();
         }
     }
 
-    static class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Tuple2<A, B>> {
+    static final class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Tuple2<A, B>> {
         private final Iterable<A> elements1;
         private final Iterable<B> elements2;
 
@@ -211,8 +219,9 @@ public abstract class Iterables {
         @Override
         public Iterator<Tuple2<A, B>> iterator() {
             return new Iterator<Tuple2<A, B>>() {
-                Iterator<A> it1 = elements1.iterator();
-                Iterator<B> it2 = elements2.iterator();
+                private final Iterator<A> it1 = elements1.iterator();
+                private final Iterator<B> it2 = elements2.iterator();
+                
                 @Override
                 public boolean hasNext() {
                     return it1.hasNext() && it2.hasNext();
@@ -225,14 +234,13 @@ public abstract class Iterables {
 
                 @Override
                 public void remove() {
-                    it1.remove();
-                    it2.remove();
+                    throw new UnsupportedOperationException();
                 }
             };
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             for (int a: resolveSize.apply(elements1)) {
                 for (int b: resolveSize.apply(elements2)) {
                     return Some(Functional.min(a,b));
@@ -242,7 +250,7 @@ public abstract class Iterables {
         }
     }
 
-    static class ConcatenatingIterable<T>  extends PossiblySizeAwareIterable<T> {
+    static final class ConcatenatingIterable<T>  extends PossiblySizeAwareIterable<T> {
         private final Iterable<? extends Iterable<? extends T>> elements;
 
         public ConcatenatingIterable(Iterable<? extends Iterable<? extends T>> elements) {
@@ -250,28 +258,15 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
-            int size = 0;
-            for (Iterable<? extends T> it: elements) {
-                Option<Integer> resolvedSize = resolveSize.apply(it);
-                if (resolvedSize.isDefined()) {
-                    size += resolvedSize.get();
-                } else {
-                    return None();
-                }
-            }
-            return Some(size);
+        public Option<Integer> sizeEstimate() {
+            return None();
         }
 
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                Iterator<Iterator<? extends T>> it = Functional.map(elements, new Transformer<Iterable<? extends T>, Iterator<? extends T>>() {
-                    @Override
-                    public Iterator<? extends T> transform(Iterable<? extends T> source) {
-                        return source.iterator();
-                    }
-                }).iterator();
+                @SuppressWarnings("unchecked")
+                private final Iterator<Iterator<? extends T>> it = Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
@@ -291,13 +286,13 @@ public abstract class Iterables {
 
                 @Override
                 public void remove() {
-                    lastUsed.remove();
+                    throw new UnsupportedOperationException();
                 }
             };
         }
     }
 
-    static class FilteringIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class FilteringIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<T> iterable;
         private final Apply<? super T, Boolean> filter;
 
@@ -307,57 +302,55 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return None();
         }
 
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                private Object[] next;
-                private Iterator<T> source = iterable.iterator();
+                private boolean hasNext;
+                private T next;
+                private final Iterator<T> source = iterable.iterator();
                 {
                     readNext();
                 }
 
                 @Override
                 public boolean hasNext() {
-                    return next != null;
+                    return hasNext;
                 }
 
                 private void readNext() {
-                    next = null;
-                    while (source.hasNext() && next == null) {
+                    hasNext = false;
+                    while (!hasNext && source.hasNext()) {
                         T n = source.next();
                         if (filter.apply(n)) {
-                            next = new Object[]{n};
+                            next = n;
+                            hasNext = true;
                         }
                     }
                 }
 
                 @Override
                 public T next() {
-                    if (next == null) {
+                    if (!hasNext) {
                         throw new NoSuchElementException();
                     }
-                    @SuppressWarnings("unchecked")
-                    T ret = (T) next[0];
+                    T ret = (T) next;
                     readNext();
                     return ret;
                 }
 
                 @Override
                 public void remove() {
-                    if (next == null) {
-                        throw new IllegalStateException();
-                    }
-                    source.remove();
+                    throw new UnsupportedOperationException();
                 }
             };
         }
     }
 
-    static class TransformingIterable<S,T> extends PossiblySizeAwareIterable<T> {
+    static final class TransformingIterable<S,T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<S> iterable;
         private final Apply<? super S, ? extends T> transformer;
 
@@ -367,14 +360,14 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                private Iterator<S> source = iterable.iterator();
+                private final Iterator<S> source = iterable.iterator();
 
                 @Override
                 public boolean hasNext() {
@@ -388,13 +381,13 @@ public abstract class Iterables {
 
                 @Override
                 public void remove() {
-                    source.remove();
+                    throw new UnsupportedOperationException();
                 }
             };
         }
     }
     
-    static class ReversingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class ReversingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<T> iterable;
 
         public ReversingIterable(Iterable<T> iterable) {
@@ -402,15 +395,16 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
         @Override
         public Iterator<T> iterator() {
-            final List<T> list = iterable instanceof List ? (List<T>)iterable : newList(iterable);
             return new Iterator<T>() {
-                ListIterator<T> underlying = list.listIterator(list.size());
+                private final List<T> list = iterable instanceof List ? (List<T>)iterable : newList(iterable);
+                private final ListIterator<T> underlying = list.listIterator(list.size());
+                
                 @Override
                 public boolean hasNext() {
                     return underlying.hasPrevious();
@@ -427,11 +421,6 @@ public abstract class Iterables {
                 }
             };
         }
-
-        @Override
-        public String toString() {
-            return Collections.newList(this).toString();
-        }
     }
     
     static final class CharSequenceIterable extends PossiblySizeAwareIterable<Character> {
@@ -444,7 +433,7 @@ public abstract class Iterables {
         @Override
         public Iterator<Character> iterator() {
             return new Iterator<Character>() {
-                int i = 0;
+                private int i = 0;
                 @Override
                 public boolean hasNext() {
                     return i < charSeq.length();
@@ -452,11 +441,12 @@ public abstract class Iterables {
 
                 @Override
                 public Character next() {
-                    if (i >= charSeq.length()) {
+                    i++;
+                    try {
+                        return charSeq.charAt(i-1);
+                    } catch (IndexOutOfBoundsException e) {
                         throw new NoSuchElementException();
                     }
-                    i++;
-                    return charSeq.charAt(i-1);
                 }
 
                 @Override
@@ -467,7 +457,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return Some(charSeq.length());
         }
     }
@@ -480,6 +470,7 @@ public abstract class Iterables {
             this.iterable = iterable;
             this.comparator = comparator;
         }
+        
         @Override
         public Iterator<T> iterator() {
             int initialSize = resolveSize.apply(iterable).getOrElse(11);
@@ -487,8 +478,12 @@ public abstract class Iterables {
                 return java.util.Collections.<T>emptyList().iterator();
             }
             final PriorityQueue<T> queue = new PriorityQueue<T>(initialSize, comparator);
-            for (T t: iterable) {
-                queue.add(t);
+            if (iterable instanceof Collection) {
+                queue.addAll((Collection<T>)iterable);
+            } else {
+                for (T t: iterable) {
+                    queue.add(t);
+                }
             }
             return new Iterator<T>() {
                 @Override
@@ -509,7 +504,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
     }
@@ -529,8 +524,8 @@ public abstract class Iterables {
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                int left = amount;
-                Iterator<T> it = elements.iterator();
+                private int left = amount;
+                private final Iterator<T> it = elements.iterator();
 
                 @Override
                 public boolean hasNext() {
@@ -548,13 +543,13 @@ public abstract class Iterables {
 
                 @Override
                 public void remove() {
-                    it.remove();
+                    throw new UnsupportedOperationException();
                 }
             };
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             Option<Integer> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(min(s.get(), amount));
@@ -591,7 +586,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> size() {
+        public Option<Integer> sizeEstimate() {
             Option<Integer> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(max(s.get() - amount, 0));
@@ -600,17 +595,4 @@ public abstract class Iterables {
             }
         }
     }
-    
-    public static Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
-        @Override
-        public Option<Integer> transform(Iterable<?> source) {
-            if (source instanceof Collection) {
-                return Some(((Collection<?>)source).size());
-            }
-            if (source instanceof PossiblySizeAwareIterable) {
-                return ((PossiblySizeAwareIterable<?>)source).size();
-            }
-            return None();
-        }
-    };
 }

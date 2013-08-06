@@ -8,34 +8,36 @@ public abstract class Enumerables {
     }
     
     public static abstract class BoundedEnumerable<T> implements Enumerable<T>, Bounded<T> {
-    	private final Bounded<T> bounds;
+    	private final T maxBound;
+        private final T minBound;
 
-			public BoundedEnumerable(Bounded<T> bounds) {
-    		  this.bounds = bounds;
-			}
-    	
-			@Override
-			public Option<T> succ(T t) {
-					if (t.equals(bounds.maxBound())) return None(); else return Some(doSucc(t));
-			}
+		public BoundedEnumerable(Bounded<T> bounds) {
+		  this.maxBound = bounds.maxBound();
+		  this.minBound = bounds.minBound();
+		}
+	
+		@Override
+		public Option<T> succ(T t) {
+				if (t.equals(maxBound)) return None(); else return Some(doSucc(t));
+		}
 
-			@Override
-			public Option<T> pred(T t) {
-				  if (t.equals(bounds.minBound())) return None(); else return Some(doPred(t));
-			}
-			
-			@Override
-			public T minBound() {
-				  return bounds.minBound();
-			}
-			
-			@Override
-			public T maxBound() {
-				  return bounds.maxBound();
-			}
-    	  
-			protected abstract T doSucc(T t);
-			protected abstract T doPred(T t);
+		@Override
+		public Option<T> pred(T t) {
+			  if (t.equals(minBound)) return None(); else return Some(doPred(t));
+		}
+		
+		@Override
+		public T minBound() {
+			  return minBound;
+		}
+		
+		@Override
+		public T maxBound() {
+			  return maxBound;
+		}
+	  
+		protected abstract T doSucc(T t);
+		protected abstract T doPred(T t);
     }
     
     public static final BoundedEnumerable<Short> shorts = new BoundedEnumerable<Short>(Bounds.shortBounds) {

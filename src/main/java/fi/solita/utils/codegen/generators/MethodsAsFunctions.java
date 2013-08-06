@@ -4,7 +4,6 @@ import static fi.solita.utils.codegen.Helpers.allTypeParams;
 import static fi.solita.utils.codegen.Helpers.boxed;
 import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.element2Methods;
-import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasNonQmarkGenerics;
 import static fi.solita.utils.codegen.Helpers.hasRawTypes;
@@ -13,6 +12,7 @@ import static fi.solita.utils.codegen.Helpers.isInstanceMethod;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
 import static fi.solita.utils.codegen.Helpers.paramsWithCast;
+import static fi.solita.utils.codegen.Helpers.publicElement;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
@@ -36,10 +36,11 @@ import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
+import static fi.solita.utils.functional.Functional.flatten;
 import static fi.solita.utils.functional.Functional.groupBy;
+import static fi.solita.utils.functional.Functional.intersection;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
-import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
@@ -47,25 +48,24 @@ import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Transformers.mkString;
 import static fi.solita.utils.functional.Transformers.prepend;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
+import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Functional;
-import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
@@ -83,24 +83,21 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
         boolean onlyPublicMembers();
     }
     
-    public static MethodsAsFunctions instance = new MethodsAsFunctions();
+    public static final MethodsAsFunctions instance = new MethodsAsFunctions();
     
     @Override
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
         Iterable<ExecutableElement> elements = element2Methods.apply(source);
         if (options.onlyPublicMembers()) {
-            elements = filter(elements, new Predicate<Element>() {
-                @Override
-                public boolean accept(Element candidate) {
-                    return candidate.getModifiers().contains(Modifier.PUBLIC);
-                }
-            });
+            elements = filter(elements, publicElement);
         }
       
         Iterable<List<ExecutableElement>> elementsByName = groupBy(elements, simpleName).values();
         Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = executableElementGen.ap(processingEnv, options);
         
-        return flatMap(flatMap(elementsByName, zipWithIndex), singleElementTransformer);
+        Iterable<Tuple2<Integer, ExecutableElement>> fm = newList(flatMap(elementsByName, zipWithIndex));
+        Iterable<Iterable<String>> rm = newList(map(fm, singleElementTransformer));
+        return flatten(rm);
     }
     
     public static Function3<ProcessingEnvironment, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>> executableElementGen = new Function3<ProcessingEnvironment, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>>() {
@@ -108,15 +105,15 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
         public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, Map.Entry<Integer, ExecutableElement> entry) {
             ExecutableElement method = entry.getValue();
             TypeElement enclosingElement = (TypeElement) method.getEnclosingElement();
+            String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
             
             int index = entry.getKey() + (contains(map(element2Fields.apply(enclosingElement), simpleName), simpleName.apply(method)) ? 1 : 0);
             
             List<? extends TypeParameterElement> allTypeParamsForMethod = newList(allTypeParams(method));
             List<? extends TypeParameterElement> relevantTypeParamsForMethod = newList(relevantTypeParams(method));
             final List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
-            final List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamsForMethod, simpleName));
+            final Set<String> relevantTypeParamsWithoutConstraints = newSet(map(relevantTypeParamsForMethod, simpleName));
             final List<String> allTypeParamsWithoutConstraints = newList(map(allTypeParamsForMethod, simpleName));
-            String methodTypeParamsWithoutConstraintsString = method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">";
             List<? extends VariableElement> methodParameters = method.getParameters();
             
             Transformer<String, String> doReplace = typeVariableReplacer(newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints)));
@@ -125,6 +122,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             String methodName = method.getSimpleName().toString();
             String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType()));
             List<String> argumentTypes = newList(map(methodParameters, qualifiedName.andThen(boxed)));
+            List<? extends TypeParameterElement> enclosingElementTypeParameters = enclosingElement.getTypeParameters();
             
             boolean needsToBeFunction = !relevantTypeParams.isEmpty();
             final boolean isPrivate = isPrivate(method);
@@ -132,18 +130,19 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             boolean zeroArgInstanceMethod = isInstanceMethod && methodParameters.isEmpty(); // handle no-arg methods like static functions
             boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
             boolean returnsVoid = returnsVoid(method);
-            boolean needsTypeArguments = !reduce(newList(newSet(relevantTypeParamsWithoutConstraints), newSet(cons(returnType, argumentTypes))), Monoids.<String>setIntersection()).isEmpty() || exists(cons(returnType, argumentTypes), hasTypeParameters);
+            Set<String> returnAndArgumentTypes = newSet(cons(returnType, argumentTypes));
+            boolean needsTypeArguments = !intersection(relevantTypeParamsWithoutConstraints, returnAndArgumentTypes).isEmpty() || exists(returnAndArgumentTypes, hasTypeParameters);
             
             boolean throwsChecked = throwsCheckedExceptions(method, processingEnv);
             boolean hasRawTypes = hasRawTypes(method);
             
             int argCount = zeroArgInstanceMethod ? 1 : methodParameters.size(); // no-arg instance methods need $self parameter
             
-            String instanceName = isInstanceMethod ? "$self" : qualifiedName.apply(enclosingElement);
+            String instanceName = isInstanceMethod ? "$self" : enclosingElementQualifiedName;
             
             String enclosingElementGenericQualifiedName = doReplace.transform(needsTypeArguments
                     ? elementGenericQualifiedName(enclosingElement)
-                    : qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElement.getTypeParameters().size())) + ">"));
+                    : enclosingElementQualifiedName + (enclosingElementTypeParameters.isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElementTypeParameters.size())) + ">"));
             
             argumentTypes = newList(map(argumentTypes, doReplace));
             String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + mkString(", ", map(relevantTypeParams, doReplace)) + ">";
@@ -154,62 +153,62 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnType + ")" : "");
 
-            Class<?> fieldClass = !handleAsInstanceMethod && returnType.equals(Boolean.class.getName()) && argCount == 1 ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount);
-            String fundef = (Function0.class.getPackage().getName() + ".Function" + argCount) + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">";
-            String instanceMethodFundef = fieldClass.getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + ", " + fundef + "> ";
-            String declaration = modifiers + " " + relevantTypeParamsString + " " + (handleAsInstanceMethod ? instanceMethodFundef : fundef) + " " + methodName + (index == 0 ? "" : index);
+            Class<?> methodClass = !handleAsInstanceMethod && (returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName())) && argCount == 1 ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount);
+            String fundef = methodClass.getName().replace('$', '.') + "<" + mkString(", ", concat(argTypes, newList(returnType))) + "> ";
+            String outerFundef = handleAsInstanceMethod ? Function1.class.getName() + "<" + enclosingElementGenericQualifiedName + ", " + fundef + ">" : fundef;
             
-            String fundefPrefix = !handleAsInstanceMethod ? "" : instanceMethodFundef + "() { protected " + fundef + " $do(final " + enclosingElementGenericQualifiedName + " $self) { return new ";
+            String declaration = modifiers + " " + relevantTypeParamsString + " " + outerFundef + " " + methodName + (index == 0 ? "" : index);
             
+            String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : returnType + " apply";
             Iterable<String> tryBlock = concat(
                 isPrivate
                     ? Some(returnClause + "$getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
-                    : Some(returnClause + instanceName + "." + methodTypeParamsWithoutConstraintsString + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
+                    : Some(returnClause + instanceName + "." + (method.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(method.getTypeParameters(), simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
                 returnsVoid
                     ? Some("return null;")
                     : None
             );
-                
             Iterable<String> tryCatchBlock = isPrivate || throwsChecked
                 ? concat(
                     Some("try {"),
-                    map(tryBlock, prepend("    ")),
+                    map(tryBlock, Helpers.padding),
                     catchBlock,
                     Some("}"))
                 : tryBlock;
-                    
             Iterable<String> applyBlock = concat(
-                Some("public " + returnType + " apply(" + mkString(", ", map(zip(argTypes, argNames), mkString(" "))) + ") {"),
-                map(tryCatchBlock, prepend("    ")),
-                Some("}")
+                Some("    public final " + implementedMethod + "(" + mkString(", ", map(zip(map(argTypes, prepend("final ")), argNames), mkString(" "))) + ") { "),
+                map(tryCatchBlock, Helpers.padding),
+                Some("    }")
             );
-            
+            @SuppressWarnings("unchecked")
+            Iterable<String> contentBlock = concat(
+                map(applyBlock, Helpers.padding),
+                options.generateMemberInitializerForMethods() || isPrivate
+                    ? concat(map(memberInitializer(enclosingElementGenericQualifiedName, methodName, Method.class, parameterTypesAsClasses(method)), Helpers.padding),
+                             EmptyLine)
+                    : None,
+                options.generateMemberAccessorForMethods()
+                    ? concat(map(memberAccessor(enclosingElementGenericQualifiedName, Method.class), Helpers.padding),
+                             EmptyLine)
+                    : None,
+                options.generateMemberNameAccessorForMethods()
+                    ? concat(map(memberNameAccessor(methodName), Helpers.padding),
+                             EmptyLine)
+                    : None,
+                map(options.getAdditionalBodyLinesForMethods(method), Helpers.padding)
+            );
             @SuppressWarnings("unchecked")
             Iterable<String> res = concat(
                 hasRawTypes
                     ? Some("@SuppressWarnings(\"rawtypes\")")
                     : None,
-                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundefPrefix + fundef + "() {"),
-                isPrivate && (hasNonQmarkGenerics(returnType) || method.getReturnType().getKind() == TypeKind.TYPEVAR)
+                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + outerFundef + "() {"),
+                isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
                     ? Some("    @SuppressWarnings(\"unchecked\")")
                     : None,
-                map(applyBlock, prepend("    ")),
                 handleAsInstanceMethod
-                    ? Some("    };}")
-                    : None,
-                handleAsInstanceMethod && options.generateMemberInitializerForMethods() || isPrivate
-                    ? concat(map(memberInitializer(enclosingElementGenericQualifiedName, methodName, elementClass(method), parameterTypesAsClasses(method)), prepend("    ")),
-                             EmptyLine)
-                    : None,
-                handleAsInstanceMethod && options.generateMemberAccessorForMethods()
-                    ? concat(map(memberAccessor(enclosingElementGenericQualifiedName, elementClass(method)), prepend("    ")),
-                             EmptyLine)
-                    : None,
-                handleAsInstanceMethod && options.generateMemberNameAccessorForMethods()
-                    ? concat(map(memberNameAccessor(methodName), prepend("    ")),
-                             EmptyLine)
-                    : None,
-                map(options.getAdditionalBodyLinesForMethods(method), prepend("    ")),
+                    ? withOuter(contentBlock, fundef, enclosingElementGenericQualifiedName)
+                    : contentBlock,
                 Some("};"),
                 needsToBeFunction
                     ? Some("}")
@@ -220,7 +219,16 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
         }
     };
     
-    public static Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>> zipWithIndex = new Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>>() {
+    private static final Iterable<String> withOuter(Iterable<String> inner, String fundef, String enclosingElementGenericQualifiedName) {
+        return concat(
+            Some("public " + fundef + " apply(final " + enclosingElementGenericQualifiedName + " $self) {"),
+            Some("return new " + fundef + "() {"),
+            inner,
+            Some("};}")
+        );
+    }
+    
+    public static final Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>> zipWithIndex = new Function1<Iterable<ExecutableElement>, Iterable<Tuple2<Integer,ExecutableElement>>>() {
         @Override
         public Iterable<Tuple2<Integer, ExecutableElement>> apply(Iterable<ExecutableElement> t) {
             return Functional.zipWithIndex(t);

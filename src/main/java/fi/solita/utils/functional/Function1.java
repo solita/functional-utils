@@ -3,7 +3,16 @@ package fi.solita.utils.functional;
 import java.io.Serializable;
 
 public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
-	
+    
+    public static final <T,R> Function1<T,R> of(final Apply<T,R> apply) {
+        return new Function1<T, R>() {
+            @Override
+            public R apply(T t) {
+                return apply.apply(t);
+            }
+        };
+    }
+    
     private static final Function1<?,?> ID = new Function1<Object,Object>() {
         @Override
         public Object apply(Object t) {

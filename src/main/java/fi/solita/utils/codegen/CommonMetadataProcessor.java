@@ -3,9 +3,13 @@ package fi.solita.utils.codegen;
 import static fi.solita.utils.codegen.Helpers.element2NestedClasses;
 import static fi.solita.utils.codegen.Helpers.getPackageName;
 import static fi.solita.utils.codegen.Helpers.nonGeneratedElements;
+import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.simpleName;
+import static fi.solita.utils.codegen.Helpers.typeArgs;
 import static fi.solita.utils.codegen.Helpers.withAnnotation;
+import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
@@ -13,16 +17,12 @@ import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.find;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.reduce;
-import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.sequence;
 import static fi.solita.utils.functional.Functional.transpose;
-import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.matches;
 import static fi.solita.utils.functional.Predicates.not;
-import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,13 +50,11 @@ import fi.solita.utils.codegen.generators.InstanceFieldsAsFunctions;
 import fi.solita.utils.codegen.generators.MethodsAsFunctions;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
-import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Predicates;
 import fi.solita.utils.functional.Transformer;
-import fi.solita.utils.functional.Tuple2;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -114,9 +112,10 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
     
     @SuppressWarnings("unchecked")
     public OPTIONS generatorOptions() {
+        final boolean onlyPublicMembers = CommonMetadataProcessor.this.onlyPublicMembers();
         return (OPTIONS) new CombinedGeneratorOptions() {
           public boolean onlyPublicMembers() {
-                return CommonMetadataProcessor.this.onlyPublicMembers();
+                return onlyPublicMembers;
           }
         };
     }
@@ -129,14 +128,14 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
                        MethodsAsFunctions.instance);
     }
     
-    static Transformer<Apply<TypeElement,Iterable<String>>, Apply<TypeElement,Pair<Long,List<String>>>> timed = new Transformer<Apply<TypeElement,Iterable<String>>, Apply<TypeElement,Pair<Long,List<String>>>>() {
+    static final Transformer<Apply<TypeElement,Iterable<String>>, Apply<TypeElement,Pair<Long,List<String>>>> timed = new Transformer<Apply<TypeElement,Iterable<String>>, Apply<TypeElement,Pair<Long,List<String>>>>() {
         @Override
         public Apply<TypeElement, Pair<Long, List<String>>> transform(final Apply<TypeElement, Iterable<String>> source) {
             return new Function1<TypeElement, Pair<Long,List<String>>>() {
                 @Override
                 public Pair<Long, List<String>> apply(TypeElement t) {
                     long start = System.nanoTime();
-                    List<String> result = newList(map(source.apply(t), prepend("    ")));
+                    List<String> result = newList(map(source.apply(t), padding));
                     return Pair.of(System.nanoTime() - start, result);
                 }
             };
@@ -165,52 +164,54 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         List<Apply<TypeElement, Pair<Long, List<String>>>> generatorsWithTiming = newList(map(generators, timed));
         
         String genClassNamePat = generatedClassNamePattern();
+        Pattern extendClassNamePattern = extendClassNamePattern();
         Filer filer = processingEnv.getFiler();
+        Class<?> clazz = getClass();
         
         long started = System.nanoTime();
         long generation = 0;
         long nestedGeneration = 0;
+        long rest = 0;
         long fileWriting = 0;
-        List<Long> gens = newList(repeat(0l, generators.size()));
-        Predicate<Element> predicate = elementsToProcess();
+        long[] cumulativeGeneratorTimes = new long[generators.size()];
+        Predicate<Element> acceptedElement = elementsToProcess();
         @SuppressWarnings("unchecked")
-        List<TypeElement> elements = newList((Iterable<TypeElement>)filter(roundEnv.getRootElements(), predicate));
-        Apply<TypeElement, Pair<List<Long>, List<String>>> nestedDataProducer = Content.withNestedClasses.ap(genClassNamePat, predicate).ap(generatorsWithTiming);
-        for (TypeElement element: elements) {
-            long time = System.nanoTime();
-            List<Pair<Long, List<String>>> elemData = newList(sequence(generatorsWithTiming, element));
-            long time2 = System.nanoTime();
-            List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(element), predicate), nestedDataProducer));
-            
-            Iterable<String> content = map(concat(flatMap(elemData, Helpers.<List<String>>right()), flatMap(nestedData, Helpers.<List<String>>right())), prepend("    "));
-            long time3 = System.nanoTime();
-            
-            String genClassName = genClassNamePat.replace("{}", element.getSimpleName().toString());
-            String superclassName = element.getSuperclass().toString().replaceFirst("<.*", "");
-            Option<String> extendedClassName = extendClassNamePattern().matcher(superclassName).matches() ? Some(genClassNamePat.replace("{}", superclassName)) : Option.<String>None();
-            ClassFileWriter.writeClassFile(getPackageName(element), genClassName, extendedClassName, content, getClass(), filer);
-            
-            generation += time2 - time;
-            nestedGeneration += time3 - time2;
-            fileWriting += System.nanoTime() - time3;
-
-            Iterable<Long> contentTimes = map(elemData, Helpers.<Long>left());
-            Iterable<List<Long>> nestedTimes = map(nestedData, Helpers.<List<Long>>left());
-            List<Long> totalTimesPerGenerator = newList(map(transpose(cons(contentTimes, nestedTimes)), new Transformer<Iterable<Long>,Long>() {
-                @Override
-                public Long transform(Iterable<Long> source) {
-                    return reduce(source, Monoids.longSum);
+        List<TypeElement> elementsToProcess = newList((Iterable<TypeElement>)filter(roundEnv.getRootElements(), acceptedElement));
+        Apply<TypeElement, Pair<List<Long>, List<String>>> nestedDataProducer = Content.withNestedClasses.ap(genClassNamePat, acceptedElement, generatorsWithTiming);
+        for (TypeElement element: elementsToProcess) {
+            try {
+                long time = System.nanoTime();
+                List<Pair<Long, List<String>>> elemData = newList(sequence(generatorsWithTiming, element));
+                long time2 = System.nanoTime();
+                List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(element), acceptedElement), nestedDataProducer));
+                long time3 = System.nanoTime();
+                Iterable<String> content = map(concat(flatMap(elemData, Helpers.<List<String>>right()), flatMap(nestedData, Helpers.<List<String>>right())), padding);
+                
+                String genClassName = genClassNamePat.replace("{}", element.getSimpleName().toString());
+                String superclassName = typeArgs.matcher(element.getSuperclass().toString()).replaceFirst("");
+                Option<String> extendedClassName = extendClassNamePattern.matcher(superclassName).matches() ? Some(genClassNamePat.replace("{}", superclassName)) : Option.<String>None();
+                long time4 = System.nanoTime();
+                ClassFileWriter.writeClassFile(getPackageName(element), genClassName, extendedClassName, content, clazz, filer);
+                
+                generation += time2 - time;
+                nestedGeneration += time3 - time2;
+                rest += time4 - time3;
+                fileWriting += System.nanoTime() - time4;
+    
+                Iterable<Long> generatorTimesForContent = map(elemData, Helpers.<Long>left());
+                Iterable<List<Long>> generatorTimesForNestedClasses = map(nestedData, Helpers.<List<Long>>left());
+                Long[] totalTimesPerGenerator = newArray(Long.class, map(transpose(cons(generatorTimesForContent, generatorTimesForNestedClasses)), Helpers.iterableSum));
+                
+                for (int i = 0; i < cumulativeGeneratorTimes.length; ++i) {
+                    cumulativeGeneratorTimes[i] += totalTimesPerGenerator[i];
                 }
-            }));
-            gens = newList(map(zip(gens, totalTimesPerGenerator), new Transformer<Tuple2<Long,Long>,Long>() {
-                @Override
-                public Long transform(Tuple2<Long, Long> source) {
-                    return source._1 + source._2;
-                }
-            }));
+            } catch (RuntimeException e) {
+                processingEnv.getMessager().printMessage(Kind.ERROR, "Exception while handling: " + element.getQualifiedName());
+                throw e;
+            }
         }
-        if (!elements.isEmpty()) {
-            processingEnv.getMessager().printMessage(Kind.NOTE, getClass().getName() + " processed " + elements.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(gens, nanosToMillis)) + " ms)");
+        if (!elementsToProcess.isEmpty()) {
+            processingEnv.getMessager().printMessage(Kind.WARNING, getClass().getName() + " processed " + elementsToProcess.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + rest/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(newArray(cumulativeGeneratorTimes), nanosToMillis)) + " ms)");
         }
         return false;
     }
@@ -229,17 +230,17 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         }
         @SuppressWarnings("rawtypes")
         @Override
-        public Class<? extends Apply> getClassForInstanceFields() {
-            return (Class<? extends Apply>) DefaultMeta.DefaultMeta_.class;
+        public Class<? extends Apply> getClassForInstanceFields(boolean isFinal) {
+            return isFinal ? MetaField.class : MetaField.Property.class;
         }
         @SuppressWarnings("rawtypes")
         @Override
-        public Class<? extends Apply> getPredicateClassForInstanceFields() {
-            return (Class<? extends Apply>) DefaultMeta.DefaultPredicateMeta_.class; 
+        public Class<? extends Apply> getPredicateClassForInstanceFields(boolean isFinal) {
+            return isFinal ? MetaField.Predicate.class : MetaField.PredicateProperty.class; 
         }
         @Override
         public List<String> getAdditionalBodyLinesForInstanceFields() {
-            return newList();
+            return emptyList();
         }
         @Override
         public boolean generateMemberAccessorForFields() {
@@ -256,29 +257,75 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForMethods(int argCount) {
-            return (Class<? extends Apply>) DefaultMeta.DefaultMethodMeta_.class; 
+            switch (argCount) {
+                case 0: return MetaMethod.F0.class;
+                case 1: return MetaMethod.F1.class;
+                case 2: return MetaMethod.F2.class;
+                case 3: return MetaMethod.F3.class;
+                case 4: return MetaMethod.F4.class;
+                case 5: return MetaMethod.F5.class;
+                case 6: return MetaMethod.F6.class;
+                case 7: return MetaMethod.F7.class;
+                case 8: return MetaMethod.F8.class;
+                case 9: return MetaMethod.F9.class;
+                case 10: return MetaMethod.F10.class;
+                case 11: return MetaMethod.F11.class;
+                case 12: return MetaMethod.F12.class;
+                case 13: return MetaMethod.F13.class;
+                case 14: return MetaMethod.F14.class;
+                case 15: return MetaMethod.F15.class;
+                case 16: return MetaMethod.F16.class;
+                case 17: return MetaMethod.F17.class;
+                case 18: return MetaMethod.F18.class;
+                case 19: return MetaMethod.F19.class;
+                case 20: return MetaMethod.F20.class;
+                case 21: return MetaMethod.F21.class;
+                case 22: return MetaMethod.F22.class;
+            }
+            throw new RuntimeException("Not implemented: F" + argCount);
         }
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getPredicateClassForMethods() {
-            return (Class<? extends Apply>) DefaultMeta.DefaultMethodPredicateMeta_.class; 
+            return (Class<? extends Apply>) MetaMethod.Predicate.class; 
         }
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForConstructors(int argCount) {
-            try {
-                return (Class<? extends Apply>) Class.forName(DefaultMeta.DefaultConstructorMeta_.class.getName() + "$F" + argCount);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+            switch (argCount) {
+                case 0: return MetaConstructor.F0.class;
+                case 1: return MetaConstructor.F1.class;
+                case 2: return MetaConstructor.F2.class;
+                case 3: return MetaConstructor.F3.class;
+                case 4: return MetaConstructor.F4.class;
+                case 5: return MetaConstructor.F5.class;
+                case 6: return MetaConstructor.F6.class;
+                case 7: return MetaConstructor.F7.class;
+                case 8: return MetaConstructor.F8.class;
+                case 9: return MetaConstructor.F9.class;
+                case 10: return MetaConstructor.F10.class;
+                case 11: return MetaConstructor.F11.class;
+                case 12: return MetaConstructor.F12.class;
+                case 13: return MetaConstructor.F13.class;
+                case 14: return MetaConstructor.F14.class;
+                case 15: return MetaConstructor.F15.class;
+                case 16: return MetaConstructor.F16.class;
+                case 17: return MetaConstructor.F17.class;
+                case 18: return MetaConstructor.F18.class;
+                case 19: return MetaConstructor.F19.class;
+                case 20: return MetaConstructor.F20.class;
+                case 21: return MetaConstructor.F21.class;
+                case 22: return MetaConstructor.F22.class;
             }
+            throw new RuntimeException("Not implemented: F" + argCount);
         }
         @Override
         public List<String> getAdditionalBodyLinesForConstructors(ExecutableElement element) {
-            return newList();
+            return emptyList();
         }
         @Override
         public List<String> getAdditionalBodyLinesForMethods(ExecutableElement element) {
-            return newList();
+            return emptyList();
         }
         @Override
         public boolean makeFieldsPublic() {

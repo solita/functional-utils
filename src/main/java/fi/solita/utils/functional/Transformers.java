@@ -46,7 +46,7 @@ public abstract class Transformers {
         }
     };
     
-    public static Transformer<String, String> removeWhitespace = new Transformer<String, String>() {
+    public static final Transformer<String, String> removeWhitespace = new Transformer<String, String>() {
         @Override
         public String transform(String source) {
             if (source == null) {
@@ -77,7 +77,7 @@ public abstract class Transformers {
         }
     };
 
-    public static Transformer<Map.Entry<?, ?>, String> join(final String delim) {
+    public static final Transformer<Map.Entry<?, ?>, String> join(final String delim) {
         return new Transformer<Map.Entry<?, ?>, String>() {
             @Override
             public String transform(Map.Entry<?, ?> source) {
@@ -86,7 +86,7 @@ public abstract class Transformers {
         };
     }
     
-    public static Transformer<Tuple, String> mkString(final String delim) {
+    public static final Transformer<Tuple, String> mkString(final String delim) {
       return new Transformer<Tuple, String>() {
           @Override
           public String transform(Tuple source) {

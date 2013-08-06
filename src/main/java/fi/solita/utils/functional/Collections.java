@@ -88,36 +88,37 @@ public abstract class Collections {
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1) {
-        return newList(Arrays.asList(e1));
+        return Arrays.asList(e1);
     }
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2) {
-        return newList(Arrays.asList(e1, e2));
+        return Arrays.asList(e1, e2);
     }
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2, T e3) {
-        return newList(Arrays.asList(e1, e2, e3));
+        return Arrays.asList(e1, e2, e3);
     }
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2, T e3, T e4) {
-        return newList(Arrays.asList(e1, e2, e3, e4));
+        return Arrays.asList(e1, e2, e3, e4);
     }
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5) {
-        return newList(Arrays.asList(e1, e2, e3, e4, e5));
+        return Arrays.asList(e1, e2, e3, e4, e5);
     }
     
     @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6) {
-        return newList(Arrays.asList(e1, e2, e3, e4, e5, e6));
+        return Arrays.asList(e1, e2, e3, e4, e5, e6);
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T... elements) {
-        return newList(concat(newList(e1, e2, e3, e4, e5, e6), elements));
+        return newList(concat(Arrays.asList(e1, e2, e3, e4, e5, e6), elements));
     }
     
     public static Set<Boolean> newSet(boolean[] array) {

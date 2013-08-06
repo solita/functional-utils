@@ -7,6 +7,22 @@ import java.util.regex.Pattern;
 
 public abstract class Predicates {
 
+    private static final class Impl {
+        private static final Predicate<?> nulls = new Predicate<Object>() {
+            @Override
+            public boolean accept(Object candidate) {
+                return candidate == null;
+            }
+        };
+        
+        private static final Predicate<Iterable<?>> empty = new Predicate<Iterable<?>>() {
+            @Override
+            public boolean accept(Iterable<?> candidate) {
+                return !candidate.iterator().hasNext();
+            }
+        };
+    }
+    
     public static final <T> Predicate<T> not(final Apply<T, Boolean> filter) {
         return new Predicate<T>() {
             @Override
@@ -17,13 +33,9 @@ public abstract class Predicates {
         };
     }
     
-    public static <T> Predicate<T> nulls() {
-        return new Predicate<T>() {
-            @Override
-            public boolean accept(T candidate) {
-                return candidate == null;
-            }
-        };
+    @SuppressWarnings("unchecked")
+    public static final <T> Predicate<T> nulls() {
+        return (Predicate<T>) Impl.nulls;
     }
     
     public static final Predicate<Integer> even = new Predicate<Integer>() {
@@ -33,13 +45,9 @@ public abstract class Predicates {
         }
     };
 
-    public static <E, T extends Iterable<E>> Predicate<T> empty() {
-        return new Predicate<T>() {
-            @Override
-            public boolean accept(T candidate) {
-                return !candidate.iterator().hasNext();
-            }
-        };
+    @SuppressWarnings("unchecked")
+    public static final <E, T extends Iterable<E>> Predicate<T> empty() {
+        return (Predicate<T>) Impl.empty;
     }
     
     public static final Predicate<String> empty = new Predicate<String>() {
@@ -49,16 +57,16 @@ public abstract class Predicates {
         }
     };
 
-    public static <T> Predicate<T> equalTo(final T element) {
+    public static final <T> Predicate<T> equalTo(final T element) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return element.equals(candidate);
+                return candidate.equals(element);
             }
         };
     }
     
-    public static <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
+    public static final <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -67,7 +75,7 @@ public abstract class Predicates {
         };
     }
     
-    public static <T extends Comparable<T>> Predicate<T> lessThan(final T value) {
+    public static final <T extends Comparable<T>> Predicate<T> lessThan(final T value) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -76,7 +84,7 @@ public abstract class Predicates {
         };
     }
     
-    public static <T extends Comparable<T>> Predicate<T> greaterThanOrEqualTo(final T value) {
+    public static final <T extends Comparable<T>> Predicate<T> greaterThanOrEqualTo(final T value) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -85,7 +93,7 @@ public abstract class Predicates {
         };
     }
     
-    public static <T extends Comparable<T>> Predicate<T> lessThanOrEqualTo(final T value) {
+    public static final <T extends Comparable<T>> Predicate<T> lessThanOrEqualTo(final T value) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -94,7 +102,7 @@ public abstract class Predicates {
         };
     }
 
-    public static <T> Predicate<Class<?>> isInstance(final Class<T> clazz) {
+    public static final <T> Predicate<Class<?>> isInstance(final Class<T> clazz) {
         return new Predicate<Class<?>>() {
             @Override
             public boolean accept(Class<?> candidate) {
@@ -103,7 +111,7 @@ public abstract class Predicates {
         };
     }
 
-    public static <T> Predicate<T> instanceOf(final Class<? extends T> clazz) {
+    public static final <T> Predicate<T> instanceOf(final Class<? extends T> clazz) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
@@ -112,16 +120,14 @@ public abstract class Predicates {
         };
     }
 
-    public static Predicate<Option<?>> defined() {
-        return new Predicate<Option<?>>() {
-            @Override
-            public boolean accept(Option<?> candidate) {
-                return candidate.isDefined();
-            }
-        };
-    }
+    public static final Predicate<Option<?>> defined = new Predicate<Option<?>>() {
+        @Override
+        public boolean accept(Option<?> candidate) {
+            return candidate.isDefined();
+        }
+    };
     
-    public static <T extends AnnotatedElement> Predicate<T> hasAnnotation(final Class<? extends Annotation> annotation) {
+    public static final <T extends AnnotatedElement> Predicate<T> hasAnnotation(final Class<? extends Annotation> annotation) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {

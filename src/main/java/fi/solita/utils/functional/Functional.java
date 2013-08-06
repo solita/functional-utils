@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
@@ -40,7 +40,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> subtract(T[] a, final Collection<T> b) {
-        return subtract(newList(a), b);
+        return subtract(Arrays.asList(a), b);
     }
     
     public static <T> Iterable<T> subtract(Iterable<T> a, final T[] b) {
@@ -48,7 +48,7 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> subtract(T[] a, final T[] b) {
-        return subtract(newList(a), newSet(b));
+        return subtract(Arrays.asList(a), newSet(b));
     }
 
     public static <K, V> Option<V> find(Map<? extends K, V> map, K key) {
@@ -137,11 +137,12 @@ public abstract class Functional {
             throw new IllegalArgumentException("size must be positive");
         }
 
-        List<List<T>> target = Collections.newList();
+        Option<Integer> estimatedSize = Iterables.resolveSize.apply(elements);
+        List<List<T>> target = estimatedSize.isDefined() ? Collections.<List<T>>newListOfSize(estimatedSize.get() / size) : Collections.<List<T>>newList();
         Iterator<T> it = elements.iterator();
         while (it.hasNext()) {
             List<T> group = Collections.newListOfSize(size);
-            for (@SuppressWarnings("unused") int i: range(1, size)) {
+            for (int i = 0; i < size; ++i) {
                 if (it.hasNext()) {
                     group.add(it.next());
                 }
@@ -181,7 +182,7 @@ public abstract class Functional {
     }
     
     public static <T> T head(T[] elements) {
-        return head(Arrays.asList(elements));
+        return elements[0];
     }
 
     public static <T> T head(Iterable<T> elements) {
@@ -189,7 +190,7 @@ public abstract class Functional {
     }
     
     public static <T> Option<T> headOption(T[] elements) {
-          return headOption(Arrays.asList(elements));
+          return elements.length == 0 ? Option.<T>None() : Some(elements[0]);
     }
 
     public static <T> Option<T> headOption(Iterable<T> elements) {
@@ -210,32 +211,34 @@ public abstract class Functional {
     }
     
     public static <T> T last(T[] elements) {
-          return last(Arrays.asList(elements));
+          return elements[elements.length-1];
     }
 
     public static <T> T last(Iterable<T> elements) {
-        Iterator<T> it = elements.iterator();
-        T ret = it.next();
-        while (it.hasNext()) {
-            ret = it.next();
-        }
-        return ret;
+        return lastOption(elements).get();
     }
     
     public static <T> Option<T> lastOption(T[] elements) {
-          return lastOption(Arrays.asList(elements));
+          return elements.length == 0 ? Option.<T>None() : Some(elements[elements.length-1]);
     }
 
     public static <T> Option<T> lastOption(Iterable<T> elements) {
-        Iterator<T> it = elements.iterator();
-        if (it.hasNext()) {
-            T ret = it.next();
-            while (it.hasNext()) {
-                ret = it.next();
+        if (elements instanceof List) {
+            if (((List<T>) elements).isEmpty()) {
+                return None();
             }
-            return Some(ret);
+            return Some(((List<T>) elements).get(((List<T>) elements).size()-1));
         } else {
-            return None();
+            Iterator<T> it = elements.iterator();
+            if (it.hasNext()) {
+                T ret = it.next();
+                while (it.hasNext()) {
+                    ret = it.next();
+                }
+                return Some(ret);
+            } else {
+                return None();
+            }
         }
     }
     
@@ -273,7 +276,7 @@ public abstract class Functional {
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private Option<T> next;
-                    private Iterator<T> source = elements.iterator();
+                    private final Iterator<T> source = elements.iterator();
                     {
                         readNext();
                     }
@@ -325,7 +328,7 @@ public abstract class Functional {
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private boolean dropping = true;
-                    private Iterator<T> source = elements.iterator();
+                    private final Iterator<T> source = elements.iterator();
                     private Option<T> next;
                     {
                         readNext();
@@ -373,7 +376,17 @@ public abstract class Functional {
     }
 
     public static int size(Iterable<?> elements) {
-        return Iterables.resolveSize.apply(elements).getOrElse(Collections.newList(elements).size());
+        if (elements instanceof Collection) {
+            return ((Collection<?>) elements).size();
+        } else {
+            int s = 0;
+            Iterator<?> it = elements.iterator();
+            while (it.hasNext()) {
+                s++;
+                it.next();
+            }
+            return s;
+        }
     }
 
     public static <T> boolean contains(T[] elements, T element) {
@@ -422,8 +435,9 @@ public abstract class Functional {
         return concat(Arrays.asList(elements1), Arrays.asList(elements2));
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2) {
-        return new ConcatenatingIterable<T>(Collections.newList(elements1, elements2));
+        return new ConcatenatingIterable<T>(Arrays.asList(elements1, elements2));
     }
 
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2, Iterable<? extends T> elements3) {
@@ -443,9 +457,6 @@ public abstract class Functional {
     }
     
     public static <T extends Comparable<T>> Iterable<T> sort(Iterable<T> elements) {
-        if (isEmpty(elements)) {
-            return newSet();
-        }
         return sort(elements, Ordering.Natural());
     }
     
@@ -454,6 +465,9 @@ public abstract class Functional {
     }
 
     public static <T> Iterable<T> sort(Iterable<T> elements, Comparator<? super T> comparator) {
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
         return new Iterables.SortingIterable<T>(elements, comparator);
     }
     
@@ -461,20 +475,24 @@ public abstract class Functional {
         return e1;
     }
     
+    @SuppressWarnings("unchecked")
     public static <T extends SemiGroup<T>> T reduce(T e1, T e2) {
-        return reduce(newList(e1, e2)).get();
+        return reduce(Arrays.asList(e1, e2)).get();
     }
     
+    @SuppressWarnings("unchecked")
     public static <T extends SemiGroup<T>> T reduce(T e1, T e2, T e3) {
-        return reduce(newList(e1, e2, e3)).get();
+        return reduce(Arrays.asList(e1, e2, e3)).get();
     }
     
+    @SuppressWarnings("unchecked")
     public static <T extends SemiGroup<T>> T reduce(T e1, T e2, T e3, T e4) {
-        return reduce(newList(e1, e2, e3, e4)).get();
+        return reduce(Arrays.asList(e1, e2, e3, e4)).get();
     }
     
+    @SuppressWarnings("unchecked")
     public static <T extends SemiGroup<T>> T reduce(T e1, T e2, T e3, T e4, T... elements) {
-        return reduce(concat(newList(e1, e2, e3, e4), elements)).get();
+        return reduce(concat(Arrays.asList(e1, e2, e3, e4), elements)).get();
     }
     
     public static <T extends SemiGroup<T>>  Option<T> reduce(T[] elements) {
@@ -602,14 +620,17 @@ public abstract class Functional {
         return zip(Arrays.asList(a), b, Arrays.asList(c));
     }
    
+    @SuppressWarnings("unchecked")
     public static <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c) {
-        return map(zip(zip(a, b), c), new Transformer<Tuple2<Tuple2<A, B>, C>, Tuple3<A, B, C>>() {
-            @Override
-            public Tuple3<A, B, C> transform(Tuple2<Tuple2<A, B>, C> source) {
-                return source._1.append(source._2);
-            }
-        });
+        return map(zip(zip(a, b), c), ( Transformer<Tuple2<Tuple2<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer);
     }
+    
+    private static final Transformer<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
+        @Override
+        public Tuple3<Object, Object, Object> transform(Tuple2<Tuple2<Object, Object>, Object> source) {
+            return source._1.append(source._2);
+        }
+    };
 
     public static <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
         return new ZippingIterable<Integer,A>(range(0), a);
@@ -683,14 +704,17 @@ public abstract class Functional {
         return new TransposingIterable<T>(elements);
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Iterable<Iterable<T>> transpose2(Iterable<T[]> elements) {
-        return transpose(map(elements, new Transformer<T[], Iterable<T>>() {
-            @Override
-            public Iterable<T> transform(T[] source) {
-                return Arrays.asList(source);
-            }
-        }));
+        return transpose(map(elements, (Transformer<T[], Iterable<T>>)(Object)arrayToIterable));
     }
+    
+    private static final Transformer<Object[], Iterable<Object>> arrayToIterable = new Transformer<Object[], Iterable<Object>>() {
+        @Override
+        public Iterable<Object> transform(Object[] source) {
+            return Arrays.asList(source);
+        }
+    };
     
     private static final String LINE_SEP = System.getProperty("line.separator");
     
@@ -698,19 +722,23 @@ public abstract class Functional {
         return mkString(LINE_SEP, elements);
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Set<T> union(Set<T> e1, Set<T> e2) {
-        return reduce(newList(e1, e2), Monoids.<T>setUnion());
+        return reduce(Arrays.asList(e1, e2), Monoids.<T>setUnion());
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T>... e) {
-        return reduce(concat(newList(e1, e2), e), Monoids.<T>setUnion());
+        return reduce(concat(Arrays.asList(e1, e2), e), Monoids.<T>setUnion());
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Set<T> intersection(Set<T> e1, Set<T> e2) {
-        return reduce(newList(e1, e2), Monoids.<T>setIntersection());
+        return reduce(Arrays.asList(e1, e2), Monoids.<T>setIntersection());
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T>... e) {
-        return reduce(concat(newList(e1, e2), e), Monoids.<T>setIntersection());
+        return reduce(concat(Arrays.asList(e1, e2), e), Monoids.<T>setIntersection());
     }
 }

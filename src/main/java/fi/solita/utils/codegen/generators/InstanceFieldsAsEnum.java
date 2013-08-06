@@ -1,6 +1,7 @@
 package fi.solita.utils.codegen.generators;
 
 import static fi.solita.utils.codegen.Helpers.element2Fields;
+import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.staticElements;
 import static fi.solita.utils.functional.Functional.concat;
@@ -9,7 +10,6 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.append;
-import static fi.solita.utils.functional.Transformers.prepend;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -42,7 +42,7 @@ public class InstanceFieldsAsEnum extends Generator<InstanceFieldsAsEnum.Options
         Iterable<VariableElement> fieldsToInclude = filter(elements, not(staticElements));
         return concat(
             Some("public enum Fields {"),
-            map(fieldsToInclude, simpleName.andThen(prepend("    ")).andThen(append(","))),
+            map(fieldsToInclude, simpleName.andThen(padding).andThen(append(","))),
             Some("}"),
             Some("")
         );
