@@ -80,6 +80,11 @@ public abstract class Helpers {
     public static final String containedType(Element e, Elements elements) {
         // FIXME: fancier way to do this?
         String type = qualifiedName.apply(e);
+        return containedType(type, elements);
+    }
+    
+    public static final String containedType(String type, Elements elements) {
+        // FIXME: fancier way to do this?
         return type.substring(type.indexOf('<')+1, type.lastIndexOf('>'));
     }
     
@@ -538,12 +543,7 @@ public abstract class Helpers {
     }
     
     public static final boolean isSubtype(TypeMirror type, Class<?> parent, ProcessingEnvironment processingEnv) {
-        return isSubtype(type, parent.getName(), processingEnv);
-    }
-    
-    public static final boolean isSubtype(TypeMirror type, String parentClassName, ProcessingEnvironment processingEnv) {
-        Types typeUtils = processingEnv.getTypeUtils();
-        return typeUtils.isSubtype(typeUtils.erasure(type), typeUtils.erasure(processingEnv.getElementUtils().getTypeElement(parentClassName).asType()));
+        return processingEnv.getTypeUtils().isSubtype(type, processingEnv.getTypeUtils().erasure(processingEnv.getElementUtils().getTypeElement(parent.getName()).asType()));
     }
     
     public static final Iterable<String> parameterTypesAsClasses(ExecutableElement element) {
