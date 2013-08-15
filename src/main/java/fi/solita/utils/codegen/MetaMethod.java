@@ -185,11 +185,4 @@ public abstract class MetaMethod {
             return getClass().getEnclosingClass().getSimpleName() + "." + getName();
         }
     }
-    
-    public static abstract class Predicate<T, B> extends fi.solita.utils.functional.Predicate<T> implements MethodMeta_<T, Boolean> {
-        @Override
-        public String toString() {
-            return getClass().getEnclosingClass().getSimpleName() + "." + getName();
-        }
-    }
 }

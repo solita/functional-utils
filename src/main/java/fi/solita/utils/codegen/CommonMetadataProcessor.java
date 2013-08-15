@@ -231,12 +231,12 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForInstanceFields(boolean isFinal) {
-            return isFinal ? MetaField.class : MetaField.Property.class;
+            return isFinal ? MetaField.class : MetaFieldProperty.class;
         }
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getPredicateClassForInstanceFields(boolean isFinal) {
-            return isFinal ? MetaField.Predicate.class : MetaField.PredicateProperty.class; 
+            return isFinal ? MetaFieldPredicate.class : MetaFieldPredicateProperty.class; 
         }
         @Override
         public List<String> getAdditionalBodyLinesForInstanceFields() {
@@ -287,7 +287,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getPredicateClassForMethods() {
-            return (Class<? extends Apply>) MetaMethod.Predicate.class; 
+            return (Class<? extends Apply>) MetaMethodPredicate.class; 
         }
         @SuppressWarnings("rawtypes")
         @Override

@@ -4,9 +4,11 @@ import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasNonQmarkGenerics;
+import static fi.solita.utils.codegen.Helpers.importType;
 import static fi.solita.utils.codegen.Helpers.isFinal;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.padding;
+import static fi.solita.utils.codegen.Helpers.publicElement;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.simpleName;
@@ -34,8 +36,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -69,12 +69,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
         Iterable<VariableElement> elements = element2Fields.apply(source);
         if (options.onlyPublicMembers()) {
-            elements = filter(elements, new Predicate<Element>() {
-                @Override
-                public boolean accept(Element candidate) {
-                    return candidate.getModifiers().contains(Modifier.PUBLIC);
-                }
-            });
+            elements = filter(elements, publicElement);
         }
       
         return flatMap(filter(elements, not(staticElements)), variableElementGen.ap(options));
@@ -128,17 +123,18 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             
             String enclosingElementGenericQualifiedName = doReplace.apply(elementGenericQualifiedName(enclosingElement));
             
-            String visibility = options.makeFieldsPublic() ? "public" : resolveVisibility(field);
-            String modifiers = visibility + " static final";
+            String visibility = options.makeFieldsPublic() ? "public " : resolveVisibility(field);
+            String modifiers = visibility + "static final";
             String fieldName = field.getSimpleName().toString();
             
-            String returnClause = "return " + (isPrivate ? "(" + returnType + ")" : "");
+            String returnClause = importType("return " + (isPrivate ? "(" + returnType + ")" : ""));
             
-            Class<?> fieldClass = returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName()) ? options.getPredicateClassForInstanceFields(isFinal) : options.getClassForInstanceFields(isFinal);
-            String fundef = fieldClass.getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + ", " + returnType + ">";
+            boolean usePredicate = returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName());
+            Class<?> fieldClass = usePredicate ? options.getPredicateClassForInstanceFields(isFinal) : options.getClassForInstanceFields(isFinal);
+            String fundef = importType(fieldClass.getName().replace('$', '.') + "<" + enclosingElementGenericQualifiedName + (usePredicate ? "" : ", " + returnType) + ">");
             String declaration = modifiers + " " + (needsToBeFunction ? relevantTypeParamsString + " ": "") + fundef + " " + fieldName;
-            String setterFundef = Function1.class.getName() + "<" + returnType + ",Void>";
-            String implementedMethod = Predicate.class.isAssignableFrom(fieldClass) ? "boolean accept" : returnType + " apply";
+            String setterFundef = importType(Function1.class.getName() + "<" + returnType + ",Void>");
+            String implementedMethod = importType(Predicate.class.isAssignableFrom(fieldClass) ? "boolean accept" : returnType + " apply");
 
             Iterable<String> tryBlock = isPrivate
                 ? Some(returnClause + "$getMember().get($self);")
@@ -153,7 +149,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
                 : tryBlock;
                         
             Iterable<String> applyBlock = concat(
-                Some("public final " + implementedMethod + "(final " + enclosingElementGenericQualifiedName + " $self) {"),
+                Some("public final " + implementedMethod + "(final " + importType(enclosingElementGenericQualifiedName) + " $self) {"),
                 map(tryCatchBlock, padding),
                 Some("}")
             );
@@ -171,7 +167,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
                     : setTryBlock;
             
             Iterable<String> setBlock = concat(
-                    Some("public final " + setterFundef + " setter(final " + enclosingElementGenericQualifiedName + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnType + " $newValue) {"),
+                    Some("public final " + setterFundef + " setter(final " + importType(enclosingElementGenericQualifiedName) + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnType + " $newValue) {"),
                     map(setTryCatchBlock, padding),
                     Some("    return null;"),
                     Some("}};}")

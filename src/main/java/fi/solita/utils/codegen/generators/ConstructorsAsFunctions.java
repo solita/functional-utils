@@ -5,6 +5,7 @@ import static fi.solita.utils.codegen.Helpers.element2Constructors;
 import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasRawTypes;
+import static fi.solita.utils.codegen.Helpers.importType;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
@@ -87,7 +88,7 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
             int index = entry.getKey();
 
             Iterable<String> relevantTypeParams = map(relevantTypeParams(constructor), typeParameter2String);
-            String relevantTypeParamsString = isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", relevantTypeParams) + ">";
+            String relevantTypeParamsString = importType(isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", relevantTypeParams) + ">");
             
             boolean needsToBeFunction = needsToBeFunction(constructor);
             boolean isPrivate = isPrivate(constructor);
@@ -103,12 +104,12 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
 
             String fieldName = "$" + (index == 0 ? "" : index);
             String constructorClass = options.getClassForConstructors(argCount).getName().replace('$', '.');
-            String fundef = constructorClass + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">";
-            String declaration = resolveVisibility(constructor) + " static final " + relevantTypeParamsString + " " + fundef + " " + fieldName;
+            String fundef = importType(constructorClass + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">");
+            String declaration = resolveVisibility(constructor) + "static final " + relevantTypeParamsString + " " + fundef + " " + fieldName;
             
             Iterable<String> tryBlock = isPrivate 
-                    ? Some("return (" + returnType + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
-                    : Some("return new " + returnType + "(" + mkString(", ", argNamesWithCast) + ");");
+                    ? Some("return (" + importType(returnType) + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
+                    : Some("return new " + importType(returnType) + "(" + mkString(", ", argNamesWithCast) + ");");
             
             Iterable<String> tryCatchBlock = isPrivate || throwsChecked
                 ? concat(
@@ -119,7 +120,7 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
                 : tryBlock;
                     
             Iterable<String> applyBlock = concat(
-                Some("public " + returnType + " apply(" + mkString(", ", map(zip(argTypes, argNames), mkString(" "))) + ") {"),
+                Some("public " + importType(returnType) + " apply(" + mkString(", ", map(zip(argTypes, argNames), mkString(" "))) + ") {"),
                 map(tryCatchBlock, padding),
                 Some("}")
             );

@@ -18,7 +18,7 @@
                     </includes>
                 </resource>
                 <resource>
-                    <directory>${project.build.directory}/generated-sources/annotations</directory>
+                    <directory>${project.build.directory}/generated-sources/apt</directory>
                     <includes>
                         <include>**/*.java</include>
                     </includes>
@@ -49,6 +49,7 @@
                     <source>1.6</source>
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
+                    <optimize>true</optimize>
                     <proc>none</proc>
                 </configuration>
             </plugin>

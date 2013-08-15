@@ -30,7 +30,7 @@ public class SortTest {
         for (int a: range(1, 6)) {
             int n = (int)Math.pow(10, a);
             System.out.println("Taking " + n + " first elements");
-            for (int i: range(1, 6)) {
+            for (int i: range(1, 5)) {
                 runSortOnce((int)Math.pow(10, i), n);
             }
             System.out.println();

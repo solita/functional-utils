@@ -14,12 +14,10 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.sort;
-import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Predicates.empty;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.not;
-import static fi.solita.utils.functional.Transformers.append;
 import static fi.solita.utils.functional.Transformers.mkString;
 import static fi.solita.utils.functional.Transformers.prepend;
 import static fi.solita.utils.functional.Transformers.replaceAll;
@@ -68,6 +66,12 @@ import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 
 public abstract class Helpers {
+    
+    private static final Pattern p = Pattern.compile("([a-zA-Z0-9_$]+\\.)+[a-zA-Z0-9_$]+");
+    
+    public static final String importType(String qualifiedTypeName) {
+        return p.matcher(qualifiedTypeName).replaceAll(Matcher.quoteReplacement("{${") + "$0" + Matcher.quoteReplacement("}$}"));
+    }
 
     public static final Predicate<String> hasTypeParameters = new Predicate<String>() {
         @Override
@@ -106,6 +110,11 @@ public abstract class Helpers {
             @Override
             public List<? extends TypeMirror> visitDeclared(DeclaredType t, Object p) {
                 return t.getTypeArguments();
+            }
+            
+            @Override
+            public List<? extends TypeMirror> visitArray(ArrayType t, Object p) {
+                return t.getComponentType().accept(this, p);
             }
         };
         
@@ -455,7 +464,7 @@ public abstract class Helpers {
         return method.getReturnType().getKind() == TypeKind.VOID;
     }
     
-    private static final Pattern typeArgsWithTypeArgs = Pattern.compile("[<,]\\s*([?]\\s*(super|extends))?[^.?]+[>,]");
+    private static final Pattern typeArgsWithTypeArgs = Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*|[<,]\\s*([?]\\s*(super|extends))?[^.?]+[>,]");
 
     public static final Pattern typeArgs = Pattern.compile("<.*>");
 
@@ -492,9 +501,16 @@ public abstract class Helpers {
     }
     
     public static final Iterable<? extends TypeParameterElement> allTypeParams(ExecutableElement e) {
+        final Set<String> typeParameterNames = newSet(map(e.getTypeParameters(), simpleName));
+        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), new Predicate<TypeParameterElement>() {
+            @Override
+            public boolean accept(TypeParameterElement candidate) {
+                return !typeParameterNames.contains(simpleName.apply(candidate));
+            }
+        });
         return staticElements.accept(e)
                 ? e.getTypeParameters()
-                : (List<TypeParameterElement>)newList(concat(subtract(((TypeElement)e.getEnclosingElement()).getTypeParameters(), e.getTypeParameters()), e.getTypeParameters()));
+                : (List<TypeParameterElement>)newList(concat(enclosingTypeVars, e.getTypeParameters()));
     }
 
     /**
@@ -502,7 +518,13 @@ public abstract class Helpers {
      */
     public static final Iterable<? extends TypeParameterElement> relevantTypeParams(ExecutableElement e) {
         List<? extends TypeParameterElement> typeParameters = e.getTypeParameters();
-        Iterable<? extends TypeParameterElement> enclosingTypeVars = subtract(((TypeElement)e.getEnclosingElement()).getTypeParameters(), typeParameters);
+        final Set<String> typeParameterNames = newSet(map(typeParameters, simpleName));
+        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), new Predicate<TypeParameterElement>() {
+            @Override
+            public boolean accept(TypeParameterElement candidate) {
+                return !typeParameterNames.contains(simpleName.apply(candidate));
+            }
+        });
         return staticElements.accept(e)               ? typeParameters :
                e.getKind() == ElementKind.CONSTRUCTOR ? concat(enclosingTypeVars, typeParameters) :
                                                         concat(filter(enclosingTypeVars, usedIn(e)), typeParameters);
@@ -520,7 +542,7 @@ public abstract class Helpers {
                 String name = simpleName.apply(candidate);
                 Pattern pat = patternCacheForUsedIn.get(name);
                 if (pat == null) {
-                    pat = Pattern.compile(".*[^a-zA-Z0-9_]" + Pattern.quote(name) + "[^a-zA-Z0-9_].*");
+                    pat = Pattern.compile(".*[^a-zA-Z0-9_$]" + Pattern.quote(name) + "[^a-zA-Z0-9_$].*");
                     patternCacheForUsedIn.put(name, pat);
                 }
                 return pat.matcher(s).matches();
@@ -536,8 +558,8 @@ public abstract class Helpers {
     };
 
     public static final String resolveVisibility(Element e) {
-        return e.getModifiers().contains(Modifier.PUBLIC) ? "public" : 
-               e.getModifiers().contains(Modifier.PROTECTED) ? "protected" :
+        return e.getModifiers().contains(Modifier.PUBLIC) ? "public " : 
+               e.getModifiers().contains(Modifier.PROTECTED) ? "protected " :
                // change privates into package-visibility so that the actual owning class can use them
                "";
     }
@@ -547,7 +569,7 @@ public abstract class Helpers {
     }
     
     public static final Iterable<String> parameterTypesAsClasses(ExecutableElement element) {
-        return map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(newList(relevantTypeParams(element))).andThen(replaceAll(typeArgs, "")).andThen(append(".class"))));
+        return map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(newList(relevantTypeParams(element))).andThen(replaceAll(typeArgs, ""))));
     }
     
     public static final String elementGenericQualifiedName(TypeElement enclosingElement) {
@@ -633,5 +655,5 @@ public abstract class Helpers {
         }
     };
 
-    public static final Transformer<String, String> padding = prepend("    ");
+    public static final Transformer<String, String> padding = prepend("  ");
 }

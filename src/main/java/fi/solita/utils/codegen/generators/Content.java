@@ -1,6 +1,7 @@
 package fi.solita.utils.codegen.generators;
 
 import static fi.solita.utils.codegen.Helpers.element2NestedClasses;
+import static fi.solita.utils.codegen.Helpers.importType;
 import static fi.solita.utils.codegen.Helpers.isPrimitive;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.padding;
@@ -18,7 +19,6 @@ import static fi.solita.utils.functional.Functional.sequence;
 import static fi.solita.utils.functional.Functional.transpose;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -47,28 +47,28 @@ public abstract class Content {
     
     public static final List<String> memberNameAccessor(String name) {
         return newList(
-            "public String getName() {",
-            "    return \"" + name + "\";",
+            "public " + importType(String.class.getName()) + " getName() {",
+            "  return \"" + name + "\";",
             "}"
         );
     }
     
-    private static final Pattern arrayClass = Pattern.compile("(\\[\\])*\\.class"); 
-    private static final Pattern typeArgArray = Pattern.compile("[^.\\[\\]]+((\\[\\])+).class");
+    private static final Pattern arrayClass = Pattern.compile("(\\[\\])*"); 
+    private static final Pattern typeArgArray = Pattern.compile("[^.\\[\\]]+((\\[\\])+)");
     
-    public static Iterable<String> memberInitializer(String classNameGeneric, String name, Class<? extends Member> reflectInvokationClass, Iterable<String> argumentClasses) {
+    public static final Iterable<String> memberInitializer(String classNameGeneric, String name, Class<? extends Member> reflectInvokationClass, Iterable<String> argumentClasses) {
         Iterable<String> typeargsReplacedWithObject = map(argumentClasses, new Transformer<String,String>() {
             @Override
             public String transform(String source) {
                 if (isPrimitive(arrayClass.matcher(source).replaceAll(""))) {
                     // just a primitive
-                    return source;
+                    return source + ".class";
                 } else {
                     Matcher m = typeArgArray.matcher(source);
                     if (m.matches()) {
-                        return "java.lang.Object[].class";
+                        return importType(Object.class.getName()) + "[].class";
                     }
-                    return source;
+                    return importType(source) + ".class";
                 }
             }
         });
@@ -76,46 +76,52 @@ public abstract class Content {
         String declr = isConstructor ? "getDeclaredConstructor(" + mkString(", ", typeargsReplacedWithObject) + ")" :
                        Method.class.isAssignableFrom(reflectInvokationClass) ?      "getDeclaredMethod(" + mkString(", ", cons('"' + name + '"', typeargsReplacedWithObject)) + ")" :
                        Field.class.isAssignableFrom(reflectInvokationClass) ?       "getDeclaredField(\"" + name + "\")" : "";
-        String clsName = reflectInvokationClass.getName() + (isConstructor ? "<" + classNameGeneric + ">" : "");
+        String clsName = importType(reflectInvokationClass.getName() + (isConstructor ? "<" + classNameGeneric + ">" : ""));
         return concat(
             newList(
                 "private transient " + clsName + " $r;",
                 "",
                 isConstructor ? "@SuppressWarnings(\"unchecked\")" : "",
                 "private " + clsName + " $getMember() {",
-                "    if ($r == null) {",
-                "        try {",
-                "            $r = (" + clsName + ")(Object)" + typeArgs.matcher(classNameGeneric).replaceAll("") + ".class." + declr + ";",
-                "            $r.setAccessible(true);"
+                "  if ($r == null) {",
+                "    try {",
+                "      $r = (" + clsName + ")(" + importType(Object.class.getName()) + ")" + importType(typeArgs.matcher(classNameGeneric).replaceAll("")) + ".class." + declr + ";",
+                "      $r.setAccessible(true);"
                 ),
-            map(catchBlock, prepend("        ")),
+            map(catchBlock, padding.andThen(padding)),
             newList(
-                "        }",
                 "    }",
-                "    return $r;",
+                "  }",
+                "  return $r;",
                 "}"
             )
         );
     }
     
-    public static List<String> memberAccessor(String classNameGeneric, Class<? extends Member> reflectInvokationClass) {
+    public static final List<String> memberAccessor(String classNameGeneric, Class<? extends Member> reflectInvokationClass) {
         return newList(
-            "public " + reflectInvokationClass.getName() + (Constructor.class.isAssignableFrom(reflectInvokationClass) ? "<" + classNameGeneric + ">" : "") + " getMember() {",
-            "    return $getMember();",
+            "public " + importType(reflectInvokationClass.getName()) + (Constructor.class.isAssignableFrom(reflectInvokationClass) ? "<" + importType(classNameGeneric) + ">" : "") + " getMember() {",
+            "  return $getMember();",
             "}"
         );
     }
     
-    public static List<String> catchBlock = newList(
-        "} catch (RuntimeException $e) {",
-        "    throw $e;",
-        "} catch (Error $e) {",
-        "    throw $e;",
-        "} catch (Throwable $e) {",
-        "    throw new RuntimeException($e);"
+    public static final RuntimeException wrap(Throwable e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException)e;
+        } else if (e instanceof Error) {
+            throw (Error)e;
+        } else {
+            return new RuntimeException(e);
+        }
+    }
+    
+    public static final List<String> catchBlock = newList(
+        "} catch (" + importType(Throwable.class.getName()) + " $e) {",
+        "  throw " + importType(Content.class.getName()) + ".wrap($e);"
     );
     
-    public static Function4<String,Predicate<Element>,List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
+    public static final Function4<String,Predicate<Element>,List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
         @Override
         public Pair<List<Long>,List<String>> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Apply<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
             if (isPrivate(source)) {
@@ -133,7 +139,7 @@ public abstract class Content {
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(generatorTimesForContent, generatorTimesForNestedClasses)), Helpers.iterableSum));
             
             List<String> allContents = newList(concat(
-                          Some(resolveVisibility(source) + " static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + Serializable.class.getName() + " {"),
+                          Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + importType(Serializable.class.getName()) + " {"),
                           elemContents,
                           map(nestedContents, padding),
                           Some("}")));
