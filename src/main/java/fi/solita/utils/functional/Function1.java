@@ -4,27 +4,6 @@ import java.io.Serializable;
 
 public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
     
-    public static final <T,R> Function1<T,R> of(final Apply<T,R> apply) {
-        return new Function1<T, R>() {
-            @Override
-            public R apply(T t) {
-                return apply.apply(t);
-            }
-        };
-    }
-    
-    private static final Function1<?,?> ID = new Function1<Object,Object>() {
-        @Override
-        public Object apply(Object t) {
-            return t;
-        }
-    };
-
-    @SuppressWarnings("unchecked")
-		public static final <T> Function1<T, T> id() {
-        return (Function1<T, T>) ID;
-    }
-
     public abstract R apply(T t);
 
     public <U> Function1<T, U> andThen(final Apply<? super R, ? extends U> next) {
@@ -36,7 +15,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
-    public <U> Function1<U, R> compose(final Apply<? super U, ? extends T> next) {
+    public final <U> Function1<U, R> compose(final Apply<? super U, ? extends T> next) {
         return new Function1<U, R>() {
             @Override
             public R apply(U source) {

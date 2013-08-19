@@ -1,12 +1,15 @@
 package fi.solita.utils.codegen;
 
 import static fi.solita.utils.codegen.Helpers.element2NestedClasses;
+import static fi.solita.utils.codegen.Helpers.equalTo;
 import static fi.solita.utils.codegen.Helpers.getPackageName;
+import static fi.solita.utils.codegen.Helpers.nanosToMillis;
 import static fi.solita.utils.codegen.Helpers.nonGeneratedElements;
 import static fi.solita.utils.codegen.Helpers.padding;
+import static fi.solita.utils.codegen.Helpers.publicElement;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
+import static fi.solita.utils.codegen.Helpers.removeGenericPart;
 import static fi.solita.utils.codegen.Helpers.simpleName;
-import static fi.solita.utils.codegen.Helpers.typeArgs;
 import static fi.solita.utils.codegen.Helpers.withAnnotation;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newArray;
@@ -20,7 +23,6 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.sequence;
 import static fi.solita.utils.functional.Functional.transpose;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.matches;
 import static fi.solita.utils.functional.Predicates.not;
 
@@ -53,13 +55,13 @@ import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
-import fi.solita.utils.functional.Predicates;
 import fi.solita.utils.functional.Transformer;
 
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({"CommonMetadataProcessor." + CommonMetadataProcessor.Options.enabled,
                    "CommonMetadataProcessor." + CommonMetadataProcessor.Options.generatedClassNamePattern,
+                   "CommonMetadataProcessor." + CommonMetadataProcessor.Options.generatedPackagePattern,
                    "CommonMetadataProcessor." + CommonMetadataProcessor.Options.includesRegex,
                    "CommonMetadataProcessor." + CommonMetadataProcessor.Options.excludesRegex,
                    "CommonMetadataProcessor." + CommonMetadataProcessor.Options.onlyPublicMembers,
@@ -67,9 +69,12 @@ import fi.solita.utils.functional.Transformer;
                    "CommonMetadataProcessor." + CommonMetadataProcessor.Options.excludesAnnotation})
 public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.CombinedGeneratorOptions> extends AbstractProcessor {
 
+    private static final int version = 1;
+    
     public static class Options {
         public static final String enabled = "enabled";
         public static final String generatedClassNamePattern = "generatedClassNamePattern";
+        public static final String generatedPackagePattern = "generatedPackagePattern";
         public static final String includesRegex = "includesRegex";
         public static final String excludesRegex = "excludesRegex";
         public static final String onlyPublicMembers = "onlyPublicMembers";
@@ -88,6 +93,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
     public Pattern excludesRegex()            { return Pattern.compile(findOption(Options.excludesRegex, "")); }
     public boolean onlyPublicMembers()        { return Boolean.parseBoolean(findOption(Options.onlyPublicMembers, "false")); }
     public String generatedClassNamePattern() { return findOption(Options.generatedClassNamePattern, "{}_"); }
+    public String generatedPackagePattern()   { return findOption(Options.generatedPackagePattern, "{}"); }
     public String includesAnnotation()        { return findOption(Options.includesAnnotation, ""); }
     public String excludesAnnotation()        { return findOption(Options.excludesAnnotation, NoMetadataGeneration.class.getName()); }
     public Pattern extendClassNamePattern()   { return Pattern.compile("<not enabled>"); }
@@ -96,7 +102,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         return find(options(), getClass().getSimpleName() + "." + option).getOrElse(defaultIfNotFound);
     }
     
-    public Predicate<Element> elementsToProcess() { return Predicates.<Element>instanceOf(TypeElement.class).and(
+    public Predicate<Element> elementsToProcess() { return Helpers.<Element>instanceOf(TypeElement.class).and(
                                                            nonGeneratedElements).and(
                                                            (includeAllByAnnotation.or(withAnnotation(includesAnnotation())))).and(
                                                            not(withAnnotation(excludesAnnotation()))).and(
@@ -157,13 +163,15 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
     }
     
     public boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        OPTIONS options = generatorOptions();
         List<Apply<TypeElement,Iterable<String>>> generators = newList();
         for (Generator<? super OPTIONS> g: generators()) {
-            generators.add(g.ap(processingEnv, generatorOptions()));
+            generators.add(g.ap(processingEnv, options));
         }
         List<Apply<TypeElement, Pair<Long, List<String>>>> generatorsWithTiming = newList(map(generators, timed));
         
         String genClassNamePat = generatedClassNamePattern();
+        String genPackagePat = generatedPackagePattern();
         Pattern extendClassNamePattern = extendClassNamePattern();
         Filer filer = processingEnv.getFiler();
         Class<?> clazz = getClass();
@@ -177,21 +185,29 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         Predicate<Element> acceptedElement = elementsToProcess();
         @SuppressWarnings("unchecked")
         List<TypeElement> elementsToProcess = newList((Iterable<TypeElement>)filter(roundEnv.getRootElements(), acceptedElement));
-        Apply<TypeElement, Pair<List<Long>, List<String>>> nestedDataProducer = Content.withNestedClasses.ap(genClassNamePat, acceptedElement, generatorsWithTiming);
+        if (options.onlyPublicMembers()) {
+            elementsToProcess = newList(filter(elementsToProcess, publicElement));
+        }
+        Apply<TypeElement, Pair<List<Long>, List<String>>> nestedDataProducer = Content.withNestedClasses.ap(options, genClassNamePat, acceptedElement, generatorsWithTiming);
         for (TypeElement element: elementsToProcess) {
             try {
                 long time = System.nanoTime();
                 List<Pair<Long, List<String>>> elemData = newList(sequence(generatorsWithTiming, element));
                 long time2 = System.nanoTime();
-                List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(element), acceptedElement), nestedDataProducer));
+                Iterable<TypeElement> nestedToProcess = element2NestedClasses.apply(element);
+                if (options.onlyPublicMembers()) {
+                    nestedToProcess = newList(filter(nestedToProcess, publicElement));
+                }
+                List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(nestedToProcess, acceptedElement), nestedDataProducer));
                 long time3 = System.nanoTime();
                 Iterable<String> content = map(concat(flatMap(elemData, Helpers.<List<String>>right()), flatMap(nestedData, Helpers.<List<String>>right())), padding);
                 
+                String genPackage = genPackagePat.replace("{}", getPackageName(element));
                 String genClassName = genClassNamePat.replace("{}", element.getSimpleName().toString());
-                String superclassName = typeArgs.matcher(element.getSuperclass().toString()).replaceFirst("");
+                String superclassName = removeGenericPart.apply(element.getSuperclass().toString());
                 Option<String> extendedClassName = extendClassNamePattern.matcher(superclassName).matches() ? Some(genClassNamePat.replace("{}", superclassName)) : Option.<String>None();
                 long time4 = System.nanoTime();
-                ClassFileWriter.writeClassFile(getPackageName(element), genClassName, extendedClassName, content, clazz, filer);
+                ClassFileWriter.writeClassFile(genPackage, genClassName, extendedClassName, content, clazz, filer);
                 
                 generation += time2 - time;
                 nestedGeneration += time3 - time2;
@@ -211,18 +227,11 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
             }
         }
         if (!elementsToProcess.isEmpty()) {
-            processingEnv.getMessager().printMessage(Kind.WARNING, getClass().getName() + " processed " + elementsToProcess.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + rest/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(newArray(cumulativeGeneratorTimes), nanosToMillis)) + " ms)");
+            processingEnv.getMessager().printMessage(Kind.WARNING, getClass().getName() + " (" + version + ") processed " + elementsToProcess.size() + " elements in " + (System.nanoTime()-started)/1000/1000 + " ms (" + generation/1000/1000 + "/" + nestedGeneration/1000/1000 + "/" + rest/1000/1000 + "/" + fileWriting/1000/1000 + " ms) (" + newList(map(newArray(cumulativeGeneratorTimes), nanosToMillis)) + " ms)");
         }
         return false;
     }
     
-    private static Transformer<Long,Long> nanosToMillis = new Transformer<Long,Long>() {
-        @Override
-        public Long transform(Long source) {
-            return source/1000/1000;
-        }
-    };
-
     public static class CombinedGeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options, InstanceFieldsAsEnum.Options {
         @Override
         public boolean generateMemberNameAccessorForMethods() {

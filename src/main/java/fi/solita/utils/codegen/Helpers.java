@@ -4,23 +4,17 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
-import static fi.solita.utils.functional.Functional.find;
+import static fi.solita.utils.functional.Functional.groupBy;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Functional.zip;
-import static fi.solita.utils.functional.Predicates.empty;
-import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.not;
-import static fi.solita.utils.functional.Transformers.mkString;
 import static fi.solita.utils.functional.Transformers.prepend;
-import static fi.solita.utils.functional.Transformers.replaceAll;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -35,23 +29,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Generated;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ErrorType;
+import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.NoType;
+import javax.lang.model.type.NullType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.AbstractTypeVisitor6;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleElementVisitor6;
 import javax.lang.model.util.SimpleTypeVisitor6;
@@ -59,35 +60,34 @@ import javax.lang.model.util.Types;
 
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
+import fi.solita.utils.functional.Functional;
 import fi.solita.utils.functional.Iterables;
 import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Ordering;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Tuple2;
 
 public abstract class Helpers {
-    
-    private static final Pattern p = Pattern.compile("([a-zA-Z0-9_$]+\\.)+[a-zA-Z0-9_$]+");
-    
-    public static final String importType(String qualifiedTypeName) {
-        return p.matcher(qualifiedTypeName).replaceAll(Matcher.quoteReplacement("{${") + "$0" + Matcher.quoteReplacement("}$}"));
-    }
 
-    public static final Predicate<String> hasTypeParameters = new Predicate<String>() {
-        @Override
-        public boolean accept(String candidate) {
-            // FIXME: How to determine if a type contains type parameters?
-            return typeArgsWithTypeArgs.matcher(candidate).find();
-        }
-    };
+    private static final Pattern qNameMatcher = Pattern.compile("([a-zA-Z0-9_$]+\\.)+[a-zA-Z0-9_$]+");
+    private static final String qNameReplacementString = Matcher.quoteReplacement("{${") + "$0" + Matcher.quoteReplacement("}$}");
     
-    public static final String containedType(Element e, Elements elements) {
+    public static final String importTypes(String typesStr) {
+        return qNameMatcher.matcher(typesStr).replaceAll(qNameReplacementString);
+    }
+    
+    public static final String importType(Class<?> clazz) {
+        return "{${" + clazz.getName().replace('$', '.') + "}$}";
+    }
+    
+    public static final String containedType(Element e) {
         // FIXME: fancier way to do this?
         String type = qualifiedName.apply(e);
-        return containedType(type, elements);
+        return containedType(type);
     }
     
-    public static final String containedType(String type, Elements elements) {
+    public static final String containedType(String type) {
         // FIXME: fancier way to do this?
         return type.substring(type.indexOf('<')+1, type.lastIndexOf('>'));
     }
@@ -100,8 +100,8 @@ public abstract class Helpers {
     public static final Transformer<TypeParameterElement,String> typeParameter2String = new Transformer<TypeParameterElement,String>() {
         @Override
         public String transform(TypeParameterElement source) {
-            String bound = mkString(" & ", map(source.getBounds(), typeMirror2GenericQualifiedName));
-            return source.getSimpleName().toString() + (bound.equals(Object.class.getName()) ? "" : " extends " + bound);
+            String bound = Functional.mkString(" & ", map(source.getBounds(), typeMirror2GenericQualifiedName));
+            return source.getSimpleName().toString() + (bound.equals("java.lang.Object") ? "" : " extends " + bound);
         }
     };
     
@@ -118,6 +118,13 @@ public abstract class Helpers {
             }
         };
         
+        private final Predicate<String> notEmpty = new Predicate<String>() {
+            @Override
+            public boolean accept(String candidate) {
+                return !candidate.isEmpty();
+            }
+        };
+        
         @Override
         public String transform(TypeMirror source) {
             String type = typeMirror2QualifiedName.apply(source);
@@ -126,11 +133,11 @@ public abstract class Helpers {
             if (params == null) {
                 return type;
             } else {
-                List<String> p = newList(filter(map(params, this), not(empty)));
+                List<String> p = newList(filter(map(params, this), notEmpty));
                 if (p.isEmpty()) {
                     return type;
                 } else {
-                    return type + "<" + mkString(", ", map(p, boxed)) + ">";
+                    return type + "<" + Functional.mkString(", ", map(p, boxed)) + ">";
                 }
             }
         }
@@ -203,17 +210,16 @@ public abstract class Helpers {
         }
     };
     
-    private static final Pattern typeArgPat = Pattern.compile("([^.\\[\\]]+)(\\[\\])?");
-    
-    public static final Function1<String, String> handleTypeVariables(final List<? extends TypeParameterElement> typeParameters) {
+    public static final <T extends TypeParameterElement> Function1<String, String> handleTypeVariables(final List<T> typeParameters) {
         // FIXME: How to "convert" a typeVariable to a concrete class?
+        final Map<String, List<T>> bySimpleName = groupBy(typeParameters, simpleName);
         return new Transformer<String, String>() {
             @Override
             public String transform(String source) {
-                Matcher m = typeArgPat.matcher(source);
-                if (!isPrimitive(source) && m.matches()) {
-                    for (TypeParameterElement e: find(typeParameters, simpleName.andThen(equalTo(m.group(1))))) {
-                        return head(e.getBounds()).toString();
+                if (!isPrimitive(source)) {
+                    List<T> t = bySimpleName.get(source.endsWith("[]") ? source.substring(0, source.length()-2) : source);
+                    if (t != null) {
+                        return head(head(t).getBounds()).toString();
                     }
                 }
                 return source;
@@ -290,7 +296,7 @@ public abstract class Helpers {
     public static final Comparator<Element> variableElementComparator = new Ordering<Element>() {
         @Override
         public int compare(Element o1, Element o2) {
-            return simpleName.apply(o1).compareTo(simpleName.apply(o2));
+            return o1.getSimpleName().toString().compareTo(o2.getSimpleName().toString());
         }
     }.then(new Ordering<Element>() {
         @Override
@@ -356,28 +362,30 @@ public abstract class Helpers {
     public static final Function1<String, String> boxed = new Transformer<String, String>() {
         @Override
         public String transform(String source) {
-            if (source.equals(int.class.getName())) {
-                return Integer.class.getName();
-            } else if (source.equals(short.class.getName())) {
-                return Short.class.getName();
-            } else if (source.equals(char.class.getName())) {
-                return Character.class.getName();
-            } else if (source.equals(byte.class.getName())) {
-                return Byte.class.getName();
-            } else if (source.equals(long.class.getName())) {
-                return Long.class.getName();
-            } else if (source.equals(double.class.getName())) {
-                return Double.class.getName();
-            } else if (source.equals(float.class.getName())) {
-                return Float.class.getName();
-            } else if (source.equals(boolean.class.getName())) {
-                return Boolean.class.getName();
-            } else if (source.equals(void.class.getName())) {
-                return Void.class.getName();
+            if (source.equals("int")) {
+                return "java.lang.Integer";
+            } else if (source.equals("short")) {
+                return "java.lang.Short";
+            } else if (source.equals("char")) {
+                return "java.lang.Character";
+            } else if (source.equals("byte")) {
+                return "java.lang.Byte";
+            } else if (source.equals("long")) {
+                return "java.lang.Long";
+            } else if (source.equals("double")) {
+                return "java.lang.Double";
+            } else if (source.equals("float")) {
+                return "java.lang.Float";
+            } else if (source.equals("boolean")) {
+                return "java.lang.Boolean";
+            } else if (source.equals("void")) {
+                return "java.lang.Void";
             }
             return source;
         }
     };
+    
+    public static final Function1<Element,String> boxedQualifiedName = qualifiedName.andThen(boxed);
     
     public static final Predicate<Element> fields = new Predicate<Element>() {
         @Override
@@ -437,12 +445,21 @@ public abstract class Helpers {
         }
     };
     
+    public static final Predicate<Object> equalTo(final Object other) {
+        return new Predicate<Object>() {
+            @Override
+            public boolean accept(Object candidate) {
+                return candidate.equals(other);
+            }   
+        };
+    }
+    
     public static final boolean hasNonQmarkGenerics(String str) {
-        return typeArgs.matcher(str).find();
+        return str.indexOf('<') != -1;
     }
     
     public static final boolean isInstanceMethod(Element e) {
-        return !staticElements.accept(e) && e.getKind() == ElementKind.METHOD;
+        return e.getKind() == ElementKind.METHOD && !staticElements.accept(e);
     }
     
     public static final Predicate<Element> publicElement = new Predicate<Element>() {
@@ -464,32 +481,52 @@ public abstract class Helpers {
         return method.getReturnType().getKind() == TypeKind.VOID;
     }
     
-    private static final Pattern typeArgsWithTypeArgs = Pattern.compile("[a-zA-Z_$][a-zA-Z0-9_$]*|[<,]\\s*([?]\\s*(super|extends))?[^.?]+[>,]");
-
-    public static final Pattern typeArgs = Pattern.compile("<.*>");
-
     public static final boolean hasRawTypes(Element e) {
-        return e.getAnnotation(SuppressWarnings.class) != null && contains(e.getAnnotation(SuppressWarnings.class).value(), "rawtypes") ||
+        SuppressWarnings suppressWarnings = e.getAnnotation(SuppressWarnings.class);
+        return suppressWarnings != null && contains(suppressWarnings.value(), "rawtypes") ||
                e.getEnclosingElement() != null && hasRawTypes(e.getEnclosingElement());
     }
 
-    public static final boolean throwsCheckedExceptions(ExecutableElement e, ProcessingEnvironment processingEnv) {
-        return exists(e.getThrownTypes(), not(Helpers.uncheckedExceptions(processingEnv)));
-    }
+    
+    
+    public static final class EnvDependent {
+        public final Types typeUtils;
+        public final Elements elementUtils;
+        public final Messager messager;
+        private final Predicate<TypeMirror> uncheckedExceptions;
 
-    public static final Predicate<TypeMirror> uncheckedExceptions(final ProcessingEnvironment processingEnv) {
-        final Types typeUtils = processingEnv.getTypeUtils();
-        final Elements elementUtils = processingEnv.getElementUtils();
-        final TypeMirror runtimeException = elementUtils.getTypeElement(RuntimeException.class.getName()).asType();
-        final TypeMirror error = elementUtils.getTypeElement(Error.class.getName()).asType();
-        return new Predicate<TypeMirror>() {
-            @Override
-            public boolean accept(TypeMirror candidate) {
-                return typeUtils.isSubtype(candidate, runtimeException) ||
-                       typeUtils.isSubtype(candidate, error);
-            }
-        };
+        public EnvDependent(final ProcessingEnvironment env) {
+            typeUtils = env.getTypeUtils();
+            elementUtils = env.getElementUtils();
+            messager = env.getMessager();
+            
+            this.uncheckedExceptions = new Predicate<TypeMirror>() {
+                final TypeMirror runtimeException = elementUtils.getTypeElement(RuntimeException.class.getName()).asType();
+                final TypeMirror error = elementUtils.getTypeElement(Error.class.getName()).asType();
+            
+                @Override
+                public boolean accept(TypeMirror candidate) {
+                    return typeUtils.isSubtype(candidate, runtimeException) ||
+                           typeUtils.isSubtype(candidate, error);
+                }
+            };
+        }
+        
+        public final boolean isSubtype(TypeMirror type, Class<?> parent) {
+            return typeUtils.isSubtype(type, typeUtils.erasure(elementUtils.getTypeElement(parent.getName()).asType()));
+        }
+        
+        public final boolean throwsCheckedExceptions(ExecutableElement e) {
+            return exists(e.getThrownTypes(), not(uncheckedExceptions));
+        }
     }
+    
+    public static final Transformer<Long,Long> nanosToMillis = new Transformer<Long,Long>() {
+        @Override
+        public Long transform(Long source) {
+            return source/1000/1000;
+        }
+    };
 
     public static final Class<? extends Member> elementClass(Element e) {
         switch (e.getKind()) {
@@ -501,16 +538,18 @@ public abstract class Helpers {
     }
     
     public static final Iterable<? extends TypeParameterElement> allTypeParams(ExecutableElement e) {
-        final Set<String> typeParameterNames = newSet(map(e.getTypeParameters(), simpleName));
-        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), new Predicate<TypeParameterElement>() {
+        List<? extends TypeParameterElement> typeParameters = e.getTypeParameters();
+        if (staticElements.accept(e)) {
+            return typeParameters;
+        }
+        final Set<String> typeParameterNames = newSet(map(typeParameters, simpleName));
+        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), simpleName.andThen(new Predicate<String>() {
             @Override
-            public boolean accept(TypeParameterElement candidate) {
-                return !typeParameterNames.contains(simpleName.apply(candidate));
+            public boolean accept(String candidate) {
+                return !typeParameterNames.contains(candidate);
             }
-        });
-        return staticElements.accept(e)
-                ? e.getTypeParameters()
-                : (List<TypeParameterElement>)newList(concat(enclosingTypeVars, e.getTypeParameters()));
+        }));
+        return concat(enclosingTypeVars, typeParameters);
     }
 
     /**
@@ -518,24 +557,108 @@ public abstract class Helpers {
      */
     public static final Iterable<? extends TypeParameterElement> relevantTypeParams(ExecutableElement e) {
         List<? extends TypeParameterElement> typeParameters = e.getTypeParameters();
+        if (staticElements.accept(e)) {
+            return typeParameters;
+        }
+        
         final Set<String> typeParameterNames = newSet(map(typeParameters, simpleName));
-        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), new Predicate<TypeParameterElement>() {
+        Iterable<? extends TypeParameterElement> enclosingTypeVars = filter(((TypeElement)e.getEnclosingElement()).getTypeParameters(), simpleName.andThen(new Predicate<String>() {
             @Override
-            public boolean accept(TypeParameterElement candidate) {
-                return !typeParameterNames.contains(simpleName.apply(candidate));
+            public boolean accept(String candidate) {
+                return !typeParameterNames.contains(candidate);
             }
-        });
-        return staticElements.accept(e)               ? typeParameters :
-               e.getKind() == ElementKind.CONSTRUCTOR ? concat(enclosingTypeVars, typeParameters) :
-                                                        concat(filter(enclosingTypeVars, usedIn(e)), typeParameters);
+        }));
+        if (e.getKind() == ElementKind.CONSTRUCTOR) {
+            return concat(enclosingTypeVars, typeParameters);
+        }
+        final Set<Name> allUsedTypeParameters = allUsedTypeParameters(e);
+        return concat(filter(enclosingTypeVars, new Predicate<TypeParameterElement>() {
+                @Override
+                public boolean accept(TypeParameterElement candidate) {
+                    return allUsedTypeParameters.contains(candidate.getSimpleName());
+                }
+            }), typeParameters);
     }
     
-    private static final Map<String,Pattern> patternCacheForUsedIn = newMap();
+    //private static final Map<String,Pattern> patternCacheForUsedIn = newMap();
 
-    private static final Predicate<TypeParameterElement> usedIn(final ExecutableElement e) {
+    private static final class TV extends AbstractTypeVisitor6<Set<Name>,Set<Name>> {
+        private Set<TypeMirror> visited = newSet();
+        @Override
+        public Set<Name> visitPrimitive(PrimitiveType t, Set<Name> p) {
+            return p;
+        }
+        @Override
+        public Set<Name> visitNull(NullType t, Set<Name> p) {
+            return p;
+        }
+        @Override
+        public Set<Name> visitArray(ArrayType t, Set<Name> p) {
+            return visit(t.getComponentType(), p);
+        }
+        @Override
+        public Set<Name> visitDeclared(DeclaredType t, Set<Name> p) {
+            if (visited.contains(t)) {
+                return p;
+            }
+            visited.add(t);
+            if (t.getKind() == TypeKind.TYPEVAR) {
+                p.add(t.asElement().getSimpleName());
+            }
+            for (TypeMirror tm: t.getTypeArguments()) {
+                visit(tm, p);
+            }
+            return p;
+        }
+        @Override
+        public Set<Name> visitError(ErrorType t, Set<Name> p) {
+            return p;
+        }
+        @Override
+        public Set<Name> visitTypeVariable(TypeVariable t, Set<Name> p) {
+            if (visited.contains(t)) {
+                return p;
+            }
+            visited.add(t);
+            p.add(t.asElement().getSimpleName());
+            visit(t.getLowerBound(), p);
+            visit(t.getUpperBound(), p);
+            return p;
+        }
+        @Override
+        public Set<Name> visitWildcard(WildcardType t, Set<Name> p) {
+            if (t.getExtendsBound() != null) visit(t.getExtendsBound(), p);
+            if (t.getSuperBound() != null) visit(t.getSuperBound(), p);
+            return p;
+        }
+        @Override
+        public Set<Name> visitExecutable(ExecutableType t, Set<Name> p) {
+            visit(t.getReturnType(), p);
+            for (TypeMirror tm: t.getParameterTypes()) {
+                visit(tm, p);
+            }
+            for (TypeMirror tm: t.getThrownTypes()) {
+                visit(tm, p);
+            }
+            for (TypeMirror tm: t.getTypeVariables()) {
+                visit(tm, p);
+            }
+            return p;
+        }
+        @Override
+        public Set<Name> visitNoType(NoType t, Set<Name> p) {
+            return p;
+        }
+    };
+    
+    public static final <T> Set<Name> allUsedTypeParameters(ExecutableElement e) {
+        return new TV().visit(e.asType(), Collections.<Name>newSet());
+    }
+    
+    /*public static final Predicate<TypeParameterElement> usedIn(final ExecutableElement e) {
         Iterable<TypeMirror> allTypeMirrors = cons(e.getReturnType(), map(e.getParameters(), type));
         Iterable<String> typeVars = map(e.getTypeParameters(), typeParameterElement2string);
-        final String s = "." + mkString(".", concat(typeVars, map(allTypeMirrors, typeMirror2GenericQualifiedName))) + ".";
+        final String s = "." + Functional.mkString(".", concat(typeVars, map(allTypeMirrors, typeMirror2GenericQualifiedName))) + ".";
         return new Predicate<TypeParameterElement>() {
             @Override
             public boolean accept(TypeParameterElement candidate) {
@@ -553,31 +676,36 @@ public abstract class Helpers {
     private static final Transformer<TypeParameterElement,String> typeParameterElement2string = new Transformer<TypeParameterElement,String>() {
         @Override
         public String transform(TypeParameterElement source) {
-            return source.getSimpleName() + "<" + mkString("-", map(source.getBounds(), typeMirror2GenericQualifiedName)) + ">";
+            return source.getSimpleName() + "<" + Functional.mkString("-", map(source.getBounds(), typeMirror2GenericQualifiedName)) + ">";
         }
-    };
+    };*/
 
     public static final String resolveVisibility(Element e) {
-        return e.getModifiers().contains(Modifier.PUBLIC) ? "public " : 
-               e.getModifiers().contains(Modifier.PROTECTED) ? "protected " :
+        Set<Modifier> modifiers = e.getModifiers();
+        return modifiers.contains(Modifier.PUBLIC) ? "public " : 
+               modifiers.contains(Modifier.PROTECTED) ? "protected " :
                // change privates into package-visibility so that the actual owning class can use them
                "";
     }
     
-    public static final boolean isSubtype(TypeMirror type, Class<?> parent, ProcessingEnvironment processingEnv) {
-        return processingEnv.getTypeUtils().isSubtype(type, processingEnv.getTypeUtils().erasure(processingEnv.getElementUtils().getTypeElement(parent.getName()).asType()));
+    public static final Iterable<String> parameterTypesAsClasses(ExecutableElement element, List<? extends TypeParameterElement> relevantTypeParams) {
+        return map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(relevantTypeParams).andThen(removeGenericPart)));
     }
     
-    public static final Iterable<String> parameterTypesAsClasses(ExecutableElement element) {
-        return map(element.getParameters(), qualifiedName.andThen(handleTypeVariables(newList(relevantTypeParams(element))).andThen(replaceAll(typeArgs, ""))));
-    }
+    public static final Transformer<String,String> removeGenericPart = new Transformer<String,String>() {
+        @Override
+        public String transform(String source) {
+            int i = source.indexOf('<');
+            return i == -1 ? source : source.substring(0, i);
+        }
+    };
     
     public static final String elementGenericQualifiedName(TypeElement enclosingElement) {
-        return qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + mkString(", ", map(enclosingElement.getTypeParameters(), qualifiedName)) + ">");
+        return qualifiedName.apply(enclosingElement) + (enclosingElement.getTypeParameters().isEmpty() ? "" : "<" + Functional.mkString(", ", map(enclosingElement.getTypeParameters(), qualifiedName)) + ">");
     }
     
-    public static final Iterable<String> paramsWithCast(ExecutableElement e, final boolean isPrivate) {
-        Iterable<String> argCasts = map(e.getParameters(), new Transformer<VariableElement, String>() {
+    public static final Iterable<String> paramsWithCast(List<? extends VariableElement> parameters, final boolean isPrivate) {
+        Iterable<String> argCasts = map(parameters, new Transformer<VariableElement, String>() {
             @Override
             public String transform(VariableElement source) {
                 return isPrivate ? "(Object)" :
@@ -585,7 +713,7 @@ public abstract class Helpers {
                        "";
             }
         });
-        return map(zip(argCasts, map(e.getParameters(), simpleName)), mkString(""));
+        return map(zip(argCasts, map(parameters, simpleName)), join);
     }
     
     public static final Predicate<Element> withAnnotation(final String className) {
@@ -611,6 +739,15 @@ public abstract class Helpers {
         };
     }
     
+    public static final <T> Predicate<T> instanceOf(final Class<? extends T> clazz) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return clazz.isInstance(candidate);
+            }
+        };
+    }
+    
     public static final <LEFT> Transformer<Map.Entry<? extends LEFT, ?>, LEFT> left() {
         return new Transformer<Map.Entry<? extends LEFT, ?>, LEFT>() {
             @Override
@@ -628,6 +765,27 @@ public abstract class Helpers {
             }
         };
     }
+    
+    public static final Transformer<Tuple2<?,?>, String> join = new Transformer<Tuple2<?,?>,String>() {
+        @Override
+        public String transform(Tuple2<?,?> source) {
+            return source._1.toString() + source._2.toString();
+        }
+    };
+    
+    public static final Transformer<Tuple2<?,?>, String> joinWithSpace = new Transformer<Tuple2<?,?>,String>() {
+        @Override
+        public String transform(Tuple2<?,?> source) {
+            return source._1.toString() + " " + source._2.toString();
+        }
+    };
+    
+    public static final Transformer<Object,String> toString = new Transformer<Object,String>() {
+        @Override
+        public String transform(Object source) {
+            return source.toString();
+        }
+    };
     
     private static final Map<String,Pattern> patternCacheForTypeVariableReplacer = newMap();
 
@@ -655,5 +813,5 @@ public abstract class Helpers {
         }
     };
 
-    public static final Transformer<String, String> padding = prepend("  ");
+    public static final Transformer<CharSequence, String> padding = prepend("  ");
 }

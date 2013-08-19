@@ -15,7 +15,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
     }
     
     @Override
-    public Function1<Tuple2<T1, T2>, R> tuppled() {
+    public final Function1<Tuple2<T1, T2>, R> tuppled() {
         return new Function1<Tuple2<T1, T2>, R>() {
             @Override
             public R apply(Tuple2<T1, T2> t) {
@@ -24,7 +24,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
         };
     }
     
-    public Function1<T1, Function1<T2, R>> curried() {
+    public final Function1<T1, Function1<T2, R>> curried() {
         return new Function1<T1, Function1<T2,R>>() {
             @Override
             public Function1<T2, R> apply(final T1 t1) {

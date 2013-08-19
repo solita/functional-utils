@@ -15,13 +15,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
-import fi.solita.utils.functional.Iterables.FilteringIterable;
-import fi.solita.utils.functional.Iterables.RangeIterable;
-import fi.solita.utils.functional.Iterables.RepeatingIterable;
-import fi.solita.utils.functional.Iterables.TransformingIterable;
-import fi.solita.utils.functional.Iterables.TransposingIterable;
-import fi.solita.utils.functional.Iterables.ZippingIterable;
+import fi.solita.utils.functional.Iterables.*;
 
 public abstract class Functional {
 
@@ -105,11 +99,11 @@ public abstract class Functional {
     }
     
     public static <T> Iterable<T> flatten(Iterable<? extends T>[] elements) {
-        return flatten(map(elements, Function1.<Iterable<? extends T>>id()));
+        return flatten(Arrays.asList(elements));
     }
 
     public static <T> Iterable<T> flatten(Iterable<? extends Iterable<? extends T>> elements) {
-        return new ConcatenatingIterable<T>(elements);
+        return new FlatteningIterable<T>(elements);
     }
     
     public static <T> void foreach(T[] elements, Apply<? super T, Void> procedure) {
@@ -393,8 +387,13 @@ public abstract class Functional {
         return contains(Arrays.asList(elements), element);
     }
 
-    public static <T,E> boolean contains(Iterable<T> elements, T element) {
-        return exists(elements, Predicates.equalTo(element));
+    public static <T,E> boolean contains(Iterable<T> elements, final T element) {
+        return exists(elements, new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.equals(element);
+            }
+        });
     }
 
     public static <T> boolean exists(T[] elements, Apply<T, Boolean> filter) {
@@ -440,16 +439,19 @@ public abstract class Functional {
         return new ConcatenatingIterable<T>(Arrays.asList(elements1, elements2));
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2, Iterable<? extends T> elements3) {
-        return concat(elements1, concat(elements2, elements3));
+        return new ConcatenatingIterable<T>(Arrays.asList(elements1, elements2, elements3));
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, Iterable<? extends T> elements2, Iterable<? extends T> elements3, Iterable<? extends T> elements4) {
-        return concat(elements1, concat(elements2, elements3, elements4));
+        return new ConcatenatingIterable<T>(Arrays.asList(elements1, elements2, elements3, elements4));
     }
     
+    @SuppressWarnings("unchecked")
     public static <T> Iterable<T> concat(Iterable<? extends T> elements1, final Iterable<? extends T> elements2, Iterable<? extends T> elements3, Iterable<? extends T> elements4, Iterable<? extends T> elements5, Iterable<? extends T>... rest) {
-        return concat(elements1, concat(elements2, concat(elements3, elements4, elements5, flatten(rest))));
+        return new ConcatenatingIterable<T>(concat(Arrays.asList(elements1, elements2, elements3, elements4, elements5), rest));
     }
     
     public static <T extends Comparable<T>> Iterable<T> sort(T[] elements) {
@@ -541,7 +543,7 @@ public abstract class Functional {
     }
 
     public static long sum(Iterable<Integer> elements) {
-        return reduce(map(elements, Transformers.int2long), Monoids.longSum);
+        return reduce(map(elements, int2long), Monoids.longSum);
     }
 
     public static long product(Integer... elements) {
@@ -549,7 +551,7 @@ public abstract class Functional {
     }
     
     public static long product(Iterable<Integer> elements) {
-        return reduce(map(elements, Transformers.int2long), Monoids.longProduct);
+        return reduce(map(elements, int2long), Monoids.longProduct);
     }
     
     public static <T extends Comparable<T>> T min(T e1, T... elements) {
@@ -669,16 +671,20 @@ public abstract class Functional {
     }
     
     public static String mkString(Iterable<Character> elements) {
-        return mkString("", map(elements, Transformers.toString));
+        StringBuilder sb = new StringBuilder();
+        for (char c: elements) {
+            sb.append(c);
+        }
+        return sb.toString();
     }
     
-    public static String mkString(String delim, String[] elements) {
+    public static String mkString(CharSequence delim, CharSequence[] elements) {
         return mkString(delim, Arrays.asList(elements));
     }
 
-    public static String mkString(String delim, Iterable<String> elements) {
+    public static String mkString(CharSequence delim, Iterable<? extends CharSequence> elements) {
         StringBuilder sb = new StringBuilder();
-        for (String s: elements) {
+        for (CharSequence s: elements) {
             if (sb.length() > 0) {
                 sb.append(delim);
             }
@@ -716,9 +722,16 @@ public abstract class Functional {
         }
     };
     
+    private static final Transformer<Integer,Long> int2long = new Transformer<Integer,Long>() {
+        @Override
+        public Long transform(Integer source) {
+            return (long)source;
+        }
+    };
+    
     private static final String LINE_SEP = System.getProperty("line.separator");
     
-    public static final String unlines(Iterable<String> elements) {
+    public static final String unlines(Iterable<? extends CharSequence> elements) {
         return mkString(LINE_SEP, elements);
     }
     

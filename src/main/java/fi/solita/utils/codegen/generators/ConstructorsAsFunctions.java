@@ -1,39 +1,38 @@
 package fi.solita.utils.codegen.generators;
 
-import static fi.solita.utils.codegen.Helpers.boxed;
+import static fi.solita.utils.codegen.Helpers.boxedQualifiedName;
 import static fi.solita.utils.codegen.Helpers.element2Constructors;
-import static fi.solita.utils.codegen.Helpers.elementClass;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
 import static fi.solita.utils.codegen.Helpers.hasRawTypes;
 import static fi.solita.utils.codegen.Helpers.importType;
+import static fi.solita.utils.codegen.Helpers.importTypes;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
+import static fi.solita.utils.codegen.Helpers.joinWithSpace;
 import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
 import static fi.solita.utils.codegen.Helpers.paramsWithCast;
 import static fi.solita.utils.codegen.Helpers.publicElement;
-import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.simpleName;
-import static fi.solita.utils.codegen.Helpers.throwsCheckedExceptions;
 import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
 import static fi.solita.utils.codegen.generators.Content.memberAccessor;
 import static fi.solita.utils.codegen.generators.Content.memberInitializer;
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatten;
-import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Functional.zipWithIndex;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Transformers.mkString;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,7 +41,10 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 
+import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function3;
@@ -63,53 +65,51 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
     @Override
     public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, TypeElement source) {
         if (source.getModifiers().contains(Modifier.ABSTRACT)) {
-            return newList();
+            return emptyList();
         }
-        
+
         Iterable<ExecutableElement> elements = element2Constructors.apply(source);
         if (options.onlyPublicMembers()) {
             elements = filter(elements, publicElement);
         }
         
-        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = constructorGen.ap(processingEnv, options);
+        Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = constructorGen.ap(new Helpers.EnvDependent(processingEnv), options);
         Iterable<Iterable<String>> rm = newList(map(newList(zipWithIndex(elements)), singleElementTransformer));
         return flatten(rm);
     }
     
-    public static boolean needsToBeFunction(ExecutableElement constructor) {
-        return !isEmpty(relevantTypeParams(constructor));
-    }
-    
-    public static Function3<ProcessingEnvironment, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>> constructorGen = new Function3<ProcessingEnvironment, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>>() {
+    public static Function3<Helpers.EnvDependent, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>> constructorGen = new Function3<Helpers.EnvDependent, Options, Map.Entry<Integer, ExecutableElement>, Iterable<String>>() {
         @Override
-        public Iterable<String> apply(ProcessingEnvironment processingEnv, Options options, Map.Entry<Integer, ExecutableElement> entry) {
+        public Iterable<String> apply(Helpers.EnvDependent helper, Options options, Map.Entry<Integer, ExecutableElement> entry) {
             ExecutableElement constructor = entry.getValue();
             TypeElement enclosingElement = (TypeElement) constructor.getEnclosingElement();
             int index = entry.getKey();
 
-            Iterable<String> relevantTypeParams = map(relevantTypeParams(constructor), typeParameter2String);
-            String relevantTypeParamsString = importType(isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", relevantTypeParams) + ">");
+            List<? extends TypeParameterElement> relevantTypeParams = newList(relevantTypeParams(constructor));
+            String relevantTypeParamsString = relevantTypeParams.isEmpty() ? "" : "<" + importTypes(mkString(", ", map(relevantTypeParams, typeParameter2String))) + ">";
+            List<? extends VariableElement> parameters = constructor.getParameters();
+            boolean needsToBeFunction = !relevantTypeParams.isEmpty();
             
-            boolean needsToBeFunction = needsToBeFunction(constructor);
             boolean isPrivate = isPrivate(constructor);
-            boolean throwsChecked = throwsCheckedExceptions(constructor, processingEnv);
+            boolean throwsChecked = helper.throwsCheckedExceptions(constructor);
             boolean hasRawTypes = hasRawTypes(constructor);
             
             String returnType = elementGenericQualifiedName(enclosingElement);
+            String returnTypeImported = importTypes(elementGenericQualifiedName(enclosingElement));
             
             int argCount = constructor.getParameters().size();
-            List<String> argTypes = newList(map(constructor.getParameters(), qualifiedName.andThen(boxed)));
-            List<String> argNames = newList(map(constructor.getParameters(), simpleName));
-            List<String> argNamesWithCast = newList(paramsWithCast(constructor, isPrivate));
+            List<String> argTypes = newList(map(parameters, boxedQualifiedName));
+            List<String> argNames = newList(map(parameters, simpleName));
+            List<String> argNamesWithCast = newList(paramsWithCast(parameters, isPrivate));
 
             String fieldName = "$" + (index == 0 ? "" : index);
-            String constructorClass = options.getClassForConstructors(argCount).getName().replace('$', '.');
-            String fundef = importType(constructorClass + "<" + mkString(", ", concat(argTypes, newList(returnType))) + ">");
+            Class<?> constructorClass = options.getClassForConstructors(argCount);
+            String fundef = importType(constructorClass) + "<" + importTypes(mkString(", ", concat(argTypes, newList(returnType)))) + ">";
             String declaration = resolveVisibility(constructor) + "static final " + relevantTypeParamsString + " " + fundef + " " + fieldName;
             
             Iterable<String> tryBlock = isPrivate 
-                    ? Some("return (" + importType(returnType) + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
-                    : Some("return new " + importType(returnType) + "(" + mkString(", ", argNamesWithCast) + ");");
+                    ? Some("return (" + returnTypeImported + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
+                    : Some("return new " + returnTypeImported + "(" + mkString(", ", argNamesWithCast) + ");");
             
             Iterable<String> tryCatchBlock = isPrivate || throwsChecked
                 ? concat(
@@ -120,7 +120,7 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
                 : tryBlock;
                     
             Iterable<String> applyBlock = concat(
-                Some("public " + importType(returnType) + " apply(" + mkString(", ", map(zip(argTypes, argNames), mkString(" "))) + ") {"),
+                Some("public " + returnTypeImported + " apply(" + mkString(", ", map(zip(argTypes, argNames), joinWithSpace)) + ") {"),
                 map(tryCatchBlock, padding),
                 Some("}")
             );
@@ -141,11 +141,11 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
                 map(applyBlock, padding),
                 EmptyLine,
                 isPrivate || options.generateMemberInitializerForConstructors()
-                    ? concat(map(memberInitializer(returnType, null, elementClass(constructor), parameterTypesAsClasses(constructor)), padding),
+                    ? concat(map(memberInitializer(returnType, null, Constructor.class, parameterTypesAsClasses(constructor, relevantTypeParams)), padding),
                              EmptyLine)
                     : None,
                 options.generateMemberAccessorForConstructors()
-                    ? concat(map(memberAccessor(returnType, elementClass(constructor)), padding),
+                    ? concat(map(memberAccessor(returnType, Constructor.class), padding),
                              EmptyLine)
                     : None,
                 map(options.getAdditionalBodyLinesForConstructors(constructor), padding),

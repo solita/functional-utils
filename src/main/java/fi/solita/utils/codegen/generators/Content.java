@@ -2,11 +2,13 @@ package fi.solita.utils.codegen.generators;
 
 import static fi.solita.utils.codegen.Helpers.element2NestedClasses;
 import static fi.solita.utils.codegen.Helpers.importType;
+import static fi.solita.utils.codegen.Helpers.importTypes;
 import static fi.solita.utils.codegen.Helpers.isPrimitive;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.padding;
+import static fi.solita.utils.codegen.Helpers.publicElement;
+import static fi.solita.utils.codegen.Helpers.removeGenericPart;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
-import static fi.solita.utils.codegen.Helpers.typeArgs;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
@@ -32,10 +34,11 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import fi.solita.utils.codegen.CommonMetadataProcessor;
 import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Function4;
+import fi.solita.utils.functional.Function5;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
@@ -47,7 +50,7 @@ public abstract class Content {
     
     public static final List<String> memberNameAccessor(String name) {
         return newList(
-            "public " + importType(String.class.getName()) + " getName() {",
+            "public " + importType(String.class) + " getName() {",
             "  return \"" + name + "\";",
             "}"
         );
@@ -66,9 +69,9 @@ public abstract class Content {
                 } else {
                     Matcher m = typeArgArray.matcher(source);
                     if (m.matches()) {
-                        return importType(Object.class.getName()) + "[].class";
+                        return importType(Object.class) + "[].class";
                     }
-                    return importType(source) + ".class";
+                    return importTypes(source) + ".class";
                 }
             }
         });
@@ -76,7 +79,7 @@ public abstract class Content {
         String declr = isConstructor ? "getDeclaredConstructor(" + mkString(", ", typeargsReplacedWithObject) + ")" :
                        Method.class.isAssignableFrom(reflectInvokationClass) ?      "getDeclaredMethod(" + mkString(", ", cons('"' + name + '"', typeargsReplacedWithObject)) + ")" :
                        Field.class.isAssignableFrom(reflectInvokationClass) ?       "getDeclaredField(\"" + name + "\")" : "";
-        String clsName = importType(reflectInvokationClass.getName() + (isConstructor ? "<" + classNameGeneric + ">" : ""));
+        String clsName = importType(reflectInvokationClass) + (isConstructor ? "<" + importTypes(classNameGeneric) + ">" : "");
         return concat(
             newList(
                 "private transient " + clsName + " $r;",
@@ -85,7 +88,7 @@ public abstract class Content {
                 "private " + clsName + " $getMember() {",
                 "  if ($r == null) {",
                 "    try {",
-                "      $r = (" + clsName + ")(" + importType(Object.class.getName()) + ")" + importType(typeArgs.matcher(classNameGeneric).replaceAll("")) + ".class." + declr + ";",
+                "      $r = (" + clsName + ")(" + importType(Object.class) + ")" + importTypes(removeGenericPart.apply(classNameGeneric)) + ".class." + declr + ";",
                 "      $r.setAccessible(true);"
                 ),
             map(catchBlock, padding.andThen(padding)),
@@ -100,7 +103,7 @@ public abstract class Content {
     
     public static final List<String> memberAccessor(String classNameGeneric, Class<? extends Member> reflectInvokationClass) {
         return newList(
-            "public " + importType(reflectInvokationClass.getName()) + (Constructor.class.isAssignableFrom(reflectInvokationClass) ? "<" + importType(classNameGeneric) + ">" : "") + " getMember() {",
+            "public " + importType(reflectInvokationClass) + (Constructor.class.isAssignableFrom(reflectInvokationClass) ? "<" + importTypes(classNameGeneric) + ">" : "") + " getMember() {",
             "  return $getMember();",
             "}"
         );
@@ -117,19 +120,24 @@ public abstract class Content {
     }
     
     public static final List<String> catchBlock = newList(
-        "} catch (" + importType(Throwable.class.getName()) + " $e) {",
-        "  throw " + importType(Content.class.getName()) + ".wrap($e);"
+        "} catch (" + importType(Throwable.class) + " $e) {",
+        "  throw " + importType(Content.class) + ".wrap($e);"
     );
     
-    public static final Function4<String,Predicate<Element>,List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function4<String, Predicate<Element>, List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
+    public static final Function5<CommonMetadataProcessor.CombinedGeneratorOptions,String,Predicate<Element>,List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>> withNestedClasses = new Function5<CommonMetadataProcessor.CombinedGeneratorOptions, String, Predicate<Element>, List<Apply<TypeElement, Pair<Long,List<String>>>>, TypeElement, Pair<List<Long>,List<String>>>() {
         @Override
-        public Pair<List<Long>,List<String>> apply(String generatedClassNamePattern, Predicate<Element> predicate, List<Apply<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
+        public Pair<List<Long>,List<String>> apply(CommonMetadataProcessor.CombinedGeneratorOptions options, String generatedClassNamePattern, Predicate<Element> predicate, List<Apply<TypeElement, Pair<Long,List<String>>>> generators, TypeElement source) {
             if (isPrivate(source)) {
                 // cannot refer to private classes
                 return Pair.of(newList(repeat(0l, generators.size())), Collections.<String>emptyList());
             }
             List<Pair<Long, List<String>>> elemData = newList(sequence(generators, source));
-            List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(element2NestedClasses.apply(source), predicate), withNestedClasses.ap(generatedClassNamePattern, predicate, generators)));
+            
+            Iterable<TypeElement> nestedToProcess = element2NestedClasses.apply(source);
+            if (options.onlyPublicMembers()) {
+                nestedToProcess = filter(nestedToProcess, publicElement);
+            }
+            List<Pair<List<Long>, List<String>>> nestedData = newList(map(filter(nestedToProcess, predicate), withNestedClasses.ap(options, generatedClassNamePattern, predicate, generators)));
             
             Iterable<Long> generatorTimesForContent = map(elemData, Helpers.<Long>left());
             Iterable<List<Long>> generatorTimesForNestedClasses = map(nestedData, Helpers.<List<Long>>left());
@@ -139,7 +147,7 @@ public abstract class Content {
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(generatorTimesForContent, generatorTimesForNestedClasses)), Helpers.iterableSum));
             
             List<String> allContents = newList(concat(
-                          Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + importType(Serializable.class.getName()) + " {"),
+                          Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + importType(Serializable.class) + " {"),
                           elemContents,
                           map(nestedContents, padding),
                           Some("}")));

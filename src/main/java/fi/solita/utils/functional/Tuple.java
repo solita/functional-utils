@@ -28,107 +28,107 @@ public abstract class Tuple {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T, T1 extends T, T2 extends T> List<T> asList(Tuple2<T1, T2> tuple) {
+    public static <T> List<T> asList(Tuple2<? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2);
     }
     
     @SuppressWarnings("unchecked")
-    public static <T, T1 extends T, T2 extends T, T3 extends T> List<T> asList(Tuple3<T1, T2, T3> tuple) {
+    public static <T> List<T> asList(Tuple3<? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3);
     }
     
     @SuppressWarnings("unchecked")
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T> List<T> asList(Tuple4<T1, T2, T3, T4> tuple) {
+    public static <T> List<T> asList(Tuple4<? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4);
     }
     
     @SuppressWarnings("unchecked")
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T> List<T> asList(Tuple5<T1, T2, T3, T4, T5> tuple) {
+    public static <T> List<T> asList(Tuple5<? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5);
     }
     
     @SuppressWarnings("unchecked")
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T> List<T> asList(Tuple6<T1, T2, T3, T4, T5, T6> tuple) {
+    public static <T> List<T> asList(Tuple6<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T> List<T> asList(Tuple7<T1, T2, T3, T4, T5, T6, T7> tuple) {
+    public static <T> List<T> asList(Tuple7<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T> List<T> asList(Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> tuple) {
+    public static <T> List<T> asList(Tuple8<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T> List<T> asList(Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> tuple) {
+    public static <T> List<T> asList(Tuple9<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T> List<T> asList(Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> tuple) {
+    public static <T> List<T> asList(Tuple10<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T> List<T> asList(Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> tuple) {
+    public static <T> List<T> asList(Tuple11<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T> List<T> asList(Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> tuple) {
+    public static <T> List<T> asList(Tuple12<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T> List<T> asList(Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> tuple) {
+    public static <T> List<T> asList(Tuple13<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T> List<T> asList(Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> tuple) {
+    public static <T> List<T> asList(Tuple14<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T> List<T> asList(Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> tuple) {
+    public static <T> List<T> asList(Tuple15<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T> List<T> asList(Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> tuple) {
+    public static <T> List<T> asList(Tuple16<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T> List<T> asList(Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> tuple) {
+    public static <T> List<T> asList(Tuple17<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T, T18 extends T> List<T> asList(Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> tuple) {
+    public static <T> List<T> asList(Tuple18<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T, T18 extends T, T19 extends T> List<T> asList(Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> tuple) {
+    public static <T> List<T> asList(Tuple19<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T, T18 extends T, T19 extends T, T20 extends T> List<T> asList(Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> tuple) {
+    public static <T> List<T> asList(Tuple20<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T, T18 extends T, T19 extends T, T20 extends T, T21 extends T> List<T> asList(Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> tuple) {
+    public static <T> List<T> asList(Tuple21<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21);
     }
     
     @SuppressWarnings({ "unchecked" })
-    public static <T, T1 extends T, T2 extends T, T3 extends T, T4 extends T, T5 extends T, T6 extends T, T7 extends T, T8 extends T, T9 extends T, T10 extends T, T11 extends T, T12 extends T, T13 extends T, T14 extends T, T15 extends T, T16 extends T, T17 extends T, T18 extends T, T19 extends T, T20 extends T, T21 extends T, T22 extends T> List<T> asList(Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> tuple) {
+    public static <T> List<T> asList(Tuple22<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22);
     }
     
@@ -433,8 +433,15 @@ public abstract class Tuple {
     
     @Override
     public String toString() {
-        return "(" + mkString(",", map(toArray(), Transformers.toString)) + ")";
+        return "(" + mkString(",", map(toArray(), toString)) + ")";
     }
+    
+    private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
+        @Override
+        public String transform(Object source) {
+            return source.toString();
+        }
+    };
     
     @Override
     public int hashCode() {

@@ -18,6 +18,8 @@ import java.util.PriorityQueue;
 
 public abstract class Iterables {
     public static final Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
+        private final Option<Integer> SOME_ZERO = Some(0);
+        private final Option<Integer> SOME_ONE = Some(1);
         @Override
         public Option<Integer> transform(Iterable<?> source) {
             if (source instanceof Collection) {
@@ -25,6 +27,9 @@ public abstract class Iterables {
             }
             if (source instanceof PossiblySizeAwareIterable) {
                 return ((PossiblySizeAwareIterable<?>)source).sizeEstimate();
+            }
+            if (source instanceof Option) {
+                return ((Option<?>)source).isDefined() ? SOME_ONE : SOME_ZERO;
             }
             return None();
         }
@@ -250,7 +255,7 @@ public abstract class Iterables {
         }
     }
 
-    static final class ConcatenatingIterable<T>  extends PossiblySizeAwareIterable<T> {
+    static class ConcatenatingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<? extends Iterable<? extends T>> elements;
 
         public ConcatenatingIterable(Iterable<? extends Iterable<? extends T>> elements) {
@@ -259,14 +264,22 @@ public abstract class Iterables {
 
         @Override
         public Option<Integer> sizeEstimate() {
-            return None();
+            int s = 0;
+            for (Option<Integer> size: map(elements, resolveSize)) {
+                if (size.isDefined()) {
+                    s += size.get();
+                } else {
+                    return Option.None();
+                }
+            }
+            return Some(s);
         }
 
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator).iterator();
+                private final Iterator<Iterator<? extends T>> it = newList(Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator)).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
@@ -289,6 +302,17 @@ public abstract class Iterables {
                     throw new UnsupportedOperationException();
                 }
             };
+        }
+    }
+    
+    static final class FlatteningIterable<T> extends ConcatenatingIterable<T> {
+        public FlatteningIterable(Iterable<? extends Iterable<? extends T>> elements) {
+            super(elements);
+        }
+        
+        @Override
+        public Option<Integer> sizeEstimate() {
+            return None();
         }
     }
 

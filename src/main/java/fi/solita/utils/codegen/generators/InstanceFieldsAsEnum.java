@@ -5,12 +5,16 @@ import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.publicElement;
 import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.staticElements;
+import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.append;
+
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -31,7 +35,10 @@ public class InstanceFieldsAsEnum extends Generator<InstanceFieldsAsEnum.Options
             elements = filter(elements, publicElement);
         }
       
-        Iterable<VariableElement> fieldsToInclude = filter(elements, not(staticElements));
+        List<VariableElement> fieldsToInclude = newList(filter(elements, not(staticElements)));
+        if (fieldsToInclude.isEmpty()) {
+            return emptyList();
+        }
         return concat(
             Some("public enum $Fields {"),
             map(fieldsToInclude, simpleName.andThen(padding).andThen(append(","))),

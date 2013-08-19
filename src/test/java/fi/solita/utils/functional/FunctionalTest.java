@@ -66,8 +66,8 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(m, Transformers.toString)), equalTo("[1, 2][3, 4]"));
-         assertThat(mkString("", map(t, Transformers.toString)), equalTo("[1, 3][2, 4]"));
+         assertThat(mkString("", map(m, toString)), equalTo("[1, 2][3, 4]"));
+         assertThat(mkString("", map(t, toString)), equalTo("[1, 3][2, 4]"));
     }
     
     @Test
@@ -78,9 +78,16 @@ public class FunctionalTest {
         
         Iterable<Iterable<String>> t = transpose(m);
         
-        assertThat(mkString("", map(m, Transformers.toString)), equalTo("[1, 2]"));
-        assertThat(mkString("", map(t, Transformers.toString)), equalTo("[1][2]"));
+        assertThat(mkString("", map(m, toString)), equalTo("[1, 2]"));
+        assertThat(mkString("", map(t, toString)), equalTo("[1][2]"));
     }
+    
+    private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
+        @Override
+        public String transform(Object source) {
+            return source.toString();
+        }
+    };
     
     @Test
     public void testRange() {

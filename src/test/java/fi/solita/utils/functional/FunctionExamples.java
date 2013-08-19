@@ -37,7 +37,7 @@ public class FunctionExamples {
         Function1<Integer, Integer> modulo42 = mod.ap(42);
         
         // function composition, one way or the other
-        Function1<String, String> func = Function1.id();
+        Function1<String, String> func = Function.id();
         Function1<String, Integer> composed = func.andThen(length);
         Function1<String, Integer> composed2 = length.compose(func);
         

@@ -157,9 +157,8 @@ public abstract class Collections {
         return newSet(Arrays.asList(elements));
     }
     
-    @SuppressWarnings("unchecked")
     public static <T> Set<T> newSet(T e1) {
-        return newSet(Arrays.asList(e1));
+        return java.util.Collections.singleton(e1);
     }
     
     @SuppressWarnings("unchecked")

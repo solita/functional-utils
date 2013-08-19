@@ -9,6 +9,7 @@ import javax.lang.model.SourceVersion;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({"CommonMetadataProcessor3." + CommonMetadataProcessor.Options.enabled,
                    "CommonMetadataProcessor3." + CommonMetadataProcessor.Options.generatedClassNamePattern,
+                   "CommonMetadataProcessor3." + CommonMetadataProcessor.Options.generatedPackagePattern,
                    "CommonMetadataProcessor3." + CommonMetadataProcessor.Options.includesRegex,
                    "CommonMetadataProcessor3." + CommonMetadataProcessor.Options.excludesRegex,
                    "CommonMetadataProcessor3." + CommonMetadataProcessor.Options.onlyPublicMembers,

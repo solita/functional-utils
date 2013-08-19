@@ -23,6 +23,25 @@ public abstract class Predicates {
         };
     }
     
+    public static final <T extends AnnotatedElement> Predicate<T> isAnnotationPresent(final Class<? extends Annotation> annotation) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.isAnnotationPresent(annotation);
+            }
+        };
+    };
+    
+    public static final <T> Predicate<T> equalTo(final T element) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return candidate.equals(element);
+            }
+        };
+    }
+
+    
     public static final <T> Predicate<T> not(final Apply<T, Boolean> filter) {
         return new Predicate<T>() {
             @Override
@@ -44,26 +63,12 @@ public abstract class Predicates {
             return candidate % 2 == 0;
         }
     };
+    
+    public static final Predicate<Integer> odd = not(even);
 
     @SuppressWarnings("unchecked")
     public static final <E, T extends Iterable<E>> Predicate<T> empty() {
         return (Predicate<T>) Impl.empty;
-    }
-    
-    public static final Predicate<String> empty = new Predicate<String>() {
-        @Override
-        public boolean accept(String candidate) {
-            return candidate.isEmpty();
-        }
-    };
-
-    public static final <T> Predicate<T> equalTo(final T element) {
-        return new Predicate<T>() {
-            @Override
-            public boolean accept(T candidate) {
-                return candidate.equals(element);
-            }
-        };
     }
     
     public static final <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
@@ -101,40 +106,6 @@ public abstract class Predicates {
             }
         };
     }
-
-    public static final <T> Predicate<Class<?>> isInstance(final Class<T> clazz) {
-        return new Predicate<Class<?>>() {
-            @Override
-            public boolean accept(Class<?> candidate) {
-                return clazz.isAssignableFrom(candidate);
-            }
-        };
-    }
-
-    public static final <T> Predicate<T> instanceOf(final Class<? extends T> clazz) {
-        return new Predicate<T>() {
-            @Override
-            public boolean accept(T candidate) {
-                return clazz.isInstance(candidate);
-            }
-        };
-    }
-
-    public static final Predicate<Option<?>> defined = new Predicate<Option<?>>() {
-        @Override
-        public boolean accept(Option<?> candidate) {
-            return candidate.isDefined();
-        }
-    };
-    
-    public static final <T extends AnnotatedElement> Predicate<T> hasAnnotation(final Class<? extends Annotation> annotation) {
-        return new Predicate<T>() {
-            @Override
-            public boolean accept(T candidate) {
-                return candidate.isAnnotationPresent(annotation);
-            }
-        };
-    };
     
     public static final Predicate<String> matches(final Pattern pattern) {
         return new Predicate<String>() {
@@ -151,40 +122,6 @@ public abstract class Predicates {
             public boolean accept(String candidate) {
                 return pattern.matcher(candidate).lookingAt();
             }
-        };
-    }
-
-    public static final Predicate<Character> whitespace = new Predicate<Character>() {
-        @Override
-        public boolean accept(Character candidate) {
-            return Character.isWhitespace(candidate);
-        }
-    };
-    
-    public static final Predicate<String> contains(final CharSequence infix) {
-        return new Predicate<String>() {
-                @Override
-                public boolean accept(String candidate) {
-                    return candidate.contains(infix);
-                }
-        };
-    }
-    
-    public static final Predicate<String> startsWith(final String prefix) {
-        return new Predicate<String>() {
-                @Override
-                public boolean accept(String candidate) {
-                    return candidate.startsWith(prefix);
-                }
-        };
-    }
-    
-    public static final Predicate<String> endsWith(final String prefix) {
-        return new Predicate<String>() {
-                @Override
-                public boolean accept(String candidate) {
-                    return candidate.endsWith(prefix);
-                }
         };
     }
     
