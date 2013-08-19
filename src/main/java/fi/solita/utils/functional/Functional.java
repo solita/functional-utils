@@ -72,9 +72,48 @@ public abstract class Functional {
     public static <S, T> Iterable<T> map(S[] elements, Apply<? super S, ? extends T> transformer) {
         return map(Arrays.asList(elements), transformer);
     }
+    
+    public static <S, T1, T2> Iterable<Tuple2<T1,T2>> map(S[] elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
+        return map(Arrays.asList(elements), f1, f2);
+    }
+    
+    public static <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(S[] elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3) {
+        return map(Arrays.asList(elements), f1, f2, f3);
+    }
+    
+    public static <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(S[] elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3, final Apply<? super S, T4> f4) {
+        return map(Arrays.asList(elements), f1, f2, f3, f4);
+    }
 
     public static <S, T> Iterable<T> map(Iterable<S> elements, Apply<? super S, ? extends T> transformer) {
         return new TransformingIterable<S,T>(elements, transformer);
+    }
+    
+    public static <S, T1, T2> Iterable<Tuple2<T1,T2>> map(Iterable<S> elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
+        return new TransformingIterable<S,Tuple2<T1,T2>>(elements, new Transformer<S, Tuple2<T1,T2>>() {
+            @Override
+            public Tuple2<T1,T2> transform(S source) {
+                return Tuple.of(f1.apply(source), f2.apply(source));
+            }
+        });
+    }
+    
+    public static <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Iterable<S> elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3) {
+        return new TransformingIterable<S,Tuple3<T1,T2,T3>>(elements, new Transformer<S, Tuple3<T1,T2,T3>>() {
+            @Override
+            public Tuple3<T1,T2,T3> transform(S source) {
+                return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source));
+            }
+        });
+    }
+    
+    public static <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Iterable<S> elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3, final Apply<? super S, T4> f4) {
+        return new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(elements, new Transformer<S, Tuple4<T1,T2,T3,T4>>() {
+            @Override
+            public Tuple4<T1,T2,T3,T4> transform(S source) {
+                return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source), f4.apply(source));
+            }
+        });
     }
 
     public static <K1, V1, K2, V2> Map<K2, V2> map(Map<K1, V1> source, Apply<Map.Entry<K1, V1>, Map.Entry<K2, V2>> transformer) {
