@@ -80,7 +80,7 @@ public abstract class Functional {
         return map(Arrays.asList(elements), transformer);
     }
     
-    public static <S, T1, T2> Iterable<Tuple2<T1,T2>> map(S[] elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
+    public static <S, T1, T2> Iterable<Pair<T1,T2>> map(S[] elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
         return map(Arrays.asList(elements), f1, f2);
     }
     
@@ -96,11 +96,11 @@ public abstract class Functional {
         return new TransformingIterable<S,T>(elements, transformer);
     }
     
-    public static <S, T1, T2> Iterable<Tuple2<T1,T2>> map(Iterable<S> elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
-        return new TransformingIterable<S,Tuple2<T1,T2>>(elements, new Transformer<S, Tuple2<T1,T2>>() {
+    public static <S, T1, T2> Iterable<Pair<T1,T2>> map(Iterable<S> elements, final Apply<? super S, T1> f1, final Apply<? super S, T2> f2) {
+        return new TransformingIterable<S,Pair<T1,T2>>(elements, new Transformer<S, Pair<T1,T2>>() {
             @Override
-            public Tuple2<T1,T2> transform(S source) {
-                return Tuple.of(f1.apply(source), f2.apply(source));
+            public Pair<T1,T2> transform(S source) {
+                return Pair.of(f1.apply(source), f2.apply(source));
             }
         });
     }
