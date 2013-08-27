@@ -1,8 +1,11 @@
 package fi.solita.utils.functional;
+import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.flatten;
+import static fi.solita.utils.functional.Functional.grouped;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
@@ -13,6 +16,7 @@ import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.transpose;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -114,6 +118,16 @@ public class FunctionalTest {
             return Functional.zipWithIndex(t);
         }
     };
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGrouped() {
+        assertEquals(emptyList(), newList(grouped(emptyList())));
+        assertEquals(Arrays.asList(newList('a')), newList(map(grouped(it("a")), Collections_.<Character>newList11())));
+        assertEquals(Arrays.asList(newList('a','a','a')), newList(map(grouped(it("aaa")), Collections_.<Character>newList11())));
+        assertEquals(newList(newList('M'), newList('i'), newList('s','s'), newList('i'), newList('s','s'), newList('i'), newList('p','p'), newList('i')),
+                     newList(map(grouped(it("Mississippi")), Collections_.<Character>newList11())));
+    }
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {
         private boolean iterated = false;

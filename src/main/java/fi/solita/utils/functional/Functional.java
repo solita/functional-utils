@@ -15,7 +15,14 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import fi.solita.utils.functional.Iterables.*;
+import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
+import fi.solita.utils.functional.Iterables.FilteringIterable;
+import fi.solita.utils.functional.Iterables.FlatteningIterable;
+import fi.solita.utils.functional.Iterables.RangeIterable;
+import fi.solita.utils.functional.Iterables.RepeatingIterable;
+import fi.solita.utils.functional.Iterables.TransformingIterable;
+import fi.solita.utils.functional.Iterables.TransposingIterable;
+import fi.solita.utils.functional.Iterables.ZippingIterable;
 
 public abstract class Functional {
 
@@ -185,6 +192,27 @@ public abstract class Functional {
             }
         }
         return target;
+    }
+    
+    public static <T> Iterable<Iterable<T>> grouped(T[] elements) {
+        return grouped(Arrays.asList(elements));
+    }
+    
+    public static <T> Iterable<Iterable<T>> grouped(Iterable<T> elements) {
+        return grouped(elements, new Predicate<Tuple2<T,T>>() {
+            @Override
+            public boolean accept(Tuple2<T, T> candidate) {
+                return candidate._1.equals(candidate._2);
+            }
+        });
+    }
+    
+    public static <T> Iterable<Iterable<T>> grouped(T[] elements, Apply<Tuple2<T,T>, Boolean> comparator) {
+        return grouped(Arrays.asList(elements), comparator);
+    }
+    
+    public static <T> Iterable<Iterable<T>> grouped(Iterable<T> elements, Apply<Tuple2<T,T>, Boolean> comparator) {
+        return new Iterables.GroupingIterable<T>(elements, comparator);
     }
     
     /**

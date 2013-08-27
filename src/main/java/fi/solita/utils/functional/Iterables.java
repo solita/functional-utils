@@ -2,9 +2,12 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.forAll;
+import static fi.solita.utils.functional.Functional.head;
+import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.max;
 import static fi.solita.utils.functional.Functional.min;
+import static fi.solita.utils.functional.Functional.span;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -617,6 +620,54 @@ public abstract class Iterables {
             } else {
                 return None();
             }
+        }
+    }
+    
+    static final class GroupingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
+        private final Iterable<T> elements;
+        private final Apply<Tuple2<T,T>, Boolean> comparator;
+
+        public GroupingIterable(Iterable<T> elements, Apply<Tuple2<T,T>, Boolean> comparator) {
+            this.elements = elements;
+            this.comparator = comparator;
+        }
+        
+        @Override
+        public Option<Integer> sizeEstimate() {
+            return None();
+        }
+        
+        @Override
+        public Iterator<Iterable<T>> iterator() {
+            return new Iterator<Iterable<T>>() {
+                private Iterable<T> remaining = elements;
+                
+                @Override
+                public boolean hasNext() {
+                    return !isEmpty(remaining);
+                }
+
+                @Override
+                public Iterable<T> next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    final T first = head(remaining);
+                    Pair<Iterable<T>, Iterable<T>> span = span(remaining, new Predicate<T>() {
+                        @Override
+                        public boolean accept(T candidate) {
+                            return comparator.apply(Tuple.of(candidate, first));
+                        }
+                    });
+                    remaining = span.right;
+                    return span.left;
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
         }
     }
 }
