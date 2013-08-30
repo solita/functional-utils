@@ -36,4 +36,33 @@ public abstract class Function7<T1, T2, T3, T4, T5, T6, T7, R> extends MultiPara
             }
         };
     }
+    
+    public final Function1<T7,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5).ap(t6);
+    }
+    
+    public final Function2<T6,T7,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5);
+    }
+    
+    public final Function3<T5,T6,T7,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4) {
+        return ap(t1).ap(t2).ap(t3).ap(t4);
+    }
+    
+    public final Function4<T4,T5,T6,T7,R> ap(final T1 t1, final T2 t2, final T3 t3) {
+        return ap(t1).ap(t2).ap(t3);
+    }
+    
+    public final Function5<T3,T4,T5,T6,T7,R> ap(final T1 t1, final T2 t2) {
+        return ap(t1).ap(t2);
+    }
+    
+    public final Function6<T2,T3,T4,T5,T6,T7,R> ap(final T1 t) {
+        return new Function6<T2,T3,T4,T5,T6,T7,R>() {
+            @Override
+            public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+                return Function7.this.apply(t, t2, t3, t4, t5, t6, t7);
+            }
+        };
+    }
 }

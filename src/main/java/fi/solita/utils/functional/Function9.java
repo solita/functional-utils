@@ -36,4 +36,41 @@ public abstract class Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> extends M
             }
         };
     }
+    
+    public final Function1<T9,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7, final T8 t8) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5).ap(t6).ap(t7).ap(t8);
+    }
+    
+    public final Function2<T8,T9,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5).ap(t6).ap(t7);
+    }
+    
+    public final Function3<T7,T8,T9,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5).ap(t6);
+    }
+    
+    public final Function4<T6,T7,T8,T9,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5) {
+        return ap(t1).ap(t2).ap(t3).ap(t4).ap(t5);
+    }
+    
+    public final Function5<T5,T6,T7,T8,T9,R> ap(final T1 t1, final T2 t2, final T3 t3, final T4 t4) {
+        return ap(t1).ap(t2).ap(t3).ap(t4);
+    }
+    
+    public final Function6<T4,T5,T6,T7,T8,T9,R> ap(final T1 t1, final T2 t2, final T3 t3) {
+        return ap(t1).ap(t2).ap(t3);
+    }
+    
+    public final Function7<T3,T4,T5,T6,T7,T8,T9,R> ap(final T1 t1, final T2 t2) {
+        return ap(t1).ap(t2);
+    }
+    
+    public final Function8<T2,T3,T4,T5,T6,T7,T8,T9,R> ap(final T1 t) {
+        return new Function8<T2,T3,T4,T5,T6,T7,T8,T9,R>() {
+            @Override
+            public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9) {
+                return Function9.this.apply(t, t2, t3, t4, t5, t6, t7, t8, t9);
+            }
+        };
+    }
 }
