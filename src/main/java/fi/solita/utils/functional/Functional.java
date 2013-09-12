@@ -454,7 +454,7 @@ public abstract class Functional {
         return contains(Arrays.asList(elements), element);
     }
 
-    public static <T,E> boolean contains(Iterable<T> elements, final T element) {
+    public static <T> boolean contains(Iterable<T> elements, final T element) {
         return exists(elements, new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
