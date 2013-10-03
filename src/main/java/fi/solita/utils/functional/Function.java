@@ -4,6 +4,9 @@ public abstract class Function {
     private Function() {
     }
     
+    public static enum GivenLater {}
+    public static final GivenLater _ = null;
+    
     public static final <T,R> Function1<T,R> of(final Apply<T,R> apply) {
         return new Function1<T, R>() {
             @Override
@@ -37,5 +40,32 @@ public abstract class Function {
                 };
             }
         };
+    }
+    
+    public static final <A,B,C> Function2<A,B,C> uncurried(final Apply<A,? extends Apply<B,C>> f) {
+    	  return new Function2<A, B, C>() {
+				  @Override
+				  public C apply(A t1, B t2) {
+				      return f.apply(t1).apply(t2);
+				  }
+				};
+    }
+    
+    public static final <A,B,C,D> Function3<A,B,C,D> uncurried2(final Apply<A,? extends Apply<B,? extends Apply<C,D>>> f) {
+  	    return new Function3<A, B, C, D>() {
+				    @Override
+				    public D apply(A t1, B t2, C t3) {
+				        return f.apply(t1).apply(t2).apply(t3);
+				    }
+				};
+    }
+    
+    public static final <A,B,C,D,E> Function4<A,B,C,D,E> uncurried3(final Apply<A,? extends Apply<B,? extends Apply<C,? extends Apply<D,E>>>> f) {
+    	  return new Function4<A, B, C, D, E>() {
+			      @Override
+			      public E apply(A t1, B t2, C t3, D t4) {
+				        return f.apply(t1).apply(t2).apply(t3).apply(t4);
+				    }
+				};
     }
 }
