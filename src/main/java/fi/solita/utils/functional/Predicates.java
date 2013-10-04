@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public abstract class Predicates {
 
     private static final class Impl {
-        private static final Predicate<?> nulls = new Predicate<Object>() {
+        private static final Predicate<?> isNull = new Predicate<Object>() {
             @Override
             public boolean accept(Object candidate) {
                 return candidate == null;
@@ -53,8 +53,8 @@ public abstract class Predicates {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> Predicate<T> nulls() {
-        return (Predicate<T>) Impl.nulls;
+    public static final <T> Predicate<T> isNull() {
+        return (Predicate<T>) Impl.isNull;
     }
     
     public static final Predicate<Integer> even = new Predicate<Integer>() {

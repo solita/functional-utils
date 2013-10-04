@@ -152,11 +152,11 @@ public abstract class Functional {
         return new FlatteningIterable<T>(elements);
     }
     
-    public static <T> void foreach(T[] elements, Apply<? super T, Void> procedure) {
+    public static <T> void foreach(T[] elements, Apply<? super T, ?> procedure) {
         foreach(Arrays.asList(elements), procedure);
     }
     
-    public static <T> void foreach(Iterable<T> elements, Apply<? super T, Void> procedure) {
+    public static <T> void foreach(Iterable<T> elements, Apply<? super T, ?> procedure) {
         for (T t: elements) {
             procedure.apply(t);
         }
@@ -463,20 +463,20 @@ public abstract class Functional {
         });
     }
 
-    public static <T> boolean exists(T[] elements, Apply<T, Boolean> filter) {
-        return exists(Arrays.asList(elements), filter);
+    public static <T> boolean exists(T[] elements, Apply<T, Boolean> predicate) {
+        return exists(Arrays.asList(elements), predicate);
     }
 
-    public static <T> boolean exists(Iterable<T> elements, Apply<? super T, Boolean> filter) {
-        return !isEmpty(filter(elements, filter));
+    public static <T> boolean exists(Iterable<T> elements, Apply<? super T, Boolean> predicate) {
+        return !isEmpty(filter(elements, predicate));
     }
 
-    public static <T> boolean forAll(T[] elements, Apply<? super T, Boolean> filter) {
-        return forAll(Arrays.asList(elements), filter);
+    public static <T> boolean forAll(T[] elements, Apply<? super T, Boolean> predicate) {
+        return forAll(Arrays.asList(elements), predicate);
     }
 
-    public static <T> boolean forAll(Iterable<T> elements, Apply<? super T, Boolean> filter) {
-        return !exists(elements, Predicates.not(filter));
+    public static <T> boolean forAll(Iterable<T> elements, Apply<? super T, Boolean> predicate) {
+        return !exists(elements, Predicates.not(predicate));
     }
     
     @SuppressWarnings("unchecked")
