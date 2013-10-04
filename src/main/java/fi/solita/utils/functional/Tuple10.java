@@ -1,9 +1,5 @@
 package fi.solita.utils.functional;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> extends Tuple implements Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4>, Tuple._5<T5>, Tuple._6<T6>, Tuple._7<T7>, Tuple._8<T8>, Tuple._9<T9>, Tuple._10<T10> {
 
@@ -17,20 +13,6 @@ public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> extends Tuple impl
     public final T8 _8;
     public final T9 _9;
     public final T10 _10;
-    
-    Tuple10() {
-        // Needed for deserialization
-        this._1 = null;
-        this._2 = null;
-        this._3 = null;
-        this._4 = null;
-        this._5 = null;
-        this._6 = null;
-        this._7 = null;
-        this._8 = null;
-        this._9 = null;
-        this._10 = null;
-    }
     
     public Tuple10(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10) {
         this._1 = _1;
@@ -138,26 +120,5 @@ public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> extends Tuple impl
     @Override
     public Object[] toArray() {
         return new Object[]{_1, _2, _3, _4, _5, _6, _7, _8, _9, _10};
-    }
-    
-    static final class SerializableTuple<T1 extends Serializable, T2 extends Serializable, T3 extends Serializable, T4 extends Serializable, T5 extends Serializable, T6 extends Serializable, T7 extends Serializable, T8 extends Serializable, T9 extends Serializable, T10 extends Serializable> extends Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> implements Serializable {
-        private static final long serialVersionUID = 1L;
-        
-        SerializableTuple() {
-            // for deserialization
-            super(null, null, null, null, null, null, null, null, null, null);
-        }
-
-        SerializableTuple(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10) {
-            super(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10);
-        }
-
-        private void writeObject(ObjectOutputStream out) throws IOException  {
-            doWriteObject(out);
-        }
-
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-            doReadObject(in);
-        }
     }
 }

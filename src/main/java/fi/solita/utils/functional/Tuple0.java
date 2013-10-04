@@ -1,8 +1,7 @@
 package fi.solita.utils.functional;
 
-import java.io.Serializable;
 
-public class Tuple0 extends Tuple implements Serializable {
+public class Tuple0 extends Tuple {
 
     public Tuple0() {
     }

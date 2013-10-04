@@ -1,7 +1,6 @@
 package fi.solita.utils.functional;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -25,21 +24,6 @@ public class PairTest {
         assertThat(pair, instanceOf(Map.Entry.class));
         assertThat(pair.left, equalTo(pair._1));
         assertThat(pair.right, equalTo(pair._2));
-    }
-    
-    @Test
-    public void nonSerializableInstantiation() {
-        Pair<NonSerializable,String> pair = Pair.of(new NonSerializable(), "foo");
-        assertThat(pair, not(instanceOf(Serializable.class)));
-        
-        assertEquals(pair.left, pair._1);
-        assertEquals(pair.right, pair._2);
-    }
-    
-    @Test
-    public void serializableInstantiation() {
-        Pair<Integer,String> pair = Pair.of(42, "foo");
-        assertThat(pair, instanceOf(Serializable.class));
     }
     
     @Test
