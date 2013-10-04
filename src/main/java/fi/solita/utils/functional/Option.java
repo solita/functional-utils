@@ -1,22 +1,15 @@
 package fi.solita.utils.functional;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Iterator;
 
-public abstract class Option<T> implements Iterable<T> {
+public abstract class Option<T> implements Iterable<T>, Serializable {
     private static final NoneImpl<Void> None = new NoneImpl<Void>();
 
-    @SuppressWarnings("unchecked")
     public static <T> Option<T> of(T t) {
         if (t == null) {
             return None();
-        } else if (t instanceof Serializable || t.getClass().isPrimitive()) {
-            return (Option<T>) new SomeImpl.SerializableSomeImpl<Serializable>((Serializable) t);
         } else {
             return new SomeImpl<T>(t);
         }
@@ -40,28 +33,49 @@ public abstract class Option<T> implements Iterable<T> {
     public abstract T get();
 
     public abstract T getOrElse(T orElse);
+    
+    public abstract <R> Option<R> map(Apply<? super T, R> f);
 
+    public abstract <R> R cata(Apply<? super T,R> ifSome, Function0<R> ifNone);
+    
+    public abstract <R> R fold(Apply<? super T,R> ifSome, R ifNone);
+    
     public abstract boolean isDefined();
 }
 
 final class NoneImpl<T> extends Option<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    NoneImpl() {
-        //
-    }
     @Override
     public T get() {
         throw new UnsupportedOperationException("Cannot get from None");
     }
+    
     @Override
     public T getOrElse(T orElse) {
         return orElse;
     }
+    
+    @Override
+    public <R> Option<R> map(Apply<? super T, R> f) {
+        return None();
+    }
+    
+    @Override
+    public <R> R cata(Apply<? super T, R> ifSome, Function0<R> ifNone) {
+        return ifNone.apply();
+    }
+    
+    @Override
+    public <R> R fold(Apply<? super T, R> ifSome, R ifNone) {
+        return ifNone;
+    }
+    
     @Override
     public boolean isDefined() {
         return false;
     }
+    
     @Override
     public Iterator<T> iterator() {
         return Collections.<T>emptyList().iterator();
@@ -76,11 +90,6 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
 class SomeImpl<T> extends Option<T> {
 
     protected final T t;
-
-    // needed for SerializableSome deserialization
-    SomeImpl() {
-        t = null;
-    }
 
     SomeImpl(T t) {
         if (t == null) {
@@ -97,6 +106,21 @@ class SomeImpl<T> extends Option<T> {
     @Override
     public T getOrElse(T orElse) {
         return get();
+    }
+    
+    @Override
+    public <R> Option<R> map(Apply<? super T, R> f) {
+        return Some(f.apply(t));
+    }
+    
+    @Override
+    public <R> R cata(Apply<? super T, R> ifSome, Function0<R> ifNone) {
+        return ifSome.apply(t);
+    }
+    
+    @Override
+    public <R> R fold(Apply<? super T, R> ifSome, R ifNone) {
+        return ifSome.apply(t);
     }
 
     @Override
@@ -129,34 +153,5 @@ class SomeImpl<T> extends Option<T> {
     @Override
     public String toString() {
         return "Some(" + t + ")";
-    }
-
-    static final class SerializableSomeImpl<T extends Serializable> extends SomeImpl<T> implements Serializable {
-        private static final long serialVersionUID = 1L;
-
-        public SerializableSomeImpl() {
-            // for deserialization
-            super();
-        }
-        
-        SerializableSomeImpl(T t) {
-            super(t);
-        }
-
-        private void writeObject(ObjectOutputStream out) throws IOException  {
-            out.writeObject(t);
-        }
-
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-            try {
-                Field f = getClass().getSuperclass().getDeclaredField("t");
-                f.setAccessible(true);
-                f.set(this, in.readObject());
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
