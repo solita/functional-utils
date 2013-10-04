@@ -4,6 +4,15 @@ public abstract class Function {
     private Function() {
     }
     
+    public static final <R> Function0<R> of(final R r) {
+        return new Function0<R>() {
+            @Override
+            public R apply() {
+                return r;
+            }
+        };
+    }
+    
     public static final <T,R> Function1<T,R> of(final Apply<T,R> apply) {
         return new Function1<T, R>() {
             @Override
@@ -23,6 +32,15 @@ public abstract class Function {
     @SuppressWarnings("unchecked")
     public static final <T> Function1<T, T> id() {
         return (Function1<T, T>) ID;
+    }
+    
+    public static final <R> Function0<R> throwing(final RuntimeException e) {
+        return new Function0<R>() {
+            @Override
+            public R apply() {
+                throw e;
+            }
+        };
     }
     
     public static final <A,B,C> Function1<B,Function1<A,C>> flip(final Apply<A,? extends Apply<B,C>> f) {
