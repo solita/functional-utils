@@ -301,7 +301,7 @@ public abstract class Helpers {
     }.then(new Ordering<Element>() {
         @Override
         public int compare(Element o1, Element o2) {
-            return type.apply(o1).toString().compareTo(type.apply(o2).toString());
+            return type.apply(o1).toString().toLowerCase().compareTo(type.apply(o2).toString().toLowerCase());
         }
     });
     
@@ -309,19 +309,19 @@ public abstract class Helpers {
         new Ordering<ExecutableElement>() {
             @Override
             public int compare(ExecutableElement o1, ExecutableElement o2) {
-                return enclosingElement.andThen(kind).apply(o1).compareTo(enclosingElement.andThen(kind).apply(o2));
-            }
-        },
-        new Ordering<ExecutableElement>() {
-            @Override
-            public int compare(ExecutableElement o1, ExecutableElement o2) {
-                return enclosingElement.andThen(qualifiedName).apply(o1).compareTo(enclosingElement.andThen(qualifiedName).apply(o2));
+                return kind.apply(o1).compareTo(kind.apply(o2));
             }
         },
         new Ordering<ExecutableElement>() {
             @Override
             public int compare(ExecutableElement o1, ExecutableElement o2) {
                 return byIterable(variableElementComparator).compare(o1.getParameters(), o2.getParameters());
+            }
+        },
+        new Ordering<ExecutableElement>() {
+            @Override
+            public int compare(ExecutableElement o1, ExecutableElement o2) {
+                return o1.getReturnType().toString().compareTo(o2.getReturnType().toString());
             }
         }
     );

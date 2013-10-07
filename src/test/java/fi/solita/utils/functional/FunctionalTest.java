@@ -123,10 +123,10 @@ public class FunctionalTest {
     @Test
     public void testGrouped() {
         assertEquals(emptyList(), newList(grouped(emptyList())));
-        assertEquals(Arrays.asList(newList('a')), newList(map(grouped(it("a")), Collections_.<Character>newList11())));
-        assertEquals(Arrays.asList(newList('a','a','a')), newList(map(grouped(it("aaa")), Collections_.<Character>newList11())));
+        assertEquals(Arrays.asList(newList('a')), newList(map(grouped(it("a")), Collections_.<Character>newList10())));
+        assertEquals(Arrays.asList(newList('a','a','a')), newList(map(grouped(it("aaa")), Collections_.<Character>newList10())));
         assertEquals(newList(newList('M'), newList('i'), newList('s','s'), newList('i'), newList('s','s'), newList('i'), newList('p','p'), newList('i')),
-                     newList(map(grouped(it("Mississippi")), Collections_.<Character>newList11())));
+                     newList(map(grouped(it("Mississippi")), Collections_.<Character>newList10())));
     }
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {
