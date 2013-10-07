@@ -20,8 +20,8 @@ public class OptionTest {
          int i2 = bar.getOrElse(42);
          
          Iterable<Integer> intvals = newList(slen, i);
-         Iterable<Integer> intvals2 = sequence(newList(Option_.<String,Integer>fold().apply(foo).ap(OptionTest_.length),
-                                                       Option_.<Integer,Integer>fold().apply(bar).ap(Function.<Integer>id())), // == Option_.<Integer>getOrElse().apply(bar))
+         Iterable<Integer> intvals2 = sequence(newList(Option_.<String,Integer>fold().ap(foo, OptionTest_.length),
+                                                       Option_.<Integer,Integer>fold().ap(bar, Function.<Integer>id())), // == Option_.<Integer>getOrElse().apply(bar))
                                                42);
     }
     
