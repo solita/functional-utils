@@ -12,6 +12,7 @@ import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.parameterTypesAsClasses;
 import static fi.solita.utils.codegen.Helpers.paramsWithCast;
 import static fi.solita.utils.codegen.Helpers.publicElement;
+import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.simpleName;
@@ -19,11 +20,11 @@ import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
-import static fi.solita.utils.codegen.generators.Content.memberAccessor;
-import static fi.solita.utils.codegen.generators.Content.memberInitializer;
+import static fi.solita.utils.codegen.generators.Content.reflectionInvokationArgs;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatten;
 import static fi.solita.utils.functional.Functional.map;
@@ -32,7 +33,6 @@ import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Functional.zipWithIndex;
 import static fi.solita.utils.functional.Option.Some;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -83,6 +83,7 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
         public Iterable<String> apply(Helpers.EnvDependent helper, Options options, Map.Entry<Integer, ExecutableElement> entry) {
             ExecutableElement constructor = entry.getValue();
             TypeElement enclosingElement = (TypeElement) constructor.getEnclosingElement();
+            String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
             int index = entry.getKey();
 
             List<? extends TypeParameterElement> relevantTypeParams = newList(relevantTypeParams(constructor));
@@ -108,7 +109,7 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
             String declaration = resolveVisibility(constructor) + "static final " + relevantTypeParamsString + " " + fundef + " " + fieldName;
             
             Iterable<String> tryBlock = isPrivate 
-                    ? Some("return (" + returnTypeImported + ")$getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
+                    ? Some("return (" + returnTypeImported + ")getMember().newInstance(" + mkString(", ", argNamesWithCast) + ");")
                     : Some("return new " + returnTypeImported + "(" + mkString(", ", argNamesWithCast) + ");");
             
             Iterable<String> tryCatchBlock = isPrivate || throwsChecked
@@ -125,31 +126,15 @@ public class ConstructorsAsFunctions extends Generator<ConstructorsAsFunctions.O
                 Some("}")
             );
             
-            Iterable<String> toString = newList(
-                "@Override",
-                "public String toString() {",
-                "    return \"" + fieldName + "\";",
-                "}"
-            );
-                
             @SuppressWarnings("unchecked")
             Iterable<String> res = concat(
                 hasRawTypes
                     ? Some("@SuppressWarnings(\"rawtypes\")")
                     : None,
-                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundef + "() {"),
+                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundef + "(" + mkString(", ", cons(importTypes(enclosingElementQualifiedName) + ".class", reflectionInvokationArgs(parameterTypesAsClasses(constructor, relevantTypeParams)))) + ") {"),
                 map(applyBlock, padding),
                 EmptyLine,
-                isPrivate || options.generateMemberInitializerForConstructors()
-                    ? concat(map(memberInitializer(returnType, null, Constructor.class, parameterTypesAsClasses(constructor, relevantTypeParams)), padding),
-                             EmptyLine)
-                    : None,
-                options.generateMemberAccessorForConstructors()
-                    ? concat(map(memberAccessor(returnType, Constructor.class), padding),
-                             EmptyLine)
-                    : None,
                 map(options.getAdditionalBodyLinesForConstructors(constructor), padding),
-                map(toString, padding),
                 Some("};"),
                 needsToBeFunction
                     ? Some("}")

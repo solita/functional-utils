@@ -27,9 +27,7 @@ import static fi.solita.utils.codegen.Helpers.typeVariableReplacer;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
-import static fi.solita.utils.codegen.generators.Content.memberAccessor;
-import static fi.solita.utils.codegen.generators.Content.memberInitializer;
-import static fi.solita.utils.codegen.generators.Content.memberNameAccessor;
+import static fi.solita.utils.codegen.generators.Content.reflectionInvokationArgs;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
@@ -45,7 +43,6 @@ import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Transformers.prepend;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -156,14 +153,13 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             boolean usePredicate = !handleAsInstanceMethod && argCount == 1 && (returnType.equals("java.lang.Boolean") || returnType.equals("boolean"));
             Class<?> methodClass = usePredicate ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount + (handleAsInstanceMethod ? 1 : 0));
             String fundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? argTypes : concat(handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes, newSet(returnType)))) + "> ";
-            //String outerFundef = handleAsInstanceMethod ? importType(Function1.class) + "<" + enclosingElementGenericQualifiedNameImported + ", " + fundef + ">" : fundef;
             
             String declaration = modifiers + " " + relevantTypeParamsString + fundef + " " + methodName + (index == 0 ? "" : index);
             
             String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : returnTypeImported + " apply";
             Iterable<String> tryBlock = concat(
                 isPrivate
-                    ? Some(returnClause + "$getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
+                    ? Some(returnClause + "getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
                     : Some(returnClause + instanceName + "." + (typeParameters.isEmpty() ? "" : "<" + mkString(", ", map(typeParameters, simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
                 returnsVoid
                     ? Some("return null;")
@@ -181,21 +177,8 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                 map(tryCatchBlock, Helpers.padding),
                 Some("}")
             );
-            @SuppressWarnings("unchecked")
             Iterable<String> contentBlock = concat(
                 map(applyBlock, Helpers.padding),
-                options.generateMemberInitializerForMethods() || isPrivate
-                    ? concat(map(memberInitializer(enclosingElementGenericQualifiedName, methodName, Method.class, parameterTypesAsClasses(method, relevantTypeParamsForMethod)), Helpers.padding),
-                             EmptyLine)
-                    : None,
-                options.generateMemberAccessorForMethods()
-                    ? concat(map(memberAccessor(enclosingElementGenericQualifiedName, Method.class), Helpers.padding),
-                             EmptyLine)
-                    : None,
-                options.generateMemberNameAccessorForMethods()
-                    ? concat(map(memberNameAccessor(methodName), Helpers.padding),
-                             EmptyLine)
-                    : None,
                 map(options.getAdditionalBodyLinesForMethods(method), Helpers.padding)
             );
             @SuppressWarnings("unchecked")
@@ -203,7 +186,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                 hasRawTypes
                     ? Some("@SuppressWarnings(\"rawtypes\")")
                     : None,
-                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundef + "() {"),
+                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundef + "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ") {"),
                 isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
                     ? Some("    @SuppressWarnings(\"unchecked\")")
                     : None,

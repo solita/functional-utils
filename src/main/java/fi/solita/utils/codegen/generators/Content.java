@@ -59,8 +59,8 @@ public abstract class Content {
     private static final Pattern arrayClass = Pattern.compile("(\\[\\])*"); 
     private static final Pattern typeArgArray = Pattern.compile("[^.\\[\\]]+((\\[\\])+)");
     
-    public static final Iterable<String> memberInitializer(String classNameGeneric, String name, Class<? extends Member> reflectInvokationClass, Iterable<String> argumentClasses) {
-        Iterable<String> typeargsReplacedWithObject = map(argumentClasses, new Transformer<String,String>() {
+    public static final Iterable<String> reflectionInvokationArgs(Iterable<String> argumentClasses) {
+        return map(argumentClasses, new Transformer<String,String>() {
             @Override
             public String transform(String source) {
                 if (isPrimitive(arrayClass.matcher(source).replaceAll(""))) {
@@ -75,9 +75,14 @@ public abstract class Content {
                 }
             }
         });
+        
+    }
+    
+    public static final Iterable<String> memberInitializer(String classNameGeneric, String name, Class<? extends Member> reflectInvokationClass, Iterable<String> argumentClasses) {
+        Iterable<String> reflectionInvokationArgs = reflectionInvokationArgs(argumentClasses);
         boolean isConstructor = Constructor.class.isAssignableFrom(reflectInvokationClass);
-        String declr = isConstructor ? "getDeclaredConstructor(" + mkString(", ", typeargsReplacedWithObject) + ")" :
-                       Method.class.isAssignableFrom(reflectInvokationClass) ?      "getDeclaredMethod(" + mkString(", ", cons('"' + name + '"', typeargsReplacedWithObject)) + ")" :
+        String declr = isConstructor ? "getDeclaredConstructor(" + mkString(", ", reflectionInvokationArgs) + ")" :
+                       Method.class.isAssignableFrom(reflectInvokationClass) ?      "getDeclaredMethod(" + mkString(", ", cons('"' + name + '"', reflectionInvokationArgs)) + ")" :
                        Field.class.isAssignableFrom(reflectInvokationClass) ?       "getDeclaredField(\"" + name + "\")" : "";
         String clsName = importType(reflectInvokationClass) + (isConstructor ? "<" + importTypes(classNameGeneric) + ">" : "");
         return concat(

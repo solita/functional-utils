@@ -9,6 +9,7 @@ import static fi.solita.utils.codegen.Helpers.isFinal;
 import static fi.solita.utils.codegen.Helpers.isPrivate;
 import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.publicElement;
+import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.simpleName;
@@ -17,9 +18,6 @@ import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
-import static fi.solita.utils.codegen.generators.Content.memberAccessor;
-import static fi.solita.utils.codegen.generators.Content.memberInitializer;
-import static fi.solita.utils.codegen.generators.Content.memberNameAccessor;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
@@ -32,7 +30,6 @@ import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -43,7 +40,6 @@ import javax.lang.model.type.TypeKind;
 
 import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Predicate;
@@ -87,6 +83,8 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
         @Override
         public Iterable<String> apply(Options options, VariableElement field) {
             TypeElement enclosingElement = (TypeElement) field.getEnclosingElement();
+            String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
+            String enclosingElementQualifiedNameImported = importTypes(enclosingElementQualifiedName);
             
             String returnType = resolveBoxedGenericType(field.asType());
             
@@ -130,17 +128,20 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             String modifiers = visibility + "static final";
             String fieldName = field.getSimpleName().toString();
             
-            String returnClause = "return " + (isPrivate ? "(" + returnTypeImported + ")" : "");
+            String returnClause = "return " + (isPrivate ? "(" + (needsToBeFunction ? "Object" : returnTypeImported) + ")" : "");
             
             boolean usePredicate = returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName());
             Class<?> fieldClass = usePredicate ? options.getPredicateClassForInstanceFields(isFinal) : options.getClassForInstanceFields(isFinal);
-            String fundef = importType(fieldClass) + "<" + enclosingElementGenericQualifiedNameImported + (usePredicate ? "" : ", " + returnTypeImported) + ">";
+            String fieldClassImported = importType(fieldClass);
+            String fundef = fieldClassImported + "<" + enclosingElementGenericQualifiedNameImported + (usePredicate ? "" : ", " + returnTypeImported) + ">";
+            String privateFundef = fieldClassImported + "<" + enclosingElementQualifiedNameImported + (usePredicate ? "" : ",Object") + ">";
             String declaration = modifiers + " " + (needsToBeFunction ? relevantTypeParamsString + " ": "") + fundef + " " + fieldName;
-            String setterFundef = importType(Function1.class) + "<" + returnTypeImported + ",Void>";
-            String implementedMethod = Predicate.class.isAssignableFrom(fieldClass) ? "boolean accept" : returnTypeImported + " apply";
+            String privateDeclaration = "private static final " + fieldClassImported + " $" + fieldName;
+            String setterFundef = importType(Function1.class) + "<" + (needsToBeFunction ? "Object" : returnTypeImported) + ",Void>";
+            String implementedMethod = Predicate.class.isAssignableFrom(fieldClass) ? "boolean accept" : (needsToBeFunction ? "Object" : returnTypeImported) + " apply";
 
             Iterable<String> tryBlock = isPrivate
-                ? Some(returnClause + "$getMember().get($self);")
+                ? Some(returnClause + "getMember().get($self);")
                 : Some(returnClause + "$self." + fieldName + ";");
             
             Iterable<String> tryCatchBlock = isPrivate
@@ -152,13 +153,13 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
                 : tryBlock;
                         
             Iterable<String> applyBlock = concat(
-                Some("public final " + implementedMethod + "(final " + enclosingElementGenericQualifiedNameImported + " $self) {"),
+                Some("public final " + implementedMethod + "(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) {"),
                 map(tryCatchBlock, padding),
                 Some("}")
             );
             
             Iterable<String> setTryBlock = isPrivate
-                    ? Some("$getMember().set($self, $newValue);")
+                    ? Some("getMember().set($self, $newValue);")
                     : Some("$self." + fieldName + " = $newValue;");
             
             Iterable<String> setTryCatchBlock = isPrivate
@@ -170,39 +171,33 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
                     : setTryBlock;
             
             Iterable<String> setBlock = concat(
-                    Some("public final " + setterFundef + " setter(final " + enclosingElementGenericQualifiedNameImported + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnType + " $newValue) {"),
+                    needsToBeFunction
+                        ? Some("public final " + setterFundef + " setter(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) { return new " + setterFundef + "() { public Void apply(final Object $newValue) {")
+                        : Some("public final " + relevantTypeParamsString + " " + setterFundef + " setter(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnType + " $newValue) {"),
                     map(setTryCatchBlock, padding),
                     Some("    return null;"),
                     Some("}};}")
                 );
+            
+            String initParams = "(" + enclosingElementQualifiedNameImported + ".class, \"" + fieldName + "\")";
                         
             @SuppressWarnings("unchecked")
             Iterable<String> res = concat(
                 needsToBeFunction
-                    ? Some(declaration + "() { return new " + fundef + "() {")
-                    : Some(declaration + " = new " + fundef + "() {"),
-                isPrivate || options.generateMemberInitializerForFields()
-                    ? concat(map(memberInitializer(enclosingElementGenericQualifiedName, fieldName, Field.class, Collections.<String>newList()), padding),
-                             EmptyLine)
-                    : None,
-                options.generateMemberAccessorForFields()
-                    ? concat(map(memberAccessor(enclosingElementGenericQualifiedName, Field.class), padding),
-                             EmptyLine)
-                    : None,
-                options.generateMemberNameAccessorForFields()
-                    ? concat(map(memberNameAccessor(fieldName), padding),
-                             EmptyLine)
-                    : None,
+                    ? newList(enclosingElementQualifiedNameImported.equals(enclosingElementGenericQualifiedNameImported) ? "" : "@SuppressWarnings(\"rawtypes\")",
+                              privateDeclaration + " = new " + privateFundef + initParams + " {")
+                    : Some(declaration + " = new " + fundef + initParams + " {"),
                 map(options.getAdditionalBodyLinesForInstanceFields(), padding),
                 EmptyLine,
-                isPrivate && (hasNonQmarkGenerics(returnType) || field.asType().getKind() == TypeKind.TYPEVAR)
+                isPrivate && !needsToBeFunction && (hasNonQmarkGenerics(returnType) || field.asType().getKind() == TypeKind.TYPEVAR)
                     ? Some("    @SuppressWarnings(\"unchecked\")")
                     : None,
                 map(applyBlock, padding),
                 isFinal ? None : map(setBlock, padding),
                 Some("};"),
                 needsToBeFunction
-                    ? Some("}")
+                    ? newList("@SuppressWarnings(\"unchecked\")",
+                              declaration + "() { return (" + fundef + ")$" + fieldName + "; }")
                     : None,
                 EmptyLine
             );
