@@ -62,6 +62,13 @@ public abstract class SemiGroups {
       }
   }
   
+  public static class Endo<T> extends Function2<Apply<T,T>,Apply<T,T>,Apply<T,T>> implements SemiGroup<Apply<T, T>> {
+      @Override
+      public Apply<T, T> apply(Apply<T, T> t1, Apply<T, T> t2) {
+          return Function.of(t1).andThen(t2);
+      }
+  }
+  
   public static class SetUnion<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
       @Override
       public Set<T> apply(Set<T> first, Set<T> second) {

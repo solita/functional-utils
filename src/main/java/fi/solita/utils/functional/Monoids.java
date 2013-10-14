@@ -61,6 +61,13 @@ public abstract class Monoids {
       }
   }
   
+  public static class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
+      @Override
+      public Apply<T, T> zero() {
+          return Function.id();
+      }
+  }
+  
   public static class SetUnion<T> extends SemiGroups.SetUnion<T> implements Monoid<Set<T>> {
       @Override
       public Set<T> zero() {
