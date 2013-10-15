@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import fi.solita.utils.codegen.NoMetadataGeneration;
+import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
 @NoMetadataGeneration
@@ -51,7 +52,26 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
         };
     }
     
-    public final Function1<T2,R> apply(final T1 t1, GivenLater _1) {
+    static final <T1,T2,R> Function2<T1,T2,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+        return new Function2<T1,T2,R>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public R apply(T1 t1, T2 t2) {
+                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2);
+            }
+        };
+    }
+    
+    static final <T1,T2,R,FR extends Apply<?,R>> Function2<T1,T2,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+        return new Function2<T1,T2,FR>() {
+            @Override
+            public FR apply(T1 t1, T2 t2) {
+                return PartialApplicationHelper.makeSecondFunc(f, placeholders, t1, t2);
+            }
+        };
+    }
+    
+    public final Function1<T2,R> apply(final T1 t1, GivenLater _2) {
         return new Function1<T2,R>() {
             @Override
             public R apply(T2 t2) {
@@ -60,11 +80,29 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
         };
     }
 
-    public final Function1<T1,R> apply(GivenLater _0, final T2 t2) {
+    public final Function1<T1,R> apply(GivenLater _1, final T2 t2) {
         return new Function1<T1,R>() {
             @Override
             public R apply(T1 t1) {
                 return Function2.this.apply(t1, t2);
+            }
+        };
+    }
+    
+    public final Function1<T1,Function1<T2,R>> apply(GivenLater _1, GivenEvenLater _2) {
+        return new Function1<T1, Function1<T2,R>>() {
+            @Override
+            public Function1<T2, R> apply(T1 t) {
+                return apply(t);
+            }
+        };
+    }
+    
+    public final Function1<T2,Function1<T1,R>> apply(GivenEvenLater _1, GivenLater _2) {
+        return new Function1<T2, Function1<T1,R>>() {
+            @Override
+            public Function1<T1, R> apply(T2 t) {
+                return apply(t);
             }
         };
     }

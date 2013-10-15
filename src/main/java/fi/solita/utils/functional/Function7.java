@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import fi.solita.utils.codegen.NoMetadataGeneration;
+import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
 @NoMetadataGeneration
@@ -70,1137 +71,1030 @@ public abstract class Function7<T1, T2, T3, T4, T5, T6, T7, R> extends MultiPara
         };
     }
     
-    public final Function2<T1,T4,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T1,T4,R>() {
+    static final <T1,T2,T3,T4,T5,T6,T7,R> Function7<T1,T2,T3,T4,T5,T6,T7,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+        return new Function7<T1,T2,T3,T4,T5,T6,T7,R>() {
+            @SuppressWarnings("unchecked")
             @Override
-            public R apply(T1 t1, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
+            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5, t6, t7);
             }
         };
     }
-
-    public final Function6<T1,T2,T3,T4,T6,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function6<T1,T2,T3,T4,T6,T7,R>() {
+    
+    static final <T1,T2,T3,T4,T5,T6,T7,R,FR extends Apply<?,R>> Function7<T1,T2,T3,T4,T5,T6,T7,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+        return new Function7<T1,T2,T3,T4,T5,T6,T7,FR>() {
             @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
+            public FR apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+                return PartialApplicationHelper.makeSecondFunc(f, placeholders, t1, t2, t3, t4, t5, t6, t7);
             }
         };
+    }
+    
+    public final Function6<T1,T3,T4,T5,T6,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T3,T4,T5,T6,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T3,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function6<T1,T3,T4,T5,T6,T7,Function1<T2,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T3,T4,T5,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function5<T1,T3,T4,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T3,T6,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T4,T6,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function4<T2,T3,T4,T6,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T3,T6,Function3<T4,T5,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T5,T6,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function4<T1,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T5,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T4,T5,T6,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T4,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T5,Function6<T1,T2,T3,T4,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T5,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function1<T5,R>() {
-            @Override
-            public R apply(T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T6,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T3,T6,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T2,T3,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T6,T7,Function3<T3,T4,T5,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T2,T3,T4,T5,T6,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function6<T2,T3,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T3,T5,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T2,T4,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T2,T4,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T3,T5,Function5<T1,T2,T4,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T4,T5,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function4<T1,T2,T4,T5,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T5,T6,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T4,T6,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function2<T4,T6,R>() {
-            @Override
-            public R apply(T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T5,T6,Function3<T1,T4,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T2,T3,T5,T6,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T2,T3,T5,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T4,T5,T6,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T4,T5,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function2<T4,T5,R>() {
-            @Override
-            public R apply(T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T4,T5,T6,Function3<T1,T2,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T5,T6,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function3<T2,T5,T6,R>() {
-            @Override
-            public R apply(T2 t2, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T5,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T3,T4,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function3<T2,T3,T4,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T5,T7,Function3<T2,T4,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T5,T6,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T2,T3,T5,T6,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T5,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T2,T4,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function3<T1,T2,T4,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T5,Function2<T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T5,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function5<T1,T2,T3,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function6<T1,T2,T3,T4,T5,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T3,T6,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function2<T3,T6,R>() {
-            @Override
-            public R apply(T3 t3, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function6<T1,T2,T3,T4,T5,T7,Function1<T6,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T2,T3,T4,T6,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function5<T2,T3,T4,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T4,T5,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T7,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function1<T7,R>() {
-            @Override
-            public R apply(T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T4,T5,Function3<T1,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T3,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T2,T3,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T5,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T6,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T1,T3,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T5,T7,Function3<T3,T4,T6,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T3,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function1<T3,R>() {
-            @Override
-            public R apply(T3 t3) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T6,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T3,T4,T5,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T3,T4,T5,T7,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T6,T7,Function3<T2,T4,T5,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T3,T5,T6,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T3,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T4,T6,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T3,T5,T6,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function4<T3,T5,T6,T7,R>() {
-            @Override
-            public R apply(T3 t3, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T4,T6,Function4<T2,T3,T5,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T6,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function3<T2,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T5,T7,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T4,T5,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T2,T4,T5,T7,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T5,T7,Function4<T1,T3,T4,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T5,T6,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T2,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T4,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T4,T5,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function4<T1,T3,T4,T5,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T3,T4,T7,Function3<T1,T5,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T3,T4,T5,T6,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T3,T4,T5,T6,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T5,T6,T7,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T5,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T2,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T5,T6,T7,Function3<T1,T2,T4,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T4,T6,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T1,T4,T6,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T3,T5,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T4,T6,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T3,T4,T6,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T3,T5,Function4<T1,T4,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T3,T5,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T2,T3,T5,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T2,T3,T4,T5,T6,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T3,T4,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T3,T4,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T2,T3,T4,T5,T6,Function2<T1,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T1,T2,T3,T5,T6,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function6<T1,T2,T3,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T2,T3,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T6,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function3<T3,T6,T7,R>() {
-            @Override
-            public R apply(T3 t3, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T2,T3,Function4<T4,T5,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T4,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T3,T4,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T4,T6,T7,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T1,T3,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T1,T3,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T4,T6,T7,Function3<T2,T3,T5,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T5,T6,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T2,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T4,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T3,T5,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T1,T3,T5,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T4,T7,Function3<T3,T5,T6,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T4,T5,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T4,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T2,T3,T4,T6,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T4,T5,T6,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function3<T4,T5,T6,R>() {
-            @Override
-            public R apply(T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T2,T3,T4,T6,T7,Function2<T1,T5,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T3,T4,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function4<T1,T2,T3,T4,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T2,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T3,T6,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T1,T3,T6,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T2,Function6<T1,T3,T4,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T2,T6,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T1,T2,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T4,T5,T6,T7,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T1,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function2<T1,T7,R>() {
-            @Override
-            public R apply(T1 t1, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T4,T5,T6,T7,Function2<T2,T3,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T2,T5,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T1,T2,T5,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T3,T4,T5,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T1,T3,T4,T5,T6,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function6<T1,T3,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T3,T4,T5,Function4<T1,T2,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T5,T6,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function3<T5,T6,T7,R>() {
-            @Override
-            public R apply(T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T3,T4,T6,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T2,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function2<T2,T7,R>() {
-            @Override
-            public R apply(T2 t2, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T3,T4,T6,T7,Function2<T2,T5,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T4,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T1,T4,T7,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T3,T4,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T4,T5,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T1,T4,T5,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T3,T4,Function4<T2,T5,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T4,T6,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T2,T4,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T5,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T5,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function3<T1,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T5,T7,Function2<T4,T6,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T4,T5,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function5<T1,T2,T3,T4,T5,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T3,T5,T6,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T4,T5,T6,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T2,T4,T5,T6,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T3,T5,T6,T7,Function2<T2,T4,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T4,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T2,T4,T7,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T2,T5,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T4,T6,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function3<T4,T6,T7,R>() {
-            @Override
-            public R apply(T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T2,T5,Function5<T1,T3,T4,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T5,T6,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T3,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T6,T7,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T3,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function2<T3,T7,R>() {
-            @Override
-            public R apply(T3 t3, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T6,T7,Function5<T1,T2,T3,T4,T5,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T3,T4,T6,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T3,T4,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T4,T6,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T4,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function1<T4,R>() {
-            @Override
-            public R apply(T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T4,T6,Function3<T2,T5,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T4,T6,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T2,T4,T6,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T2,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T5,T6,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function3<T1,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T2,T7,Function4<T3,T4,T5,T6,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T2,T3,T4,T5,T6,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function5<T2,T3,T4,T5,T6,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T3,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T5,T6,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function5<T1,T2,T3,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T3,Function5<T2,T4,T5,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T3,T4,T6,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T3,T4,T6,T7,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T5,T6,T7,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T4,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T3,T4,T7,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T5,T6,T7,Function4<T1,T2,T3,T4,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T6,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function2<T6,T7,R>() {
-            @Override
-            public R apply(T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T5,T6,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T2,T4,T5,T6,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T2,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T5,T6,Function2<T4,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T3,T5,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function2<T3,T5,R>() {
-            @Override
-            public R apply(T3 t3, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T7,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T1,T2,T3,T4,T5,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function6<T1,T2,T3,T4,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function1<T7,Function6<T1,T2,T3,T4,T5,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T4,T5,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function5<T1,T2,T4,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T4,T5,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T5,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T2,T3,T5,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T1,T4,T5,Function4<T2,T3,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T4,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function5<T1,T2,T3,T4,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T5,T6,T7,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T4,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function4<T2,T3,T4,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T2,T5,T6,T7,Function3<T1,T3,T4,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T4,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function2<T4,T7,R>() {
-            @Override
-            public R apply(T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T3,T4,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T2,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function1<T2,R>() {
-            @Override
-            public R apply(T2 t2) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T3,T4,Function4<T1,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T5,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function3<T2,T5,T7,R>() {
-            @Override
-            public R apply(T2 t2, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T3,T6,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T3,T4,T5,T6,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function5<T1,T3,T4,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T3,T6,Function5<T1,T2,T4,T5,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T2,T3,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function3<T1,T2,T3,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T4,T5,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T5,T6,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function2<T5,T6,R>() {
-            @Override
-            public R apply(T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T3,T4,T5,Function3<T2,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T2,T3,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T2,T3,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T6,T7,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T4,T6,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T3,T4,T6,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T6,T7,Function4<T1,T3,T4,T5,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T4,T5,T6,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T4,T5,T7,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T1,T2,T3,T4,T5,T6,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function6<T1,T2,T3,T4,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T3,T4,T5,T7,Function3<T1,T2,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T4,T6,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function4<T1,T2,T4,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T2,T7,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T2,T3,T4,T5,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function5<T2,T3,T4,T5,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T2,T7,Function5<T1,T3,T4,T5,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T3,T5,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T3,T5,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T2,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T5,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function2<T5,T7,R>() {
-            @Override
-            public R apply(T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T2,Function5<T3,T4,T5,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T4,T5,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T2,T4,T5,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T4,T7,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T4,T6,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T1,T4,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T4,T7,Function4<T1,T3,T5,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T5,T6,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function3<T3,T5,T6,R>() {
-            @Override
-            public R apply(T3 t3, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T4,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T5,T7,R> apply(final T1 t1, final T2 t2, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function3<T3,T5,T7,R>() {
-            @Override
-            public R apply(T3 t3, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T1,T4,Function5<T2,T3,T5,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T3,T4,R> apply(GivenLater _0, final T2 t2, GivenLater _2, GivenLater _3, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function3<T1,T3,T4,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T4 t4) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T3,T7,R> apply(GivenLater _0, final T2 t2, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T1,T3,T7,R>() {
-            @Override
-            public R apply(T1 t1, T3 t3, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T7,Function2<T5,T6,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T2,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T1,T2,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function6<T1,T2,T3,T4,T6,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T4,T5,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, final T6 t6, GivenLater _6) {
-        return new Function3<T4,T5,T7,R>() {
-            @Override
-            public R apply(T4 t4, T5 t5, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function6<T1,T2,T3,T4,T6,T7,Function1<T5,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function6<T1,T2,T4,T5,T6,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function6<T1,T2,T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T5,T6,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T6,R> apply(final T1 t1, final T2 t2, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function1<T6,R>() {
-            @Override
-            public R apply(T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T5,T6,Function5<T1,T2,T3,T4,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T1,T6,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function2<T1,T6,R>() {
-            @Override
-            public R apply(T1 t1, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T3,T4,T5,T6,T7,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T4,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function4<T1,T2,T4,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T3,T4,T5,T6,T7,Function2<T1,T2,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T2,T5,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function2<T2,T5,R>() {
-            @Override
-            public R apply(T2 t2, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T4,T6,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T2,T6,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function2<T2,T6,R>() {
-            @Override
-            public R apply(T2 t2, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T4,T6,Function5<T1,T2,T3,T5,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T5,T6,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, final T4 t4, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function4<T2,T5,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T4,T5,T6,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T3,T6,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function3<T2,T3,T6,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T4,T5,T6,Function4<T1,T2,T3,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T1,T5,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function2<T1,T5,R>() {
-            @Override
-            public R apply(T1 t1, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T5,T7,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T3,T5,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function4<T1,T2,T3,T5,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T5,T7,Function5<T1,T2,T3,T4,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T3,T4,T5,R> apply(final T1 t1, final T2 t2, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function3<T3,T4,T5,R>() {
-            @Override
-            public R apply(T3 t3, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T3,T5,T6,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function1<T1,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function1<T1,R>() {
-            @Override
-            public R apply(T1 t1) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T3,T5,T6,Function4<T1,T2,T4,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function2<T1,T2,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, final T6 t6, final T7 t7) {
-        return new Function2<T1,T2,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T4,T5,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T4,T6,T7,R> apply(final T1 t1, GivenLater _1, final T3 t3, GivenLater _3, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T2,T4,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T4 t4, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T2,T4,T5,Function3<T3,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T4,T5,T6,R> apply(GivenLater _0, GivenLater _1, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, final T7 t7) {
-        return new Function5<T1,T2,T4,T5,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T4 t4, T5 t5, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T6,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T4,T5,T6,T7,R> apply(final T1 t1, final T2 t2, final T3 t3, GivenLater _3, GivenLater _4, GivenLater _5, GivenLater _6) {
-        return new Function4<T4,T5,T6,T7,R>() {
-            @Override
-            public R apply(T4 t4, T5 t5, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T4,T6,Function2<T5,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T2,T3,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, final T6 t6, GivenLater _6) {
-        return new Function3<T2,T3,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T4,T5,T6,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T1,T2,T6,T7,R> apply(GivenLater _0, GivenLater _1, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T1,T2,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function4<T1,T4,T5,T6,Function3<T2,T3,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T4,T6,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, GivenLater _3, final T5 t5, GivenLater _5, final T7 t7) {
-        return new Function5<T1,T2,T3,T4,T6,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T6 t6) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T6,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T4,T5,R> apply(final T1 t1, GivenLater _1, GivenLater _2, GivenLater _3, GivenLater _4, final T6 t6, final T7 t7) {
-        return new Function4<T2,T3,T4,T5,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T4 t4, T5 t5) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function5<T1,T2,T3,T6,T7,Function2<T4,T5,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function3<T1,T6,T7,R> apply(GivenLater _0, final T2 t2, final T3 t3, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function3<T1,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T4,T6,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function5<T1,T2,T3,T6,T7,R> apply(GivenLater _0, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function5<T1,T2,T3,T6,T7,R>() {
-            @Override
-            public R apply(T1 t1, T2 t2, T3 t3, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function3<T2,T4,T6,Function4<T1,T3,T5,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 
-    public final Function4<T2,T3,T6,T7,R> apply(final T1 t1, GivenLater _1, GivenLater _2, final T4 t4, final T5 t5, GivenLater _5, GivenLater _6) {
-        return new Function4<T2,T3,T6,T7,R>() {
-            @Override
-            public R apply(T2 t2, T3 t3, T6 t6, T7 t7) {
-                return Function7.this.apply(t1, t2, t3, t4, t5, t6, t7);
-            }
-        };
+    public final Function2<T2,T4,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T2,T4,Function5<T1,T3,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T4,T5,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T4,T5,Function5<T1,T2,T3,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T6,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T6,Function4<T2,T4,T5,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T3,T5,T6,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T3,T5,T6,T7,Function1<T4,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T4,T5,T7,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T4,T5,T7,Function4<T1,T2,T3,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T6,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T6,Function4<T3,T4,T5,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T3,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T3,Function6<T1,T2,T4,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T4,T5,T6,T7,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T4,T5,T6,T7,Function2<T1,T3,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T4,T6,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T4,T6,Function3<T3,T5,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T4,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T4,Function6<T1,T2,T3,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T5,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T5,T7,Function3<T1,T4,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T6,T7,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T6,T7,Function4<T1,T2,T4,T5,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T5,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T5,Function5<T2,T3,T4,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T5,T7,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T5,T7,Function4<T2,T3,T4,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T4,T6,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T4,T6,Function4<T1,T2,T5,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T3,T4,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T3,T4,T7,Function3<T2,T5,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T6,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T6,Function5<T2,T3,T4,T5,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T3,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T3,T7,Function4<T1,T4,T5,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T4,T7,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T4,T7,Function4<T2,T3,T5,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T6,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T6,T7,Function2<T3,T5,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T4,T7,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T4,T7,Function5<T1,T2,T3,T5,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T4,T6,T7,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T4,T6,T7,Function4<T1,T2,T3,T5,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T2,T3,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T2,T3,Function5<T1,T4,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T4,T5,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T4,T5,Function4<T1,T3,T6,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T6,R> apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T6,Function6<T1,T2,T3,T4,T5,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T3,T5,T6,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T3,T5,T6,T7,Function2<T1,T4,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T3,T4,T6,T7,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T3,T4,T6,T7,Function3<T1,T2,T5,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T7,Function4<T2,T4,T5,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T4,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T4,Function3<T5,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T6,T7,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T6,T7,Function3<T1,T3,T5,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T5,T6,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T5,T6,Function3<T3,T4,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T3,T4,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T3,T4,Function5<T1,T2,T5,T6,T7,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T3,T4,T5,T7,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T3,T4,T5,T7,Function2<T2,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T5,T6,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T5,T6,T7,Function2<T3,T4,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T4,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, T5 t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T4,Function4<T3,T5,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T6,T7,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T6,T7,Function4<T2,T3,T4,T5,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T4,T6,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T4,T6,Function3<T1,T5,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T2,T6,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T2,T6,Function5<T1,T3,T4,T5,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T4,T5,T6,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T4,T5,T6,T7,Function1<T3,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T5,T7,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T5,T7,Function2<T3,T6,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T5,T7,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T5,T7,Function4<T1,T2,T4,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T5,R> apply(GivenLater t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T2,T5,Function4<T3,T4,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T3,T4,T5,T6,R> apply(GivenLater t1, T2 t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T3,T4,T5,T6,Function2<T2,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T5,T6,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T5,T6,Function4<T2,T3,T4,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T5,T6,T7,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T5,T6,T7,Function3<T2,T3,T4,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T3,T4,T5,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T2,T3,T4,T5,T7,Function2<T1,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T3,T5,T6,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T3,T5,T6,Function3<T2,T4,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T5,T7,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T5,T7,Function3<T1,T3,T6,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T7,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T7,Function3<T4,T5,T6,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T4,T5,T6,T7,R> apply(T1 t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T4,T5,T6,T7,Function3<T1,T2,T3,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T6,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T3,T6,T7,Function3<T1,T4,T5,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T3,T4,T5,T6,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T1,T2,T3,T4,T5,T6,Function1<T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T3,T6,R> apply(T1 t1, GivenLater t2, GivenLater t3, T4 t4, T5 t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T3,T6,Function4<T1,T4,T5,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T7,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T1,T7,Function5<T2,T3,T4,T5,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T2,T3,T4,T5,T6,T7,R> apply(T1 t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function6<T2,T3,T4,T5,T6,T7,Function1<T1,R>> apply(GivenEvenLater t1, GivenLater t2, GivenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenLater t7) {
+        return Function6.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T4,T7,R> apply(T1 t1, T2 t2, GivenLater t3, GivenLater t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T3,T4,T7,Function4<T1,T2,T5,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T5,R> apply(GivenLater t1, GivenLater t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T2,T3,T5,Function3<T4,T6,T7,R>> apply(GivenLater t1, GivenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T5,T6,R> apply(T1 t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T2,T4,T5,T6,Function3<T1,T3,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T5,T6,R> apply(T1 t1, GivenLater t2, T3 t3, T4 t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T2,T5,T6,Function4<T1,T3,T4,T7,R>> apply(GivenEvenLater t1, GivenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T1,R> apply(GivenLater t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
+        return Function1.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function1<T1,Function6<T2,T3,T4,T5,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function1.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T3,T7,R> apply(T1 t1, T2 t2, GivenLater t3, T4 t4, T5 t5, T6 t6, GivenLater t7) {
+        return Function2.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function2<T3,T7,Function5<T1,T2,T4,T5,T6,R>> apply(GivenEvenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenEvenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function2.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T5,R> apply(GivenLater t1, T2 t2, GivenLater t3, T4 t4, GivenLater t5, T6 t6, T7 t7) {
+        return Function3.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function3<T1,T3,T5,Function4<T2,T4,T6,T7,R>> apply(GivenLater t1, GivenEvenLater t2, GivenLater t3, GivenEvenLater t4, GivenLater t5, GivenEvenLater t6, GivenEvenLater t7) {
+        return Function3.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T4,T5,T7,R> apply(GivenLater t1, T2 t2, T3 t3, GivenLater t4, GivenLater t5, T6 t6, GivenLater t7) {
+        return Function4.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function4<T1,T4,T5,T7,Function3<T2,T3,T6,R>> apply(GivenLater t1, GivenEvenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenEvenLater t6, GivenLater t7) {
+        return Function4.split(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T5,T6,R> apply(GivenLater t1, GivenLater t2, T3 t3, GivenLater t4, GivenLater t5, GivenLater t6, T7 t7) {
+        return Function5.partial(this, t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public final Function5<T1,T2,T4,T5,T6,Function2<T3,T7,R>> apply(GivenLater t1, GivenLater t2, GivenEvenLater t3, GivenLater t4, GivenLater t5, GivenLater t6, GivenEvenLater t7) {
+        return Function5.split(this, t1, t2, t3, t4, t5, t6, t7);
     }
 }

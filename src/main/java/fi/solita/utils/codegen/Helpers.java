@@ -4,7 +4,6 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.groupBy;
@@ -96,6 +95,16 @@ public abstract class Helpers {
         // FIXME: any correct ways to do this?
         return boxed.apply(type.toString());
     }
+    
+    public static final Transformer<String,String> replaceTypeVarWithObject = new Transformer<String,String>() {
+        @Override
+        public String transform(String source) {
+            if (source.indexOf('.') == -1) {
+                return source.endsWith("[]") ? "Object[]" : "Object";
+            }
+            return source;
+        }
+    };
     
     public static final Transformer<TypeParameterElement,String> typeParameter2String = new Transformer<TypeParameterElement,String>() {
         @Override
@@ -483,7 +492,7 @@ public abstract class Helpers {
     
     public static final boolean hasRawTypes(Element e) {
         SuppressWarnings suppressWarnings = e.getAnnotation(SuppressWarnings.class);
-        return suppressWarnings != null && contains(suppressWarnings.value(), "rawtypes") ||
+        return suppressWarnings != null && Functional.contains(suppressWarnings.value(), "rawtypes") ||
                e.getEnclosingElement() != null && hasRawTypes(e.getEnclosingElement());
     }
 
@@ -786,6 +795,24 @@ public abstract class Helpers {
             return source.toString();
         }
     };
+    
+    public static final Predicate<String> endsWith(final String suffix) {
+        return new Predicate<String>() {
+            @Override
+            public boolean accept(String candidate) {
+                return candidate.endsWith(suffix);
+            }
+        };
+    }
+    
+    public static final Predicate<String> contains(final char c) {
+        return new Predicate<String>() {
+            @Override
+            public boolean accept(String candidate) {
+                return candidate.indexOf(c) != -1;
+            }
+        };
+    }
     
     private static final Map<String,Pattern> patternCacheForTypeVariableReplacer = newMap();
 

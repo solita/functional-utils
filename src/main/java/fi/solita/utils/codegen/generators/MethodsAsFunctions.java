@@ -3,6 +3,7 @@ package fi.solita.utils.codegen.generators;
 import static fi.solita.utils.codegen.Helpers.allTypeParams;
 import static fi.solita.utils.codegen.Helpers.allUsedTypeParameters;
 import static fi.solita.utils.codegen.Helpers.boxedQualifiedName;
+import static fi.solita.utils.codegen.Helpers.contains;
 import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.element2Methods;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
@@ -18,6 +19,8 @@ import static fi.solita.utils.codegen.Helpers.paramsWithCast;
 import static fi.solita.utils.codegen.Helpers.publicElement;
 import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.relevantTypeParams;
+import static fi.solita.utils.codegen.Helpers.removeGenericPart;
+import static fi.solita.utils.codegen.Helpers.replaceTypeVarWithObject;
 import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.returnsVoid;
@@ -32,6 +35,7 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
+import static fi.solita.utils.functional.Functional.exists;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.groupBy;
@@ -41,6 +45,7 @@ import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.List;
@@ -148,19 +153,28 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self") : map(parameters, simpleName);
             List<String> argNamesWithCast = newList(paramsWithCast(parameters, isPrivate));
             
-            String returnClause = returnsVoid ? "" : "return " + (isPrivate ? "(" + returnTypeImported + ")" : "");
+            boolean hasPlainGenericArguments = exists(map(argTypes, removeGenericPart), not(contains('.')));
+            boolean optimize = needsToBeFunction && !hasPlainGenericArguments;
+            
+            String returnClause = returnsVoid ? "" : "return " + (isPrivate && !optimize ? "(" + returnTypeImported + ")" : "");
 
             boolean usePredicate = !handleAsInstanceMethod && argCount == 1 && (returnType.equals("java.lang.Boolean") || returnType.equals("boolean"));
             Class<?> methodClass = usePredicate ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount + (handleAsInstanceMethod ? 1 : 0));
-            String fundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? argTypes : concat(handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes, newSet(returnType)))) + "> ";
+            
+            Iterable<String> implementedMethodArgTypes = handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes;
+            Iterable<String> privateImplementedMethodArgTypes  = map(handleAsInstanceMethod ? cons(enclosingElementQualifiedName, argTypes) : argTypes, removeGenericPart.andThen(replaceTypeVarWithObject));
+
+            String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : (optimize ? "Object" : returnTypeImported) + " apply";
+            String fundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? implementedMethodArgTypes : concat(implementedMethodArgTypes, newSet(returnType)))) + "> ";
+            String privateFundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? privateImplementedMethodArgTypes : concat(privateImplementedMethodArgTypes, newSet("Object")))) + "> ";
             
             String declaration = modifiers + " " + relevantTypeParamsString + fundef + " " + methodName + (index == 0 ? "" : index);
+            String privateDeclaration = "private static final " + importType(methodClass) + " $" + methodName + (index == 0 ? "" : index);
             
-            String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : returnTypeImported + " apply";
             Iterable<String> tryBlock = concat(
                 isPrivate
                     ? Some(returnClause + "getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
-                    : Some(returnClause + instanceName + "." + (typeParameters.isEmpty() ? "" : "<" + mkString(", ", map(typeParameters, simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
+                    : Some(returnClause + instanceName + "." + (typeParameters.isEmpty() || optimize ? "" : "<" + mkString(", ", map(typeParameters, simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
                 returnsVoid
                     ? Some("return null;")
                     : None
@@ -173,7 +187,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                     Some("}"))
                 : tryBlock;
             Iterable<String> applyBlock = concat(
-                Some("public final " + implementedMethod + "(" + importTypes(mkString(", ", map(zip(map(handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes, prepend("final ")), handleAsInstanceMethod ? cons("$self", argNames) : argNames), joinWithSpace))) + ") { "),
+                Some("public final " + implementedMethod + "(" + importTypes(mkString(", ", map(zip(map(optimize ? privateImplementedMethodArgTypes : implementedMethodArgTypes, prepend("final ")), handleAsInstanceMethod ? cons("$self", argNames) : argNames), joinWithSpace))) + ") { "),
                 map(tryCatchBlock, Helpers.padding),
                 Some("}")
             );
@@ -181,19 +195,27 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                 map(applyBlock, Helpers.padding),
                 map(options.getAdditionalBodyLinesForMethods(method), Helpers.padding)
             );
+            
+            String initParams = "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + (index == 0 ? "" : index) + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ")";
+            
             @SuppressWarnings("unchecked")
             Iterable<String> res = concat(
-                hasRawTypes
-                    ? Some("@SuppressWarnings(\"rawtypes\")")
-                    : None,
-                Some(declaration + (needsToBeFunction ? "() { return" : " =") + " new " + fundef + "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ") {"),
+                needsToBeFunction
+                    ? optimize
+                        ? newList(hasRawTypes ? "@SuppressWarnings(\"rawtypes\")" : "",
+                                  privateDeclaration + " = new " + privateFundef + initParams + " {")
+                        : Some(declaration + "() { return new " + fundef + initParams + " {")
+                    : Some(declaration + " = new " + fundef + initParams + " {"),
                 isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
                     ? Some("    @SuppressWarnings(\"unchecked\")")
                     : None,
                 contentBlock,
                 Some("};"),
                 needsToBeFunction
-                    ? Some("}")
+                    ? optimize
+                        ? newList("@SuppressWarnings(\"unchecked\")",
+                                  declaration + "() { return (" + fundef + ")$" + methodName + (index == 0 ? "" : index) + "; }")
+                        : Some("}")
                     : None,
                 EmptyLine
             );

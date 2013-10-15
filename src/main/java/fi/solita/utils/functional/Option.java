@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public abstract class Option<T> implements Iterable<T>, Serializable {
-    private static final NoneImpl<Void> None = new NoneImpl<Void>();
+    private static final NoneImpl<Void> NoneInstance = new NoneImpl<Void>();
 
     public static <T> Option<T> of(T t) {
         if (t == null) {
@@ -24,7 +24,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
 
     @SuppressWarnings("unchecked")
     public static <T> Option<T> None() {
-        return (Option<T>) None;
+        return (Option<T>) NoneInstance;
     }
 
     Option() {

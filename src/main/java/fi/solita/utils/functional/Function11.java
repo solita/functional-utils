@@ -84,4 +84,23 @@ public abstract class Function11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R
             }
         };
     }
+    
+    static final <T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,R> Function11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+        return new Function11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,R>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11) {
+                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+            }
+        };
+    }
+    
+    static final <T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,R,FR extends Apply<?,R>> Function11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+        return new Function11<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,FR>() {
+            @Override
+            public FR apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11) {
+                return PartialApplicationHelper.makeSecondFunc(f, placeholders, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+            }
+        };
+    }
 }

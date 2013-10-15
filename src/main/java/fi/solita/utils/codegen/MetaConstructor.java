@@ -4,6 +4,9 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import fi.solita.utils.codegen.generators.Content;
 import fi.solita.utils.functional.Function0;
@@ -82,6 +85,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -100,6 +107,10 @@ public abstract class MetaConstructor {
         public F1(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -122,6 +133,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -140,6 +155,10 @@ public abstract class MetaConstructor {
         public F3(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -162,6 +181,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -180,6 +203,10 @@ public abstract class MetaConstructor {
         public F5(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -202,6 +229,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -220,6 +251,10 @@ public abstract class MetaConstructor {
         public F7(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -242,6 +277,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -260,6 +299,10 @@ public abstract class MetaConstructor {
         public F9(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -282,6 +325,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -300,6 +347,10 @@ public abstract class MetaConstructor {
         public F11(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -322,6 +373,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -340,6 +395,10 @@ public abstract class MetaConstructor {
         public F13(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -362,6 +421,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -380,6 +443,10 @@ public abstract class MetaConstructor {
         public F15(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -402,6 +469,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -420,6 +491,10 @@ public abstract class MetaConstructor {
         public F17(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -442,6 +517,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -460,6 +539,10 @@ public abstract class MetaConstructor {
         public F19(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
@@ -482,6 +565,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -502,6 +589,10 @@ public abstract class MetaConstructor {
             this.argClasses = argClasses;
         }
         @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
+        }
+        @Override
         public Constructor<R> getMember() {
             if ($r == null) {
                 $r = doGetMember(clazz, argClasses);
@@ -520,6 +611,10 @@ public abstract class MetaConstructor {
         public F22(Class<?> clazz, Class<?>... argClasses) {
             this.clazz = clazz;
             this.argClasses = argClasses;
+        }
+        @Override
+        public List<Class<?>> getConstructorParameterTypes() {
+            return Collections.unmodifiableList(Arrays.asList(argClasses));
         }
         @Override
         public Constructor<R> getMember() {
