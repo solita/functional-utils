@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import fi.solita.utils.codegen.generators.Content;
 import fi.solita.utils.functional.Function1;
 
-public abstract class MetaFieldProperty<T, R> extends Function1<T, R> implements FieldMeta_<T, R>, PropertyMeta_<T, R> {
+public abstract class MetaFieldProperty<T, R> extends Function1<T, R> implements MetaField<T, R>, MetaProperty<T, R> {
     private transient Field $r;
     private final Class<?> clazz;
     private final String name;

@@ -154,7 +154,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
             List<String> argNamesWithCast = newList(paramsWithCast(parameters, isPrivate));
             
             boolean hasPlainGenericArguments = exists(map(argTypes, removeGenericPart), not(contains('.')));
-            boolean optimize = needsToBeFunction && !hasPlainGenericArguments;
+            boolean optimize = false; // skipped, since javac compiler starts to complain about ambiguous methods in some cases... // needsToBeFunction && !hasPlainGenericArguments;
             
             String returnClause = returnsVoid ? "" : "return " + (isPrivate && !optimize ? "(" + returnTypeImported + ")" : "");
 

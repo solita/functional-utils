@@ -3,8 +3,9 @@ package fi.solita.utils.codegen;
 import java.lang.reflect.Field;
 
 import fi.solita.utils.codegen.generators.Content;
+import fi.solita.utils.functional.Predicate;
 
-public abstract class MetaFieldPredicateProperty<T> extends fi.solita.utils.functional.Predicate<T> implements FieldMeta_<T, Boolean>, PropertyMeta_<T, Boolean> {
+public abstract class MetaFieldPredicateProperty<T> extends Predicate<T> implements MetaField<T, Boolean>, MetaProperty<T, Boolean> {
     private transient Field $r;
     private final Class<?> clazz;
     private final String name;

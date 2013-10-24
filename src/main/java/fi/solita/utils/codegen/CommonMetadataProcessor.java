@@ -240,7 +240,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @SuppressWarnings("rawtypes")
         @Override
         public Class<? extends Apply> getClassForInstanceFields(boolean isFinal) {
-            return isFinal ? MetaField.class : MetaFieldProperty.class;
+            return isFinal ? MetaFieldPlain.class : MetaFieldProperty.class;
         }
         @SuppressWarnings("rawtypes")
         @Override
@@ -267,29 +267,29 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @Override
         public Class<? extends Apply> getClassForMethods(int argCount) {
             switch (argCount) {
-                case 0: return MetaMethod.F0.class;
-                case 1: return MetaMethod.F1.class;
-                case 2: return MetaMethod.F2.class;
-                case 3: return MetaMethod.F3.class;
-                case 4: return MetaMethod.F4.class;
-                case 5: return MetaMethod.F5.class;
-                case 6: return MetaMethod.F6.class;
-                case 7: return MetaMethod.F7.class;
-                case 8: return MetaMethod.F8.class;
-                case 9: return MetaMethod.F9.class;
-                case 10: return MetaMethod.F10.class;
-                case 11: return MetaMethod.F11.class;
-                case 12: return MetaMethod.F12.class;
-                case 13: return MetaMethod.F13.class;
-                case 14: return MetaMethod.F14.class;
-                case 15: return MetaMethod.F15.class;
-                case 16: return MetaMethod.F16.class;
-                case 17: return MetaMethod.F17.class;
-                case 18: return MetaMethod.F18.class;
-                case 19: return MetaMethod.F19.class;
-                case 20: return MetaMethod.F20.class;
-                case 21: return MetaMethod.F21.class;
-                case 22: return MetaMethod.F22.class;
+                case 0: return MetaMethods.M0.class;
+                case 1: return MetaMethods.M1.class;
+                case 2: return MetaMethods.M2.class;
+                case 3: return MetaMethods.M3.class;
+                case 4: return MetaMethods.M4.class;
+                case 5: return MetaMethods.M5.class;
+                case 6: return MetaMethods.M6.class;
+                case 7: return MetaMethods.M7.class;
+                case 8: return MetaMethods.M8.class;
+                case 9: return MetaMethods.M9.class;
+                case 10: return MetaMethods.M10.class;
+                case 11: return MetaMethods.M11.class;
+                case 12: return MetaMethods.M12.class;
+                case 13: return MetaMethods.M13.class;
+                case 14: return MetaMethods.M14.class;
+                case 15: return MetaMethods.M15.class;
+                case 16: return MetaMethods.M16.class;
+                case 17: return MetaMethods.M17.class;
+                case 18: return MetaMethods.M18.class;
+                case 19: return MetaMethods.M19.class;
+                case 20: return MetaMethods.M20.class;
+                case 21: return MetaMethods.M21.class;
+                case 22: return MetaMethods.M22.class;
             }
             throw new RuntimeException("Not implemented: F" + argCount);
         }
@@ -302,29 +302,29 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         @Override
         public Class<? extends Apply> getClassForConstructors(int argCount) {
             switch (argCount) {
-                case 0: return MetaConstructor.F0.class;
-                case 1: return MetaConstructor.F1.class;
-                case 2: return MetaConstructor.F2.class;
-                case 3: return MetaConstructor.F3.class;
-                case 4: return MetaConstructor.F4.class;
-                case 5: return MetaConstructor.F5.class;
-                case 6: return MetaConstructor.F6.class;
-                case 7: return MetaConstructor.F7.class;
-                case 8: return MetaConstructor.F8.class;
-                case 9: return MetaConstructor.F9.class;
-                case 10: return MetaConstructor.F10.class;
-                case 11: return MetaConstructor.F11.class;
-                case 12: return MetaConstructor.F12.class;
-                case 13: return MetaConstructor.F13.class;
-                case 14: return MetaConstructor.F14.class;
-                case 15: return MetaConstructor.F15.class;
-                case 16: return MetaConstructor.F16.class;
-                case 17: return MetaConstructor.F17.class;
-                case 18: return MetaConstructor.F18.class;
-                case 19: return MetaConstructor.F19.class;
-                case 20: return MetaConstructor.F20.class;
-                case 21: return MetaConstructor.F21.class;
-                case 22: return MetaConstructor.F22.class;
+                case 0: return MetaConstructors.C0.class;
+                case 1: return MetaConstructors.C1.class;
+                case 2: return MetaConstructors.C2.class;
+                case 3: return MetaConstructors.C3.class;
+                case 4: return MetaConstructors.C4.class;
+                case 5: return MetaConstructors.C5.class;
+                case 6: return MetaConstructors.C6.class;
+                case 7: return MetaConstructors.C7.class;
+                case 8: return MetaConstructors.C8.class;
+                case 9: return MetaConstructors.C9.class;
+                case 10: return MetaConstructors.C10.class;
+                case 11: return MetaConstructors.C11.class;
+                case 12: return MetaConstructors.C12.class;
+                case 13: return MetaConstructors.C13.class;
+                case 14: return MetaConstructors.C14.class;
+                case 15: return MetaConstructors.C15.class;
+                case 16: return MetaConstructors.C16.class;
+                case 17: return MetaConstructors.C17.class;
+                case 18: return MetaConstructors.C18.class;
+                case 19: return MetaConstructors.C19.class;
+                case 20: return MetaConstructors.C20.class;
+                case 21: return MetaConstructors.C21.class;
+                case 22: return MetaConstructors.C22.class;
             }
             throw new RuntimeException("Not implemented: F" + argCount);
         }

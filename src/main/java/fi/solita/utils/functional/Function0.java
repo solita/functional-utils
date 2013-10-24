@@ -2,6 +2,9 @@ package fi.solita.utils.functional;
 
 import java.io.Serializable;
 
+import fi.solita.utils.codegen.NoMetadataGeneration;
+
+@NoMetadataGeneration
 public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
 
     public abstract R apply();

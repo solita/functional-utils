@@ -2,7 +2,9 @@ package fi.solita.utils.codegen;
 
 import java.lang.reflect.Method;
 
-public abstract class MetaMethodPredicate<T> extends fi.solita.utils.functional.Predicate<T> implements MethodMeta_<T, Boolean> {
+import fi.solita.utils.functional.Predicate;
+
+public abstract class MetaMethodPredicate<T> extends Predicate<T> implements MetaMethod<T, Boolean> {
     private transient Method $r;
     private final Class<?> clazz;
     private final String name;
@@ -17,7 +19,7 @@ public abstract class MetaMethodPredicate<T> extends fi.solita.utils.functional.
     @Override
     public final Method getMember() {
         if ($r == null) {
-            $r = MetaMethod.doGetMember(clazz, name, argClasses);
+            $r = MetaMethods.doGetMember(clazz, name, argClasses);
         }
         return $r;
     }
@@ -28,6 +30,6 @@ public abstract class MetaMethodPredicate<T> extends fi.solita.utils.functional.
     
     @Override
     public final String toString() {
-        return MetaMethod.doToString(clazz, name);
+        return MetaMethods.doToString(clazz, name);
     }
 }
