@@ -714,6 +714,8 @@ public abstract class Functional {
     }
 
     public static Iterable<Integer> range(int from, int toInclusive) {
+        if (toInclusive < from)
+            return emptyList();
         return new RangeIterable<Integer>(Enumerables.ints, from, toInclusive, toInclusive - from + 1);
     }
     
@@ -734,6 +736,8 @@ public abstract class Functional {
     }
 
     public static <T> Iterable<T> repeat(T value, int amount) {
+        if (amount <= 0)
+            return emptyList();
         return new RepeatingIterable<T>(value, amount);
     }
     
