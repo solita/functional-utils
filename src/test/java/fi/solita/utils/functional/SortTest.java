@@ -55,7 +55,7 @@ public class SortTest {
         System.out.println("Regular sort took " + ((end-start)/1000/1000) + " ms");
         
         start = System.nanoTime();
-        List<TestClass> lazy = newList(take(sort(data, Compare.by(accessor)), firstToTake));
+        List<TestClass> lazy = newList(take(firstToTake, sort(data, Compare.by(accessor))));
         end = System.nanoTime();
         
         System.out.println("Lazy sort took    " + ((end-start)/1000/1000) + " ms");

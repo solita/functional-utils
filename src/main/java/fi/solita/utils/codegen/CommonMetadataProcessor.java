@@ -99,7 +99,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
     public Pattern extendClassNamePattern()   { return Pattern.compile("<not enabled>"); }
 
     public String findOption(String option, String defaultIfNotFound) {
-        return find(options(), getClass().getSimpleName() + "." + option).getOrElse(defaultIfNotFound);
+        return find(getClass().getSimpleName() + "." + option, options()).getOrElse(defaultIfNotFound);
     }
     
     public Predicate<Element> elementsToProcess() { return Helpers.<Element>instanceOf(TypeElement.class).and(

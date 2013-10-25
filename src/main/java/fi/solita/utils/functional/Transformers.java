@@ -108,4 +108,11 @@ public abstract class Transformers {
             }
         };
     }
+    
+    public static Transformer<Integer, Integer> negate = new Transformer<Integer,Integer>() {
+        @Override
+        public Integer transform(Integer source) {
+            return -1*source;
+        }
+    };
 }

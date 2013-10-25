@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.forAll;
+import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
@@ -190,7 +190,7 @@ public abstract class Iterables {
                 
                 @Override
                 public boolean hasNext() {
-                    return !iterators.isEmpty() && forAll(iterators, hasNext);
+                    return !iterators.isEmpty() && forall(iterators, hasNext);
                 }
 
                 @SuppressWarnings("unchecked")
