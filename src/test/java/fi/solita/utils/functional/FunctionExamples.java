@@ -1,7 +1,10 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Function._;
+import static fi.solita.utils.functional.Function.__;
 import static fi.solita.utils.functional.FunctionExamples_.*;
+
 import org.junit.Test;
 
 public class FunctionExamples {
@@ -35,6 +38,12 @@ public class FunctionExamples {
         Function0<Integer> partiallyApplied = length.ap("foo");
         int result = partiallyApplied.apply();
         Function1<Integer, Integer> modulo42 = mod.ap(42);
+        
+        Function1<Integer, Integer> partiallyApplyFirstParam = mod.apply(42, _);
+        Function1<Integer, Integer> partiallyApplySecondParam = mod.apply(_, 84);
+        // a function can also be split to two functions, dividing some params
+        // to the first one and others to the second one:
+        Function1<Integer, Function1<Integer, Integer>> split = mod.apply(__, _);
         
         // function composition, one way or the other
         Function1<String, String> func = Function.id();

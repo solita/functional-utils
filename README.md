@@ -209,6 +209,12 @@ Just a few examples of using these utils.
 	int result = partiallyApplied.apply();
 	Function1<Integer, Integer> modulo42 = mod.ap(42);
 	
+	Function1<Integer, Integer> partiallyApplyFirstParam = mod.apply(42, _);
+	Function1<Integer, Integer> partiallyApplySecondParam = mod.apply(_, 84);
+	// a function can also be split to two functions, dividing some params
+	// to the first one and others to the second one:
+	Function1<Integer, Function1<Integer, Integer>> split = mod.apply(__, _);
+	
 	// function composition, one way or the other
 	Function1<String, String> func = Function1.id();
 	Function1<String, Integer> composed = func.andThen(length);
@@ -217,7 +223,7 @@ Just a few examples of using these utils.
 	// multi-param function can be views as a 1-arg function of a Tuple:
 	Function2<Integer,Integer,Integer> m = mod;
 	Function1<Tuple2<Integer,Integer>,Integer> tuppled = m.tuppled();
-
+	
 	Function2<Integer,Integer,Integer> twoArgFunction = mod;
 	Function1<Integer,Function1<Integer,Integer>> curried = twoArgFunction.curried();
 

@@ -11,7 +11,7 @@ import org.junit.Test;
 public class MonoidExamples {
 
     @SuppressWarnings("unused")
-		@Test
+    @Test
     public void examples() {
         List<Integer> ints = newList(1, 2);
         
