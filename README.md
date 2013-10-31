@@ -244,24 +244,24 @@ Just a few examples of using these utils.
 	
 	//...
 	
-	List<Integer> ints = newList(1, 2);
-	
-	// Integers, Booleans and Strings are monoids,
+	List<Long> longs = newList(1l, 2l);
+        
+	// Longs (if assumed unbounded), Booleans and Strings are monoids,
 	// but they do not have "default instances of Monoid typeclass" so we
 	// must give one as a parameter.
-	int three = reduce(ints, Monoid.intSum);
-	int two = reduce(ints, Monoid.intProduct);
-	boolean notTrue = reduce(newList(true, false), Monoid.booleanConjunction);
-	String foobar = reduce(newList("foo", "bar"), Monoid.stringConcat);
-	
+	long three = reduce(longs, Monoids.longSum);
+	long two = reduce(longs, Monoids.longProduct);
+	boolean notTrue = reduce(newList(true, false), Monoids.booleanConjunction);
+	String foobar = reduce(newList("foo", "bar"), Monoids.stringConcat);
+
 	// For classes having a default (SemiGroup) instance,
 	// no parameter is needed.
 	List<Distance> distances = newList(new Distance(1), new Distance(2));
 	Option<Distance> reduced = reduce(distances);
-	
-	Map<String, Integer> first = newMap();
-	Map<String, Integer> second = newMap();
-	Map<String, Integer> valuesSummed = reduce(newList(first, second), Monoids.<String,Integer>mapCombine(SemiGroups.intSum));
+
+	Map<String, Long> first = newMap();
+	Map<String, Long> second = newMap();
+	Map<String, Long> valuesSummed = reduce(newList(first, second), Monoids.<String,Long>mapCombine(SemiGroups.longSum));
 
 ### fi.solita.utils.functional.Functional
 

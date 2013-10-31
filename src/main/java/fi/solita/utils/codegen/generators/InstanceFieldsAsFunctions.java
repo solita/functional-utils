@@ -19,14 +19,14 @@ import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Functional.filter;
-import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.isEmpty;
-import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
+import static fi.solita.utils.functional.FunctionalA.concat;
+import static fi.solita.utils.functional.FunctionalImpl.filter;
+import static fi.solita.utils.functional.FunctionalImpl.flatMap;
+import static fi.solita.utils.functional.FunctionalImpl.map;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 

@@ -1,13 +1,14 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.isEmpty;
-import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.max;
-import static fi.solita.utils.functional.Functional.min;
-import static fi.solita.utils.functional.Functional.span;
+import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.FunctionalA.max;
+import static fi.solita.utils.functional.FunctionalA.min;
+import static fi.solita.utils.functional.FunctionalImpl.forall;
+import static fi.solita.utils.functional.FunctionalImpl.map;
+import static fi.solita.utils.functional.FunctionalImpl.span;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -20,13 +21,13 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 public abstract class Iterables {
-    public static final Transformer<Iterable<?>,Option<Integer>> resolveSize = new Transformer<Iterable<?>,Option<Integer>>() {
-        private final Option<Integer> SOME_ZERO = Some(0);
-        private final Option<Integer> SOME_ONE = Some(1);
+    public static final Transformer<Iterable<?>,Option<Long>> resolveSize = new Transformer<Iterable<?>,Option<Long>>() {
+        private final Option<Long> SOME_ZERO = Some(0l);
+        private final Option<Long> SOME_ONE = Some(1l);
         @Override
-        public Option<Integer> transform(Iterable<?> source) {
+        public Option<Long> transform(Iterable<?> source) {
             if (source instanceof Collection) {
-                return Some(((Collection<?>)source).size());
+                return Some((long)((Collection<?>)source).size());
             }
             if (source instanceof PossiblySizeAwareIterable) {
                 return ((PossiblySizeAwareIterable<?>)source).sizeEstimate();
@@ -60,7 +61,7 @@ public abstract class Iterables {
     };
     
     static abstract class PossiblySizeAwareIterable<T> implements Iterable<T> {
-        public abstract Option<Integer> sizeEstimate();
+        public abstract Option<Long> sizeEstimate();
         
         @Override
         public String toString() {
@@ -72,17 +73,17 @@ public abstract class Iterables {
         private final Enumerable<T> enumeration;
         private final Option<T> from;
         private final Option<T> toInclusive;
-        private final Option<Integer> knownSize;
+        private final Option<Long> knownSize;
         
         public RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive) {
-            this(enumeration, from, toInclusive, Option.<Integer>None());
+            this(enumeration, from, toInclusive, Option.<Long>None());
         }
         
-        public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, int knownSize) {
+        public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, long knownSize) {
             this(enumeration, from, Some(toInclusive), Some(knownSize));
         }
 
-        private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Integer> knownSize) {
+        private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Long> knownSize) {
             this.enumeration = enumeration;
             this.from = Some(from);
             this.toInclusive = toInclusive;
@@ -125,28 +126,28 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            return knownSize;
+        public Option<Long> sizeEstimate() {
+            return knownSize.isDefined() ? Some(knownSize.get()) : Option.<Long>None();
         }
     }
 
     static final class RepeatingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final T value;
-        private final Integer amount;
+        private final Long amount;
 
         public RepeatingIterable(T value) {
             this.value = value;
             this.amount = null;
         }
 
-        public RepeatingIterable(T value, int amount) {
+        public RepeatingIterable(T value, long amount) {
             this.value = value;
             this.amount = amount;
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            return amount != null ? Some(amount) : Option.<Integer>None();
+        public Option<Long> sizeEstimate() {
+            return amount != null ? Some(amount) : Option.<Long>None();
         }
 
         @Override
@@ -155,7 +156,7 @@ public abstract class Iterables {
                 private int current = 0;
                 @Override
                 public boolean hasNext() {
-                    return current < amount;
+                    return amount == null || current < amount;
                 }
 
                 @Override
@@ -210,7 +211,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return None();
         }
     }
@@ -248,9 +249,9 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            for (int a: resolveSize.apply(elements1)) {
-                for (int b: resolveSize.apply(elements2)) {
+        public Option<Long> sizeEstimate() {
+            for (long a: resolveSize.apply(elements1)) {
+                for (long b: resolveSize.apply(elements2)) {
                     return Some(Functional.min(a,b));
                 }
             }
@@ -266,9 +267,9 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            int s = 0;
-            for (Option<Integer> size: map(elements, resolveSize)) {
+        public Option<Long> sizeEstimate() {
+            long s = 0;
+            for (Option<Long> size: map(elements, resolveSize)) {
                 if (size.isDefined()) {
                     s += size.get();
                 } else {
@@ -314,7 +315,7 @@ public abstract class Iterables {
         }
         
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return None();
         }
     }
@@ -329,7 +330,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return None();
         }
 
@@ -387,7 +388,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
@@ -422,7 +423,7 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
@@ -450,30 +451,47 @@ public abstract class Iterables {
         }
     }
     
-    static final class CharSequenceIterable extends PossiblySizeAwareIterable<Character> {
-        private final CharSequence charSeq;
+    static final class CharSequenceIterable extends PossiblySizeAwareIterable<Character> implements CharSequence {
+        private final CharSequence chars;
 
-        public CharSequenceIterable(CharSequence charSeq) {
-            this.charSeq = charSeq;
+        public CharSequenceIterable(CharSequence chars) {
+            this.chars = chars;
+        }
+        
+        @Override
+        public char charAt(int index) {
+            return chars.charAt(index);
         }
 
         @Override
+        public int length() {
+            return chars.length();
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            return chars.subSequence(start, end);
+        }
+        
+        @Override
         public Iterator<Character> iterator() {
             return new Iterator<Character>() {
-                private int i = 0;
+                private int read = 0;
                 @Override
                 public boolean hasNext() {
-                    return i < charSeq.length();
+                    try {
+                        chars.charAt(read);
+                        return true;
+                    } catch (IndexOutOfBoundsException e) {
+                        return false;
+                    }
                 }
 
                 @Override
                 public Character next() {
-                    i++;
-                    try {
-                        return charSeq.charAt(i-1);
-                    } catch (IndexOutOfBoundsException e) {
-                        throw new NoSuchElementException();
-                    }
+                    char ret = chars.charAt(read);
+                    read++;
+                    return ret;
                 }
 
                 @Override
@@ -484,8 +502,103 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            return Some(charSeq.length());
+        public Option<Long> sizeEstimate() {
+            if (chars instanceof String || chars instanceof StringBuilder || chars instanceof StringBuffer) {
+                return Some((long)chars.length());
+            } else {
+                return None();
+            }
+        }
+        
+        @Override
+        public String toString() {
+            return chars.toString();
+        }
+    }
+    
+    static class MemoizingCharSequenceIterable extends PossiblySizeAwareIterable<Character> implements CharSequence, Iterable<Character> {
+        private final StringBuilder memo = new StringBuilder();
+        private final Iterator<Character> it;
+        
+        public MemoizingCharSequenceIterable(Iterable<Character> chars) {
+            it = chars.iterator();
+        }
+        
+        private int resolveLength() {
+            while (it.hasNext()) {
+                memo.append(it.next());
+            }
+            return memo.length();
+        }
+        
+        /**
+         * Does not neccessarily check if <i>end</i> is bigger than <i>length()<i>
+         */
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            if (start < 0 || end < 0 || start > end || !it.hasNext() && end > length()) {
+                throw new IndexOutOfBoundsException();
+            }
+            return new MemoizingCharSequenceIterable(take(end - start, FunctionalImpl.drop(start, this)));
+        }
+        
+        @Override
+        public int length() {
+            return resolveLength();
+        }
+        
+        @Override
+        public char charAt(int index) {
+            if (index < 0)
+                throw new IndexOutOfBoundsException();
+            for (int i = 0; i < index - memo.length(); ++i) {
+                memo.append(it.next());
+            }
+            return memo.charAt(index);
+        }
+
+        @Override
+        public Iterator<Character> iterator() {
+            return new Iterator<Character>() {
+                private int read = 0;
+                @Override
+                public boolean hasNext() {
+                    if (read == memo.length() && it.hasNext()) {
+                        memo.append(it.next());
+                    }
+                    return read < memo.length();
+                }
+
+                @Override
+                public Character next() {
+                    if (read == memo.length()) {
+                        memo.append(it.next());
+                    }
+                    char ret = memo.charAt(read);
+                    read++;
+                    return ret;
+                }
+
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        @Override
+        public Option<Long> sizeEstimate() {
+            if (!it.hasNext()) {
+                return Some((long)memo.length());
+            } else {
+                return None();
+            }
+        }
+        
+        @Override
+        public String toString() {
+            resolveLength();
+            return memo.toString();
         }
     }
     
@@ -500,11 +613,11 @@ public abstract class Iterables {
         
         @Override
         public Iterator<T> iterator() {
-            int initialSize = resolveSize.apply(iterable).getOrElse(11);
+            long initialSize = resolveSize.apply(iterable).getOrElse(11l);
             if (initialSize == 0) {
                 return java.util.Collections.<T>emptyList().iterator();
             }
-            final PriorityQueue<T> queue = new PriorityQueue<T>(initialSize, comparator);
+            final PriorityQueue<T> queue = new PriorityQueue<T>((int)initialSize, comparator);
             if (iterable instanceof Collection) {
                 queue.addAll((Collection<T>)iterable);
             } else {
@@ -531,16 +644,16 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
     }
     
     static final class TakingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<T> elements;
-        private final int amount;
+        private final long amount;
 
-        public TakingIterable(Iterable<T> elements, int amount) {
+        public TakingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
                 throw new IllegalArgumentException("amount must be >= 0");
             }
@@ -551,7 +664,7 @@ public abstract class Iterables {
         @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
-                private int left = amount;
+                private long left = amount;
                 private final Iterator<T> it = elements.iterator();
 
                 @Override
@@ -576,8 +689,8 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            Option<Integer> s = resolveSize.apply(elements);
+        public Option<Long> sizeEstimate() {
+            Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(min(s.get(), amount));
             } else {
@@ -591,9 +704,9 @@ public abstract class Iterables {
     
     static final class DroppingIterable<T> extends PossiblySizeAwareIterable<T> {
         private final Iterable<T> elements;
-        private final int amount;
+        private final long amount;
 
-        public DroppingIterable(Iterable<T> elements, int amount) {
+        public DroppingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
                 throw new IllegalArgumentException("amount must be >= 0");
             }
@@ -604,7 +717,7 @@ public abstract class Iterables {
         @Override
         public Iterator<T> iterator() {
             Iterator<T> it = elements.iterator();
-            int left = amount;
+            long left = amount;
             while (left > 0 && it.hasNext()) {
                 it.next();
                 left--;
@@ -613,10 +726,10 @@ public abstract class Iterables {
         }
 
         @Override
-        public Option<Integer> sizeEstimate() {
-            Option<Integer> s = resolveSize.apply(elements);
+        public Option<Long> sizeEstimate() {
+            Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
-                return Some(max(s.get() - amount, 0));
+                return Some(max(s.get() - amount, 0l));
             } else {
                 return None();
             }
@@ -633,7 +746,7 @@ public abstract class Iterables {
         }
         
         @Override
-        public Option<Integer> sizeEstimate() {
+        public Option<Long> sizeEstimate() {
             return None();
         }
         

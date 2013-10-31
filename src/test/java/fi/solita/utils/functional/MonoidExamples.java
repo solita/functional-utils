@@ -13,13 +13,13 @@ public class MonoidExamples {
     @SuppressWarnings("unused")
     @Test
     public void examples() {
-        List<Integer> ints = newList(1, 2);
+        List<Long> longs = newList(1l, 2l);
         
-        // Integers, Booleans and Strings are monoids,
+        // Longs (if assumed unbounded), Booleans and Strings are monoids,
         // but they do not have "default instances of Monoid typeclass" so we
         // must give one as a parameter.
-        int three = reduce(ints, Monoids.intSum);
-        int two = reduce(ints, Monoids.intProduct);
+        long three = reduce(longs, Monoids.longSum);
+        long two = reduce(longs, Monoids.longProduct);
         boolean notTrue = reduce(newList(true, false), Monoids.booleanConjunction);
         String foobar = reduce(newList("foo", "bar"), Monoids.stringConcat);
         
@@ -28,9 +28,9 @@ public class MonoidExamples {
         List<Distance> distances = newList(new Distance(1), new Distance(2));
         Option<Distance> reduced = reduce(distances);
         
-        Map<String, Integer> first = newMap();
-        Map<String, Integer> second = newMap();
-        Map<String, Integer> valuesSummed = reduce(newList(first, second), Monoids.<String,Integer>mapCombine(SemiGroups.intSum));
+        Map<String, Long> first = newMap();
+        Map<String, Long> second = newMap();
+        Map<String, Long> valuesSummed = reduce(newList(first, second), Monoids.<String,Long>mapCombine(SemiGroups.longSum));
     }
     
     static class Distance implements SemiGroup<Distance> {

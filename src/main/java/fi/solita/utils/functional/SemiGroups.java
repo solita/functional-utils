@@ -136,10 +136,6 @@ public abstract class SemiGroups {
       }
   }
     
-    public static final SemiGroup<Integer> intSum = Monoids.intSum;
-
-    public static final SemiGroup<Integer> intProduct = Monoids.intProduct;
-
     public static final SemiGroup<Long> longSum = Monoids.longSum;
 
     public static final SemiGroup<Long> longProduct = Monoids.longProduct;

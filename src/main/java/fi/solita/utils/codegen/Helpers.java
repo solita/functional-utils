@@ -4,14 +4,7 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Functional.exists;
-import static fi.solita.utils.functional.Functional.filter;
-import static fi.solita.utils.functional.Functional.groupBy;
-import static fi.solita.utils.functional.Functional.head;
-import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.reduce;
-import static fi.solita.utils.functional.Functional.sort;
-import static fi.solita.utils.functional.Functional.zip;
+import static fi.solita.utils.functional.Functional.*;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
 
@@ -72,7 +65,7 @@ public abstract class Helpers {
     private static final Pattern qNameMatcher = Pattern.compile("([a-zA-Z0-9_$]+\\.)+[a-zA-Z0-9_$]+");
     private static final String qNameReplacementString = Matcher.quoteReplacement("{${") + "$0" + Matcher.quoteReplacement("}$}");
     
-    public static final String importTypes(String typesStr) {
+    public static final String importTypes(CharSequence typesStr) {
         return qNameMatcher.matcher(typesStr).replaceAll(qNameReplacementString);
     }
     
@@ -109,7 +102,7 @@ public abstract class Helpers {
     public static final Transformer<TypeParameterElement,String> typeParameter2String = new Transformer<TypeParameterElement,String>() {
         @Override
         public String transform(TypeParameterElement source) {
-            String bound = Functional.mkString(" & ", map(source.getBounds(), typeMirror2GenericQualifiedName));
+            String bound = Functional.mkString(" & ", map(source.getBounds(), typeMirror2GenericQualifiedName)).toString();
             return source.getSimpleName().toString() + (bound.equals("java.lang.Object") ? "" : " extends " + bound);
         }
     };
@@ -339,8 +332,8 @@ public abstract class Helpers {
         return new Ordering<T>() {
             @Override
             public int compare(T o1, T o2) {
-                for (Integer s1: Iterables.resolveSize.apply(o1)) {
-                    for (Integer s2: Iterables.resolveSize.apply(o2)) {
+                for (Long s1: Iterables.resolveSize.apply(o1)) {
+                    for (Long s2: Iterables.resolveSize.apply(o2)) {
                         int s = s1.compareTo(s2);
                         if (s != 0) {
                             return s;
@@ -492,7 +485,7 @@ public abstract class Helpers {
     
     public static final boolean hasRawTypes(Element e) {
         SuppressWarnings suppressWarnings = e.getAnnotation(SuppressWarnings.class);
-        return suppressWarnings != null && Functional.contains(suppressWarnings.value(), "rawtypes") ||
+        return suppressWarnings != null && Functional.contains("rawtypes", suppressWarnings.value()) ||
                e.getEnclosingElement() != null && hasRawTypes(e.getEnclosingElement());
     }
 

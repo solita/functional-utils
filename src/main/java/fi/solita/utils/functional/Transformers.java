@@ -70,7 +70,7 @@ public abstract class Transformers {
         };
     }
     
-    public static final Transformer<Tuple, String> mkString(final String delim, final Apply<Object,String> toString) {
+    public static final Transformer<Tuple, String> mkString(final String delim, final Apply<Object,CharSequence> toString) {
           return new Transformer<Tuple, String>() {
               @Override
               public String transform(Tuple source) {
@@ -100,7 +100,7 @@ public abstract class Transformers {
         };
     };
     
-    public static Transformer<Integer, Integer> mod(final Integer mod) {
+    public static final Transformer<Integer, Integer> mod(final Integer mod) {
         return new Transformer<Integer, Integer>() {
             @Override
             public Integer transform(Integer source) {
@@ -109,10 +109,49 @@ public abstract class Transformers {
         };
     }
     
-    public static Transformer<Integer, Integer> negate = new Transformer<Integer,Integer>() {
+    
+    
+    public static final Transformer<Long, Long> negate = new Transformer<Long,Long>() {
+        @Override
+        public Long transform(Long source) {
+            return -1*source;
+        }
+    };
+    
+    public static final Transformer<Integer, Integer> negateInt = new Transformer<Integer,Integer>() {
         @Override
         public Integer transform(Integer source) {
             return -1*source;
+        }
+    };
+    
+    public static final Transformer<Short, Short> negateShort = new Transformer<Short,Short>() {
+        @Override
+        public Short transform(Short source) {
+            return (short)(-1*source);
+        }
+    };
+    
+    
+    
+    public static final Transformer<Short, Long> short2long = new Transformer<Short,Long>() {
+        @Override
+        public Long transform(Short source) {
+            return source.longValue();
+        }
+    };
+    
+    public static final Transformer<Integer, Long> int2long = new Transformer<Integer,Long>() {
+        @Override
+        public Long transform(Integer source) {
+            return source.longValue();
+        }
+    };
+    
+    public static final Transformer<Object,String> toString = new Transformer<Object,String>() {
+        @Override
+        public String transform(Object source) {
+            return source.toString();
         }
     };
 }

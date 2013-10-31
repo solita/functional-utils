@@ -13,8 +13,8 @@ public abstract class Compare {
         return new Ordering<T>() {
             @Override
             public int compare(T o1, T o2) {
-                for (Integer s1: Iterables.resolveSize.apply(o1)) {
-                    for (Integer s2: Iterables.resolveSize.apply(o2)) {
+                for (Long s1: Iterables.resolveSize.apply(o1)) {
+                    for (Long s2: Iterables.resolveSize.apply(o2)) {
                         int s = s1.compareTo(s2);
                         if (s != 0) {
                             return s;

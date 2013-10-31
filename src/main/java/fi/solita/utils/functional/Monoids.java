@@ -46,20 +46,6 @@ public abstract class Monoids {
           return 0l;
       }
   }
-
-  public static class IntProduct extends SemiGroups.IntProduct implements Monoid<Integer> {
-      @Override
-      public Integer zero() {
-          return 1;
-      }
-  }
-
-  public static class IntSum extends SemiGroups.IntSum implements Monoid<Integer> {
-      @Override
-      public Integer zero() {
-          return 0;
-      }
-  }
   
   public static class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
       @Override
@@ -173,10 +159,6 @@ public abstract class Monoids {
           return emptyMap();
       }
   }
-
-  public static final Monoid<Integer> intSum = new IntSum();
-
-  public static final Monoid<Integer> intProduct = new IntProduct();
 
   public static final Monoid<Long> longSum = new LongSum();
 

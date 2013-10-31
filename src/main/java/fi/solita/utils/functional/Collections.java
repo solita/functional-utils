@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.FunctionalA.concat;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -38,16 +38,16 @@ public abstract class Collections {
         return new HashMap<K, V>();
     }
     
-    public static <T> List<T> newListOfSize(int initialSize) {
-        return new ArrayList<T>(initialSize);
+    public static <T> List<T> newListOfSize(long initialSize) {
+        return new ArrayList<T>((int)initialSize);
     }
 
-    public static <T> Set<T> newSetOfSize(int initialSize) {
-        return new HashSet<T>(initialSize);
+    public static <T> Set<T> newSetOfSize(long initialSize) {
+        return new HashSet<T>((int)initialSize);
     }
 
-    public static <K,V> Map<K,V> newMapOfSize(int initialSize) {
-        return new HashMap<K,V>(initialSize);
+    public static <K,V> Map<K,V> newMapOfSize(long initialSize) {
+        return new HashMap<K,V>((int)initialSize);
     }
     
     public static List<Boolean> newList(boolean[] array) {
@@ -193,7 +193,7 @@ public abstract class Collections {
     
     public static <T> List<T> newList(Iterable<T> elements) {
         List<T> ret = null;
-        for (int size: Iterables.resolveSize.apply(elements)) {
+        for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newListOfSize(size);
         }
         if (ret == null) {
@@ -212,7 +212,7 @@ public abstract class Collections {
 
     public static <T> Set<T> newSet(Iterable<T> elements) {
         Set<T> ret = null;
-        for (int size: Iterables.resolveSize.apply(elements)) {
+        for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newSetOfSize((int)(size*1.5));
         }
         if (ret == null) {
@@ -230,7 +230,7 @@ public abstract class Collections {
 
     public static <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         Map<K, V> ret = null;
-        for (int size: Iterables.resolveSize.apply(elements)) {
+        for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newMapOfSize((int)(size*1.5));
         }
         if (ret == null) {
@@ -258,7 +258,7 @@ public abstract class Collections {
     
     public static <K, V> Map<K, List<V>> newMultimap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         Map<K, List<V>> ret = null;
-        for (int size: Iterables.resolveSize.apply(elements)) {
+        for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newMapOfSize((int)(size*1.5));
         }
         if (ret == null) {
@@ -412,5 +412,9 @@ public abstract class Collections {
     
     public static Iterable<Character> it(CharSequence charSeq) {
         return new Iterables.CharSequenceIterable(charSeq);
+    }
+    
+    public static CharSequence it(Iterable<Character> xs) {
+        return new Iterables.MemoizingCharSequenceIterable(xs);
     }
 }

@@ -1,19 +1,19 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
-import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.flatten;
-import static fi.solita.utils.functional.Functional.grouped;
+import static fi.solita.utils.functional.Functional.group;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
-import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.reverse;
 import static fi.solita.utils.functional.Functional.size;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.FunctionalC.group;
+import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
@@ -70,8 +70,8 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(m, toString)), equalTo("[1, 2][3, 4]"));
-         assertThat(mkString("", map(t, toString)), equalTo("[1, 3][2, 4]"));
+         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3, 4]"));
+         assertThat(mkString("", map(toString, t)), equalTo("[1, 3][2, 4]"));
     }
     
     @Test
@@ -82,8 +82,8 @@ public class FunctionalTest {
         
         Iterable<Iterable<String>> t = transpose(m);
         
-        assertThat(mkString("", map(m, toString)), equalTo("[1, 2]"));
-        assertThat(mkString("", map(t, toString)), equalTo("[1][2]"));
+        assertThat(mkString("", map(toString, m)), equalTo("[1, 2]"));
+        assertThat(mkString("", map(toString, t)), equalTo("[1][2]"));
     }
     
     private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
@@ -95,13 +95,13 @@ public class FunctionalTest {
     
     @Test
     public void testRange() {
-        assertThat(size(range(1, 2)), equalTo(2));
+        assertThat(size(range(1, 2)), equalTo(2l));
     }
     
     @Test
     public void testName() {
         @SuppressWarnings("unchecked")
-        Iterable<Tuple2<Integer, String>> a = flatMap(Arrays.asList(onceIterable), zipWithIndex);
+        Iterable<Tuple2<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
         Iterable<Iterable<String>> b = map(a, new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
             @Override
             public Iterable<String> transform(Tuple2<Integer,String> source) {
@@ -119,14 +119,13 @@ public class FunctionalTest {
         }
     };
     
-    @SuppressWarnings("unchecked")
     @Test
     public void testGrouped() {
-        assertEquals(emptyList(), newList(grouped(emptyList())));
-        assertEquals(Arrays.asList(newList('a')), newList(map(grouped(it("a")), Collections_.<Character>newList10())));
-        assertEquals(Arrays.asList(newList('a','a','a')), newList(map(grouped(it("aaa")), Collections_.<Character>newList10())));
-        assertEquals(newList(newList('M'), newList('i'), newList('s','s'), newList('i'), newList('s','s'), newList('i'), newList('p','p'), newList('i')),
-                     newList(map(grouped(it("Mississippi")), Collections_.<Character>newList10())));
+        assertEquals(emptyList(), newList(group(emptyList())));
+        assertEquals(newList("a"), newList(map(group("a"), Transformers.toString)));
+        assertEquals(newList("aaa"), newList(map(group("aaa"), Transformers.toString)));
+        assertEquals(newList("M", "i", "ss", "i", "ss", "i", "pp", "i"),
+                     newList(map(group("Mississippi"), Transformers.toString)));
     }
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {
