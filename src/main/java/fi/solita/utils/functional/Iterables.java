@@ -161,7 +161,7 @@ public abstract class Iterables {
 
                 @Override
                 public T next() {
-                    if (current == amount) {
+                    if (amount != null && current == amount) {
                         throw new NoSuchElementException();
                     }
                     current++;

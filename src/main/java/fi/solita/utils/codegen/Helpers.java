@@ -515,7 +515,11 @@ public abstract class Helpers {
         }
         
         public final boolean isSubtype(TypeMirror type, Class<?> parent) {
-            return typeUtils.isSubtype(type, typeUtils.erasure(elementUtils.getTypeElement(parent.getName()).asType()));
+            return typeUtils.isSubtype(typeUtils.erasure(type), typeUtils.erasure(elementUtils.getTypeElement(parent.getName()).asType()));
+        }
+        
+        public final boolean isSameType(TypeMirror type, Class<?> other) {
+            return typeUtils.isSameType(typeUtils.erasure(type), typeUtils.erasure(elementUtils.getTypeElement(other.getName()).asType()));
         }
         
         public final boolean throwsCheckedExceptions(ExecutableElement e) {

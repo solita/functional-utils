@@ -146,7 +146,7 @@ public abstract class FunctionalImpl {
     /**
      * Non-lazy
      */
-    public static final <G, T> Map<G, List<T>> groupBy(Iterable<T> xs, Apply<? super T,G> f) {
+    public static <G, T> Map<G, List<T>> groupBy(Iterable<T> xs, Apply<? super T,G> f) {
         Map<G, List<T>> target = newMap();
         for (T t: xs) {
             G g = f.apply(t);
