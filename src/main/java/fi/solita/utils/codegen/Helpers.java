@@ -221,7 +221,11 @@ public abstract class Helpers {
                 if (!isPrimitive(source)) {
                     List<T> t = bySimpleName.get(source.endsWith("[]") ? source.substring(0, source.length()-2) : source);
                     if (t != null) {
-                        return head(head(t).getBounds()).toString();
+                        TypeMirror tm = head(head(t).getBounds());
+                        if (tm.getKind() == TypeKind.TYPEVAR)
+                            return Object.class.getName();
+                        else
+                            return tm.toString();
                     }
                 }
                 return source;

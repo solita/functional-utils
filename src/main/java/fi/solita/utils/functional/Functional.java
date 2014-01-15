@@ -38,6 +38,22 @@ public abstract class Functional extends FunctionalC {
     public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Apply<? super S, T4> f4, Iterable<S> xs) {
         return FunctionalImpl.map(xs, f1, f2, f3, f4);
     }
+    
+    public static final <F, A, B, FA extends F, FB extends F> FB fmap(Functor<F, A, B, FA, FB> functor, Apply<A,B> f, FA xs) {
+        return functor.fmap(f, xs);
+    }
+    
+    public static final <F, A, B, C, D, FAC extends F, FBD extends F> FBD bimap(BiFunctor<F, A, B, C, D, FAC, FBD, ?, ?> p, Apply<A, B> f, Apply<C, D> f2, FAC e) {
+        return p.bimap(f, f2, e);
+    }
+    
+    public static final <F, A, B, FAC extends F, FBC extends F> FBC first(BiFunctor<F, A, B, ?, ?, FAC, ?, FBC, ?> p, Apply<A, B> f, FAC e) {
+        return p.first(f, e);
+    }
+    
+    public static final <F, C, D, FAC extends F, FAD extends F> FAD second(BiFunctor<F, ?, ?, C, D, FAC, ?, ?, FAD> p, Apply<C, D> f, FAC e) {
+        return p.second(f, e);
+    }
 
     public static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<? extends T>> f, Iterable<S> xs) {
         return FunctionalImpl.flatMap(xs, f);
