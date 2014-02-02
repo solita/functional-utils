@@ -12,7 +12,7 @@ public abstract class FunctionalM extends FunctionalImpl {
         return FunctionalImpl.filter(map, predicate);
     }
     
-    public static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<Map.Entry<K1, V1>, Map.Entry<K2, V2>> f, Map<K1, V1> map) {
+    public static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
         return FunctionalImpl.map(map, f);
     }
     
