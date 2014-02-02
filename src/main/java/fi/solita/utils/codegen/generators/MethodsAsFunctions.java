@@ -106,121 +106,124 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
     public static Function4<Helpers.EnvDependent, Options, Set<String>, Map.Entry<Integer, ExecutableElement>, Iterable<String>> executableElementGen = new Function4<Helpers.EnvDependent, Options, Set<String>, Map.Entry<Integer, ExecutableElement>, Iterable<String>>() {
         @Override
         public Iterable<String> apply(Helpers.EnvDependent helper, Options options, Set<String> reservedNames, Map.Entry<Integer, ExecutableElement> entry) {
-            ExecutableElement method = entry.getValue();
-            TypeElement enclosingElement = (TypeElement) method.getEnclosingElement();
-            String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
-            
-            int index = entry.getKey() + (reservedNames.contains(simpleName.apply(method)) ? 1 : 0);
-            
-            List<? extends TypeParameterElement> allTypeParamsForMethod = newList(allTypeParams(method));
-            List<? extends TypeParameterElement> relevantTypeParamsForMethod = newList(relevantTypeParams(method));
-            final List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
-            final Set<String> relevantTypeParamsWithoutConstraints = newSet(map(relevantTypeParamsForMethod, simpleName));
-            final List<String> allTypeParamsWithoutConstraints = newList(map(allTypeParamsForMethod, simpleName));
-            List<? extends VariableElement> parameters = method.getParameters();
-            List<? extends TypeParameterElement> typeParameters = method.getTypeParameters();
-            
-            Transformer<String, String> doReplace = typeVariableReplacer(newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints)));
-            
-            String modifiers = resolveVisibility(method) + "static final";
-            String methodName = method.getSimpleName().toString();
-            String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType()));
-            String returnTypeImported = importTypes(returnType);
-            List<String> argumentTypes = newList(map(parameters, boxedQualifiedName));
-            List<? extends TypeParameterElement> enclosingElementTypeParameters = enclosingElement.getTypeParameters();
-            
-            boolean needsToBeFunction = !relevantTypeParams.isEmpty();
-            final boolean isPrivate = isPrivate(method);
-            boolean isInstanceMethod = isInstanceMethod(method);
-            boolean zeroArgInstanceMethod = isInstanceMethod && parameters.isEmpty(); // handle no-arg methods like static functions
-            boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
-            boolean returnsVoid = returnsVoid(method);
-            boolean needsTypeArguments = !allUsedTypeParameters(method).isEmpty();
-            
-            boolean throwsChecked = helper.throwsCheckedExceptions(method);
-            boolean hasRawTypes = hasRawTypes(method);
-            
-            int argCount = zeroArgInstanceMethod ? 1 : parameters.size(); // no-arg instance methods need $self parameter
-            
-            String enclosingElementGenericQualifiedName = doReplace.transform(needsTypeArguments
-                    ? elementGenericQualifiedName(enclosingElement)
-                    : enclosingElementQualifiedName + (enclosingElementTypeParameters.isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElementTypeParameters.size())) + ">"));
-            
-            String instanceName = isInstanceMethod ? "$self" : importTypes(enclosingElementQualifiedName);
-            argumentTypes = newList(map(argumentTypes, doReplace));
-            String relevantTypeParamsString = relevantTypeParams.isEmpty() ? " " : "<" + importTypes(mkString(", ", map(relevantTypeParams, doReplace))) + "> ";
-            
-            List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
-            Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self") : map(parameters, simpleName);
-            List<String> argNamesWithCast = newList(paramsWithCast(parameters, isPrivate));
-            
-            boolean hasPlainGenericArguments = exists(map(argTypes, removeGenericPart), not(contains('.')));
-            boolean optimize = false; // skipped, since javac compiler starts to complain about ambiguous methods in some cases... // needsToBeFunction && !hasPlainGenericArguments;
-            
-            String returnClause = returnsVoid ? "" : "return " + (isPrivate && !optimize ? "(" + returnTypeImported + ")" : "");
-
-            boolean usePredicate = !handleAsInstanceMethod && argCount == 1 && (returnType.equals("java.lang.Boolean") || returnType.equals("boolean"));
-            Class<?> methodClass = usePredicate ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount + (handleAsInstanceMethod ? 1 : 0));
-            
-            Iterable<String> implementedMethodArgTypes = handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes;
-            Iterable<String> privateImplementedMethodArgTypes  = map(handleAsInstanceMethod ? cons(enclosingElementQualifiedName, argTypes) : argTypes, removeGenericPart.andThen(replaceTypeVarWithObject));
-
-            String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : (optimize ? "Object" : returnTypeImported) + " apply";
-            String fundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? implementedMethodArgTypes : concat(implementedMethodArgTypes, newSet(returnType)))) + "> ";
-            String privateFundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? privateImplementedMethodArgTypes : concat(privateImplementedMethodArgTypes, newSet("Object")))) + "> ";
-            
-            String declaration = modifiers + " " + relevantTypeParamsString + fundef + " " + methodName + (index == 0 ? "" : index);
-            String privateDeclaration = "private static final " + importType(methodClass) + " $" + methodName + (index == 0 ? "" : index);
-            
-            Iterable<String> tryBlock = concat(
-                isPrivate
-                    ? Some(returnClause + "getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
-                    : Some(returnClause + instanceName + "." + (typeParameters.isEmpty() || optimize ? "" : "<" + mkString(", ", map(typeParameters, simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
-                returnsVoid
-                    ? Some("return null;")
-                    : None
-            );
-            Iterable<String> tryCatchBlock = isPrivate || throwsChecked
-                ? concat(
-                    Some("try {"),
-                    map(tryBlock, Helpers.padding),
-                    catchBlock,
-                    Some("}"))
-                : tryBlock;
-            Iterable<String> applyBlock = concat(
-                Some("public final " + implementedMethod + "(" + importTypes(mkString(", ", map(zip(map(optimize ? privateImplementedMethodArgTypes : implementedMethodArgTypes, prepend("final ")), handleAsInstanceMethod ? cons("$self", argNames) : argNames), joinWithSpace))) + ") { "),
-                map(tryCatchBlock, Helpers.padding),
-                Some("}")
-            );
-            Iterable<String> contentBlock = concat(
-                map(applyBlock, Helpers.padding),
-                map(options.getAdditionalBodyLinesForMethods(method), Helpers.padding)
-            );
-            
-            String initParams = "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + (index == 0 ? "" : index) + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ")";
-            
-            @SuppressWarnings("unchecked")
-            Iterable<String> res = concat(
-                needsToBeFunction
-                    ? optimize
-                        ? newList(hasRawTypes ? "@SuppressWarnings(\"rawtypes\")" : "",
-                                  privateDeclaration + " = new " + privateFundef + initParams + " {")
-                        : Some(declaration + "() { return new " + fundef + initParams + " {")
-                    : Some(declaration + " = new " + fundef + initParams + " {"),
-                isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
-                    ? Some("    @SuppressWarnings(\"unchecked\")")
-                    : None,
-                contentBlock,
-                Some("};"),
-                needsToBeFunction
-                    ? optimize
-                        ? newList("@SuppressWarnings(\"unchecked\")",
-                                  declaration + "() { return (" + fundef + ")$" + methodName + (index == 0 ? "" : index) + "; }")
-                        : Some("}")
-                    : None,
-                EmptyLine
-            );
-            return res;
+            try {
+                ExecutableElement method = entry.getValue();
+                TypeElement enclosingElement = (TypeElement) method.getEnclosingElement();
+                String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
+                
+                int index = entry.getKey() + (reservedNames.contains(simpleName.apply(method)) ? 1 : 0);
+                
+                List<? extends TypeParameterElement> allTypeParamsForMethod = newList(allTypeParams(method));
+                List<? extends TypeParameterElement> relevantTypeParamsForMethod = newList(relevantTypeParams(method));
+                final List<String> relevantTypeParams = newList(map(relevantTypeParamsForMethod, typeParameter2String));
+                final Set<String> relevantTypeParamsWithoutConstraints = newSet(map(relevantTypeParamsForMethod, simpleName));
+                final List<String> allTypeParamsWithoutConstraints = newList(map(allTypeParamsForMethod, simpleName));
+                List<? extends VariableElement> parameters = method.getParameters();
+                List<? extends TypeParameterElement> typeParameters = method.getTypeParameters();
+                
+                Transformer<String, String> doReplace = typeVariableReplacer(newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints)));
+                
+                String modifiers = resolveVisibility(method) + "static final";
+                String methodName = method.getSimpleName().toString();
+                String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType(), helper.typeUtils));
+                String returnTypeImported = importTypes(returnType);
+                List<String> argumentTypes = newList(map(parameters, boxedQualifiedName));
+                List<? extends TypeParameterElement> enclosingElementTypeParameters = enclosingElement.getTypeParameters();
+                
+                boolean needsToBeFunction = !relevantTypeParams.isEmpty();
+                final boolean isPrivate = isPrivate(method);
+                boolean isInstanceMethod = isInstanceMethod(method);
+                boolean zeroArgInstanceMethod = isInstanceMethod && parameters.isEmpty(); // handle no-arg methods like static functions
+                boolean handleAsInstanceMethod = isInstanceMethod && !zeroArgInstanceMethod;
+                boolean returnsVoid = returnsVoid(method);
+                boolean needsTypeArguments = !allUsedTypeParameters(method).isEmpty();
+                
+                boolean throwsChecked = helper.throwsCheckedExceptions(method);
+                boolean hasRawTypes = hasRawTypes(method);
+                
+                int argCount = zeroArgInstanceMethod ? 1 : parameters.size(); // no-arg instance methods need $self parameter
+                
+                String enclosingElementGenericQualifiedName = doReplace.transform(needsTypeArguments
+                        ? elementGenericQualifiedName(enclosingElement)
+                        : enclosingElementQualifiedName + (enclosingElementTypeParameters.isEmpty() ? "" : "<" + mkString(", ", repeat("?", enclosingElementTypeParameters.size())) + ">"));
+                
+                String instanceName = isInstanceMethod ? "$self" : importTypes(enclosingElementQualifiedName);
+                argumentTypes = newList(map(argumentTypes, doReplace));
+                String relevantTypeParamsString = relevantTypeParams.isEmpty() ? " " : "<" + importTypes(mkString(", ", map(relevantTypeParams, doReplace))) + "> ";
+                
+                List<String> argTypes = zeroArgInstanceMethod ? newList(enclosingElementGenericQualifiedName) : argumentTypes;
+                Iterable<String> argNames = zeroArgInstanceMethod ? newList("$self") : map(parameters, simpleName);
+                List<String> argNamesWithCast = newList(paramsWithCast(parameters, isPrivate));
+                
+                //boolean hasPlainGenericArguments = exists(map(argTypes, removeGenericPart), not(contains('.')));
+                boolean optimize = false; // skipped, since javac compiler starts to complain about ambiguous methods in some cases... // needsToBeFunction && !hasPlainGenericArguments;
+                
+                String returnClause = returnsVoid ? "" : "return " + (isPrivate && !optimize ? "(" + returnTypeImported + ")" : "");
+    
+                boolean usePredicate = !handleAsInstanceMethod && argCount == 1 && (returnType.equals("java.lang.Boolean") || returnType.equals("boolean"));
+                Class<?> methodClass = usePredicate ? options.getPredicateClassForMethods() : options.getClassForMethods(argCount + (handleAsInstanceMethod ? 1 : 0));
+                
+                Iterable<String> implementedMethodArgTypes = handleAsInstanceMethod ? cons(enclosingElementGenericQualifiedName, argTypes) : argTypes;
+                Iterable<String> privateImplementedMethodArgTypes  = map(handleAsInstanceMethod ? cons(enclosingElementQualifiedName, argTypes) : argTypes, removeGenericPart.andThen(replaceTypeVarWithObject));
+    
+                String implementedMethod = Predicate.class.isAssignableFrom(methodClass) ? "boolean accept" : (optimize ? "Object" : returnTypeImported) + " apply";
+                String fundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? implementedMethodArgTypes : concat(implementedMethodArgTypes, newSet(returnType)))) + "> ";
+                String privateFundef = importType(methodClass) + "<" + importTypes(mkString(", ", usePredicate ? privateImplementedMethodArgTypes : concat(privateImplementedMethodArgTypes, newSet("Object")))) + "> ";
+                
+                String declaration = modifiers + " " + relevantTypeParamsString + fundef + " " + methodName + (index == 0 ? "" : index);
+                String privateDeclaration = "private static final " + importType(methodClass) + " $" + methodName + (index == 0 ? "" : index);
+                
+                Iterable<String> tryBlock = concat(
+                    isPrivate
+                        ? Some(returnClause + "getMember().invoke(" + mkString(", ", cons(isInstanceMethod ? "$self" : "null", argNamesWithCast)) + ");")
+                        : Some(returnClause + instanceName + "." + (typeParameters.isEmpty() || optimize ? "" : "<" + mkString(", ", map(typeParameters, simpleName)) + ">") + methodName + "(" + mkString(", ", argNamesWithCast) + ");"),
+                    returnsVoid
+                        ? Some("return null;")
+                        : None
+                );
+                Iterable<String> tryCatchBlock = isPrivate || throwsChecked
+                    ? concat(
+                        Some("try {"),
+                        map(tryBlock, Helpers.padding),
+                        catchBlock,
+                        Some("}"))
+                    : tryBlock;
+                Iterable<String> applyBlock = concat(
+                    Some("public final " + implementedMethod + "(" + importTypes(mkString(", ", map(zip(map(optimize ? privateImplementedMethodArgTypes : implementedMethodArgTypes, prepend("final ")), handleAsInstanceMethod ? cons("$self", argNames) : argNames), joinWithSpace))) + ") { "),
+                    map(tryCatchBlock, Helpers.padding),
+                    Some("}")
+                );
+                Iterable<String> contentBlock = concat(
+                    map(applyBlock, Helpers.padding),
+                    map(options.getAdditionalBodyLinesForMethods(method), Helpers.padding)
+                );
+                
+                String initParams = "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + (index == 0 ? "" : index) + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ")";
+                
+                Iterable<String> res = concat(
+                    needsToBeFunction
+                        ? optimize
+                            ? newList(hasRawTypes ? "@SuppressWarnings(\"rawtypes\")" : "",
+                                      privateDeclaration + " = new " + privateFundef + initParams + " {")
+                            : Some(declaration + "() { return new " + fundef + initParams + " {")
+                        : Some(declaration + " = new " + fundef + initParams + " {"),
+                    isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
+                        ? Some("    @SuppressWarnings(\"unchecked\")")
+                        : None,
+                    contentBlock,
+                    Some("};"),
+                    needsToBeFunction
+                        ? optimize
+                            ? newList("@SuppressWarnings(\"unchecked\")",
+                                      declaration + "() { return (" + fundef + ")$" + methodName + (index == 0 ? "" : index) + "; }")
+                            : Some("}")
+                        : None,
+                    EmptyLine
+                );
+                return res;
+            } catch (RuntimeException e) {
+                throw new RuntimeException("Exception while processing: " + entry.getValue(), e);
+            }
         }
     };
     

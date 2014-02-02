@@ -42,6 +42,7 @@ import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
 import fi.solita.utils.functional.Function2;
+import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple2;
@@ -69,7 +70,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             elements = filter(elements, publicElement);
         }
       
-        return flatMap(filter(elements, not(staticElements)), variableElementGen.ap(options));
+        return flatMap(filter(elements, not(staticElements)), variableElementGen.ap(options, new Helpers.EnvDependent(processingEnv)));
     }
     
     private static final Transformer<String,Pattern> toReplacePattern = new Transformer<String,Pattern>() {
@@ -79,14 +80,14 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
         }
     };
     
-    public static Function2<Options, VariableElement, Iterable<String>> variableElementGen = new Function2<InstanceFieldsAsFunctions.Options, VariableElement, Iterable<String>>() {
+    public static Function3<Options, Helpers.EnvDependent, VariableElement, Iterable<String>> variableElementGen = new Function3<InstanceFieldsAsFunctions.Options, Helpers.EnvDependent, VariableElement, Iterable<String>>() {
         @Override
-        public Iterable<String> apply(Options options, VariableElement field) {
+        public Iterable<String> apply(Options options, Helpers.EnvDependent helper, VariableElement field) {
             TypeElement enclosingElement = (TypeElement) field.getEnclosingElement();
             String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
             String enclosingElementQualifiedNameImported = importTypes(enclosingElementQualifiedName);
             
-            String returnType = resolveBoxedGenericType(field.asType());
+            String returnType = resolveBoxedGenericType(field.asType(), helper.typeUtils);
             
             Iterable<String> allTypeParams = map(enclosingElement.getTypeParameters(), typeParameter2String);
             List<String> allTypeParamsWithoutConstraints = newList(map(enclosingElement.getTypeParameters(), simpleName));

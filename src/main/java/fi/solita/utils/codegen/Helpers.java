@@ -62,7 +62,7 @@ import fi.solita.utils.functional.Tuple2;
 
 public abstract class Helpers {
 
-    private static final Pattern qNameMatcher = Pattern.compile("([a-zA-Z0-9_$]+\\.)+[a-zA-Z0-9_$]+");
+    private static final Pattern qNameMatcher = Pattern.compile("([a-zA-Z0-9_]+\\.)+[a-zA-Z0-9_$]+");
     private static final String qNameReplacementString = Matcher.quoteReplacement("{${") + "$0" + Matcher.quoteReplacement("}$}");
     
     public static final String importTypes(CharSequence typesStr) {
@@ -70,7 +70,7 @@ public abstract class Helpers {
     }
     
     public static final String importType(Class<?> clazz) {
-        return "{${" + clazz.getName().replace('$', '.') + "}$}";
+        return "{${" + clazz.getName() + "}$}";
     }
     
     public static final String containedType(Element e) {
@@ -84,9 +84,14 @@ public abstract class Helpers {
         return type.substring(type.indexOf('<')+1, type.lastIndexOf('>'));
     }
     
-    public static final String resolveBoxedGenericType(TypeMirror type) {
+    public static final String resolveBoxedGenericType(TypeMirror type, Types types) {
         // FIXME: any correct ways to do this?
-        return boxed.apply(type.toString());
+        String typeStr = type.toString();
+        Element elem = types.asElement(type);
+        if (elem != null && elem.getEnclosingElement() != null && elem.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
+            typeStr = reverse(reverse(typeStr).replaceFirst("[.]", Matcher.quoteReplacement("$")));
+        }
+        return boxed.apply(typeStr);
     }
     
     public static final Transformer<String,String> replaceTypeVarWithObject = new Transformer<String,String>() {

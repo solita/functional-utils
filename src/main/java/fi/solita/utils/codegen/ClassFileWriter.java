@@ -1,6 +1,9 @@
 package fi.solita.utils.codegen;
 
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Functional.takeWhile;
+import static fi.solita.utils.functional.Predicates.equalTo;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.io.Serializable;
 import java.io.Writer;
@@ -16,7 +19,7 @@ import fi.solita.utils.functional.Option;
 
 public class ClassFileWriter {
     
-    private static final Pattern IMPORTS = Pattern.compile(Pattern.quote("{${") + "(([a-zA-Z0-9_$]+\\.)*([a-zA-Z0-9_$]+))" + Pattern.quote("}$}"));
+    private static final Pattern IMPORTS = Pattern.compile(Pattern.quote("{${") + "(([a-zA-Z0-9_]+\\.)*([a-zA-Z0-9_$]+))" + Pattern.quote("}$}"));
     private static final String SERIALIZABLE = Serializable.class.getSimpleName();
     private static final String GENERATED = Generated.class.getSimpleName();
     private static final String LINE_SEP = System.getProperty("line.separator");
@@ -30,14 +33,14 @@ public class ClassFileWriter {
         for (String line: contentLines) {
             Matcher m = IMPORTS.matcher(line);
             while (m.find()) {
-                String qualifiedName = m.group(1);
-                String simpleName = m.group(3);
+                String qualifiedName = takeWhile(not(equalTo('$')), m.group(1));
+                String simpleName = m.group(3).replaceAll("[$]", ".");
                 String alreadyImported = toImport.get(simpleName);
                 if (alreadyImported == null || alreadyImported.equals(qualifiedName)) {
                     toImport.put(simpleName, qualifiedName);
-                    m.appendReplacement(content, "$3");
+                    m.appendReplacement(content, simpleName);
                 } else {
-                    m.appendReplacement(content, "$1");
+                    m.appendReplacement(content, qualifiedName);
                 }
             }
             m.appendTail(content);
