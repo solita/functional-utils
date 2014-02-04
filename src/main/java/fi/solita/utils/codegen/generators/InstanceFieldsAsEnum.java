@@ -40,7 +40,7 @@ public class InstanceFieldsAsEnum extends Generator<InstanceFieldsAsEnum.Options
             return emptyList();
         }
         return concat(
-            Some("public enum $Fields {"),
+            Some("public enum $FieldNames {"),
             map(fieldsToInclude, simpleName.andThen(padding).andThen(append(","))),
             Some("}"),
             Some("")

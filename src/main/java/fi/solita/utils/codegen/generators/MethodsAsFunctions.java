@@ -3,7 +3,6 @@ package fi.solita.utils.codegen.generators;
 import static fi.solita.utils.codegen.Helpers.allTypeParams;
 import static fi.solita.utils.codegen.Helpers.allUsedTypeParameters;
 import static fi.solita.utils.codegen.Helpers.boxedQualifiedName;
-import static fi.solita.utils.codegen.Helpers.contains;
 import static fi.solita.utils.codegen.Helpers.element2Fields;
 import static fi.solita.utils.codegen.Helpers.element2Methods;
 import static fi.solita.utils.codegen.Helpers.elementGenericQualifiedName;
@@ -40,13 +39,11 @@ import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.zip;
 import static fi.solita.utils.functional.FunctionalA.concat;
-import static fi.solita.utils.functional.FunctionalImpl.exists;
 import static fi.solita.utils.functional.FunctionalImpl.filter;
 import static fi.solita.utils.functional.FunctionalImpl.flatMap;
 import static fi.solita.utils.functional.FunctionalImpl.groupBy;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.List;
@@ -125,7 +122,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                 
                 String modifiers = resolveVisibility(method) + "static final";
                 String methodName = method.getSimpleName().toString();
-                String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType(), helper.typeUtils));
+                String returnType = doReplace.transform(resolveBoxedGenericType(method.getReturnType(), helper.elementUtils));
                 String returnTypeImported = importTypes(returnType);
                 List<String> argumentTypes = newList(map(parameters, boxedQualifiedName));
                 List<? extends TypeParameterElement> enclosingElementTypeParameters = enclosingElement.getTypeParameters();

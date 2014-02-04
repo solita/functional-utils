@@ -49,6 +49,7 @@ import fi.solita.utils.codegen.generators.Content;
 import fi.solita.utils.codegen.generators.Generator;
 import fi.solita.utils.codegen.generators.InstanceFieldsAsEnum;
 import fi.solita.utils.codegen.generators.InstanceFieldsAsFunctions;
+import fi.solita.utils.codegen.generators.InstanceFieldsAsTuple;
 import fi.solita.utils.codegen.generators.MethodsAsFunctions;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
@@ -128,7 +129,9 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
     
     @SuppressWarnings("unchecked")
     public List<Generator<? super OPTIONS>> generators() {
-        return Arrays.<Generator<? super OPTIONS>>asList(InstanceFieldsAsEnum.instance,
+        return Arrays.<Generator<? super OPTIONS>>asList(
+                       InstanceFieldsAsEnum.instance,
+                       InstanceFieldsAsTuple.instance,
                        InstanceFieldsAsFunctions.instance,
                        ConstructorsAsFunctions.instance,
                        MethodsAsFunctions.instance);
@@ -232,7 +235,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
         return false;
     }
     
-    public static class CombinedGeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options, InstanceFieldsAsEnum.Options {
+    public static class CombinedGeneratorOptions implements InstanceFieldsAsFunctions.Options, MethodsAsFunctions.Options, ConstructorsAsFunctions.Options, InstanceFieldsAsEnum.Options, InstanceFieldsAsTuple.Options {
         @Override
         public boolean generateMemberNameAccessorForMethods() {
             return true;

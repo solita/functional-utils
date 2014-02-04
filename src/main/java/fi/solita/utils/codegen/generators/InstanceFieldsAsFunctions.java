@@ -41,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 import fi.solita.utils.codegen.Helpers;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function1;
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
@@ -73,21 +72,30 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
         return flatMap(filter(elements, not(staticElements)), variableElementGen.ap(options, new Helpers.EnvDependent(processingEnv)));
     }
     
-    private static final Transformer<String,Pattern> toReplacePattern = new Transformer<String,Pattern>() {
+    static final Transformer<String,Pattern> toReplacePattern = new Transformer<String,Pattern>() {
         @Override
         public Pattern transform(String obj) {
             return Pattern.compile("([^a-zA-Z0-9_])([?]\\s*(?:extends|super)\\s+)?" + Pattern.quote(obj.toString()) + "([^a-zA-Z0-9_])");
         }
     };
     
-    public static Function3<Options, Helpers.EnvDependent, VariableElement, Iterable<String>> variableElementGen = new Function3<InstanceFieldsAsFunctions.Options, Helpers.EnvDependent, VariableElement, Iterable<String>>() {
+    // this hack is a way to share most of the code with other generators
+    static abstract class F extends Function3<Options, Helpers.EnvDependent, VariableElement, Iterable<String>> {
+        String enclosingElementQualifiedNameImported;
+        String relevantTypeParamsString;
+        List<String> relevantTypeParamsWithoutConstraints;
+        String fundef;
+        boolean needsToBeFunction;
+    }
+    
+    public static F variableElementGen = new F() {
         @Override
         public Iterable<String> apply(Options options, Helpers.EnvDependent helper, VariableElement field) {
             TypeElement enclosingElement = (TypeElement) field.getEnclosingElement();
             String enclosingElementQualifiedName = qualifiedName.apply(enclosingElement);
-            String enclosingElementQualifiedNameImported = importTypes(enclosingElementQualifiedName);
+            enclosingElementQualifiedNameImported = importTypes(enclosingElementQualifiedName);
             
-            String returnType = resolveBoxedGenericType(field.asType(), helper.typeUtils);
+            String returnType = resolveBoxedGenericType(field.asType(), helper.elementUtils);
             
             Iterable<String> allTypeParams = map(enclosingElement.getTypeParameters(), typeParameter2String);
             List<String> allTypeParamsWithoutConstraints = newList(map(enclosingElement.getTypeParameters(), simpleName));
@@ -100,7 +108,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             }));
             
             List<String> relevantTypeParams = newList(map(relevantTypeParamPairs, Helpers.<String>left()));
-            List<String> relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamPairs, Helpers.<String>right()));
+            relevantTypeParamsWithoutConstraints = newList(map(relevantTypeParamPairs, Helpers.<String>right()));
 
             final List<String> toReplace = newList(subtract(allTypeParamsWithoutConstraints, relevantTypeParamsWithoutConstraints));
             final List<Pattern> toReplacePatterns = newList(map(toReplace, toReplacePattern));
@@ -116,9 +124,9 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             
             boolean isPrivate = isPrivate(field);
             boolean isFinal = isFinal(field);
-            boolean needsToBeFunction = !relevantTypeParams.isEmpty();
+            needsToBeFunction = !relevantTypeParams.isEmpty();
             
-            String relevantTypeParamsString = isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", map(relevantTypeParams, doReplace)) + ">";
+            relevantTypeParamsString = isEmpty(relevantTypeParams) ? "" : "<" + mkString(", ", map(relevantTypeParams, doReplace)) + ">";
             returnType = doReplace.apply(returnType);
             String returnTypeImported = importTypes(returnType);
             
@@ -134,7 +142,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             boolean usePredicate = returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName());
             Class<?> fieldClass = usePredicate ? options.getPredicateClassForInstanceFields(isFinal) : options.getClassForInstanceFields(isFinal);
             String fieldClassImported = importType(fieldClass);
-            String fundef = fieldClassImported + "<" + enclosingElementGenericQualifiedNameImported + (usePredicate ? "" : ", " + returnTypeImported) + ">";
+            fundef = fieldClassImported + "<" + enclosingElementGenericQualifiedNameImported + (usePredicate ? "" : ", " + returnTypeImported) + ">";
             String privateFundef = fieldClassImported + "<" + enclosingElementQualifiedNameImported + (usePredicate ? "" : ",Object") + ">";
             String declaration = modifiers + " " + (needsToBeFunction ? relevantTypeParamsString + " ": "") + fundef + " " + fieldName;
             String privateDeclaration = "private static final " + fieldClassImported + " $" + fieldName;
