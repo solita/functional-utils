@@ -45,10 +45,10 @@ public abstract class Function {
         return (Function1<T, T>) ID;
     }
 
-    public static final <R> Function0<R> throwing(final RuntimeException e) {
-        return new Function0<R>() {
+    public static final <R, E extends Throwable> Function0.Ex1<R,E> throwing(final E e) {
+        return new Function0.Ex1<R,E>() {
             @Override
-            public R apply() {
+            public R apply() throws E {
                 throw e;
             }
         };
