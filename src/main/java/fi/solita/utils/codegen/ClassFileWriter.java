@@ -34,7 +34,7 @@ public class ClassFileWriter {
             Matcher m = IMPORTS.matcher(line);
             while (m.find()) {
                 String qualifiedName = takeWhile(not(equalTo('$')), m.group(1));
-                String simpleName = m.group(3).replaceAll("[$]", ".");
+                String simpleName = m.group(3).replaceFirst("[$]", ".");
                 String alreadyImported = toImport.get(simpleName);
                 if (alreadyImported == null || alreadyImported.equals(qualifiedName)) {
                     toImport.put(simpleName, qualifiedName);

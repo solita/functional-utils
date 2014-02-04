@@ -84,12 +84,12 @@ public abstract class Helpers {
         return type.substring(type.indexOf('<')+1, type.lastIndexOf('>'));
     }
     
-    public static final String resolveBoxedGenericType(TypeMirror type, Types types) {
+    public static final String resolveBoxedGenericType(TypeMirror type, Elements elements) {
         // FIXME: any correct ways to do this?
         String typeStr = type.toString();
-        Element elem = types.asElement(type);
+        Element elem = elements.getTypeElement(typeStr.replaceAll("<.*>", "").replaceAll("\\[\\]", ""));
         if (elem != null && elem.getEnclosingElement() != null && elem.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
-            typeStr = reverse(reverse(typeStr).replaceFirst("[.]", Matcher.quoteReplacement("$")));
+            typeStr = reverse(reverse(typeStr).replaceFirst("[.]([^<>]*)$", Matcher.quoteReplacement("$") + "$1"));
         }
         return boxed.apply(typeStr);
     }
