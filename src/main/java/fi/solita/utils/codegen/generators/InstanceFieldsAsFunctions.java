@@ -182,7 +182,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             Iterable<String> setBlock = concat(
                     needsToBeFunction
                         ? Some("public final " + setterFundef + " setter(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) { return new " + setterFundef + "() { public Void apply(final Object $newValue) {")
-                        : Some("public final " + relevantTypeParamsString + " " + setterFundef + " setter(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnType + " $newValue) {"),
+                        : Some("public final " + relevantTypeParamsString + " " + setterFundef + " setter(final " + (needsToBeFunction ? enclosingElementQualifiedNameImported : enclosingElementGenericQualifiedNameImported) + " $self) { return new " + setterFundef + "() { public Void apply(final " + returnTypeImported + " $newValue) {"),
                     map(setTryCatchBlock, padding),
                     Some("    return null;"),
                     Some("}};}")
