@@ -36,9 +36,9 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     
     public abstract <R> Option<R> map(Apply<? super T, R> f);
 
-    public abstract <R> R cata(Apply<? super T,R> ifSome, Function0<R> ifNone);
+    public abstract <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone);
     
-    public abstract <R> R fold(Apply<? super T,R> ifSome, R ifNone);
+    public abstract <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone);
     
     public abstract boolean isDefined();
 }
@@ -62,12 +62,12 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     }
     
     @Override
-    public <R> R cata(Apply<? super T, R> ifSome, Function0<R> ifNone) {
+    public <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
         return ifNone.apply();
     }
     
     @Override
-    public <R> R fold(Apply<? super T, R> ifSome, R ifNone) {
+    public <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifNone;
     }
     
@@ -114,12 +114,12 @@ class SomeImpl<T> extends Option<T> {
     }
     
     @Override
-    public <R> R cata(Apply<? super T, R> ifSome, Function0<R> ifNone) {
+    public <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
         return ifSome.apply(t);
     }
     
     @Override
-    public <R> R fold(Apply<? super T, R> ifSome, R ifNone) {
+    public <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifSome.apply(t);
     }
 
