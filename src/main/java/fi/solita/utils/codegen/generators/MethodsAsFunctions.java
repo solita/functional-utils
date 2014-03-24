@@ -24,6 +24,7 @@ import static fi.solita.utils.codegen.Helpers.resolveBoxedGenericType;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.codegen.Helpers.returnsVoid;
 import static fi.solita.utils.codegen.Helpers.simpleName;
+import static fi.solita.utils.codegen.Helpers.staticElements;
 import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.codegen.Helpers.typeVariableReplacer;
 import static fi.solita.utils.codegen.generators.Content.EmptyLine;
@@ -44,6 +45,7 @@ import static fi.solita.utils.functional.FunctionalImpl.flatMap;
 import static fi.solita.utils.functional.FunctionalImpl.groupBy;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
 
 import java.util.List;
@@ -93,6 +95,7 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
         if (options.onlyPublicMembers()) {
             processedFields = filter(processedFields, publicElement);
         }
+        processedFields = filter(processedFields, not(staticElements));
       
         Iterable<List<ExecutableElement>> elementsByName = groupBy(elements, simpleName).values();
         Function1<Entry<Integer, ExecutableElement>, Iterable<String>> singleElementTransformer = executableElementGen.ap(new Helpers.EnvDependent(processingEnv), options, newSet(map(processedFields, simpleName)));
