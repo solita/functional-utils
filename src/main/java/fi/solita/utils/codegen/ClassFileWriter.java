@@ -1,6 +1,7 @@
 package fi.solita.utils.codegen;
 
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.not;
@@ -58,7 +59,7 @@ public class ClassFileWriter {
                   .append(';')
                   .append(LINE_SEP);
             }
-            for (String qualifiedName: toImport.values()) {
+            for (String qualifiedName: newSet(toImport.values())) {
                 pw.append("import ")
                   .append(qualifiedName)
                   .append(";")
