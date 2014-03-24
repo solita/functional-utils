@@ -50,7 +50,7 @@ public class InstanceFieldsAsTuple extends Generator<InstanceFieldsAsTuple.Optio
         }
         
         List<VariableElement> fieldsToInclude = newList(filter(elements, not(staticElements)));
-        if (fieldsToInclude.isEmpty()) {
+        if (fieldsToInclude.isEmpty() || fieldsToInclude.size() > Tuple.class.getDeclaredClasses().length) {
             return emptyList();
         }
         
