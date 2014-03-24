@@ -19,6 +19,7 @@
                     <compilerVersion>1.6</compilerVersion>
                     <proc>none</proc>
                     <optimize>true</optimize>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>
@@ -33,9 +34,7 @@
                             <includes>
                                 <include>**/*_.class</include>
                             </includes>
-                            <outputDirectory>${project.build.directory}/bar</outputDirectory>
                             <finalName>${project.artifactId}-meta-${project.version}</finalName>
-                            <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
                         </configuration>
                     </execution>
                     <execution>
@@ -48,12 +47,14 @@
                             <includes>
                                 <include>**/*.java</include>
                             </includes>
-                            <outputDirectory>${project.build.directory}/bar</outputDirectory>
                             <finalName>${project.artifactId}-meta-${project.version}</finalName>
-                            <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/bar</outputDirectory>
+                    <archive><addMavenDescriptor>false</addMavenDescriptor></archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.bsc.maven</groupId>

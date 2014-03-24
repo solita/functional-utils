@@ -50,6 +50,7 @@
                     <target>1.6</target>
                     <encoding>UTF-8</encoding>
                     <optimize>true</optimize>
+                    <debug>false</debug>
                     <proc>none</proc>
                 </configuration>
             </plugin>
