@@ -283,7 +283,7 @@ public abstract class Iterables {
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = newList(Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator)).iterator();
+                private final Iterator<Iterator<? extends T>> it = Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
