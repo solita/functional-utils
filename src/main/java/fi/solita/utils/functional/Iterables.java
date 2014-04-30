@@ -655,7 +655,7 @@ public abstract class Iterables {
 
         public TakingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
-                throw new IllegalArgumentException("amount must be >= 0");
+                amount = 0;
             }
             this.elements = elements;
             this.amount = amount;
@@ -708,7 +708,7 @@ public abstract class Iterables {
 
         public DroppingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
-                throw new IllegalArgumentException("amount must be >= 0");
+                amount = 0;
             }
             this.elements = elements;
             this.amount = amount;

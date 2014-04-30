@@ -32,6 +32,7 @@ public class FunctionalTest {
     public void testTake() {
         List<Integer> list = newList(1, 2, 3);
         
+        assertTrue(newList(take(-1, list)).isEmpty());
         assertTrue(newList(take(0, list)).isEmpty());
         assertThat(newList(take(1, list)), equalTo(newList(1)));
         assertThat(newList(take(3, list)), equalTo(list));
@@ -44,6 +45,7 @@ public class FunctionalTest {
     public void testDrop() {
         List<Integer> list = newList(1, 2, 3);
         
+        assertThat(newList(drop(-1, list)), equalTo(list));
         assertThat(newList(drop(0, list)), equalTo(list));
         assertThat(newList(drop(1, list)), equalTo(newList(2, 3)));
         assertTrue(newList(drop(3, list)).isEmpty());
