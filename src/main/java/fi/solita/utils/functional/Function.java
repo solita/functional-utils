@@ -32,6 +32,19 @@ public abstract class Function {
             }
         };
     }
+    
+    public static final <R> Function0<R> memoize(final Function0<R> apply) {
+        return new Function0<R>() {
+            private R r;
+            @Override
+            public R apply() {
+                if (r == null) {
+                    r = apply.apply();
+                }
+                return r;
+            }
+        };
+    }
 
     private static final Function1<?, ?> ID = new Function1<Object, Object>() {
         @Override
