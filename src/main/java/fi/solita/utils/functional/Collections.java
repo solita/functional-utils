@@ -6,10 +6,13 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public abstract class Collections {
@@ -25,7 +28,20 @@ public abstract class Collections {
     public static final <K,V> Map<K,V> emptyMap() {
         return java.util.Collections.emptyMap();
     }
-
+    
+    public static final <T> Collection<T> emptyCollection() {
+        return emptyList();
+    }
+    
+    public static final <T> Queue<T> emptyQueue() {
+        return emptyDeque();
+    }
+    
+    public static final <T> Deque<T> emptyDeque() {
+        // TODO: make unmodifiable
+        return new LinkedList<T>();
+    }
+    
     public static final <T> List<T> newList() {
         return new ArrayList<T>();
     }
@@ -38,6 +54,18 @@ public abstract class Collections {
         return new HashMap<K, V>();
     }
     
+    public static final <T> Queue<T> newQueue() {
+        return new LinkedList<T>();
+    }
+    
+    public static final <T> Deque<T> newDeque() {
+        return new LinkedList<T>();
+    }
+    
+    public static final <T> Collection<T> newCollection() {
+        return new ArrayList<T>();
+    }
+    
     public static final <T> List<T> newListOfSize(long initialSize) {
         return new ArrayList<T>((int)initialSize);
     }
@@ -48,6 +76,10 @@ public abstract class Collections {
 
     public static final <K,V> Map<K,V> newMapOfSize(long initialSize) {
         return new HashMap<K,V>((int)initialSize);
+    }
+    
+    public static final <T> Collection<T> newCollectionOfSize(long initialSize) {
+        return new ArrayList<T>((int)initialSize);
     }
     
     public static final List<Boolean> newList(boolean[] array) {
