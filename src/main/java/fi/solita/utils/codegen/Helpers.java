@@ -3,7 +3,6 @@ package fi.solita.utils.codegen;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.*;
 import static fi.solita.utils.functional.Predicates.not;
 import static fi.solita.utils.functional.Transformers.prepend;
@@ -663,6 +662,31 @@ public abstract class Helpers {
         @Override
         public Set<Name> visitNoType(NoType t, Set<Name> p) {
             return p;
+        }
+        @Override
+        public Set<Name> visitUnknown(TypeMirror t, Set<Name> p) {
+            try {
+                Class<?> union = Class.forName("javax.lang.model.type.UnionType");
+                if (union.isInstance(t)) {
+                    return p;
+                }
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Class<?> intersection = Class.forName("javax.lang.model.type.IntersectionType");
+                if (intersection.isInstance(t)) {
+                    @SuppressWarnings("unchecked")
+                    List<TypeMirror> bounds = (List<TypeMirror>) intersection.getMethod("getBounds").invoke(t);
+                    for (TypeMirror tm: bounds) {
+                        visit(tm, p);
+                    }
+                    return p;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return super.visitUnknown(t, p);
         }
     };
     
