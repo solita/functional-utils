@@ -162,6 +162,6 @@ public class FunctionalTest {
     
     @Test
     public void testDistinct() {
-        assertEquals(newList(1,2,3,4), newList(distinct(1,2,3,3,2,1,4)));
+        assertEquals(newList(1,2,3,4), newList(distinct(newList(1,2,3,3,2,1,4))));
     }
 }

@@ -176,7 +176,7 @@ public class FunctionalExamples {
         assertEquals(newSet(2), intersection);
         
         // subtract
-        Iterable<Integer> subtract = subtract(someIterableOrArray, 2);
+        Iterable<Integer> subtract = subtract(someIterableOrArray, newList(2));
         assertEquals(newList(1,3), newList(subtract));
         
         // min
