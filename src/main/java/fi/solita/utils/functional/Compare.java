@@ -39,11 +39,11 @@ public abstract class Compare {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> Ordering<T> by(final Function1<? super T, ? extends Comparable<?>> f) {
+    public static final <T> Ordering<T> by(final Apply<? super T, ? extends Comparable<?>> f) {
         return by(f, (Comparator<Object>)(Object)Ordering.Natural());
     }
     
-    public static final <T,S> Ordering<S> by(final Function1<? super S, T> f, final Comparator<? super T> c) {
+    public static final <T,S> Ordering<S> by(final Apply<? super S, T> f, final Comparator<? super T> c) {
         return new Ordering<S>() {
             @Override
             public int compare(S o1, S o2) {
@@ -52,11 +52,11 @@ public abstract class Compare {
         };
     }
     
-    public static final <S, T extends Comparable<T>> Ordering<S> byOption(final Function1<? super S, Option<T>> f) {
+    public static final <S, T extends Comparable<T>> Ordering<S> byOption(final Apply<? super S, Option<T>> f) {
         return byOption(f, Ordering.Natural());
     }
     
-    public static final <S, T> Ordering<S> byOption(final Function1<? super S, Option<T>> f, final Comparator<? super T> c) {
+    public static final <S, T> Ordering<S> byOption(final Apply<? super S, Option<T>> f, final Comparator<? super T> c) {
         return by(f, Compare.<T>byOption(c));
     }
     
