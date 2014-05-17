@@ -91,8 +91,17 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static final <T> Iterable<T> flatten(T[]... xs) {
+    public static final <T> Iterable<T> flatten(T[][] xs) {
         return flatten(map(xs, new Transformer<T[], Iterable<T>>() {
+            @Override
+            public Iterable<T> transform(T[] source) {
+                return Arrays.asList(source);
+            }
+        }));
+    }
+    
+    public static final <T> Iterable<T> flatten(T[] x, T[]... xs) {
+        return flatten(map(cons(x, xs), new Transformer<T[], Iterable<T>>() {
             @Override
             public Iterable<T> transform(T[] source) {
                 return Arrays.asList(source);
