@@ -233,6 +233,10 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.reverse(xs);
     }
     
+    public static final <T> Iterable<T> distinct(Iterable<T> xs) {
+        return FunctionalImpl.distinct(xs);
+    }
+    
     public static final <T,R> Iterable<R> sequence(T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
         return FunctionalImpl.sequence(fs, value);
     }

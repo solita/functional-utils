@@ -354,6 +354,12 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
+    public static CharSequence distinct(CharSequence xs) {
+        return filter(new DistinctPredicate<Character>(), xs);
+    }
+    
+    
+    
     public static CharSequence unlines(Iterable<? extends CharSequence> xs) {
         return FunctionalImpl.unlines(xs);
     }

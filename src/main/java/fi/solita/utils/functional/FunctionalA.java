@@ -495,6 +495,12 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
+    public static <T> Iterable<T> distinct(T... xs) {
+        return distinct(Arrays.asList(xs));
+    }
+    
+    
+    
     public static final <T,R> Iterable<R> sequence(Apply<? super T,? extends R>[] fs, T value) {
         return sequence(Arrays.asList(fs), value);
     }

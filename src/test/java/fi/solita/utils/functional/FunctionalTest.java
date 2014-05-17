@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.distinct;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.flatten;
@@ -16,9 +17,7 @@ import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -160,4 +159,9 @@ public class FunctionalTest {
             };
         }
     };
+    
+    @Test
+    public void testDistinct() {
+        assertEquals(newList(1,2,3,4), newList(distinct(1,2,3,3,2,1,4)));
+    }
 }

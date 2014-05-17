@@ -3,6 +3,7 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -102,6 +104,7 @@ public abstract class FunctionalImpl {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public static final <T> void foreach(Iterable<T> xs, ApplyVoid<? super T> procedure) {
         foreach(xs, (Apply<? super T, Void>)procedure);
     }
@@ -485,6 +488,20 @@ public abstract class FunctionalImpl {
     public static <T> Iterable<T> reverse(Iterable<T> xs) {
         return new Iterables.ReversingIterable<T>(xs);
     }
+    
+    public static <T> Iterable<T> distinct(Iterable<T> xs) {
+        return filter(xs, new DistinctPredicate<T>());
+    }
+    
+    protected static final class DistinctPredicate<T> extends Predicate<T> {
+        private final Set<T> visited = newSet();
+        @Override
+        public boolean accept(T candidate) {
+            boolean ret = !visited.contains(candidate);
+            visited.add(candidate);
+            return ret;
+        }
+    };
     
     public static final <T,R> Iterable<R> sequence(Iterable<? extends Apply<? super T,? extends R>> fs, final T value) {
         return map(fs, new Transformer<Apply<? super T,? extends R>, R>() {

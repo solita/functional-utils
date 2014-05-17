@@ -207,6 +207,7 @@ public class FunctionalExamples {
         // repeat
         // range
         // sequence
+        // distinct
         
         // zip
         // zipWithIndex
