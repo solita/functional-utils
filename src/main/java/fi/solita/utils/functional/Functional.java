@@ -63,7 +63,11 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.flatten(xs);
     }
     
-    public static final <T> void foreach(Apply<? super T, ?> procedure, Iterable<T> xs) {
+    public static final <T> void foreach(Apply<? super T, Void> procedure, Iterable<T> xs) {
+        FunctionalImpl.foreach(xs, procedure);
+    }
+    
+    public static final <T> void foreach(ApplyVoid<? super T> procedure, Iterable<T> xs) {
         FunctionalImpl.foreach(xs, procedure);
     }
 

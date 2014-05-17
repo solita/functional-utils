@@ -96,10 +96,14 @@ public abstract class FunctionalImpl {
         return new FlatteningIterable<T>(xs);
     }
     
-    public static final <T> void foreach(Iterable<T> xs, Apply<? super T, ?> procedure) {
+    public static final <T> void foreach(Iterable<T> xs, Apply<? super T, Void> procedure) {
         for (T t: xs) {
             procedure.apply(t);
         }
+    }
+    
+    public static final <T> void foreach(Iterable<T> xs, ApplyVoid<? super T> procedure) {
+        foreach(xs, (Apply<? super T, Void>)procedure);
     }
     
     /**

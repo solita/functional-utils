@@ -132,11 +132,19 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static final <T> void foreach(T[] xs, Apply<? super T, ?> procedure) {
+    public static final <T> void foreach(T[] xs, Apply<? super T, Void> procedure) {
         foreach(Arrays.asList(xs), procedure);
     }
     
-    public static final <T> void foreach(Apply<? super T, ?> procedure, T... xs) {
+    public static final <T> void foreach(T[] xs, ApplyVoid<? super T> procedure) {
+        foreach(Arrays.asList(xs), procedure);
+    }
+    
+    public static final <T> void foreach(Apply<? super T, Void> procedure, T... xs) {
+        foreach(Arrays.asList(xs), procedure);
+    }
+    
+    public static final <T> void foreach(ApplyVoid<? super T> procedure, T... xs) {
         foreach(Arrays.asList(xs), procedure);
     }
     

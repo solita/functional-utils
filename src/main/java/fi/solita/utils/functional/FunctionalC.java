@@ -74,7 +74,13 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.flatMap(it(xs), f);
     }
     
-    public static final void foreach(Apply<Character, ?> procedure, CharSequence xs) {
+    
+    
+    public static final void foreach(Apply<Character, Void> procedure, CharSequence xs) {
+        FunctionalImpl.foreach(it(xs), procedure);
+    }
+    
+    public static final void foreach(ApplyVoid<Character> procedure, CharSequence xs) {
         FunctionalImpl.foreach(it(xs), procedure);
     }
     
