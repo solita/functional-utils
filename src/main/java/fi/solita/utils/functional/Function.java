@@ -57,6 +57,15 @@ public abstract class Function {
     public static final <T> Function1<T, T> id() {
         return (Function1<T, T>) ID;
     }
+    
+    public static final <T,R> Function1<T,R> constant(final R r) {
+        return new Function1<T, R>() {
+            @Override
+            public R apply(T ignored) {
+                return r;
+            }
+        };
+    }
 
     public static final <R, E extends Throwable> Function0.Ex1<R,E> throwing(final E e) {
         return new Function0.Ex1<R,E>() {
