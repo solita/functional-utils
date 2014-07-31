@@ -152,7 +152,7 @@ public abstract class Content {
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(generatorTimesForContent, generatorTimesForNestedClasses)), Helpers.iterableSum));
             
             List<String> allContents = newList(concat(
-                          Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + importType(Serializable.class) + " {"),
+                          Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + Serializable.class.getName() + " {"),
                           elemContents,
                           map(nestedContents, padding),
                           Some("}")));

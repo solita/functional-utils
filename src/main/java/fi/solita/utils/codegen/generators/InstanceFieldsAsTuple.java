@@ -1,11 +1,13 @@
 package fi.solita.utils.codegen.generators;
 
+import static fi.solita.utils.codegen.Helpers.getPackageName;
 import static fi.solita.utils.codegen.Helpers.importTypes;
 import static fi.solita.utils.codegen.Helpers.padding;
 import static fi.solita.utils.codegen.Helpers.publicElement;
-import static fi.solita.utils.codegen.Helpers.*;
+import static fi.solita.utils.codegen.Helpers.qualifiedName;
 import static fi.solita.utils.codegen.Helpers.simpleName;
 import static fi.solita.utils.codegen.Helpers.staticElements;
+import static fi.solita.utils.codegen.Helpers.typeParameter2String;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.isEmpty;
@@ -17,6 +19,7 @@ import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -56,7 +59,9 @@ public class InstanceFieldsAsTuple extends Generator<InstanceFieldsAsTuple.Optio
         
         final InstanceFieldsAsFunctions.F f = InstanceFieldsAsFunctions.variableElementGen;
         
-        final String enclosingElementQualifiedNameImported = importTypes(qualifiedName.apply(enclosingElement));
+        final String pack = getPackageName(enclosingElement);
+        String metaClassQualifiedName = pack + "." + qualifiedName.apply(enclosingElement).replaceFirst(Pattern.quote(pack + "."), "").replace(".", "_.") + "_";
+        final String metaClassQualifiedNameImported = importTypes(metaClassQualifiedName);
         List<String> allTypeParams = newList(map(enclosingElement.getTypeParameters(), typeParameter2String));
         String typeParamsString = isEmpty(allTypeParams) ? "" : "<" + mkString(", ", allTypeParams) + ">";
         String tupleClass = Helpers.importTypes(Tuple.class.getName() + fieldsToInclude.size());
@@ -69,7 +74,7 @@ public class InstanceFieldsAsTuple extends Generator<InstanceFieldsAsTuple.Optio
                 f.apply((fi.solita.utils.codegen.generators.InstanceFieldsAsFunctions.Options) options, helper, field);
                 String relevantTypeParamsString = isEmpty(f.relevantTypeParamsWithoutConstraints) ? "" : "<" + mkString(", ", f.relevantTypeParamsWithoutConstraints) + ">";
                 
-                return Tuple.of(enclosingElementQualifiedNameImported + "_." + relevantTypeParamsString + simpleName.apply(field), f.fundef, f.needsToBeFunction);
+                return Tuple.of(metaClassQualifiedNameImported + "." + relevantTypeParamsString + simpleName.apply(field), f.fundef, f.needsToBeFunction);
             }
         }));
       
