@@ -16,22 +16,18 @@ public abstract class Enumerables {
 		  this.minBound = bounds.minBound();
 		}
 	
-		@Override
 		public Option<T> succ(T t) {
 				if (t.equals(maxBound)) return None(); else return Some(doSucc(t));
 		}
 
-		@Override
 		public Option<T> pred(T t) {
 			  if (t.equals(minBound)) return None(); else return Some(doPred(t));
 		}
 		
-		@Override
 		public T minBound() {
 			  return minBound;
 		}
 		
-		@Override
 		public T maxBound() {
 			  return maxBound;
 		}

@@ -76,7 +76,6 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
         return false;
     }
     
-    @Override
     public Iterator<T> iterator() {
         return Collections.<T>emptyList().iterator();
     }
@@ -128,7 +127,6 @@ class SomeImpl<T> extends Option<T> {
         return true;
     }
 
-    @Override
     public Iterator<T> iterator() {
         return Collections.singleton(t).iterator();
     }

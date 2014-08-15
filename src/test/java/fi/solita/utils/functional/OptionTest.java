@@ -14,19 +14,17 @@ public class OptionTest {
          Option<String> foo = Some("foo");
          Option<Integer> bar = Some(42);
          
-         int slen = foo.fold(OptionTest_.length, 42);
-         int slen2 = (foo.isDefined() ? length(foo.get()) : 42);
+         int slen = foo.fold(strlen, 42);
+         int slen2 = (foo.isDefined() ? strlen.apply(foo.get()) : 42);
          
          int i = bar.fold(Function.<Integer>id(), 42);
          int i2 = bar.getOrElse(42);
-         
-         Iterable<Integer> intvals = newList(slen, i);
-         Iterable<Integer> intvals2 = sequence(newList(Option_.<String,Integer>fold().ap(foo, OptionTest_.length),
-                                                       Option_.<Integer,Integer>fold().ap(bar, Function.<Integer>id())), // == Option_.<Integer>getOrElse().apply(bar))
-                                               42);
     }
     
-    static int length(String s) {
-        return s.length();
-    }
+    static Apply<String,Integer> strlen = new Transformer<String,Integer>() {
+        @Override
+        public Integer transform(String source) {
+            return source.length();
+        }
+    };
 }

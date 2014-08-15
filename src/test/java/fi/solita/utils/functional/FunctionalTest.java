@@ -131,7 +131,6 @@ public class FunctionalTest {
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {
         private boolean iterated = false;
-        @Override
         public Iterator<String> iterator() {
             if (iterated) {
                 throw new IllegalStateException("trying to iterate again!");
@@ -139,12 +138,10 @@ public class FunctionalTest {
             iterated = true;
             return new Iterator<String>() {
                 boolean nextCalled = false;
-                @Override
                 public boolean hasNext() {
                     return !nextCalled;
                 }
 
-                @Override
                 public String next() {
                     if (nextCalled) {
                         throw new NoSuchElementException();
@@ -153,7 +150,6 @@ public class FunctionalTest {
                     return "foo";
                 }
 
-                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

@@ -13,7 +13,6 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
             return ret;
         }
         return new Ordering<T>() {
-            @Override
             public int compare(T o1, T o2) {
                 return c.compare(o1, o2);
             }
@@ -24,7 +23,6 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     @SuppressWarnings("rawtypes")
     private static final Ordering Natural = new Ordering<Comparable>() {
         @SuppressWarnings("unchecked")
-        @Override
         public int compare(Comparable o1, Comparable o2) {
             return o1.compareTo(o2);
         }
@@ -38,12 +36,10 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(java.util.Collections.reverseOrder(this));
     }
     
-    @Override
     public final Ordering<T> apply(Tuple2<Ordering<T>,Ordering<T>> t) {
         return of(Monoids.<T>comparatorConcat().apply(t._1, t._2));
     }
 
-    @Override
     public final Ordering<T> zero() {
         return of(Monoids.comparatorConcat().zero());
     }

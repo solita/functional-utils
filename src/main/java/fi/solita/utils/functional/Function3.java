@@ -1,11 +1,9 @@
 package fi.solita.utils.functional;
 
-import fi.solita.utils.codegen.NoMetadataGeneration;
 import static fi.solita.utils.functional.Function._;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-@NoMetadataGeneration
 public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3<T1,T2,T3>, R> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3);

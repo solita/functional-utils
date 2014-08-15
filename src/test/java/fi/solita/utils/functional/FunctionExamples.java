@@ -1,25 +1,26 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Function._;
 import static fi.solita.utils.functional.Function.__;
-import static fi.solita.utils.functional.FunctionExamples_.*;
+import static fi.solita.utils.functional.FunctionalImpl.map;
 
 import org.junit.Test;
 
 public class FunctionExamples {
-  
-    static int constant() {
-      return 42;
-    }
-  
-    static int length(String s) {
-      return s.length();
-    }
     
-    static int mod(int modulus, int i) {
-      return i % modulus;
-    }
+    static Transformer<String,Integer> length = new Transformer<String,Integer>() {
+        @Override
+        public Integer transform(String source) {
+            return source.length();
+        }
+    };
+    
+    static Function2<Integer,Integer,Integer> mod = new Function2<Integer,Integer,Integer>() {
+        @Override
+        public Integer apply(Integer modulus, Integer i) {
+            return i % modulus;
+        }
+    };
     
     @SuppressWarnings("unused")
     @Test
@@ -28,7 +29,7 @@ public class FunctionExamples {
         Apply<String,Integer> f = length;
         
         // Function0 ia a 0-arg function, Function1 1-arg, Function2 2-arg, etc.
-        Function0<Integer> zeroArg = constant;
+        Function0<Integer> zeroArg = Function.of(42);
         Function1<String,Integer> oneArg = length;
         Function2<Integer, Integer, Integer> twoArg = mod;
         

@@ -25,17 +25,14 @@ public class Tuple3<T1, T2, T3> extends Tuple implements Tuple._1<T1>, Tuple._2<
         return Tuple.of(_1, _2);
     }
     
-    @Override
     public T1 get_1() {
         return _1;
     }
     
-    @Override
     public T2 get_2() {
         return _2;
     }
     
-    @Override
     public T3 get_3() {
         return _3;
     }

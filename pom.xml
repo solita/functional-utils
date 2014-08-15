@@ -2,15 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.solita.utils</groupId>
     <artifactId>functional-utils</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.8</version>
     <build>
-        <defaultGoal>package</defaultGoal>
-        <finalName>${project.artifactId}</finalName>
-        
         <resources>
-                <resource>
-                    <directory>${basedir}/src/main/resources</directory>
-                </resource>
                 <resource>
                     <directory>${basedir}/src/main/java</directory>
                     <includes>
@@ -29,59 +23,12 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
-                <executions>
-                    <execution>
-                        <id>compileProcessorForAnnotationProcessing</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <includes>
-                                <include>fi/solita/utils/codegen/**.*</include>
-                            </includes>
-                            <proc>none</proc>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.5</source>
+                    <target>1.5</target>
                     <encoding>UTF-8</encoding>
                     <optimize>true</optimize>
                     <debug>false</debug>
-                    <proc>none</proc>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>2.2.4</version>
-                <executions>
-                    <execution>
-                        <id>process</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                    </execution>
-                    <execution>
-                        <id>process-test</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>process-test</goal>
-                        </goals>
-                        <inherited>false</inherited>
-                    </execution>
-                </executions>
-                <configuration>
-                    <compilerArguments>-source 1.6 -target 1.6</compilerArguments>
-                    <encoding>UTF-8</encoding>
-                    <processors>
-                        <processor>fi.solita.utils.codegen.CommonMetadataProcessor</processor>
-                    </processors>
                 </configuration>
             </plugin>
             <plugin>
@@ -89,14 +36,6 @@
                 <version>2.6</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                   <outputDirectory>${basedir}</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

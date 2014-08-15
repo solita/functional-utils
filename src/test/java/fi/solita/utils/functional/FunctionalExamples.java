@@ -4,15 +4,50 @@ import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Functional.*;
-import static fi.solita.utils.functional.FunctionalExamples_.*;
+import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.cons;
+import static fi.solita.utils.functional.Functional.contains;
+import static fi.solita.utils.functional.Functional.drop;
+import static fi.solita.utils.functional.Functional.dropWhile;
+import static fi.solita.utils.functional.Functional.exists;
+import static fi.solita.utils.functional.Functional.filter;
+import static fi.solita.utils.functional.Functional.find;
+import static fi.solita.utils.functional.Functional.flatMap;
+import static fi.solita.utils.functional.Functional.flatten;
+import static fi.solita.utils.functional.Functional.fold;
+import static fi.solita.utils.functional.Functional.forall;
+import static fi.solita.utils.functional.Functional.foreach;
+import static fi.solita.utils.functional.Functional.head;
+import static fi.solita.utils.functional.Functional.headOption;
+import static fi.solita.utils.functional.Functional.init;
+import static fi.solita.utils.functional.Functional.isEmpty;
+import static fi.solita.utils.functional.Functional.last;
+import static fi.solita.utils.functional.Functional.lastOption;
+import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.max;
+import static fi.solita.utils.functional.Functional.min;
+import static fi.solita.utils.functional.Functional.reduce;
+import static fi.solita.utils.functional.Functional.size;
+import static fi.solita.utils.functional.Functional.sort;
+import static fi.solita.utils.functional.Functional.span;
+import static fi.solita.utils.functional.Functional.subtract;
+import static fi.solita.utils.functional.Functional.tail;
+import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.Functional.takeWhile;
+import static fi.solita.utils.functional.FunctionalA.flatten;
+import static fi.solita.utils.functional.FunctionalS.intersection;
+import static fi.solita.utils.functional.FunctionalS.product;
+import static fi.solita.utils.functional.FunctionalS.sum;
+import static fi.solita.utils.functional.FunctionalS.union;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.*;
-import static fi.solita.utils.functional.Transformers.*;
+import static fi.solita.utils.functional.Predicates.even;
+import static fi.solita.utils.functional.Predicates.odd;
+import static fi.solita.utils.functional.Transformers.negateInt;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -27,24 +62,26 @@ public class FunctionalExamples {
     static Iterable<Integer> someIterableOrArray = newList(1, 2, 3);
     static Map<Integer,String> someMap = newMap(Pair.of(42, "foo"));
     
-    static boolean evenKey(Map.Entry<Integer, String> e) {
-        return e.getKey() % 2 == 0;
-    }
+    Apply<Map.Entry<Integer,String>,Boolean> evenKey = new Transformer<Map.Entry<Integer,String>,Boolean>() {
+        @Override
+        public Boolean transform(Entry<Integer, String> source) {
+            return source.getKey() % 2 == 0;
+        }
+    };
     
-    static int intPlus(int s1, int s2) {
-        return s1 + s2;
-    }
+    Apply<Integer,Void> someProcedure = new Transformer<Integer,Void>() {
+        @Override
+        public Void transform(Integer source) {
+            return null;
+        }
+    };
     
-    static String strConcat(String s1, int s2) {
-        return s1 + s2;
-    }
-    
-    static void someProcedure(Integer i) {
-    }
-    
-    static List<Integer> repeatTwice(int i) {
-        return newList(i, i);
-    }
+    Apply<Integer,List<Integer>> repeatTwice = new Transformer<Integer,List<Integer>>() {
+        @Override
+        public List<Integer> transform(Integer source) {
+            return newList(source, source);
+        }
+    };
     
     @Test
     public void examples() {
@@ -158,8 +195,8 @@ public class FunctionalExamples {
         assertEquals(newList(1,2), newList(flattenArrays));
         
         // fold
-        Option<Integer> fold = fold(intPlus, someIterableOrArray);
-        String foldFromZero = fold("->", strConcat, someIterableOrArray);
+        Option<Integer> fold = fold(SemiGroups.intSum, someIterableOrArray);
+        String foldFromZero = fold("->", SemiGroups.stringConcat, map(Transformers.toString, someIterableOrArray));
         assertEquals(Some(6), fold);
         assertEquals("->123", foldFromZero);
         

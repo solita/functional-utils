@@ -20,32 +20,32 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple._1
         return Tuple.of(_1, _2, t);
     }
 
-    @Override
+    
     public T1 getKey() {
         return _1;
     }
     
-    @Override
+    
     public T2 getValue() {
         return _2;
     }
     
-    @Override
+    
     public T2 setValue(T2 value) {
         throw new UnsupportedOperationException();
     }
     
-    @Override
+    
     public T1 get_1() {
         return _1;
     }
     
-    @Override
+    
     public T2 get_2() {
         return _2;
     }
     
-    @Override
+    
     public Object[] toArray() {
         return new Object[]{_1, _2};
     }

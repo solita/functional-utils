@@ -121,102 +121,102 @@ public class Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18);
     }
 
-    @Override
+    
     public T1 get_1() {
         return _1;
     }
     
-    @Override
+    
     public T2 get_2() {
         return _2;
     }
     
-    @Override
+    
     public T3 get_3() {
         return _3;
     }
     
-    @Override
+    
     public T4 get_4() {
         return _4;
     }
     
-    @Override
+    
     public T5 get_5() {
         return _5;
     }
     
-    @Override
+    
     public T6 get_6() {
         return _6;
     }
     
-    @Override
+    
     public T7 get_7() {
         return _7;
     }
     
-    @Override
+    
     public T8 get_8() {
         return _8;
     }
     
-    @Override
+    
     public T9 get_9() {
         return _9;
     }
     
-    @Override
+    
     public T10 get_10() {
         return _10;
     }
     
-    @Override
+    
     public T11 get_11() {
         return _11;
     }
     
-    @Override
+    
     public T12 get_12() {
         return _12;
     }
     
-    @Override
+    
     public T13 get_13() {
         return _13;
     }
     
-    @Override
+    
     public T14 get_14() {
         return _14;
     }
     
-    @Override
+    
     public T15 get_15() {
         return _15;
     }
     
-    @Override
+    
     public T16 get_16() {
         return _16;
     }
     
-    @Override
+    
     public T17 get_17() {
         return _17;
     }
     
-    @Override
+    
     public T18 get_18() {
         return _18;
     }
     
-    @Override
+    
     public T19 get_19() {
         return _19;
     }
     
-    @Override
+    
     public Object[] toArray() {
         return new Object[]{_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19};
     }

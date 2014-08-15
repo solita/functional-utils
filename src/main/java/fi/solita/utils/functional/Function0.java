@@ -2,9 +2,6 @@ package fi.solita.utils.functional;
 
 import java.io.Serializable;
 
-import fi.solita.utils.codegen.NoMetadataGeneration;
-
-@NoMetadataGeneration
 public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
 
     public abstract R apply();
@@ -18,7 +15,6 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
         };
     }
     
-    @Override
     public final R apply(Tuple0 t) {
         return apply();
     }
@@ -26,7 +22,6 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
     public static abstract class Ex1<R,E1 extends Throwable> implements ApplyEx.Ex1<Tuple0, R, E1>, Serializable {
         public abstract R apply() throws E1;
         
-        @Override
         public final R apply(Tuple0 t) throws E1 {
             return apply();
         }
@@ -71,7 +66,6 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
     public static abstract class Ex2<R,E1 extends Throwable, E2 extends Throwable> implements ApplyEx.Ex2<Tuple0, R, E1, E2>, Serializable {
         public abstract R apply() throws E1, E2;
         
-        @Override
         public final R apply(Tuple0 t) throws E1, E2 {
             return apply();
         }
@@ -107,7 +101,6 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
     public static abstract class Ex3<R,E1 extends Throwable, E2 extends Throwable, E3 extends Throwable> implements ApplyEx.Ex3<Tuple0, R, E1, E2, E3>, Serializable {
         public abstract R apply() throws E1, E2, E3;
         
-        @Override
         public final R apply(Tuple0 t) throws E1, E2, E3 {
             return apply();
         }
@@ -134,7 +127,6 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Serializable {
     public static abstract class Ex4<R,E1 extends Throwable, E2 extends Throwable, E3 extends Throwable, E4 extends Throwable> implements ApplyEx.Ex4<Tuple0, R, E1, E2, E3, E4>, Serializable {
         public abstract R apply() throws E1, E2, E3, E4;
         
-        @Override
         public final R apply(Tuple0 t) throws E1, E2, E3, E4 {
             return apply();
         }

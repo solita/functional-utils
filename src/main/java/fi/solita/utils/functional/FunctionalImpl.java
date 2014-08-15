@@ -225,7 +225,6 @@ public abstract class FunctionalImpl {
     
     public static final <T> Iterable<T> takeWhile(final Iterable<T> xs, final Apply<? super T, Boolean> predicate) {
         return new Iterable<T>() {
-            @Override
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private Option<T> next;
@@ -234,7 +233,6 @@ public abstract class FunctionalImpl {
                         readNext();
                     }
 
-                    @Override
                     public boolean hasNext() {
                         return next.isDefined();
                     }
@@ -252,7 +250,6 @@ public abstract class FunctionalImpl {
                         }
                     }
 
-                    @Override
                     public T next() {
                         if (!next.isDefined()) {
                             throw new NoSuchElementException();
@@ -262,7 +259,6 @@ public abstract class FunctionalImpl {
                         return ret;
                     }
 
-                    @Override
                     public void remove() {
                         throw new UnsupportedOperationException();
                     }
@@ -273,7 +269,6 @@ public abstract class FunctionalImpl {
     
     public static final <T> Iterable<T> dropWhile(final Iterable<T> xs, final Apply<? super T, Boolean> predicate) {
         return new Iterable<T>() {
-            @Override
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private boolean dropping = true;
@@ -283,7 +278,6 @@ public abstract class FunctionalImpl {
                         readNext();
                     }
 
-                    @Override
                     public boolean hasNext() {
                         return next.isDefined();
                     }
@@ -296,7 +290,6 @@ public abstract class FunctionalImpl {
                         dropping = false;
                     }
 
-                    @Override
                     public T next() {
                         if (!next.isDefined()) {
                             throw new NoSuchElementException();
@@ -306,7 +299,6 @@ public abstract class FunctionalImpl {
                         return ret;
                     }
 
-                    @Override
                     public void remove() {
                         throw new UnsupportedOperationException();
                     }

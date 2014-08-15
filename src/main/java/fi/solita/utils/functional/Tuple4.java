@@ -31,22 +31,18 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple
         return Tuple.of(_1, _2, _3);
     }
     
-    @Override
     public T1 get_1() {
         return _1;
     }
     
-    @Override
     public T2 get_2() {
         return _2;
     }
     
-    @Override
     public T3 get_3() {
         return _3;
     }
     
-    @Override
     public T4 get_4() {
         return _4;
     }

@@ -17,7 +17,6 @@ public class Tuple1<T1> extends Tuple implements Tuple._1<T1> {
         return Tuple.of(_1, t);
     }
     
-    @Override
     public T1 get_1() {
         return _1;
     }

@@ -13,49 +13,54 @@ public abstract class Monoids {
     }
     
     public static class BooleanDisjunction extends SemiGroups.BooleanDisjunction implements Monoid<Boolean> {
-      @Override
       public Boolean zero() {
           return false;
       }
   }
 
   public static class BooleanConjunction extends SemiGroups.BooleanConjunction implements Monoid<Boolean> {
-      @Override
       public Boolean zero() {
           return true;
       }
   }
 
   public static class StringConcat extends SemiGroups.StringConcat implements Monoid<String> {
-      @Override
       public String zero() {
           return "";
       }
   }
+  
+  public static class IntProduct extends SemiGroups.IntProduct implements Monoid<Integer> {
+      public Integer zero() {
+          return 1;
+      }
+  }
+
+  public static class IntSum extends SemiGroups.IntSum implements Monoid<Integer> {
+      public Integer zero() {
+          return 0;
+      }
+  }
 
   public static class LongProduct extends SemiGroups.LongProduct implements Monoid<Long> {
-      @Override
       public Long zero() {
           return 1l;
       }
   }
 
   public static class LongSum extends SemiGroups.LongSum implements Monoid<Long> {
-      @Override
       public Long zero() {
           return 0l;
       }
   }
   
   public static class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
-      @Override
       public Apply<T, T> zero() {
           return Function.id();
       }
   }
   
   public static class SetUnion<T> extends SemiGroups.SetUnion<T> implements Monoid<Set<T>> {
-      @Override
       public Set<T> zero() {
           return java.util.Collections.emptySet();
       }
@@ -64,84 +69,68 @@ public abstract class Monoids {
   public static class SetIntersection<T> extends SemiGroups.SetIntersection<T> implements Monoid<Set<T>> {
       private static final Set<?> AllContainingSet = new AllContainingSet<Object>();
       static final class AllContainingSet<T> implements Set<T> {
-          @Override
           public int size() {
               return Integer.MAX_VALUE;
           }
 
-          @Override
           public boolean isEmpty() {
               return false;
           }
 
-          @Override
           public boolean contains(Object o) {
               return true;
           }
 
-          @Override
           public boolean containsAll(Collection<?> c) {
               return true;
           }
 
-          @Override
           public Iterator<T> iterator() {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public Object[] toArray() {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public <S> S[] toArray(S[] a) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public boolean add(T e) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public boolean remove(Object o) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public boolean addAll(Collection<? extends T> c) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public boolean retainAll(Collection<?> c) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public boolean removeAll(Collection<?> c) {
               throw new UnsupportedOperationException();
           }
 
-          @Override
           public void clear() {
               throw new UnsupportedOperationException();
           }
       }
 
       @SuppressWarnings("unchecked")
-      @Override
       public Set<T> zero() {
           return (Set<T>) AllContainingSet;
       }
   }
   
   public static class ComparatorConcat<T> extends SemiGroups.ComparatorConcat<T> implements Monoid<Comparator<T>> {
-      @Override
       public Comparator<T> zero() {
           return new Comparator<T>() {
-              @Override
               public int compare(T o1, T o2) {
                   return 0;
               }
@@ -154,12 +143,15 @@ public abstract class Monoids {
           super(sg);
       }
 
-      @Override
       public Map<K, V> zero() {
           return emptyMap();
       }
   }
 
+  public static final Monoid<Integer> intSum = new IntSum();
+
+  public static final Monoid<Integer> intProduct = new IntProduct();
+  
   public static final Monoid<Long> longSum = new LongSum();
 
   public static final Monoid<Long> longProduct = new LongProduct();

@@ -104,7 +104,6 @@ public abstract class SemiGroups {
       @Override
       public Comparator<T> apply(final Comparator<T> first, final Comparator<T> second) {
           return new Comparator<T>() {
-              @Override
               public int compare(T o1, T o2) {
                   int c = first.compare(o1, o2);
                   return c != 0 ? c : second.compare(o1, o2);
@@ -135,6 +134,10 @@ public abstract class SemiGroups {
           return ret;
       }
   }
+  
+    public static final SemiGroup<Integer> intSum = Monoids.intSum;
+
+    public static final SemiGroup<Integer> intProduct = Monoids.intProduct;
     
     public static final SemiGroup<Long> longSum = Monoids.longSum;
 

@@ -40,7 +40,6 @@ public class MonoidExamples {
             this.meters = meters;
         }
 
-        @Override
         public Distance apply(final Tuple2<Distance, Distance> t) {
             return new Distance(t._1.meters + t._2.meters);
         }

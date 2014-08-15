@@ -24,7 +24,7 @@ public abstract class Iterables {
     public static final Transformer<Iterable<?>,Option<Long>> resolveSize = new Transformer<Iterable<?>,Option<Long>>() {
         private final Option<Long> SOME_ZERO = Some(0l);
         private final Option<Long> SOME_ONE = Some(1l);
-        @Override
+        
         public Option<Long> transform(Iterable<?> source) {
             if (source instanceof Collection) {
                 return Some((long)((Collection<?>)source).size());
@@ -40,21 +40,21 @@ public abstract class Iterables {
     };
     
     private static final Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
-        @Override
+        
         public Boolean transform(Iterator<?> source) {
             return source.hasNext();
         }
     };
     
     private static final Transformer<Iterator<Object>, Object> next = new Transformer<Iterator<Object>,Object>() {
-        @Override
+        
         public Object transform(Iterator<Object> source) {
             return source.next();
         }
     };
     
     private static final Transformer<Iterable<Object>,Iterator<Object>> toIterator = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        @Override
+        
         public Iterator<Object> transform(Iterable<Object> source) {
             return source.iterator();
         }
@@ -63,7 +63,7 @@ public abstract class Iterables {
     static abstract class PossiblySizeAwareIterable<T> implements Iterable<T> {
         public abstract Option<Long> sizeEstimate();
         
-        @Override
+        
         public String toString() {
             return getClass().getSimpleName() + Collections.newList(this).toString();
         }
@@ -90,17 +90,14 @@ public abstract class Iterables {
             this.knownSize = knownSize;
         }
 
-        @Override
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private Option<T> nextToReturn = from;
                 
-                @Override
                 public boolean hasNext() {
                     return nextToReturn.isDefined();
                 }
 
-                @Override
                 public T next() {
                     T ret;
                     try {
@@ -118,14 +115,14 @@ public abstract class Iterables {
                     return ret;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return knownSize.isDefined() ? Some(knownSize.get()) : Option.<Long>None();
         }
@@ -145,21 +142,21 @@ public abstract class Iterables {
             this.amount = amount;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return amount != null ? Some(amount) : Option.<Long>None();
         }
 
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private int current = 0;
-                @Override
+                
                 public boolean hasNext() {
                     return amount == null || current < amount;
                 }
 
-                @Override
+                
                 public T next() {
                     if (amount != null && current == amount) {
                         throw new NoSuchElementException();
@@ -168,7 +165,7 @@ public abstract class Iterables {
                     return value;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -183,19 +180,19 @@ public abstract class Iterables {
             this.elements = elements;
         }
         
-        @Override
+        
         public Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
                 private final List<Iterator<T>> iterators = newList(map(elements, (Transformer<Iterable<T>,Iterator<T>>)(Object)toIterator));
                 
-                @Override
+                
                 public boolean hasNext() {
                     return !iterators.isEmpty() && forall(iterators, hasNext);
                 }
 
                 @SuppressWarnings("unchecked")
-                @Override
+                
                 public Iterable<T> next() {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
@@ -203,14 +200,14 @@ public abstract class Iterables {
                     return newList(map(iterators, (Transformer<Iterator<T>, T>)(Object)next));
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return None();
         }
@@ -225,30 +222,30 @@ public abstract class Iterables {
             this.elements2 = elements2;
         }
 
-        @Override
+        
         public Iterator<Tuple2<A, B>> iterator() {
             return new Iterator<Tuple2<A, B>>() {
                 private final Iterator<A> it1 = elements1.iterator();
                 private final Iterator<B> it2 = elements2.iterator();
                 
-                @Override
+                
                 public boolean hasNext() {
                     return it1.hasNext() && it2.hasNext();
                 }
 
-                @Override
+                
                 public Tuple2<A, B> next() {
                     return Tuple.of(it1.next(), it2.next());
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             for (long a: resolveSize.apply(elements1)) {
                 for (long b: resolveSize.apply(elements2)) {
@@ -266,7 +263,7 @@ public abstract class Iterables {
             this.elements = elements;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             long s = 0;
             for (Option<Long> size: map(elements, resolveSize)) {
@@ -279,7 +276,7 @@ public abstract class Iterables {
             return Some(s);
         }
 
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
@@ -287,7 +284,7 @@ public abstract class Iterables {
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
-                @Override
+                
                 public boolean hasNext() {
                     while (!lastUsed.hasNext() && it.hasNext()) {
                         lastUsed = it.next();
@@ -295,13 +292,13 @@ public abstract class Iterables {
                     return lastUsed.hasNext();
                 }
 
-                @Override
+                
                 public T next() {
                     hasNext();
                     return lastUsed.next();
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -314,7 +311,7 @@ public abstract class Iterables {
             super(elements);
         }
         
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return None();
         }
@@ -329,12 +326,12 @@ public abstract class Iterables {
             this.filter = filter;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return None();
         }
 
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private boolean hasNext;
@@ -344,7 +341,7 @@ public abstract class Iterables {
                     readNext();
                 }
 
-                @Override
+                
                 public boolean hasNext() {
                     return hasNext;
                 }
@@ -360,7 +357,7 @@ public abstract class Iterables {
                     }
                 }
 
-                @Override
+                
                 public T next() {
                     if (!hasNext) {
                         throw new NoSuchElementException();
@@ -370,7 +367,7 @@ public abstract class Iterables {
                     return ret;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -387,27 +384,27 @@ public abstract class Iterables {
             this.transformer = transformer;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private final Iterator<S> source = iterable.iterator();
 
-                @Override
+                
                 public boolean hasNext() {
                     return source.hasNext();
                 }
 
-                @Override
+                
                 public T next() {
                     return transformer.apply(source.next());
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -422,28 +419,28 @@ public abstract class Iterables {
             this.iterable = iterable;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
 
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private final List<T> list = iterable instanceof List ? (List<T>)iterable : newList(iterable);
                 private final ListIterator<T> underlying = list.listIterator(list.size());
                 
-                @Override
+                
                 public boolean hasNext() {
                     return underlying.hasPrevious();
                 }
 
-                @Override
+                
                 public T next() {
                     return underlying.previous();
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -458,26 +455,26 @@ public abstract class Iterables {
             this.chars = chars;
         }
         
-        @Override
+        
         public char charAt(int index) {
             return chars.charAt(index);
         }
 
-        @Override
+        
         public int length() {
             return chars.length();
         }
 
-        @Override
+        
         public CharSequence subSequence(int start, int end) {
             return chars.subSequence(start, end);
         }
         
-        @Override
+        
         public Iterator<Character> iterator() {
             return new Iterator<Character>() {
                 private int read = 0;
-                @Override
+                
                 public boolean hasNext() {
                     try {
                         chars.charAt(read);
@@ -487,21 +484,21 @@ public abstract class Iterables {
                     }
                 }
 
-                @Override
+                
                 public Character next() {
                     char ret = chars.charAt(read);
                     read++;
                     return ret;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             if (chars instanceof String || chars instanceof StringBuilder || chars instanceof StringBuffer) {
                 return Some((long)chars.length());
@@ -510,7 +507,7 @@ public abstract class Iterables {
             }
         }
         
-        @Override
+        
         public String toString() {
             return chars.toString();
         }
@@ -534,7 +531,7 @@ public abstract class Iterables {
         /**
          * Does not neccessarily check if <i>end</i> is bigger than <i>length()<i>
          */
-        @Override
+        
         public CharSequence subSequence(int start, int end) {
             if (start < 0 || end < 0 || start > end || !it.hasNext() && end > length()) {
                 throw new IndexOutOfBoundsException();
@@ -542,12 +539,12 @@ public abstract class Iterables {
             return new MemoizingCharSequenceIterable(take(end - start, FunctionalImpl.drop(start, this)));
         }
         
-        @Override
+        
         public int length() {
             return resolveLength();
         }
         
-        @Override
+        
         public char charAt(int index) {
             if (index < 0)
                 throw new IndexOutOfBoundsException();
@@ -557,11 +554,11 @@ public abstract class Iterables {
             return memo.charAt(index);
         }
 
-        @Override
+        
         public Iterator<Character> iterator() {
             return new Iterator<Character>() {
                 private int read = 0;
-                @Override
+                
                 public boolean hasNext() {
                     if (read == memo.length() && it.hasNext()) {
                         memo.append(it.next());
@@ -569,7 +566,7 @@ public abstract class Iterables {
                     return read < memo.length();
                 }
 
-                @Override
+                
                 public Character next() {
                     if (read == memo.length()) {
                         memo.append(it.next());
@@ -579,14 +576,14 @@ public abstract class Iterables {
                     return ret;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             if (!it.hasNext()) {
                 return Some((long)memo.length());
@@ -595,7 +592,7 @@ public abstract class Iterables {
             }
         }
         
-        @Override
+        
         public String toString() {
             resolveLength();
             return memo.toString();
@@ -611,7 +608,6 @@ public abstract class Iterables {
             this.comparator = comparator;
         }
         
-        @Override
         public Iterator<T> iterator() {
             long initialSize = resolveSize.apply(iterable).getOrElse(11l);
             if (initialSize == 0) {
@@ -626,24 +622,24 @@ public abstract class Iterables {
                 }
             }
             return new Iterator<T>() {
-                @Override
+                
                 public boolean hasNext() {
                     return !queue.isEmpty();
                 }
 
-                @Override
+                
                 public T next() {
                     return queue.remove();
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
         }
@@ -661,18 +657,18 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
-        @Override
+        
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private long left = amount;
                 private final Iterator<T> it = elements.iterator();
 
-                @Override
+                
                 public boolean hasNext() {
                     return left > 0 && it.hasNext();
                 }
 
-                @Override
+                
                 public T next() {
                     if (left == 0) {
                         throw new NoSuchElementException();
@@ -681,14 +677,14 @@ public abstract class Iterables {
                     return it.next();
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
@@ -714,7 +710,7 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
-        @Override
+        
         public Iterator<T> iterator() {
             Iterator<T> it = elements.iterator();
             long left = amount;
@@ -725,7 +721,7 @@ public abstract class Iterables {
             return it;
         }
 
-        @Override
+        
         public Option<Long> sizeEstimate() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
@@ -745,29 +741,29 @@ public abstract class Iterables {
             this.comparator = comparator;
         }
         
-        @Override
+        
         public Option<Long> sizeEstimate() {
             return None();
         }
         
-        @Override
+        
         public Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 private Iterable<T> remaining = elements;
                 
-                @Override
+                
                 public boolean hasNext() {
                     return !isEmpty(remaining);
                 }
 
-                @Override
+                
                 public Iterable<T> next() {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
                     final T first = head(remaining);
                     Pair<Iterable<T>, Iterable<T>> span = span(remaining, new Predicate<T>() {
-                        @Override
+                        
                         public boolean accept(T candidate) {
                             return comparator.apply(Tuple.of(candidate, first));
                         }
@@ -776,7 +772,7 @@ public abstract class Iterables {
                     return span.left;
                 }
 
-                @Override
+                
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
