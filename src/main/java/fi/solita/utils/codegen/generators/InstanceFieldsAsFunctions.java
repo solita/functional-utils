@@ -19,6 +19,7 @@ import static fi.solita.utils.codegen.generators.Content.EmptyLine;
 import static fi.solita.utils.codegen.generators.Content.None;
 import static fi.solita.utils.codegen.generators.Content.catchBlock;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.contains;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.subtract;
@@ -137,7 +138,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
             String modifiers = visibility + "static final";
             String fieldName = field.getSimpleName().toString();
             
-            String returnClause = "return " + (isPrivate ? "(" + (needsToBeFunction ? "Object" : returnTypeImported) + ")" : "");
+            final String returnClause = "return " + (isPrivate ? "(" + (needsToBeFunction ? "Object" : returnTypeImported) + ")" : "");
             
             boolean usePredicate = returnType.equals(Boolean.class.getName()) || returnType.equals(boolean.class.getName());
             Class<?> fieldClass = usePredicate ? options.getPredicateClassForInstanceFields(isFinal) : options.getClassForInstanceFields(isFinal);
@@ -198,7 +199,7 @@ public class InstanceFieldsAsFunctions extends Generator<InstanceFieldsAsFunctio
                     : Some(declaration + " = new " + fundef + initParams + " {"),
                 map(options.getAdditionalBodyLinesForInstanceFields(), padding),
                 EmptyLine,
-                isPrivate && !needsToBeFunction && (hasNonQmarkGenerics(returnType) || field.asType().getKind() == TypeKind.TYPEVAR)
+                isPrivate && !needsToBeFunction && (field.getEnclosingElement().getAnnotation(SuppressWarnings.class) == null || !contains("unchecked", field.getEnclosingElement().getAnnotation(SuppressWarnings.class).value())) && (hasNonQmarkGenerics(returnType) || field.asType().getKind() == TypeKind.TYPEVAR)
                     ? Some("    @SuppressWarnings(\"unchecked\")")
                     : None,
                 map(applyBlock, padding),

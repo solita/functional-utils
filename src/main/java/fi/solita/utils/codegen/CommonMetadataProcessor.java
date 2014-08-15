@@ -210,7 +210,7 @@ public class CommonMetadataProcessor<OPTIONS extends CommonMetadataProcessor.Com
                 String superclassName = removeGenericPart.apply(element.getSuperclass().toString());
                 Option<String> extendedClassName = extendClassNamePattern.matcher(superclassName).matches() ? Some(genClassNamePat.replace("{}", superclassName)) : Option.<String>None();
                 long time4 = System.nanoTime();
-                ClassFileWriter.writeClassFile(genPackage, genClassName, extendedClassName, content, clazz, filer);
+                ClassFileWriter.writeClassFile(genPackage, genClassName, extendedClassName, content, clazz, filer, Option.of(element.getAnnotation(SuppressWarnings.class)), element.getAnnotation(Deprecated.class) != null);
                 
                 generation += time2 - time;
                 nestedGeneration += time3 - time2;

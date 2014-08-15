@@ -464,8 +464,10 @@ public abstract class Helpers {
         };
     }
     
+    private static final Pattern hasNonQmarkGenericsPattern = Pattern.compile("<\\s*[^?]");
+    
     public static final boolean hasNonQmarkGenerics(String str) {
-        return str.indexOf('<') != -1;
+        return hasNonQmarkGenericsPattern.matcher(str).find();
     }
     
     public static final boolean isInstanceMethod(Element e) {
@@ -493,8 +495,7 @@ public abstract class Helpers {
     
     public static final boolean hasRawTypes(Element e) {
         SuppressWarnings suppressWarnings = e.getAnnotation(SuppressWarnings.class);
-        return suppressWarnings != null && Functional.contains("rawtypes", suppressWarnings.value()) ||
-               e.getEnclosingElement() != null && hasRawTypes(e.getEnclosingElement());
+        return suppressWarnings != null && Functional.contains("rawtypes", suppressWarnings.value());
     }
 
     

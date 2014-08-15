@@ -35,6 +35,7 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.cons;
+import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.subtract;
@@ -200,16 +201,23 @@ public class MethodsAsFunctions extends Generator<MethodsAsFunctions.Options> {
                 
                 String initParams = "(" + importTypes(enclosingElementQualifiedName) + ".class, " + mkString(", ", cons("\"" + methodName + (index == 0 ? "" : index) + "\"", reflectionInvokationArgs(parameterTypesAsClasses(method, relevantTypeParamsForMethod)))) + ")";
                 
+                Iterable<String> warnings = concat(
+                    isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType)) ? Some("\"unchecked\"") : None,
+                    hasRawTypes ? Some("\"rawtypes\"") : None);
+                        
+                @SuppressWarnings("unchecked")
                 Iterable<String> res = concat(
+                    isEmpty(warnings)
+                        ? None
+                        : Some("@SuppressWarnings({" + mkString(",", warnings) + "})"),
+                    method.getAnnotation(Deprecated.class) == null
+                        ? None
+                        : Some("@Deprecated"),
                     needsToBeFunction
                         ? optimize
-                            ? newList(hasRawTypes ? "@SuppressWarnings(\"rawtypes\")" : "",
-                                      privateDeclaration + " = new " + privateFundef + initParams + " {")
+                            ? Some(privateDeclaration + " = new " + privateFundef + initParams + " {")
                             : Some(declaration + "() { return new " + fundef + initParams + " {")
                         : Some(declaration + " = new " + fundef + initParams + " {"),
-                    isPrivate && (method.getReturnType().getKind() == TypeKind.TYPEVAR || hasNonQmarkGenerics(returnType))
-                        ? Some("    @SuppressWarnings(\"unchecked\")")
-                        : None,
                     contentBlock,
                     Some("};"),
                     needsToBeFunction

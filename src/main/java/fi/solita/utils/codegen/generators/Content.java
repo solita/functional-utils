@@ -11,16 +11,19 @@ import static fi.solita.utils.codegen.Helpers.removeGenericPart;
 import static fi.solita.utils.codegen.Helpers.resolveVisibility;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.cons;
+import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.Functional.repeat;
 import static fi.solita.utils.functional.Functional.transpose;
 import static fi.solita.utils.functional.FunctionalA.concat;
-import static fi.solita.utils.functional.FunctionalImpl.filter;
+import static fi.solita.utils.functional.FunctionalA.filter;
 import static fi.solita.utils.functional.FunctionalImpl.flatMap;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 import static fi.solita.utils.functional.FunctionalImpl.sequence;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.equalTo;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -151,7 +154,17 @@ public abstract class Content {
             
             List<Long> totalTimesPerGenerator = newList(map(transpose(cons(generatorTimesForContent, generatorTimesForNestedClasses)), Helpers.iterableSum));
             
+            Iterable<String> warnings = source.getAnnotation(SuppressWarnings.class) == null
+                ? Collections.<String>emptyList()
+                : filter(source.getAnnotation(SuppressWarnings.class).value(), not(equalTo("unused")));
+            
             List<String> allContents = newList(concat(
+                          isEmpty(warnings)
+                              ? None
+                              : Some("@SuppressWarnings({\"" + mkString("\",\"", warnings) + "\"})"),
+                          source.getAnnotation(Deprecated.class) == null
+                              ? None
+                              : Some("@Deprecated"),
                           Some(resolveVisibility(source) + "static final class " + generatedClassNamePattern.replace("{}", source.getSimpleName().toString()) + " implements " + Serializable.class.getName() + " {"),
                           elemContents,
                           map(nestedContents, padding),

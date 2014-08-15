@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Option.Some;
 
 import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class OptionTest {
     
     @Test
