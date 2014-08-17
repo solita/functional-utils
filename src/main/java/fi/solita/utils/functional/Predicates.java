@@ -131,4 +131,11 @@ public abstract class Predicates {
             return candidate instanceof Serializable || candidate != null && candidate.getClass().isPrimitive();
         }
     };
+    
+    public static final Predicate<Option<?>> defined = new Predicate<Option<?>>() {
+        @Override
+        public boolean accept(Option<?> candidate) {
+            return candidate.isDefined();
+        }
+    };
 }

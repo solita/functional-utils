@@ -194,6 +194,42 @@ public abstract class Transformers {
         return (Transformer<Either<?,T>,Option<T>>)(Object)eitherRight;
     }
     
+    private static final Transformer<Option<?>,?> get = new Transformer<Option<?>,Object>() {
+        @Override
+        public Object transform(Option<?> source) {
+            return source.get();
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Option<T>,T> get() {
+        return (Transformer<Option<T>,T>)(Object)get;
+    }
+    
+    public static final Transformer<String,Iterable<Character>> it = new Transformer<String,Iterable<Character>>() {
+        @Override
+        public Iterable<Character> transform(String source) {
+            return it(source);
+        }
+    };
+    
+    private static final Transformer<Iterable<?>, Object> head = new Transformer<Iterable<?>,Object>() {
+        @Override
+        public Object transform(Iterable<?> source) {
+            return Functional.head(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Iterable<T>,T> head() {
+        return (Transformer<Iterable<T>,T>)(Object)head;
+    }
+    
+    public static final Transformer<Iterable<?>, Long> size = new Transformer<Iterable<?>,Long>() {
+        @Override
+        public Long transform(Iterable<?> source) {
+            return Functional.size(source);
+        }
+    };
+    
     private static final Transformer<Tuple._1<?>,?> _1 = new Transformer<Tuple._1<?>,Object>() {
         @Override
         public Object transform(Tuple._1<?> source) {
