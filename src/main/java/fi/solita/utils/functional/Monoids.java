@@ -12,6 +12,18 @@ public abstract class Monoids {
     private Monoids() {
     }
     
+    public static final <T> Monoid<T> of(final SemiGroup<T> sg, final Function0<T> zero) {
+        return new Monoid<T>() {
+            public T apply(Tuple2<T, T> t) {
+                return sg.apply(t);
+            }
+
+            public T zero() {
+                return zero.apply();
+            }
+        };
+    }
+    
     public static class BooleanDisjunction extends SemiGroups.BooleanDisjunction implements Monoid<Boolean> {
       public Boolean zero() {
           return false;
@@ -51,6 +63,18 @@ public abstract class Monoids {
   public static class LongSum extends SemiGroups.LongSum implements Monoid<Long> {
       public Long zero() {
           return 0l;
+      }
+  }
+  
+  public static class DoubleProduct extends SemiGroups.DoubleProduct implements Monoid<Double> {
+      public Double zero() {
+          return 1.0;
+      }
+  }
+
+  public static class DoubleSum extends SemiGroups.DoubleSum implements Monoid<Double> {
+      public Double zero() {
+          return 0.0;
       }
   }
   
@@ -155,6 +179,10 @@ public abstract class Monoids {
   public static final Monoid<Long> longSum = new LongSum();
 
   public static final Monoid<Long> longProduct = new LongProduct();
+  
+  public static final Monoid<Double> doubleSum = new DoubleSum();
+
+  public static final Monoid<Double> doubleProduct = new DoubleProduct();
 
   public static final Monoid<String> stringConcat = new StringConcat();
 
@@ -176,5 +204,17 @@ public abstract class Monoids {
   
   public static final <K,V> MapCombine<K,V> mapCombine(SemiGroup<V> sg) {
     return new MapCombine<K,V>(sg);
+  }
+  
+  public static final <T1,T2> Monoid<Tuple2<T1,T2>> product(Monoid<T1> m1, Monoid<T2> m2) {
+      return Monoids.of(SemiGroups.product(m1, m2), Function.of(Tuple.of(m1.zero(), m2.zero())));
+  }
+  
+  public static final <T1,T2,T3> Monoid<Tuple3<T1,T2,T3>> product(Monoid<T1> m1, Monoid<T2> m2, Monoid<T3> m3) {
+      return Monoids.of(SemiGroups.product(m1, m2, m3), Function.of(Tuple.of(m1.zero(), m2.zero(), m3.zero())));
+  }
+  
+  public static final <T1,T2,T3,T4> Monoid<Tuple4<T1,T2,T3,T4>> product(Monoid<T1> m1, Monoid<T2> m2, Monoid<T3> m3, Monoid<T4> m4) {
+    return Monoids.of(SemiGroups.product(m1, m2, m3, m4), Function.of(Tuple.of(m1.zero(), m2.zero(), m3.zero(), m4.zero())));
   }
 }

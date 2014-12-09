@@ -62,6 +62,34 @@ public abstract class SemiGroups {
       }
   }
   
+  public static class DoubleProduct extends Function2<Double,Double,Double> implements SemiGroup<Double> {
+      @Override
+      public Double apply(Double first, Double second) {
+          return first * second;
+      }
+  }
+  
+  public static class DoubleSum extends Function2<Double,Double,Double> implements SemiGroup<Double> {
+      @Override
+      public Double apply(Double first, Double second) {
+          return first + second;
+      }
+  }
+  
+  public static class Max<T extends Comparable<T>> extends Function2<T,T,T> implements SemiGroup<T> {
+    @Override
+    public T apply(T t1, T t2) {
+        return t1.compareTo(t2) < 0 ? t2 : t1;
+    }
+  }
+  
+  public static class Min<T extends Comparable<T>> extends Function2<T,T,T> implements SemiGroup<T> {
+      @Override
+      public T apply(T t1, T t2) {
+          return t1.compareTo(t2) > 0 ? t2 : t1;
+      }
+    }
+  
   public static class Endo<T> extends Function2<Apply<T,T>,Apply<T,T>,Apply<T,T>> implements SemiGroup<Apply<T, T>> {
       @Override
       public Apply<T, T> apply(Apply<T, T> t1, Apply<T, T> t2) {
@@ -135,6 +163,57 @@ public abstract class SemiGroups {
       }
   }
   
+  public static class Product2<T1,T2> extends Function2<Tuple2<T1,T2>,Tuple2<T1,T2>,Tuple2<T1,T2>> implements SemiGroup<Tuple2<T1,T2>> {
+    private final SemiGroup<T1> s1;
+    private final SemiGroup<T2> s2;
+    
+    protected Product2(SemiGroup<T1> s1, SemiGroup<T2> s2) {
+        this.s1 = s1;
+        this.s2 = s2;
+    }
+
+    @Override
+    public Tuple2<T1, T2> apply(Tuple2<T1, T2> t1, Tuple2<T1, T2> t2) {
+        return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)));
+    }
+  }
+  
+  public static class Product3<T1,T2,T3> extends Function2<Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>> implements SemiGroup<Tuple3<T1,T2,T3>> {
+      private final SemiGroup<T1> s1;
+      private final SemiGroup<T2> s2;
+      private final SemiGroup<T3> s3;
+      
+      protected Product3(SemiGroup<T1> s1, SemiGroup<T2> s2, SemiGroup<T3> s3) {
+          this.s1 = s1;
+          this.s2 = s2;
+          this.s3 = s3;
+      }
+
+      @Override
+      public Tuple3<T1, T2, T3> apply(Tuple3<T1, T2, T3> t1, Tuple3<T1, T2, T3> t2) {
+          return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)), s3.apply(Tuple.of(t1._3, t2._3)));
+      }
+    }
+  
+    public static class Product4<T1,T2,T3,T4> extends Function2<Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>> implements SemiGroup<Tuple4<T1,T2,T3,T4>> {
+      private final SemiGroup<T1> s1;
+      private final SemiGroup<T2> s2;
+      private final SemiGroup<T3> s3;
+      private final SemiGroup<T4> s4;
+      
+      protected Product4(SemiGroup<T1> s1, SemiGroup<T2> s2, SemiGroup<T3> s3, SemiGroup<T4> s4) {
+          this.s1 = s1;
+          this.s2 = s2;
+          this.s3 = s3;
+          this.s4 = s4;
+      }
+
+      @Override
+      public Tuple4<T1, T2, T3, T4> apply(Tuple4<T1, T2, T3, T4> t1, Tuple4<T1, T2, T3, T4> t2) {
+          return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)), s3.apply(Tuple.of(t1._3, t2._3)), s4.apply(Tuple.of(t1._4, t2._4)));
+      }
+    }
+  
     public static final SemiGroup<Integer> intSum = Monoids.intSum;
 
     public static final SemiGroup<Integer> intProduct = Monoids.intProduct;
@@ -143,11 +222,23 @@ public abstract class SemiGroups {
 
     public static final SemiGroup<Long> longProduct = Monoids.longProduct;
 
+    public static final SemiGroup<Double> doubleSum = Monoids.doubleSum;
+
+    public static final SemiGroup<Double> doubleProduct = Monoids.doubleProduct;
+    
     public static final SemiGroup<String> stringConcat = Monoids.stringConcat;
 
     public static final SemiGroup<Boolean> booleanConjunction = Monoids.booleanConjunction;
 
     public static final SemiGroup<Boolean> booleanDisjunction = Monoids.booleanDisjunction;
+    
+    public static final <T extends Comparable<T>> SemiGroup<T> max() {
+        return new Max<T>();
+    }
+    
+    public static final <T extends Comparable<T>> SemiGroup<T> min() {
+        return new Min<T>();
+    }
     
     public static final <T> SemiGroup<Set<T>> setUnion() {
         return Monoids.setUnion();
@@ -163,5 +254,17 @@ public abstract class SemiGroups {
     
     public static final <K,V> SemiGroup<Map<K,V>> mapCombine(SemiGroup<V> sg) {
         return new MapCombine<K, V>(sg);
+    }
+    
+    public static final <T1,T2> SemiGroup<Tuple2<T1,T2>> product(SemiGroup<T1> s1, SemiGroup<T2> s2) {
+        return new Product2<T1,T2>(s1, s2);
+    }
+    
+    public static final <T1,T2,T3> SemiGroup<Tuple3<T1,T2,T3>> product(SemiGroup<T1> s1, SemiGroup<T2> s2, SemiGroup<T3> s3) {
+        return new Product3<T1,T2,T3>(s1, s2, s3);
+    }
+    
+    public static final <T1,T2,T3,T4> SemiGroup<Tuple4<T1,T2,T3,T4>> product(SemiGroup<T1> s1, SemiGroup<T2> s2, SemiGroup<T3> s3, SemiGroup<T4> s4) {
+        return new Product4<T1,T2,T3,T4>(s1, s2, s3, s4);
     }
 }

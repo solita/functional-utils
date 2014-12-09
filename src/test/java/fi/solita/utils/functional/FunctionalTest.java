@@ -9,6 +9,7 @@ import static fi.solita.utils.functional.Functional.group;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
+import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Functional.reverse;
 import static fi.solita.utils.functional.Functional.size;
 import static fi.solita.utils.functional.Functional.take;
@@ -17,8 +18,11 @@ import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -161,5 +165,78 @@ public class FunctionalTest {
     @Test
     public void testDistinct() {
         assertEquals(newList(1,2,3,4), newList(distinct(newList(1,2,3,3,2,1,4))));
+    }
+    
+    @Test
+    public void traversalFusionByComposingMonoids() {
+        // lista, joka varmistaa että sen voi iteroida vain kerran
+        List<Double> list = listOf(1.0, 2.0, 3.0, 4.0);
+        
+        // tavallisesti lukujen summaamista varten löytyy kirjastoista jokin
+        // sum-funktio tähän tyyliin:
+        //
+        // int summa = sum(list);
+        //
+        // Jos abstraktiotaso olisi hieman korkeampi, niin tuossa tehtäisiin
+        // oikeasti listan redusointi summa-monoidilla.
+        
+        // näin laskettaisiin siis esim summa ja tulo normaalisti:
+        double summa = reduce(Monoids.doubleSum,     newList(list));
+        double tulo  = reduce(Monoids.doubleProduct, newList(list));
+        
+        // lukujen maksimi ei ole monoidi (koska ei järkevää nolla-arvoa)
+        // mutta mistä tahansa semigroupista voidaan tehdä monoidi tarjoamalla
+        // sopiva nolla-arvo:
+        Monoid<Double> maxMonoid = Monoids.of(SemiGroups.<Double>max(), Function.of(Double.MIN_VALUE));
+        double maximi = reduce(maxMonoid, newList(list));
+        
+        // listan pituus ei ole itsessään monoidi, mutta se voidaan laskea
+        // monoidina kuvaamalla lista ykkösiksi ja käyttämällä summa-monoidia:
+        int pituus = reduce(Monoids.intSum, map(Function.constant(1), newList(list)));
+        
+        // ja oikein siis menee:
+        assertEquals(10.0, summa, 0.1);
+        assertEquals(24.0, tulo, 0.1);
+        assertEquals(4, pituus);
+        assertEquals(4.0, maximi, 0.1);
+        
+        // entä jos lista on vaikka 2mrd numeroa, ja halutaan siis iteroida
+        // vain kerran?
+        
+        // muunnetaan lista numeroita listaksi Tupleja. Eli siis kukin
+        // listan alkio jaetaan moneen osaan kutakin haluttua tapausta varten:
+        Iterable<Tuple4<Double, Double, Integer, Double>> jaettu = map(toSuitableTuple /* d -> Tuple.of(d, d, 1, d) */, list);
+        
+        // nyt tarvitaan monoidi, joka osaa käsitellä nuo tuplet.
+        // Monoidien kompositio on myös monoidi (nimeltään product-monoid):
+        Monoid<Tuple4<Double,Double,Integer,Double>> productMonoid = Monoids.product(Monoids.doubleSum, Monoids.doubleProduct, Monoids.intSum, maxMonoid);
+        
+        // tehdään laskenta yhdessä iteraatiossa:
+        Tuple4<Double,Double,Integer,Double> sumProductLengthMax = reduce(productMonoid, jaettu);
+        
+        // ja tarkistus:
+        assertEquals(Double.valueOf(10.0), sumProductLengthMax._1);
+        assertEquals(Double.valueOf(24.0), sumProductLengthMax._2);
+        assertEquals(Integer.valueOf(4),   sumProductLengthMax._3);
+        assertEquals(Double.valueOf(4.0),  sumProductLengthMax._4);
+    }
+
+    private static final Apply<Double, Tuple4<Double, Double, Integer, Double>> toSuitableTuple = new Apply<Double,Tuple4<Double,Double,Integer,Double>>() {
+        public Tuple4<Double, Double, Integer, Double> apply(Double d) {
+            return Tuple.of(d, d, 1, d);
+        }
+    };
+    
+    private static <T> ArrayList<T> listOf(T... ts) {
+        return new ArrayList<T>(Arrays.asList(ts)) {
+            private boolean iterated = false;
+            public Iterator<T> iterator() {
+                if (iterated) {
+                    throw new UnsupportedOperationException("Already iterated!");
+                }
+                iterated = true;
+                return super.iterator();
+            }
+        };
     }
 }
