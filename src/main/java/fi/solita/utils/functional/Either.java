@@ -17,6 +17,10 @@ public final class Either<L,R> implements Serializable {
         return new Either<L, R>(Option.<L>None(), Some(right));
     }
     
+    public static final <T> T get(Either<? extends T, ? extends T> e) {
+        return e.isLeft() ? e.left.get() : e.right.get();
+    }
+    
     public static final <T> List<T> asList(Either<? extends T, ? extends T> either) {
         return newList(concat(either.left, either.right));
     }
