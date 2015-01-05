@@ -1,5 +1,8 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,5 +21,9 @@ public abstract class FunctionalM extends FunctionalImpl {
     
     public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,G> f, Iterable<T> xs) {
         return FunctionalImpl.groupBy(xs, f);
+    }
+    
+    public static final <K, V> Map<K, V> with(K key, V value, Map<? extends K, ? extends V> map) {
+        return newMap(concat(map.entrySet(), newList(Pair.of(key, value))));
     }
 }
