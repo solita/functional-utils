@@ -38,22 +38,22 @@ public class CompareExamples {
         Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by_1;
 
         List<Tuple2<String, Employee>> listOfTuples = newList();
-        sort(listOfTuples, by_1);
+        sort(by_1, listOfTuples);
         // Employee does not implement comparable, but we can first map to _2 and then to salary
-        sort(listOfTuples, Compare.by(Transformers.<Employee>_2().andThen(salary)));
+        sort(Compare.by(Transformers.<Employee>_2().andThen(salary)), listOfTuples);
         
         // sorted by the contents of an iterable
-        sort(Collections.<List<String>>newList(), Compare.<String>byIterable());
+        sort(Compare.<String>byIterable(), Collections.<List<String>>newList());
 
         // sorted by the contents of an Option
-        sort(Collections.<Option<String>>newList(), Compare.<String>byOption());
+        sort(Compare.<String>byOption(), Collections.<Option<String>>newList());
         
         // sorted by a function to an Option
-        sort(Collections.<Employee>newList(), Compare.byOption(name));
+        sort(Compare.byOption(name), Collections.<Employee>newList());
         
         // and the same with explicit comparators
-        sort(Collections.<List<Employee>>newList(), Compare.byIterable(Compare.by(salary)));
-        sort(Collections.<Option<Employee>>newList(), Compare.byOption(Compare.by(salary)));
-        sort(Collections.<Employee>newList(), Compare.byOption(name, Ordering.Natural()));
+        sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newList());
+        sort(Compare.byOption(Compare.by(salary)), Collections.<Option<Employee>>newList());
+        sort(Compare.byOption(name, Ordering.Natural()), Collections.<Employee>newList());
     }
 }

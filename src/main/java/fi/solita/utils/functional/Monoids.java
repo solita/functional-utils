@@ -14,7 +14,7 @@ public abstract class Monoids {
     
     public static final <T> Monoid<T> of(final SemiGroup<T> sg, final Function0<T> zero) {
         return new Monoid<T>() {
-            public T apply(Tuple2<T, T> t) {
+            public T apply(Map.Entry<T, T> t) {
                 return sg.apply(t);
             }
 

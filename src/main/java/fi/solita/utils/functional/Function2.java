@@ -1,9 +1,11 @@
 package fi.solita.utils.functional;
 
+import java.util.Map;
+
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,T2>, R> {
+public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<T1,T2>, R> {
 
     public abstract R apply(T1 t1, T2 t2);
     
@@ -18,11 +20,11 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Tuple2<T1,
     }
     
     @Override
-    public final Function1<Tuple2<T1, T2>, R> tuppled() {
-        return new Function1<Tuple2<T1, T2>, R>() {
+    public final Function1<Map.Entry<T1, T2>, R> tuppled() {
+        return new Function1<Map.Entry<T1, T2>, R>() {
             @Override
-            public R apply(Tuple2<T1, T2> t) {
-                return Function2.this.apply(t._1, t._2);
+            public R apply(Map.Entry<T1, T2> t) {
+                return Function2.this.apply(t.getKey(), t.getValue());
             }
         };
     }

@@ -50,7 +50,7 @@ public abstract class Transformers {
             if (source == null) {
                 return null;
             }
-            return Functional.mkString("", map(filter(it(source), not(whitespace)), toString));
+            return Functional.mkString("", map(toString, filter(not(whitespace), it(source))));
         }
     };
     
@@ -67,7 +67,7 @@ public abstract class Transformers {
           return new Transformer<Tuple, String>() {
               @Override
               public String transform(Tuple source) {
-                  return Functional.mkString(delim, map(source.toArray(), toString));
+                  return Functional.mkString(delim, map(toString, source.toArray()));
               }
           };
       }

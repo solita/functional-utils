@@ -4,6 +4,8 @@ import static fi.solita.utils.functional.Function._;
 import static fi.solita.utils.functional.Function.__;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 
+import java.util.Map;
+
 import org.junit.Test;
 
 public class FunctionExamples {
@@ -34,7 +36,7 @@ public class FunctionExamples {
         Function2<Integer, Integer, Integer> twoArg = mod;
         
         int applied = length.apply("foo");
-        Iterable<Integer> mappedOverFunction = map(newList("a", "aa"), f);
+        Iterable<Integer> mappedOverFunction = map(f, newList("a", "aa"));
         
         Function0<Integer> partiallyApplied = length.ap("foo");
         int result = partiallyApplied.apply();
@@ -53,7 +55,7 @@ public class FunctionExamples {
         
         // multi-param function can be views as a 1-arg function of a Tuple:
         Function2<Integer,Integer,Integer> m = mod;
-        Function1<Tuple2<Integer,Integer>,Integer> tuppled = m.tuppled();
+        Function1<Map.Entry<Integer,Integer>,Integer> tuppled = m.tuppled();
         
         Function2<Integer,Integer,Integer> twoArgFunction = mod;
         Function1<Integer,Function1<Integer,Integer>> curried = twoArgFunction.curried();

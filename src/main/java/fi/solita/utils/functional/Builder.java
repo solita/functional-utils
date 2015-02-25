@@ -34,13 +34,13 @@ public final class Builder<T> {
     }
 
     public final Builder<T> init(final T t) {
-        Map<Apply<? super T, ? extends Object>, Object> newValues = newMap(map(members, new Transformer<Apply<? super T,? extends Object>, Pair<Apply<? super T,? extends Object>,Object>>() {
+        Map<Apply<? super T, ? extends Object>, Object> newValues = newMap(map(new Transformer<Apply<? super T,? extends Object>, Pair<Apply<? super T,? extends Object>,Object>>() {
             @SuppressWarnings("unchecked")
             @Override
             public Pair<Apply<? super T,? extends Object>,Object> transform(Apply<? super T,? extends Object> source) {
                 return (Pair<Apply<? super T,? extends Object>,Object>)(Object)Pair.of(source, source.apply(t));
             }
-        }));
+        }, members));
         return new Builder<T>(newValues, members, constructor);
     }
 
@@ -61,7 +61,7 @@ public final class Builder<T> {
     }
 
     public final T build() throws IncompleteException {
-        return constructor.apply(Tuple.of(newArray(Object.class, map(members, new Transformer<Apply<? super T,? extends Object>,Object>() {
+        return constructor.apply(Tuple.of(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
             @Override
             public Object transform(Apply<? super T, ? extends Object> member) {
                 if (values.containsKey(member)) {
@@ -84,7 +84,7 @@ public final class Builder<T> {
                 }
                 throw new IncompleteException(member);
             }
-        }))));
+        }, members))));
     }
     
     public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<F1,T> constructor) {

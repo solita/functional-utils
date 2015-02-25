@@ -339,15 +339,8 @@ public abstract class Tuple implements Serializable {
     
     @Override
     public String toString() {
-        return "(" + mkString(",", map(toArray(), toString)) + ")";
+        return "(" + mkString(",", map(Transformers.toString, toArray())) + ")";
     }
-    
-    private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
-        @Override
-        public String transform(Object source) {
-            return source.toString();
-        }
-    };
     
     @Override
     public int hashCode() {

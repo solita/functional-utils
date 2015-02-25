@@ -1,14 +1,14 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.isEmpty;
+import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.span;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
-import static fi.solita.utils.functional.FunctionalImpl.forall;
-import static fi.solita.utils.functional.FunctionalImpl.map;
-import static fi.solita.utils.functional.FunctionalImpl.span;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -184,11 +184,11 @@ public abstract class Iterables {
         public Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
-                private final List<Iterator<T>> iterators = newList(map(elements, (Transformer<Iterable<T>,Iterator<T>>)(Object)toIterator));
+                private final List<Iterator<T>> iterators = newList(map((Transformer<Iterable<T>,Iterator<T>>)(Object)toIterator, elements));
                 
                 
                 public boolean hasNext() {
-                    return !iterators.isEmpty() && forall(iterators, hasNext);
+                    return !iterators.isEmpty() && forall(hasNext, iterators);
                 }
 
                 @SuppressWarnings("unchecked")
@@ -197,7 +197,7 @@ public abstract class Iterables {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
-                    return newList(map(iterators, (Transformer<Iterator<T>, T>)(Object)next));
+                    return newList(map((Transformer<Iterator<T>, T>)(Object)next, iterators));
                 }
 
                 
@@ -266,7 +266,7 @@ public abstract class Iterables {
         
         public Option<Long> sizeEstimate() {
             long s = 0;
-            for (Option<Long> size: map(elements, resolveSize)) {
+            for (Option<Long> size: map(resolveSize, elements)) {
                 if (size.isDefined()) {
                     s += size.get();
                 } else {
@@ -280,7 +280,7 @@ public abstract class Iterables {
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = Functional.map(elements, (Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator).iterator();
+                private final Iterator<Iterator<? extends T>> it = Functional.map((Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator, elements).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
@@ -762,14 +762,14 @@ public abstract class Iterables {
                         throw new NoSuchElementException();
                     }
                     final T first = head(remaining);
-                    Pair<Iterable<T>, Iterable<T>> span = span(remaining, new Predicate<T>() {
+                    Pair<Iterable<T>, Iterable<T>> s = span(new Predicate<T>() {
                         
                         public boolean accept(T candidate) {
                             return comparator.apply(Tuple.of(candidate, first));
                         }
-                    });
-                    remaining = span.right;
-                    return span.left;
+                    }, remaining);
+                    remaining = s.right;
+                    return s.left;
                 }
 
                 

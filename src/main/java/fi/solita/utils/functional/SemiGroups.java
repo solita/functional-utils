@@ -119,12 +119,12 @@ public abstract class SemiGroups {
           if (second instanceof Monoids.SetIntersection.AllContainingSet) {
               return first;
           }
-          return newSet(filter(first, new Predicate<T>() {
+          return newSet(filter(new Predicate<T>() {
               @Override
               public boolean accept(T candidate) {
                   return second.contains(candidate);
               }
-          }));
+          }, first));
       }
   }
   

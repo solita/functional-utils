@@ -18,10 +18,10 @@ public class MonoidExamples {
         // Longs (if assumed unbounded), Booleans and Strings are monoids,
         // but they do not have "default instances of Monoid typeclass" so we
         // must give one as a parameter.
-        long three = reduce(longs, Monoids.longSum);
-        long two = reduce(longs, Monoids.longProduct);
-        boolean notTrue = reduce(newList(true, false), Monoids.booleanConjunction);
-        String foobar = reduce(newList("foo", "bar"), Monoids.stringConcat);
+        long three = reduce(Monoids.longSum, longs);
+        long two = reduce(Monoids.longProduct, longs);
+        boolean notTrue = reduce(Monoids.booleanConjunction, newList(true, false));
+        String foobar = reduce(Monoids.stringConcat, newList("foo", "bar"));
         
         // For classes having a default (SemiGroup) instance,
         // no parameter is needed.
@@ -30,7 +30,7 @@ public class MonoidExamples {
         
         Map<String, Long> first = newMap();
         Map<String, Long> second = newMap();
-        Map<String, Long> valuesSummed = reduce(newList(first, second), Monoids.<String,Long>mapCombine(SemiGroups.longSum));
+        Map<String, Long> valuesSummed = reduce(Monoids.<String,Long>mapCombine(SemiGroups.longSum), newList(first, second));
     }
     
     static class Distance implements SemiGroup<Distance> {
@@ -40,8 +40,8 @@ public class MonoidExamples {
             this.meters = meters;
         }
 
-        public Distance apply(final Tuple2<Distance, Distance> t) {
-            return new Distance(t._1.meters + t._2.meters);
+        public Distance apply(final Map.Entry<Distance, Distance> t) {
+            return new Distance(t.getKey().meters + t.getValue().meters);
         }
     }
 }

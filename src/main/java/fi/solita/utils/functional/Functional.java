@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Collections.emptyList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 import fi.solita.utils.functional.Iterables.ZippingIterable;
@@ -16,27 +17,27 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.find(xs, predicate);
+        return FunctionalImpl.find(predicate, xs);
     }
 
     public static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.filter(xs, predicate);
+        return FunctionalImpl.filter(predicate, xs);
     }
     
     public static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<S> xs) {
-        return FunctionalImpl.map(xs, f);
+        return FunctionalImpl.map(f, xs);
     }
     
     public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Iterable<S> xs) {
-        return FunctionalImpl.map(xs, f1, f2);
+        return FunctionalImpl.map(f1, f2, xs);
     }
     
     public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Iterable<S> xs) {
-        return FunctionalImpl.map(xs, f1, f2, f3);
+        return FunctionalImpl.map(f1, f2, f3, xs);
     }
     
     public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Apply<? super S, T4> f4, Iterable<S> xs) {
-        return FunctionalImpl.map(xs, f1, f2, f3, f4);
+        return FunctionalImpl.map(f1, f2, f3, f4, xs);
     }
     
     public static final <F, A, B, FA extends F, FB extends F> FB fmap(Functor<F, A, B, FA, FB> functor, Apply<A,B> f, FA xs) {
@@ -56,7 +57,7 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<? extends T>> f, Iterable<S> xs) {
-        return FunctionalImpl.flatMap(xs, f);
+        return FunctionalImpl.flatMap(f, xs);
     }
 
     public static final <T> Iterable<T> flatten(Iterable<? extends Iterable<? extends T>> xs) {
@@ -64,15 +65,15 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T> void foreach(Apply<? super T, Void> procedure, Iterable<T> xs) {
-        FunctionalImpl.foreach(xs, procedure);
+        FunctionalImpl.foreach(procedure, xs);
     }
     
     public static final <T> void foreach(ApplyVoid<? super T> procedure, Iterable<T> xs) {
-        FunctionalImpl.foreach(xs, procedure);
+        FunctionalImpl.foreach(procedure, xs);
     }
 
     public static final <T> Iterable<List<T>> grouped(long groupSize, Iterable<T> xs) {
-        return FunctionalImpl.grouped(xs, groupSize);
+        return FunctionalImpl.grouped(groupSize, xs);
     }
     
     public static final <T> Iterable<Iterable<T>> group(Iterable<T> xs) {
@@ -80,7 +81,7 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T> Iterable<Iterable<T>> group(Apply<Tuple2<T,T>, Boolean> comparator, Iterable<T> xs) {
-        return FunctionalImpl.group(xs, comparator);
+        return FunctionalImpl.group(comparator, xs);
     }
     
     public static final <T> T head(Iterable<T> xs) {
@@ -116,15 +117,15 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T> Iterable<T> takeWhile(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.takeWhile(xs, predicate);
+        return FunctionalImpl.takeWhile(predicate, xs);
     }
     
     public static final <T> Iterable<T> dropWhile(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.dropWhile(xs, predicate);
+        return FunctionalImpl.dropWhile(predicate, xs);
     }
     
     public static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.span(xs, predicate);
+        return FunctionalImpl.span(predicate, xs);
     }
     
     public static final boolean isEmpty(Iterable<?> xs) {
@@ -136,15 +137,15 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <T> boolean contains(T candidate, Iterable<T> xs) {
-        return FunctionalImpl.exists(xs, Predicates.equalTo(candidate));
+        return FunctionalImpl.exists(Predicates.equalTo(candidate), xs);
     }
 
     public static final <T> boolean exists(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.exists(xs, predicate);
+        return FunctionalImpl.exists(predicate, xs);
     }
 
     public static final <T> boolean forall(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.forall(xs, predicate);
+        return FunctionalImpl.forall(predicate, xs);
     }
     
     public static final <T> Iterable<T> cons(T x, Iterable<? extends T> xs) {
@@ -160,7 +161,7 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T> Iterable<T> sort(Comparator<? super T> comparator, Iterable<T> xs) {
-        return FunctionalImpl.sort(xs, comparator);
+        return FunctionalImpl.sort(comparator, xs);
     }
     
     public static final <T extends SemiGroup<T>> Option<T> reduce(Iterable<? extends T> xs) {
@@ -168,15 +169,15 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T> T reduce(Monoid<T> m, Iterable<? extends T> xs) {
-        return FunctionalImpl.reduce(xs, m);
+        return FunctionalImpl.reduce(m, xs);
     }
     
-    public static final <T,Z> Z fold(Z zero, Apply<Tuple2<Z,T>, Z> f, Iterable<? extends T> xs) {
-        return FunctionalImpl.fold(zero, xs, f);
+    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<Z,T>, Z> f, Iterable<? extends T> xs) {
+        return FunctionalImpl.fold(zero, f, xs);
     }
     
-    public static final <T> Option<T> fold(Apply<Tuple2<T,T>, T> f, Iterable<? extends T> xs) {
-        return FunctionalImpl.fold(xs, f);
+    public static final <T> Option<T> fold(Apply<Map.Entry<T,T>, T> f, Iterable<? extends T> xs) {
+        return FunctionalImpl.fold(f, xs);
     }
 
     public static <T extends Comparable<T>> Option<T> min(Iterable<T> xs) {
@@ -238,7 +239,7 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static final <T,R> Iterable<R> sequence(T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
-        return FunctionalImpl.sequence(fs, value);
+        return FunctionalImpl.sequence(value, fs);
     }
     
     public static final <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> xs) {

@@ -34,7 +34,6 @@ import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.tail;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
-import static fi.solita.utils.functional.FunctionalA.flatten;
 import static fi.solita.utils.functional.FunctionalS.intersection;
 import static fi.solita.utils.functional.FunctionalS.product;
 import static fi.solita.utils.functional.FunctionalS.sum;

@@ -14,7 +14,6 @@ import static fi.solita.utils.functional.Functional.reverse;
 import static fi.solita.utils.functional.Functional.size;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.transpose;
-import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -107,12 +106,12 @@ public class FunctionalTest {
     public void testName() {
         @SuppressWarnings("unchecked")
         Iterable<Tuple2<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
-        Iterable<Iterable<String>> b = map(a, new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
+        Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
             @Override
             public Iterable<String> transform(Tuple2<Integer,String> source) {
                 return newList(source._2);
             }
-        });
+        }, a);
         Iterable<String> c = flatten(b);
         newList(c);
     }
@@ -127,10 +126,10 @@ public class FunctionalTest {
     @Test
     public void testGrouped() {
         assertEquals(emptyList(), newList(group(emptyList())));
-        assertEquals(newList("a"), newList(map(group("a"), Transformers.toString)));
-        assertEquals(newList("aaa"), newList(map(group("aaa"), Transformers.toString)));
+        assertEquals(newList("a"), newList(map(Transformers.toString, group("a"))));
+        assertEquals(newList("aaa"), newList(map(Transformers.toString, group("aaa"))));
         assertEquals(newList("M", "i", "ss", "i", "ss", "i", "pp", "i"),
-                     newList(map(group("Mississippi"), Transformers.toString)));
+                     newList(map(Transformers.toString, group("Mississippi"))));
     }
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {

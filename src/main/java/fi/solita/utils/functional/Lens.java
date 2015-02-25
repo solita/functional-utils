@@ -1,11 +1,13 @@
 package fi.solita.utils.functional;
 
+import java.util.Map;
+
 public final class Lens<T,F> {
     private final Apply<T, F> getter;
-    private final Apply<Tuple2<T, F>, T> setter;
+    private final Apply<Map.Entry<T, F>, T> setter;
     private final Builder<T> builder;
 
-    private Lens(Apply<T, F> getter, Apply<Tuple2<T, F>, T> setter, Builder<T> builder) {
+    private Lens(Apply<T, F> getter, Apply<Map.Entry<T, F>, T> setter, Builder<T> builder) {
         this.getter = getter;
         this.setter = setter;
         this.builder = builder;
@@ -39,11 +41,11 @@ public final class Lens<T,F> {
         builder);
     }
 
-    private static final <T,F> Apply<Tuple2<T,F>,T> setter(final Apply<T,F> field, final Builder<T> builder) {
-        return new Apply<Tuple2<T,F>, T>() {
-            public T apply(Tuple2<T, F> t) {
-                return builder.init(t._1)
-                              .with(field, t._2)
+    private static final <T,F> Apply<Map.Entry<T,F>,T> setter(final Apply<T,F> field, final Builder<T> builder) {
+        return new Apply<Map.Entry<T,F>, T>() {
+            public T apply(Map.Entry<T, F> t) {
+                return builder.init(t.getKey())
+                              .with(field, t.getValue())
                               .build();
             }
         };

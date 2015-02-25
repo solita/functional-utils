@@ -38,11 +38,11 @@ public abstract class FunctionalS extends FunctionalA {
     }
     
     public static final long product(int... xs) {
-        return product(map(newArray(xs), Transformers.int2long));
+        return product(map(Transformers.int2long, newArray(xs)));
     }
     
     public static final long product(short... xs) {
-        return product(map(newArray(xs), Transformers.short2long));
+        return product(map(Transformers.short2long, newArray(xs)));
     }
     
     
@@ -81,63 +81,63 @@ public abstract class FunctionalS extends FunctionalA {
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2) {
-        return reduce(Arrays.asList(e1, e2), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), Arrays.asList(e1, e2));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3) {
-        return reduce(Arrays.asList(e1, e2, e3), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), Arrays.asList(e1, e2, e3));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4) {
-        return reduce(Arrays.asList(e1, e2, e3, e4), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), Arrays.asList(e1, e2, e3, e4));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5) {
-        return reduce(Arrays.asList(e1, e2, e3, e4, e5), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), Arrays.asList(e1, e2, e3, e4, e5));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6) {
-        return reduce(Arrays.asList(e1, e2, e3, e4, e5, e6), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
-        return reduce(concat(Arrays.asList(e1, e2, e3, e4, e5, e6), Arrays.asList(es)), Monoids.<T>setUnion());
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), FunctionalImpl.concat(Arrays.asList(e1, e2, e3, e4, e5, e6), Arrays.asList(es)));
     }
     
     
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2) {
-        return reduce(Arrays.asList(e1, e2), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), Arrays.asList(e1, e2));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3) {
-        return reduce(Arrays.asList(e1, e2, e3), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), Arrays.asList(e1, e2, e3));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4) {
-        return reduce(Arrays.asList(e1, e2, e3, e4), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), Arrays.asList(e1, e2, e3, e4));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5) {
-        return reduce(Arrays.asList(e1, e2, e3, e4, e5), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), Arrays.asList(e1, e2, e3, e4, e5));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6) {
-        return reduce(Arrays.asList(e1, e2, e3, e4, e5, e6), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
-        return reduce(concat(Arrays.asList(e1, e2, e3, e4, e5, e6), Arrays.asList(es)), Monoids.<T>setIntersection());
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), FunctionalImpl.concat(Arrays.asList(e1, e2, e3, e4, e5, e6), Arrays.asList(es)));
     }
 }

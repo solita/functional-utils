@@ -39,12 +39,12 @@ public class SortTest {
     
     public void runSortOnce(int size, int firstToTake) {
         System.out.println("Testing for " + size + " elements");
-        List<TestClass> data = newList(map(range(1, size), new Transformer<Integer, TestClass>() {
+        List<TestClass> data = newList(map(new Transformer<Integer, TestClass>() {
             @Override
             public TestClass transform(Integer source) {
                 return new TestClass();
             }
-        }));
+        }, range(1, size)));
         
         long start = System.nanoTime();
         List<TestClass> regular = new ArrayList<TestClass>(data);
@@ -55,7 +55,7 @@ public class SortTest {
         System.out.println("Regular sort took " + ((end-start)/1000/1000) + " ms");
         
         start = System.nanoTime();
-        List<TestClass> lazy = newList(take(firstToTake, sort(data, Compare.by(accessor))));
+        List<TestClass> lazy = newList(take(firstToTake, sort(Compare.by(accessor), data)));
         end = System.nanoTime();
         
         System.out.println("Lazy sort took    " + ((end-start)/1000/1000) + " ms");

@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 import fi.solita.utils.functional.Iterables.ZippingIterable;
@@ -39,13 +40,13 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final Option<Character> find(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return FunctionalImpl.find(it(xs), predicate);
+        return FunctionalImpl.find(predicate, it(xs));
     }
     
     
     
     public static final CharSequence filter(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return it(FunctionalImpl.filter(it(xs), predicate));
+        return it(FunctionalImpl.filter(predicate, it(xs)));
     }
     
     public static final String filter(Apply<Character, Boolean> predicate, String xs) {
@@ -55,61 +56,61 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final <T> Iterable<T> map(Apply<Character, ? extends T> f, CharSequence xs) {
-        return FunctionalImpl.map(it(xs), f);
+        return FunctionalImpl.map(f, it(xs));
     }
     
     public static final <T1, T2> Iterable<Pair<T1,T2>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, CharSequence xs) {
-        return FunctionalImpl.map(it(xs), f1, f2);
+        return FunctionalImpl.map(f1, f2, it(xs));
     }
     
     public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, Apply<Character, T3> f3, CharSequence xs) {
-        return FunctionalImpl.map(it(xs), f1, f2, f3);
+        return FunctionalImpl.map(f1, f2, f3, it(xs));
     }
     
     public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, Apply<Character, T3> f3, Apply<Character, T4> f4, CharSequence xs) {
-        return FunctionalImpl.map(it(xs), f1, f2, f3, f4);
+        return FunctionalImpl.map(f1, f2, f3, f4, it(xs));
     }
     
     public static final <T> Iterable<T> flatMap(Apply<Character, ? extends Iterable<? extends T>> f, CharSequence xs) {
-        return FunctionalImpl.flatMap(it(xs), f);
+        return FunctionalImpl.flatMap(f, it(xs));
     }
     
     
     
     public static final void foreach(Apply<Character, Void> procedure, CharSequence xs) {
-        FunctionalImpl.foreach(it(xs), procedure);
+        FunctionalImpl.foreach(procedure, it(xs));
     }
     
     public static final void foreach(ApplyVoid<Character> procedure, CharSequence xs) {
-        FunctionalImpl.foreach(it(xs), procedure);
+        FunctionalImpl.foreach(procedure, it(xs));
     }
     
     
     
     public static final Iterable<CharSequence> grouped(long groupSize, CharSequence xs) {
-        return map(FunctionalImpl.grouped(it(xs), groupSize), iterable2charSeq);
+        return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.grouped(groupSize, it(xs)));
     }
     
     public static final Iterable<String> grouped(long groupSize, String xs) {
-        return map(grouped(groupSize, (CharSequence)xs), Transformers.toString);
+        return FunctionalImpl.map(Transformers.toString, grouped(groupSize, (CharSequence)xs));
     }
 
     
     
     public static final Iterable<CharSequence> group(CharSequence xs) {
-        return map(FunctionalImpl.group(it(xs)), iterable2charSeq);
+        return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(it(xs)));
     }
     
     public static final Iterable<String> group(String xs) {
-        return map(group((CharSequence)xs), Transformers.toString);
+        return FunctionalImpl.map(Transformers.toString, group((CharSequence)xs));
     }
     
     public static final <T> Iterable<CharSequence> group(Apply<Tuple2<Character,Character>, Boolean> comparator, CharSequence xs) {
-        return map(FunctionalImpl.group(it(xs), comparator), iterable2charSeq);
+        return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(comparator, it(xs)));
     }
     
     public static final <T> Iterable<String> group(Apply<Tuple2<Character,Character>, Boolean> comparator, String xs) {
-        return map(group(comparator, (CharSequence)xs), Transformers.toString);
+        return FunctionalImpl.map(Transformers.toString, group(comparator, (CharSequence)xs));
     }
     
     
@@ -183,7 +184,7 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final CharSequence takeWhile(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return it(FunctionalImpl.takeWhile(it(xs), predicate));
+        return it(FunctionalImpl.takeWhile(predicate, it(xs)));
     }
     
     public static final String takeWhile(Apply<Character, Boolean> predicate, String xs) {
@@ -193,7 +194,7 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final CharSequence dropWhile(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return it(FunctionalImpl.dropWhile(it(xs), predicate));
+        return it(FunctionalImpl.dropWhile(predicate, it(xs)));
     }
     
     public static final String dropWhile(Apply<Character, Boolean> predicate, String xs) {
@@ -231,7 +232,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final boolean contains(char candidate, CharSequence xs) {
-        return FunctionalImpl.exists(it(xs), Predicates.equalTo(candidate));
+        return FunctionalImpl.exists(Predicates.equalTo(candidate), it(xs));
     }
     
     public static final boolean contains(char candidate, String xs) {
@@ -239,17 +240,17 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final boolean exists(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return FunctionalImpl.exists(it(xs), predicate);
+        return FunctionalImpl.exists(predicate, it(xs));
     }
     
     public static final boolean forall(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return FunctionalImpl.forall(it(xs), predicate);
+        return FunctionalImpl.forall(predicate, it(xs));
     }
     
     
     
     public static final CharSequence cons(char x, CharSequence xs) {
-        return it(cons(x, it(xs)));
+        return it(FunctionalImpl.cons(x, it(xs)));
     }
     
     public static final String cons(char x, String xs) {
@@ -259,7 +260,7 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final CharSequence concat(CharSequence a, CharSequence b) {
-        return it(concat(it(a), it(b)));
+        return it(FunctionalImpl.concat(it(a), it(b)));
     }
     
     public static final String concat(String a, String b) {
@@ -277,7 +278,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final CharSequence sort(Comparator<Character> comparator, CharSequence xs) {
-        return it(FunctionalImpl.sort(it(xs), comparator));
+        return it(FunctionalImpl.sort(comparator, it(xs)));
     }
     
     public static final String sort(Comparator<Character> comparator, String xs) {
@@ -286,12 +287,12 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
-    public static final <Z> Z fold(Z zero, Apply<Tuple2<Z,Character>, Z> f, CharSequence xs) {
-        return FunctionalImpl.fold(zero, it(xs), f);
+    public static final <Z> Z fold(Z zero, Apply<Map.Entry<Z,Character>, Z> f, CharSequence xs) {
+        return FunctionalImpl.fold(zero, f, it(xs));
     }
     
-    public static final Option<Character> fold(Apply<Tuple2<Character,Character>, Character> f, CharSequence xs) {
-        return FunctionalImpl.fold(it(xs), f);
+    public static final Option<Character> fold(Apply<Map.Entry<Character,Character>, Character> f, CharSequence xs) {
+        return FunctionalImpl.fold(f, it(xs));
     }
     
     public static Option<Character> min(CharSequence xs) {
@@ -334,12 +335,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String mkString(CharSequence delimiter, CharSequence xs) {
-        return FunctionalImpl.mkString(delimiter, map(it(xs), new Transformer<Character,String>() {
-            @Override
-            public String transform(Character source) {
-                return source.toString();
-            }
-        }));
+        return FunctionalImpl.mkString(delimiter, FunctionalImpl.map(Transformers.toString, it(xs)));
     }
     
     
@@ -355,7 +351,7 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static CharSequence distinct(CharSequence xs) {
-        return filter(new DistinctPredicate<Character>(), xs);
+        return it(FunctionalImpl.distinct(it(xs)));
     }
     
     

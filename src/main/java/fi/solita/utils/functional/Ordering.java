@@ -3,6 +3,7 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Functional.reduce;
 
 import java.util.Comparator;
+import java.util.Map;
 
 public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> {
     
@@ -36,8 +37,8 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(java.util.Collections.reverseOrder(this));
     }
     
-    public final Ordering<T> apply(Tuple2<Ordering<T>,Ordering<T>> t) {
-        return of(Monoids.<T>comparatorConcat().apply(t._1, t._2));
+    public final Ordering<T> apply(Map.Entry<Ordering<T>,Ordering<T>> t) {
+        return of(Monoids.<T>comparatorConcat().apply(t.getKey(), t.getValue()));
     }
 
     public final Ordering<T> zero() {
