@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -116,6 +117,10 @@ public abstract class Collections {
     
     public static final <T> List<T> newList(T[] elements) {
         return newList(Arrays.asList(elements));
+    }
+    
+    public static final <T> List<T> newList(Enumeration<T> elements) {
+        return java.util.Collections.unmodifiableList(java.util.Collections.list(elements));
     }
     
     @SuppressWarnings("unchecked")
@@ -257,6 +262,10 @@ public abstract class Collections {
     
     public static final <T> Set<T> newSet(T[] elements) {
         return newSet(Arrays.asList(elements));
+    }
+    
+    public static final <T> Set<T> newSet(Enumeration<T> elements) {
+        return newSet(java.util.Collections.list(elements));
     }
     
     public static final <T> Set<T> newSet(T e1) {
