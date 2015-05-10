@@ -331,14 +331,14 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<Z,T>, Z> f, T[] xs) {
+    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, T[] xs) {
         return FunctionalImpl.fold(zero, f, Arrays.asList(xs));
     }
     
     /**
      * @return <i>None</i> if <i>elements</i> is empty
      */
-    public static final <T> Option<T> fold(Apply<Map.Entry<T,T>, T> f, T[] xs) {
+    public static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, T[] xs) {
         return FunctionalImpl.fold(f, Arrays.asList(xs));
     }
     

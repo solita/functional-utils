@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
 
-public abstract class Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> extends MultiParamFunction<Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>, R> {
+public abstract class Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> extends MultiParamFunction<Tuple8<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8>, R> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8);
 
@@ -15,10 +15,10 @@ public abstract class Function8<T1, T2, T3, T4, T5, T6, T7, T8, R> extends Multi
         };
     }
 
-    public final Function1<Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>, R> tuppled() {
-        return new Function1<Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>, R>() {
+    public final Function1<Tuple8<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8>, R> tuppled() {
+        return new Function1<Tuple8<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8>, R>() {
             @Override
-            public R apply(Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> t) {
+            public R apply(Tuple8<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8> t) {
                 return Function8.this.apply(t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8);
             }
         };

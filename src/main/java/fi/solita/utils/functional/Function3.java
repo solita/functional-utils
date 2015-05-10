@@ -4,7 +4,7 @@ import static fi.solita.utils.functional.Function._;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3<T1,T2,T3>, R> {
+public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3<? extends T1,? extends T2,? extends T3>, R> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3);
     
@@ -18,10 +18,10 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         };
     }
     
-    public final Function1<Tuple3<T1, T2, T3>, R> tuppled() { 
-        return new Function1<Tuple3<T1, T2, T3>, R>() {
+    public final Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R> tuppled() { 
+        return new Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R>() {
             @Override
-            public R apply(Tuple3<T1, T2, T3> t) {
+            public R apply(Tuple3<? extends T1, ? extends T2, ? extends T3> t) {
                 return Function3.this.apply(t._1, t._2, t._3);
             }
         };

@@ -40,7 +40,7 @@ public class MonoidExamples {
             this.meters = meters;
         }
 
-        public Distance apply(final Map.Entry<Distance, Distance> t) {
+        public Distance apply(final Map.Entry<? extends Distance, ? extends Distance> t) {
             return new Distance(t.getKey().meters + t.getValue().meters);
         }
     }

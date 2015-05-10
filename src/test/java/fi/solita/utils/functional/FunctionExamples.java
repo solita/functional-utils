@@ -4,7 +4,7 @@ import static fi.solita.utils.functional.Function._;
 import static fi.solita.utils.functional.Function.__;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class FunctionExamples {
         
         // multi-param function can be views as a 1-arg function of a Tuple:
         Function2<Integer,Integer,Integer> m = mod;
-        Function1<Map.Entry<Integer,Integer>,Integer> tuppled = m.tuppled();
+        Function1<Entry<? extends Integer, ? extends Integer>, Integer> tuppled = m.tuppled();
         
         Function2<Integer,Integer,Integer> twoArgFunction = mod;
         Function1<Integer,Function1<Integer,Integer>> curried = twoArgFunction.curried();

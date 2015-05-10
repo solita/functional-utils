@@ -37,7 +37,7 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(java.util.Collections.reverseOrder(this));
     }
     
-    public final Ordering<T> apply(Map.Entry<Ordering<T>,Ordering<T>> t) {
+    public final Ordering<T> apply(Map.Entry<? extends Ordering<T>,? extends Ordering<T>> t) {
         return of(Monoids.<T>comparatorConcat().apply(t.getKey(), t.getValue()));
     }
 

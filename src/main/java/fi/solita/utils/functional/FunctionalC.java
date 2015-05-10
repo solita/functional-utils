@@ -287,11 +287,11 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
-    public static final <Z> Z fold(Z zero, Apply<Map.Entry<Z,Character>, Z> f, CharSequence xs) {
+    public static final <Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends Character>, Z> f, CharSequence xs) {
         return FunctionalImpl.fold(zero, f, it(xs));
     }
     
-    public static final Option<Character> fold(Apply<Map.Entry<Character,Character>, Character> f, CharSequence xs) {
+    public static final Option<Character> fold(Apply<Map.Entry<? extends Character,? extends Character>, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     

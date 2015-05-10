@@ -50,11 +50,11 @@ public abstract class Compare {
         };
     }
     
-    public static final <S, T extends Comparable<T>> Ordering<S> byOption(final Apply<? super S, Option<T>> f) {
+    public static final <S, T extends Comparable<T>> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f) {
         return byOption(f, Ordering.Natural());
     }
     
-    public static final <S, T> Ordering<S> byOption(final Apply<? super S, Option<T>> f, final Comparator<? super T> c) {
+    public static final <S, T> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f, final Comparator<? super T> c) {
         return by(f, Compare.<T>byOption(c));
     }
     

@@ -357,7 +357,7 @@ final class FunctionalImpl {
         return fold(m, cons(m.zero(), xs)).get();
     }
     
-    static final <T,Z> Z fold(Z zero, Apply<Map.Entry<Z,T>, Z> f, Iterable<? extends T> xs) {
+    static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
         Z ret = zero;
         for (T t : xs) {
             ret = f.apply(Tuple.of(ret, t));
@@ -368,7 +368,7 @@ final class FunctionalImpl {
     /**
      * @return <i>None</i> if <i>elements</i> is empty
      */
-    static final <T> Option<T> fold(Apply<Map.Entry<T,T>, T> f, Iterable<? extends T> xs) {
+    static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, Iterable<? extends T> xs) {
         Option<? extends T> h = headOption(xs);
         if (h.isDefined()) {
             T ret = h.get();
@@ -403,7 +403,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return Some(fold(head(xs), (Apply<Map.Entry<T,T>,T>)(Object)smaller, tail(xs)));
+        return Some(fold(head(xs), (Apply<Map.Entry<? extends T,? extends T>,T>)(Object)smaller, tail(xs)));
     }
     
     @SuppressWarnings("rawtypes")
@@ -429,7 +429,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return Some(fold(head(xs), (Apply<Map.Entry<T,T>,T>)(Object)bigger, tail(xs)));
+        return Some(fold(head(xs), (Apply<Map.Entry<? extends T,? extends T>,T>)(Object)bigger, tail(xs)));
     }
     
     static <A,B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, Iterable<B> b) {

@@ -172,11 +172,11 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.reduce(m, xs);
     }
     
-    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<Z,T>, Z> f, Iterable<? extends T> xs) {
+    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(zero, f, xs);
     }
     
-    public static final <T> Option<T> fold(Apply<Map.Entry<T,T>, T> f, Iterable<? extends T> xs) {
+    public static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(f, xs);
     }
 

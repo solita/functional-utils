@@ -4,10 +4,10 @@ import java.util.Map;
 
 public final class Lens<T,F> {
     private final Apply<T, F> getter;
-    private final Apply<Map.Entry<T, F>, T> setter;
+    private final Apply<Map.Entry<? extends T, ? extends F>, T> setter;
     private final Builder<T> builder;
 
-    private Lens(Apply<T, F> getter, Apply<Map.Entry<T, F>, T> setter, Builder<T> builder) {
+    private Lens(Apply<T, F> getter, Apply<Map.Entry<? extends T, ? extends F>, T> setter, Builder<T> builder) {
         this.getter = getter;
         this.setter = setter;
         this.builder = builder;
@@ -41,9 +41,9 @@ public final class Lens<T,F> {
         builder);
     }
 
-    private static final <T,F> Apply<Map.Entry<T,F>,T> setter(final Apply<T,F> field, final Builder<T> builder) {
-        return new Apply<Map.Entry<T,F>, T>() {
-            public T apply(Map.Entry<T, F> t) {
+    private static final <T,F> Apply<Map.Entry<? extends T,? extends F>,T> setter(final Apply<T,F> field, final Builder<T> builder) {
+        return new Apply<Map.Entry<? extends T,? extends F>, T>() {
+            public T apply(Map.Entry<? extends T, ? extends F> t) {
                 return builder.init(t.getKey())
                               .with(field, t.getValue())
                               .build();
