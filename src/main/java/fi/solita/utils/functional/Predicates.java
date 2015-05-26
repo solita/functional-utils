@@ -66,6 +66,15 @@ public abstract class Predicates {
     
     public static final Predicate<Integer> odd = not(even);
 
+    public static final <T> Predicate<T> instanceOf(final Class<? extends T> c) {
+        return new Predicate<T>() {
+            @Override
+            public boolean accept(T candidate) {
+                return c.isInstance(candidate);
+            }
+        };
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <E, T extends Iterable<E>> Predicate<T> empty() {
         return (Predicate<T>) Impl.empty;

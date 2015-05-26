@@ -87,20 +87,20 @@ public final class Builder<T> {
         }, members))));
     }
     
-    public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<F1,T> constructor) {
+    public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<? extends F1,T> constructor) {
         return newBuilder(Tuple.asList(members), Function.of(constructor).tuppled());
     }
 
     public static <T,F1,F2> Builder<T> of(
             Tuple2<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>> members, Apply<Tuple2<F1,F2>,T> constructor) {
+                   ? extends Apply<? super T,F2>> members, Apply<? extends Tuple2<? extends F1,? extends F2>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
     public static <T,F1,F2,F3> Builder<T> of(
             Tuple3<? extends Apply<? super T,F1>,
                    ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>> members, Apply<Tuple3<F1,F2,F3>,T> constructor) {
+                   ? extends Apply<? super T,F3>> members, Apply<? extends Tuple3<? extends F1,? extends F2,? extends F3>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -108,7 +108,7 @@ public final class Builder<T> {
             Tuple4<? extends Apply<? super T,F1>,
                    ? extends Apply<? super T,F2>,
                    ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>> members, Apply<Tuple4<F1,F2,F3,F4>,T> constructor) {
+                   ? extends Apply<? super T,F4>> members, Apply<? extends Tuple4<? extends F1,? extends F2,? extends F3,? extends F4>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -117,7 +117,7 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F2>,
                    ? extends Apply<? super T,F3>,
                    ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>> members, Apply<Tuple5<F1,F2,F3,F4,F5>,T> constructor) {
+                   ? extends Apply<? super T,F5>> members, Apply<? extends Tuple5<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -127,7 +127,7 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F3>,
                    ? extends Apply<? super T,F4>,
                    ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>> members, Apply<Tuple6<F1,F2,F3,F4,F5,F6>,T> constructor) {
+                   ? extends Apply<? super T,F6>> members, Apply<? extends Tuple6<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -138,7 +138,7 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F4>,
                    ? extends Apply<? super T,F5>,
                    ? extends Apply<? super T,F6>,
-                   ? extends Apply<? super T,F7>> members, Apply<Tuple7<F1,F2,F3,F4,F5,F6,F7>,T> constructor) {
+                   ? extends Apply<? super T,F7>> members, Apply<? extends Tuple7<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -150,7 +150,7 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F5>,
                    ? extends Apply<? super T,F6>,
                    ? extends Apply<? super T,F7>,
-                   ? extends Apply<? super T,F8>> members, Apply<Tuple8<F1,F2,F3,F4,F5,F6,F7,F8>,T> constructor) {
+                   ? extends Apply<? super T,F8>> members, Apply<? extends Tuple8<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -163,7 +163,7 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F6>,
                    ? extends Apply<? super T,F7>,
                    ? extends Apply<? super T,F8>,
-                   ? extends Apply<? super T,F9>> members, Apply<Tuple9<F1,F2,F3,F4,F5,F6,F7,F8,F9>,T> constructor) {
+                   ? extends Apply<? super T,F9>> members, Apply<? extends Tuple9<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -177,7 +177,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F7>,
                     ? extends Apply<? super T,F8>,
                     ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>> members, Apply<Tuple10<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10>,T> constructor) {
+                    ? extends Apply<? super T,F10>> members, Apply<? extends Tuple10<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -192,7 +192,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F8>,
                     ? extends Apply<? super T,F9>,
                     ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>> members, Apply<Tuple11<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11>,T> constructor) {
+                    ? extends Apply<? super T,F11>> members, Apply<? extends Tuple11<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -208,7 +208,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F9>,
                     ? extends Apply<? super T,F10>,
                     ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>> members, Apply<Tuple12<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12>,T> constructor) {
+                    ? extends Apply<? super T,F12>> members, Apply<? extends Tuple12<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -225,7 +225,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F10>,
                     ? extends Apply<? super T,F11>,
                     ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>> members, Apply<Tuple13<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13>,T> constructor) {
+                    ? extends Apply<? super T,F13>> members, Apply<? extends Tuple13<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -243,7 +243,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F11>,
                     ? extends Apply<? super T,F12>,
                     ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>> members, Apply<Tuple14<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14>,T> constructor) {
+                    ? extends Apply<? super T,F14>> members, Apply<? extends Tuple14<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -262,7 +262,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F12>,
                     ? extends Apply<? super T,F13>,
                     ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>> members, Apply<Tuple15<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15>,T> constructor) {
+                    ? extends Apply<? super T,F15>> members, Apply<? extends Tuple15<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -282,7 +282,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F13>,
                     ? extends Apply<? super T,F14>,
                     ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>> members, Apply<Tuple16<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16>,T> constructor) {
+                    ? extends Apply<? super T,F16>> members, Apply<? extends Tuple16<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -303,7 +303,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F14>,
                     ? extends Apply<? super T,F15>,
                     ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>> members, Apply<Tuple17<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17>,T> constructor) {
+                    ? extends Apply<? super T,F17>> members, Apply<? extends Tuple17<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -325,7 +325,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F15>,
                     ? extends Apply<? super T,F16>,
                     ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>> members, Apply<Tuple18<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18>,T> constructor) {
+                    ? extends Apply<? super T,F18>> members, Apply<? extends Tuple18<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17,? extends F18>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -348,7 +348,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F16>,
                     ? extends Apply<? super T,F17>,
                     ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>> members, Apply<Tuple19<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19>,T> constructor) {
+                    ? extends Apply<? super T,F19>> members, Apply<? extends Tuple19<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17,? extends F18,? extends F19>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -372,7 +372,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F17>,
                     ? extends Apply<? super T,F18>,
                     ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>> members, Apply<Tuple20<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20>,T> constructor) {
+                    ? extends Apply<? super T,F20>> members, Apply<? extends Tuple20<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17,? extends F18,? extends F19,? extends F20>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -397,7 +397,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F18>,
                     ? extends Apply<? super T,F19>,
                     ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>> members, Apply<Tuple21<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21>,T> constructor) {
+                    ? extends Apply<? super T,F21>> members, Apply<? extends Tuple21<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17,? extends F18,? extends F19,? extends F20,? extends F21>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
@@ -423,7 +423,7 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F19>,
                     ? extends Apply<? super T,F20>,
                     ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>> members, Apply<Tuple22<F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22>,T> constructor) {
+                    ? extends Apply<? super T,F22>> members, Apply<? extends Tuple22<? extends F1,? extends F2,? extends F3,? extends F4,? extends F5,? extends F6,? extends F7,? extends F8,? extends F9,? extends F10,? extends F11,? extends F12,? extends F13,? extends F14,? extends F15,? extends F16,? extends F17,? extends F18,? extends F19,? extends F20,? extends F21,? extends F22>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
 }
