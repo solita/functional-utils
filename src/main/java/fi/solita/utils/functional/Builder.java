@@ -29,8 +29,9 @@ public final class Builder<T> {
         this.constructor = (Apply<Tuple, T>) constructor;
     }
     
-    private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
-        return new Builder<T>(Collections.<Apply<? super T, ? extends Object>,Object>emptyMap(), members, constructor);
+    @SuppressWarnings("unchecked")
+    private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
+        return new Builder<T>(Collections.<Apply<? super T, ? extends Object>,Object>emptyMap(), members, (Apply<? extends Tuple, T>) constructor);
     }
 
     public final Builder<T> init(final T t) {
@@ -93,7 +94,7 @@ public final class Builder<T> {
 
     public static <T,F1,F2> Builder<T> of(
             Tuple2<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>> members, Apply<? extends Tuple2<? extends F1,? extends F2>,T> constructor) {
+                   ? extends Apply<? super T,F2>> members, Apply<? extends Map.Entry<? extends F1,? extends F2>,T> constructor) {
         return newBuilder(Tuple.asList(members), constructor);
     }
     
