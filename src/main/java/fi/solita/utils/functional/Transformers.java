@@ -150,26 +150,34 @@ public abstract class Transformers {
         }
     };
     
-    private static final Transformer<Pair<?,?>,?> left = new Transformer<Pair<?,?>,Object>() {
+    private static final Transformer<Map.Entry<?,?>,?> left = new Transformer<Map.Entry<?,?>,Object>() {
         @Override
-        public Object transform(Pair<?,?> source) {
-            return source.left;
+        public Object transform(Map.Entry<?,?> source) {
+            return source.getKey();
         }
     };
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Pair<T,?>,T> left() {
-        return (Transformer<Pair<T,?>,T>)(Object)left;
+    public static final <T> Transformer<Map.Entry<T,?>,T> left() {
+        return (Transformer<Map.Entry<T,?>,T>)(Object)left;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <K,V> Transformer<Map.Entry<K,V>,K> key() {
+        return (Transformer<Map.Entry<K,V>,K>)(Object)left;
     }
     
-    private static final Transformer<Pair<?,?>,?> right = new Transformer<Pair<?,?>,Object>() {
+    private static final Transformer<Map.Entry<?,?>,?> right = new Transformer<Map.Entry<?,?>,Object>() {
         @Override
-        public Object transform(Pair<?,?> source) {
-            return source.right;
+        public Object transform(Map.Entry<?,?> source) {
+            return source.getValue();
         }
     };
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Pair<?,T>,T> right() {
-        return (Transformer<Pair<?,T>,T>)(Object)right;
+    public static final <T> Transformer<Map.Entry<?,T>,T> right() {
+        return (Transformer<Map.Entry<?,T>,T>)(Object)right;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <K,V> Transformer<Map.Entry<K,V>,V> value() {
+        return (Transformer<Map.Entry<K,V>,V>)(Object)right;
     }
     
     private static final Transformer<Either<?,?>,Option<?>> eitherLeft = new Transformer<Either<?,?>,Option<?>>() {
