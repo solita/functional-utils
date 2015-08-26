@@ -43,6 +43,16 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
+    public final Function2<T2,T1,R> swap() {
+        final Function2<T1, T2, R> self = this;
+        return new Function2<T2,T1,R>() {
+            @Override
+            public R apply(T2 t2, T1 t1) {
+                return self.apply(t1, t2);
+            }
+        };
+    }
+    
     public final Function1<T2,R> ap(final T1 t) {
         return new Function1<T2,R>() {
             @Override
