@@ -205,6 +205,15 @@ public abstract class Transformers {
         return (Transformer<Option<T>,T>)(Object)get;
     }
     
+    public static final <T> Transformer<Option<T>,T> getOrElse(final T elseValue) {
+        return new Transformer<Option<T>,T>() {
+            @Override
+            public T transform(Option<T> source) {
+                return source.getOrElse(elseValue);
+            }
+        };
+    }
+    
     public static final Transformer<String,Iterable<Character>> it = new Transformer<String,Iterable<Character>>() {
         @Override
         public Iterable<Character> transform(String source) {
