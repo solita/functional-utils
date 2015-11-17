@@ -51,6 +51,18 @@ public class Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, t);
     }
     
+    public <A1,A2> Tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,A1,A2> join(Tuple2<A1,A2> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, t._1, t._2);
+    }
+    
+    public <A1,A2,A3> Tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,A1,A2,A3> join(Tuple3<A1,A2,A3> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, t._1, t._2, t._3);
+    }
+    
+    public <A1,A2,A3,A4> Tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,A1,A2,A3,A4> join(Tuple4<A1,A2,A3,A4> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, t._1, t._2, t._3, t._4);
+    }
+    
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }

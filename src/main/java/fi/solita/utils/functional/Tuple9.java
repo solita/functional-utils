@@ -33,6 +33,54 @@ public class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> extends Tuple implements
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t);
     }
     
+    public <A1,A2> Tuple11<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2> join(Tuple2<A1,A2> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2);
+    }
+    
+    public <A1,A2,A3> Tuple12<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3> join(Tuple3<A1,A2,A3> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3);
+    }
+    
+    public <A1,A2,A3,A4> Tuple13<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4> join(Tuple4<A1,A2,A3,A4> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4);
+    }
+    
+    public <A1,A2,A3,A4,A5> Tuple14<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5> join(Tuple5<A1,A2,A3,A4,A5> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6> Tuple15<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6> join(Tuple6<A1,A2,A3,A4,A5,A6> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7> Tuple16<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7> join(Tuple7<A1,A2,A3,A4,A5,A6,A7> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7);
+    }
+
+    public <A1,A2,A3,A4,A5,A6,A7,A8> Tuple17<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8> join(Tuple8<A1,A2,A3,A4,A5,A6,A7,A8> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9> Tuple18<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8,A9> join(Tuple9<A1,A2,A3,A4,A5,A6,A7,A8,A9> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10> Tuple19<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10> join(Tuple10<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11> Tuple20<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11> join(Tuple11<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12> Tuple21<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12> join(Tuple12<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13> Tuple22<T1,T2,T3,T4,T5,T6,T7,T8,T9,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13> join(Tuple13<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13);
+    }
+    
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }
