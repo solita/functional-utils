@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public abstract class Collections {
     
@@ -24,6 +27,10 @@ public abstract class Collections {
     
     public static final <T> Set<T> emptySet() {
         return java.util.Collections.emptySet();
+    }
+    
+    public static final <T> SortedSet<T> emptySortedSet() {
+        return java.util.Collections.unmodifiableSortedSet(new TreeSet<T>());
     }
     
     public static final <K,V> Map<K,V> emptyMap() {
@@ -49,6 +56,14 @@ public abstract class Collections {
     
     public static final <T> Set<T> newSet() {
         return new HashSet<T>();
+    }
+    
+    public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet() {
+        return new TreeSet<T>();
+    }
+    
+    public static final <T> SortedSet<T> newSortedSet(Comparator<T> comparator) {
+        return new TreeSet<T>(comparator);
     }
 
     public static final <K, V> Map<K, V> newMap() {
@@ -372,7 +387,14 @@ public abstract class Collections {
         return newSet(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21), elements));
     }
     
+    private static final Class<?> unmodifiableListClass = java.util.Collections.unmodifiableList(emptyList()).getClass();
+    private static final Class<?> unmodifiableSetClass = java.util.Collections.unmodifiableSet(emptySet()).getClass();
+    private static final Class<?> unmodifiableSortedSetClass = java.util.Collections.unmodifiableSortedSet(emptySortedSet()).getClass();
+    
     public static final <T> List<T> newList(Iterable<T> elements) {
+        if (unmodifiableListClass.isInstance(elements)) {
+            return (List<T>)elements;
+        }
         List<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newListOfSize(size);
@@ -392,6 +414,9 @@ public abstract class Collections {
     }
 
     public static final <T> Set<T> newSet(Iterable<T> elements) {
+        if (unmodifiableSetClass.isInstance(elements)) {
+            return (Set<T>)elements;
+        }
         Set<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newSetOfSize((int)(size*1.5));
@@ -407,6 +432,36 @@ public abstract class Collections {
             }
         }
         return java.util.Collections.unmodifiableSet(ret);
+    }
+    
+    public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet(Iterable<T> elements) {
+        if (unmodifiableSortedSetClass.isInstance(elements)) {
+            return (SortedSet<T>)elements;
+        }
+        SortedSet<T> ret = newSortedSet();
+        if (elements instanceof Collection) {
+            ret.addAll((Collection<? extends T>) elements);
+        } else {
+            for (T t: elements) {
+                ret.add(t);
+            }
+        }
+        return java.util.Collections.unmodifiableSortedSet(ret);
+    }
+    
+    public static final <T> SortedSet<T> newSortedSet(Comparator<T> comparator, Iterable<T> elements) {
+        if (unmodifiableSortedSetClass.isInstance(elements)) {
+            return (SortedSet<T>)elements;
+        }
+        SortedSet<T> ret = newSortedSet(comparator);
+        if (elements instanceof Collection) {
+            ret.addAll((Collection<? extends T>) elements);
+        } else {
+            for (T t: elements) {
+                ret.add(t);
+            }
+        }
+        return java.util.Collections.unmodifiableSortedSet(ret);
     }
 
     public static final <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
