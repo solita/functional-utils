@@ -11,6 +11,7 @@ import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -743,5 +744,13 @@ public abstract class Collections {
     
     public static final CharSequence it(Iterable<Character> xs) {
         return new Iterables.MemoizingCharSequenceIterable(xs);
+    }
+    
+    public static final <T> Iterable<T> lazily(final Supplier<Iterable<T>> s) {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                return s.apply().iterator();
+            }
+        };
     }
 }
