@@ -156,7 +156,7 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.concat(a, b);
     }
 
-    public static final <T extends Comparable<T>> Iterable<T> sort(Iterable<T> xs) {
+    public static final <T extends Comparable<? super T>> Iterable<T> sort(Iterable<T> xs) {
         return FunctionalImpl.sort(xs);
     }
     

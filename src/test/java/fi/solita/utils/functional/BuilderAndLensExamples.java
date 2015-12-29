@@ -54,9 +54,9 @@ class Employee_ {
     public static final Tuple3<Apply<Employee,String>,Apply<Employee,Option<Integer>>,Apply<Employee,Department>> $Fields() {
         return Tuple.of(name, salary, department);
     }
-    public static final Apply<Tuple3<String, Option<Integer>, Department>, Employee> $ = new Apply<Tuple3<String,Option<Integer>,Department>, Employee>() {
-        public Employee apply(Tuple3<String, Option<Integer>, Department> t) {
-            return new Employee(t._1, t._2, t._3);
+    public static final Function3<String, Option<Integer>, Department, Employee> $ = new Function3<String,Option<Integer>,Department,Employee>() {
+        public Employee apply(String t1, Option<Integer> t2, Department t3) {
+            return new Employee(t1, t2, t3);
         }
     };
     public static final Apply<Employee, String> name = new Apply<Employee, String>() {

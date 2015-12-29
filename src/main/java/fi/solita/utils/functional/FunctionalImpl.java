@@ -335,7 +335,7 @@ final class FunctionalImpl {
         return !exists(Predicates.not(predicate), xs);
     }
     
-    static <T extends Comparable<T>> Iterable<T> sort(Iterable<T> xs) {
+    static <T extends Comparable<? super T>> Iterable<T> sort(Iterable<T> xs) {
         return sort(Ordering.Natural(), xs);
     }
     

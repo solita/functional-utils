@@ -2,7 +2,6 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Functional.filter;
-import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Map;
@@ -50,7 +49,7 @@ public abstract class Transformers {
             if (source == null) {
                 return null;
             }
-            return Functional.mkString("", map(toString, filter(not(whitespace), it(source))));
+            return Functional.mkString("", Functional.map(toString, filter(not(whitespace), it(source))));
         }
     };
     
@@ -67,12 +66,12 @@ public abstract class Transformers {
           return new Transformer<Tuple, String>() {
               @Override
               public String transform(Tuple source) {
-                  return Functional.mkString(delim, map(toString, source.toArray()));
+                  return Functional.mkString(delim, Functional.map(toString, source.toArray()));
               }
           };
       }
 
-    public static final <T> Transformer<String, String> prefix(final int chars) {
+    public static final Transformer<String, String> prefix(final int chars) {
         if (chars <= 0) {
             throw new IllegalArgumentException("chars must be >= 1");
         }
@@ -238,6 +237,15 @@ public abstract class Transformers {
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Iterable<T>,T> head() {
         return (Transformer<Iterable<T>,T>)(Object)head;
+    }
+    
+    public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> map(final Apply<? super T, R> f) {
+        return new Transformer<Iterable<? extends T>,Iterable<R>>() {
+            @Override
+            public Iterable<R> transform(Iterable<? extends T> source) {
+                return Functional.map(f, source);
+            }
+        };
     }
     
     public static final Transformer<Iterable<?>, Long> size = new Transformer<Iterable<?>,Long>() {
