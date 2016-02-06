@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public abstract class Collections {
@@ -36,6 +38,10 @@ public abstract class Collections {
     
     public static final <K,V> Map<K,V> emptyMap() {
         return java.util.Collections.emptyMap();
+    }
+    
+    public static final <K,V> SortedMap<K,V> emptySortedMap() {
+        return java.util.Collections.unmodifiableSortedMap(new TreeMap<K, V>());
     }
     
     public static final <T> Collection<T> emptyCollection() {
@@ -69,6 +75,14 @@ public abstract class Collections {
 
     public static final <K, V> Map<K, V> newMap() {
         return new HashMap<K, V>();
+    }
+    
+    public static final <K extends Comparable<? super K>,V> SortedMap<K,V> newSortedMap() {
+        return new TreeMap<K,V>();
+    }
+    
+    public static final <K,V> SortedMap<K,V> newSortedMap(Comparator<K> comparator) {
+        return new TreeMap<K,V>(comparator);
     }
     
     public static final <T> Queue<T> newQueue() {
@@ -391,6 +405,7 @@ public abstract class Collections {
     private static final Class<?> unmodifiableListClass = java.util.Collections.unmodifiableList(emptyList()).getClass();
     private static final Class<?> unmodifiableSetClass = java.util.Collections.unmodifiableSet(emptySet()).getClass();
     private static final Class<?> unmodifiableSortedSetClass = java.util.Collections.unmodifiableSortedSet(emptySortedSet()).getClass();
+    private static final Class<?> unmodifiableSortedMapClass = java.util.Collections.unmodifiableSortedMap(emptySortedMap()).getClass();
     
     public static final <T> List<T> newList(Iterable<T> elements) {
         if (unmodifiableListClass.isInstance(elements)) {
@@ -477,6 +492,21 @@ public abstract class Collections {
             ret.put(e.getKey(), e.getValue());
         }
         return java.util.Collections.unmodifiableMap(ret);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <K, V> SortedMap<K, V> newSortedMap(Comparator<K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        if (elements == null) {
+            return null;
+        }
+        if (unmodifiableSortedMapClass.isInstance(elements)) {
+            return (SortedMap<K,V>)elements;
+        }
+        SortedMap<K, V> ret = newSortedMap(comparator);
+        for (Map.Entry<? extends K, ? extends V> e: elements) {
+            ret.put(e.getKey(), e.getValue());
+        }
+        return java.util.Collections.unmodifiableSortedMap(ret);
     }
     
     @SuppressWarnings("unchecked")
