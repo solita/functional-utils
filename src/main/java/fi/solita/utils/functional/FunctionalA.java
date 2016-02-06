@@ -27,6 +27,12 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
+    public static final <T> Iterable<T> remove(T toRemove, T[] xs) {
+        return FunctionalImpl.remove(toRemove, Arrays.asList(xs));
+    }
+    
+    
+    
     public static final <T> Option<T> find(Apply<? super T, Boolean> predicate, T[] xs) {
         return FunctionalImpl.find(predicate, Arrays.asList(xs));
     }

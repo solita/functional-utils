@@ -6,6 +6,8 @@ import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.equalTo;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,6 +39,10 @@ final class FunctionalImpl {
                 return !b.contains(object);
             }
         }, a);
+    }
+    
+    static <T> Iterable<T> remove(T toRemove, Iterable<T> xs) {
+        return filter(not(equalTo(toRemove)), xs);
     }
     
     static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<T> xs) {

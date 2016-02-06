@@ -15,6 +15,10 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Iterable<T> subtract(Iterable<? extends T> a, final Collection<? extends T> b) {
         return FunctionalImpl.subtract(a, b);
     }
+    
+    public static final <T> Iterable<T> remove(T toRemove, Iterable<T> xs) {
+        return FunctionalImpl.remove(toRemove, xs);
+    }
 
     public static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
         return FunctionalImpl.find(predicate, xs);

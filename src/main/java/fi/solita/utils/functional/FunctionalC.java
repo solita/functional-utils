@@ -39,6 +39,17 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
+    
+    public static final CharSequence remove(char toRemove, CharSequence xs) {
+        return it(FunctionalImpl.remove(toRemove, it(xs)));
+    }
+    
+    public static final String remove(char toRemove, String xs) {
+        return it(FunctionalImpl.remove(toRemove, it(xs))).toString();
+    }
+    
+    
+    
     public static final Option<Character> find(Apply<Character, Boolean> predicate, CharSequence xs) {
         return FunctionalImpl.find(predicate, it(xs));
     }
