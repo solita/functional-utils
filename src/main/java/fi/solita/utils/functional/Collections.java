@@ -146,11 +146,11 @@ public abstract class Collections {
     }
     
     public static final <T> List<T> newList(T[] elements) {
-        return newList(Arrays.asList(elements));
+        return elements == null ? null : newList(Arrays.asList(elements));
     }
     
     public static final <T> List<T> newList(Enumeration<T> elements) {
-        return java.util.Collections.unmodifiableList(java.util.Collections.list(elements));
+        return elements == null ? null : java.util.Collections.unmodifiableList(java.util.Collections.list(elements));
     }
     
     @SuppressWarnings("unchecked")
@@ -291,11 +291,11 @@ public abstract class Collections {
     }
     
     public static final <T> Set<T> newSet(T[] elements) {
-        return newSet(Arrays.asList(elements));
+        return elements == null ? null : newSet(Arrays.asList(elements));
     }
     
     public static final <T> Set<T> newSet(Enumeration<T> elements) {
-        return newSet(java.util.Collections.list(elements));
+        return elements == null ? null : newSet(java.util.Collections.list(elements));
     }
     
     public static final <T> Set<T> newSet(T e1) {
@@ -408,6 +408,9 @@ public abstract class Collections {
     private static final Class<?> unmodifiableSortedMapClass = java.util.Collections.unmodifiableSortedMap(emptySortedMap()).getClass();
     
     public static final <T> List<T> newList(Iterable<T> elements) {
+        if (elements == null) {
+            return null;
+        }
         if (unmodifiableListClass.isInstance(elements)) {
             return (List<T>)elements;
         }
@@ -430,6 +433,9 @@ public abstract class Collections {
     }
 
     public static final <T> Set<T> newSet(Iterable<T> elements) {
+        if (elements == null) {
+            return null;
+        }
         if (unmodifiableSetClass.isInstance(elements)) {
             return (Set<T>)elements;
         }
@@ -451,6 +457,9 @@ public abstract class Collections {
     }
     
     public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet(Iterable<T> elements) {
+        if (elements == null) {
+            return null;
+        }
         if (unmodifiableSortedSetClass.isInstance(elements)) {
             return (SortedSet<T>)elements;
         }
@@ -466,6 +475,9 @@ public abstract class Collections {
     }
     
     public static final <T> SortedSet<T> newSortedSet(Comparator<T> comparator, Iterable<T> elements) {
+        if (elements == null) {
+            return null;
+        }
         if (unmodifiableSortedSetClass.isInstance(elements)) {
             return (SortedSet<T>)elements;
         }
@@ -481,6 +493,9 @@ public abstract class Collections {
     }
 
     public static final <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        if (elements == null) {
+            return null;
+        }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newMapOfSize((int)(size*1.5));
@@ -615,6 +630,9 @@ public abstract class Collections {
     }
     
     public static final <K, V> Map<K, List<V>> newMultimap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        if (elements == null) {
+            return null;
+        }
         Map<K, List<V>> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newMapOfSize((int)(size*1.5));
@@ -634,6 +652,9 @@ public abstract class Collections {
     }
     
     public static final Boolean[] newArray(boolean... array) {
+        if (array == null) {
+            return null;
+        }
         Boolean[] result = new Boolean[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -642,6 +663,9 @@ public abstract class Collections {
     }
     
     public static final Byte[] newArray(byte... array) {
+        if (array == null) {
+            return null;
+        }
         Byte[] result = new Byte[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -650,6 +674,9 @@ public abstract class Collections {
     }
     
     public static final Character[] newArray(char... array) {
+        if (array == null) {
+            return null;
+        }
         Character[] result = new Character[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -658,6 +685,9 @@ public abstract class Collections {
     }
     
     public static final Double[] newArray(double... array) {
+        if (array == null) {
+            return null;
+        }
         Double[] result = new Double[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -666,6 +696,9 @@ public abstract class Collections {
     }
     
     public static final Float[] newArray(float... array) {
+        if (array == null) {
+            return null;
+        }
         Float[] result = new Float[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -674,6 +707,9 @@ public abstract class Collections {
     }
 
     public static final Integer[] newArray(int... array) {
+        if (array == null) {
+            return null;
+        }
         Integer[] result = new Integer[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -682,6 +718,9 @@ public abstract class Collections {
     }
     
     public static final Long[] newArray(long... array) {
+        if (array == null) {
+            return null;
+        }
         Long[] result = new Long[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -690,6 +729,9 @@ public abstract class Collections {
     }
     
     public static final Short[] newArray(short... array) {
+        if (array == null) {
+            return null;
+        }
         Short[] result = new Short[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -698,6 +740,9 @@ public abstract class Collections {
     }
     
     public static final boolean[] newArray(Boolean[] array) {
+        if (array == null) {
+            return null;
+        }
         boolean[] result = new boolean[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -706,6 +751,9 @@ public abstract class Collections {
     }
     
     public static final byte[] newArray(Byte[] array) {
+        if (array == null) {
+            return null;
+        }
         byte[] result = new byte[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -714,6 +762,9 @@ public abstract class Collections {
     }
     
     public static final char[] newArray(Character[] array) {
+        if (array == null) {
+            return null;
+        }
         char[] result = new char[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -722,6 +773,9 @@ public abstract class Collections {
     }
     
     public static final double[] newArray(Double[] array) {
+        if (array == null) {
+            return null;
+        }
         double[] result = new double[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -730,6 +784,9 @@ public abstract class Collections {
     }
     
     public static final float[] newArray(Float[] array) {
+        if (array == null) {
+            return null;
+        }
         float[] result = new float[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -738,6 +795,9 @@ public abstract class Collections {
     }
 
     public static final int[] newArray(Integer[] array) {
+        if (array == null) {
+            return null;
+        }
         int[] result = new int[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -746,6 +806,9 @@ public abstract class Collections {
     }
     
     public static final long[] newArray(Long[] array) {
+        if (array == null) {
+            return null;
+        }
         long[] result = new long[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -754,6 +817,9 @@ public abstract class Collections {
     }
     
     public static final short[] newArray(Short[] array) {
+        if (array == null) {
+            return null;
+        }
         short[] result = new short[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
@@ -762,6 +828,9 @@ public abstract class Collections {
     }
 
     public static final <T> T[] newArray(Class<T> clazz, Iterable<T> elements) {
+        if (elements == null) {
+            return null;
+        }
         List<T> list = newList(elements);
         @SuppressWarnings("unchecked")
         T[] ret = (T[])Array.newInstance(clazz, list.size());
@@ -769,11 +838,11 @@ public abstract class Collections {
     }
     
     public static final Iterable<Character> it(CharSequence charSeq) {
-        return new Iterables.CharSequenceIterable(charSeq);
+        return charSeq == null ? null : new Iterables.CharSequenceIterable(charSeq);
     }
     
     public static final CharSequence it(Iterable<Character> xs) {
-        return new Iterables.MemoizingCharSequenceIterable(xs);
+        return xs == null ? null : new Iterables.MemoizingCharSequenceIterable(xs);
     }
     
     public static final <T> Iterable<T> lazily(final Supplier<Iterable<T>> s) {
