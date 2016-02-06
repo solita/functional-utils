@@ -23,6 +23,7 @@ Just a few examples of using these utils.
 * [Tuples] (#user-content-fisolitautilsfunctionaltuple)
 * [Functions] (#user-content-fisolitautilsfunctionalfunction)
 * [Monoids] (#user-content-fisolita.utilsfunctionalmonoid)
+* [Pattern matching] (#user-content-fisolitautilsfunctionalmatch)
 * [Common functional stuff] (#user-content-fisolitautilsfunctionalfunctional)
 
 ### fi.solita.utils.functional.Builder and fi.solita.utils.functional.Lens
@@ -345,6 +346,27 @@ Just a few examples of using these utils.
 	Map<String, Long> first = newMap();
 	Map<String, Long> second = newMap();
 	Map<String, Long> valuesSummed = reduce(newList(first, second), Monoids.<String,Long>mapCombine(SemiGroups.longSum));
+
+### fi.solita.utils.functional.Match
+	for (Integer m: Match.instance(Integer.class, (Object)42)) {
+		// executed only if object is an Integer 
+	}
+	
+	for (Integer m: Match.singleton(newList(1))) {
+		// executed only if the given iterable contains exactly one item
+	}
+	
+	for (Pair<Integer, Integer> m: Match.pair(newList(1,2))) {
+		// executed only if the given iterable contains exactly two items
+	}
+	
+	for (Pair<Integer,Integer> m: Match.iterable(1, null, newList(1,2))) {
+		// executed only if the iterable (last parameter) contains exactly as many
+		// elements as given as previous parameters, and all non-null values
+		// are equal to the corresponding element in the iterable.
+		//
+		// So, you can use nulls to mean "this element can be anything"
+	}
 
 ### fi.solita.utils.functional.Functional
 
