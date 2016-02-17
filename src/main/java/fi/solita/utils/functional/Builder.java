@@ -33,6 +33,10 @@ public final class Builder<T> {
     private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
         return new Builder<T>(Collections.<Apply<? super T, ? extends Object>,Object>emptyMap(), members, (Apply<? extends Tuple, T>) constructor);
     }
+    
+    public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
+        return members;
+    }
 
     public final Builder<T> init(final T t) {
         Map<Apply<? super T, ? extends Object>, Object> newValues = newMap(map(new Transformer<Apply<? super T,? extends Object>, Pair<Apply<? super T,? extends Object>,Object>>() {
