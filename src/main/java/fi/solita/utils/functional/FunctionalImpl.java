@@ -50,11 +50,11 @@ final class FunctionalImpl {
     }
     
     static final <K, V> Option<V> find(K key, Map<? extends K, V> map) {
-        return Option.of(map.get(key));
+        return map == null ? null : Option.of(map.get(key));
     }
     
     static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return new FilteringIterable<T>(xs, predicate);
+        return xs == null ? null : new FilteringIterable<T>(xs, predicate);
     }
     
     static final <T, E> Map<T, E> filter(Apply<Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
@@ -62,11 +62,11 @@ final class FunctionalImpl {
     }
     
     static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<S> xs) {
-        return new TransformingIterable<S,T>(xs, f);
+        return xs == null ? null : new TransformingIterable<S,T>(xs, f);
     }
     
     static final <S, T1, T2> Iterable<Pair<T1,T2>> map(final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, Iterable<S> xs) {
-        return new TransformingIterable<S,Pair<T1,T2>>(xs, new Transformer<S, Pair<T1,T2>>() {
+        return xs == null ? null : new TransformingIterable<S,Pair<T1,T2>>(xs, new Transformer<S, Pair<T1,T2>>() {
             @Override
             public Pair<T1,T2> transform(S source) {
                 return Pair.of(f1.apply(source), f2.apply(source));
@@ -75,7 +75,7 @@ final class FunctionalImpl {
     }
     
     static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3, Iterable<S> xs) {
-        return new TransformingIterable<S,Tuple3<T1,T2,T3>>(xs, new Transformer<S, Tuple3<T1,T2,T3>>() {
+        return xs == null ? null : new TransformingIterable<S,Tuple3<T1,T2,T3>>(xs, new Transformer<S, Tuple3<T1,T2,T3>>() {
             @Override
             public Tuple3<T1,T2,T3> transform(S source) {
                 return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source));
@@ -84,7 +84,7 @@ final class FunctionalImpl {
     }
     
     static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(final Apply<? super S, T1> f1, final Apply<? super S, T2> f2, final Apply<? super S, T3> f3, final Apply<? super S, T4> f4, Iterable<S> xs) {
-        return new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(xs, new Transformer<S, Tuple4<T1,T2,T3,T4>>() {
+        return xs == null ? null : new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(xs, new Transformer<S, Tuple4<T1,T2,T3,T4>>() {
             @Override
             public Tuple4<T1,T2,T3,T4> transform(S source) {
                 return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source), f4.apply(source));
@@ -101,7 +101,7 @@ final class FunctionalImpl {
     }
     
     static <T> Iterable<T> flatten(Iterable<? extends Iterable<? extends T>> xs) {
-        return new FlatteningIterable<T>(xs);
+        return xs == null ? null : new FlatteningIterable<T>(xs);
     }
     
     static final <T> void foreach(Apply<? super T, Void> procedure, Iterable<T> xs) {
@@ -121,6 +121,9 @@ final class FunctionalImpl {
     static final <T> Iterable<List<T>> grouped(long groupSize, Iterable<T> xs) {
         if (groupSize <= 0) {
             throw new IllegalArgumentException("size must be positive");
+        }
+        if (xs == null) {
+            return null;
         }
 
         Option<Long> estimatedSize = Iterables.resolveSize.apply(xs);
@@ -153,13 +156,16 @@ final class FunctionalImpl {
     };
     
     static final <T> Iterable<Iterable<T>> group(Apply<Tuple2<T,T>, Boolean> comparator, Iterable<T> xs) {
-        return new Iterables.GroupingIterable<T>(xs, comparator);
+        return xs == null ? null : new Iterables.GroupingIterable<T>(xs, comparator);
     }
     
     /**
      * Non-lazy
      */
     static <G, T> Map<G, List<T>> groupBy(Apply<? super T,G> f, Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         Map<G, List<T>> target = newMap();
         for (T t: xs) {
             G g = f.apply(t);
@@ -177,10 +183,13 @@ final class FunctionalImpl {
     }
     
     static <T> T head(Iterable<T> xs) {
-        return xs.iterator().next();
+        return xs == null ? null : xs.iterator().next();
     }
     
     static <T> Option<T> headOption(Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         Iterator<T> it = xs.iterator();
         if (it.hasNext()) {
             return Some(it.next());
@@ -194,10 +203,13 @@ final class FunctionalImpl {
     }
     
     static <T> T last(Iterable<T> xs) {
-        return lastOption(xs).get();
+        return xs == null ? null : lastOption(xs).get();
     }
     
     static <T> Option<T> lastOption(Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (xs instanceof List) {
             if (((List<T>) xs).isEmpty()) {
                 return None();
@@ -218,19 +230,19 @@ final class FunctionalImpl {
     }
     
     static <T> Iterable<T> init(Iterable<T> xs) {
-        return take(size(xs)-1, xs);
+        return xs == null ? null : take(size(xs)-1, xs);
     }
     
     static <T> Iterable<T> take(long amount, Iterable<T> xs) {
-        return new Iterables.TakingIterable<T>(xs, amount);
+        return xs == null ? null : new Iterables.TakingIterable<T>(xs, amount);
     }
 
     static <T> Iterable<T> drop(long amount, Iterable<T> xs) {
-        return new Iterables.DroppingIterable<T>(xs, amount);
+        return xs == null ? null : new Iterables.DroppingIterable<T>(xs, amount);
     }
     
     static final <T> Iterable<T> takeWhile(final Apply<? super T, Boolean> predicate, final Iterable<T> xs) {
-        return new Iterable<T>() {
+        return xs == null ? null : new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private Option<T> next;
@@ -274,7 +286,7 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> dropWhile(final Apply<? super T, Boolean> predicate, final Iterable<T> xs) {
-        return new Iterable<T>() {
+        return xs == null ? null : new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new Iterator<T>() {
                     private boolean dropping = true;
@@ -315,7 +327,7 @@ final class FunctionalImpl {
     
     static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
         // TODO: a more efficient implementation
-        return Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
+        return xs == null ? null : Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
     static boolean isEmpty(Iterable<?> xs) {
@@ -346,6 +358,9 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> sort(Comparator<? super T> comparator, Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (isEmpty(xs)) {
             return emptyList();
         }
@@ -353,6 +368,9 @@ final class FunctionalImpl {
     }
     
     static <T extends SemiGroup<T>> Option<T> reduce(Iterable<? extends T> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (isEmpty(xs)) {
             return None();
         }
@@ -360,10 +378,13 @@ final class FunctionalImpl {
     }
     
     static final <T> T reduce(Monoid<T> m, Iterable<? extends T> xs) {
-        return fold(m, cons(m.zero(), xs)).get();
+        return xs == null ? null : fold(m, cons(m.zero(), xs)).get();
     }
     
     static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
+        if (xs == null) {
+            return null;
+        }
         Z ret = zero;
         for (T t : xs) {
             ret = f.apply(Tuple.of(ret, t));
@@ -375,6 +396,9 @@ final class FunctionalImpl {
      * @return <i>None</i> if <i>elements</i> is empty
      */
     static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, Iterable<? extends T> xs) {
+        if (xs == null) {
+            return null;
+        }
         Option<? extends T> h = headOption(xs);
         if (h.isDefined()) {
             T ret = h.get();
@@ -401,11 +425,14 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static <T> Iterable<T> concat(Iterable<? extends T> a, Iterable<? extends T> b) {
-        return new ConcatenatingIterable<T>(Arrays.asList(a, b));
+        return a == null || b == null ? null : new ConcatenatingIterable<T>(Arrays.asList(a, b));
     }
     
     @SuppressWarnings("unchecked")
     static <T extends Comparable<T>> Option<T> min(Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (isEmpty(xs)) {
             return None();
         }
@@ -432,6 +459,9 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static <T extends Comparable<T>> Option<T> max(Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (isEmpty(xs)) {
             return None();
         }
@@ -439,7 +469,7 @@ final class FunctionalImpl {
     }
     
     static <A,B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, Iterable<B> b) {
-        return new ZippingIterable<A,B>(a, b);
+        return a == null || b == null ? null : new ZippingIterable<A,B>(a, b);
     }
     
     @SuppressWarnings("unchecked")
@@ -455,14 +485,17 @@ final class FunctionalImpl {
     };
     
     static <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
-        return new RangeIterable<T>(enumeration, from, Option.<T>None());
+        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Option.<T>None());
     }
     
     static <T> Iterable<T> range(Enumerable<T> enumeration, T from, T toInclusive) {
-        return new RangeIterable<T>(enumeration, from, Some(toInclusive));
+        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Some(toInclusive));
     }
     
     static String mkString(Iterable<Character> xs) {
+        if (xs == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         for (char c: xs) {
             sb.append(c);
@@ -471,6 +504,9 @@ final class FunctionalImpl {
     }
     
     static String mkString(CharSequence delimiter, Iterable<? extends CharSequence> xs) {
+        if (xs == null) {
+            return null;
+        }
         if (isEmpty(xs)) {
             return "";
         }
@@ -484,7 +520,7 @@ final class FunctionalImpl {
     }
     
     static <T> Iterable<T> reverse(Iterable<T> xs) {
-        return new Iterables.ReversingIterable<T>(xs);
+        return xs == null ? null : new Iterables.ReversingIterable<T>(xs);
     }
     
     static <T> Iterable<T> distinct(Iterable<T> xs) {
@@ -511,10 +547,13 @@ final class FunctionalImpl {
     }
     
     static <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> xs) {
-        return new TransposingIterable<T>(xs);
+        return xs == null ? null : new TransposingIterable<T>(xs);
     }
     
     static CharSequence unlines(Iterable<? extends CharSequence> xs) {
+        if (xs == null) {
+            return null;
+        }
         Iterable<String> lineSeparators = Functional.repeat(System.getProperty("line.separator"));
         CharSequence first = head(xs);
         Iterable<CharSequence> rest = map(new Transformer<Tuple2<String,? extends CharSequence>,CharSequence>() {

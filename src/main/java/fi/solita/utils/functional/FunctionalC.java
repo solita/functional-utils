@@ -29,12 +29,12 @@ public abstract class FunctionalC extends FunctionalS {
 
     
     
-    public static final CharSequence subtract(CharSequence a, final CharSequence b) {
+    public static final CharSequence subtract(CharSequence a, CharSequence b) {
         return it(FunctionalImpl.subtract(it(a), newList(it(b))));
     }
     
-    public static final String subtract(String a, final String b) {
-        return subtract((CharSequence)a, (CharSequence)b).toString();
+    public static final String subtract(String a, String b) {
+        return a == null || b == null ? null : subtract((CharSequence)a, (CharSequence)b).toString();
     }
     
     
@@ -45,7 +45,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String remove(char toRemove, String xs) {
-        return it(FunctionalImpl.remove(toRemove, it(xs))).toString();
+        return xs == null ? null : it(FunctionalImpl.remove(toRemove, it(xs))).toString();
     }
     
     
@@ -61,7 +61,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String filter(Apply<Character, Boolean> predicate, String xs) {
-        return filter(predicate, (CharSequence)xs).toString();
+        return xs == null ? null : filter(predicate, (CharSequence)xs).toString();
     }
     
     
@@ -116,21 +116,24 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.map(Transformers.toString, group((CharSequence)xs));
     }
     
-    public static final <T> Iterable<CharSequence> group(Apply<Tuple2<Character,Character>, Boolean> comparator, CharSequence xs) {
+    public static final Iterable<CharSequence> group(Apply<Tuple2<Character,Character>, Boolean> comparator, CharSequence xs) {
         return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(comparator, it(xs)));
     }
     
-    public static final <T> Iterable<String> group(Apply<Tuple2<Character,Character>, Boolean> comparator, String xs) {
+    public static final Iterable<String> group(Apply<Tuple2<Character,Character>, Boolean> comparator, String xs) {
         return FunctionalImpl.map(Transformers.toString, group(comparator, (CharSequence)xs));
     }
     
     
     
-    public static final char head(CharSequence xs) {
-        return xs.charAt(0);
+    public static final Character head(CharSequence xs) {
+        return xs == null ? null : xs.charAt(0);
     }
     
     public static final Option<Character> headOption(CharSequence xs) {
+        if (xs == null) {
+            return null;
+        }
         try {
             return Some(xs.charAt(0));
         } catch (IndexOutOfBoundsException e) {
@@ -141,20 +144,23 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final CharSequence tail(CharSequence xs) {
-        return xs.subSequence(1, xs.length());
+        return xs == null ? null : xs.subSequence(1, xs.length());
     }
     
     public static final String tail(String xs) {
-        return xs.substring(1, xs.length());
+        return xs == null ? null : xs.substring(1, xs.length());
     }
     
     
     
-    public static final char last(CharSequence xs) {
-        return xs.charAt(xs.length() - 1);
+    public static final Character last(CharSequence xs) {
+        return xs == null ? null : xs.charAt(xs.length() - 1);
     }
     
     public static final Option<Character> lastOption(CharSequence xs) {
+        if (xs == null) {
+            return null;
+        }
         try {
             return Some(xs.charAt(xs.length() - 1));
         } catch (IndexOutOfBoundsException e) {
@@ -169,7 +175,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String init(String xs) {
-        return xs.substring(0, xs.length()-1);
+        return xs == null ? null : xs.substring(0, xs.length()-1);
     }
     
     
@@ -179,7 +185,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String take(long amount, String xs) {
-        return xs.substring(0, min((int)amount, xs.length()));
+        return xs == null ? null : xs.substring(0, min((int)amount, xs.length()));
     }
     
     
@@ -189,7 +195,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String drop(long amount, String xs) {
-        return xs.substring(min((int)amount, xs.length()), xs.length());
+        return xs == null ? null : xs.substring(min((int)amount, xs.length()), xs.length());
     }
     
     
@@ -199,7 +205,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String takeWhile(Apply<Character, Boolean> predicate, String xs) {
-        return takeWhile(predicate, (CharSequence)xs).toString();
+        return xs == null ? null : takeWhile(predicate, (CharSequence)xs).toString();
     }
     
     
@@ -209,16 +215,19 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String dropWhile(Apply<Character, Boolean> predicate, String xs) {
-        return dropWhile(predicate, (CharSequence)xs).toString();
+        return xs == null ? null : dropWhile(predicate, (CharSequence)xs).toString();
     }
     
     
     
-    public static final <T> Pair<CharSequence, CharSequence> span(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final Pair<CharSequence, CharSequence> span(Apply<Character, Boolean> predicate, CharSequence xs) {
         return Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
-    public static final <T> Pair<String, String> span(Apply<Character, Boolean> predicate, String xs) {
+    public static final Pair<String, String> span(Apply<Character, Boolean> predicate, String xs) {
+        if (xs == null) {
+            return null;
+        }
         Pair<CharSequence,CharSequence> span = span(predicate, (CharSequence)xs);
         return Pair.of(span.left.toString(), span.right.toString());
     }
@@ -265,7 +274,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String cons(char x, String xs) {
-        return x + xs;
+        return xs == null ? null : x + xs;
     }
     
     
@@ -275,7 +284,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String concat(String a, String b) {
-        return a + b;
+        return a == null || b == null ? null : a + b;
     }
     
     
@@ -285,7 +294,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String sort(String xs) {
-        return sort((CharSequence)xs).toString();
+        return xs == null ? null : sort((CharSequence)xs).toString();
     }
     
     public static final CharSequence sort(Comparator<Character> comparator, CharSequence xs) {
@@ -293,7 +302,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String sort(Comparator<Character> comparator, String xs) {
-        return sort(comparator, (CharSequence)xs).toString();
+        return xs == null ? null : sort(comparator, (CharSequence)xs).toString();
     }
     
     
@@ -323,7 +332,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final Iterable<Tuple2<Integer, Character>> zipWithIndex(CharSequence a) {
-        return new ZippingIterable<Integer,Character>(range(0), it(a));
+        return a == null ? null : new ZippingIterable<Integer,Character>(range(0), it(a));
     }
     
     
@@ -342,7 +351,7 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final String mkString(CharSequence xs) {
-        return xs.toString();
+        return xs == null ? null : xs.toString();
     }
     
     public static final String mkString(CharSequence delimiter, CharSequence xs) {
@@ -356,7 +365,7 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     public static final String reverse(String xs) {
-        return reverse((CharSequence)xs).toString();
+        return xs == null ? null : reverse((CharSequence)xs).toString();
     }
     
     

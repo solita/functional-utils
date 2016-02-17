@@ -24,6 +24,6 @@ public abstract class FunctionalM {
     }
     
     public static final <K, V> Map<K, V> with(K key, V value, Map<? extends K, ? extends V> map) {
-        return newMap(FunctionalImpl.concat(map.entrySet(), newList(Pair.of(key, value))));
+        return map == null ? null : newMap(FunctionalImpl.concat(map.entrySet(), newList(Pair.of(key, value))));
     }
 }

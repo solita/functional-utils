@@ -205,7 +205,7 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <T, S extends Enumerable<T> & Bounded<T>> Iterable<T> range(S enumeration) {
-        return range(enumeration, enumeration.minBound());
+        return enumeration == null ? null : range(enumeration, enumeration.minBound());
     }
     
     public static final <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
@@ -217,13 +217,13 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <T> Iterable<T> repeat(T value) {
-        return new RepeatingIterable<T>(value);
+        return value == null ? null : new RepeatingIterable<T>(value);
     }
 
     public static final <T> Iterable<T> repeat(T value, long amount) {
         if (amount <= 0)
             return emptyList();
-        return new RepeatingIterable<T>(value, amount);
+        return value == null ? null : new RepeatingIterable<T>(value, amount);
     }
     
     public static final String mkString(Iterable<Character> xs) {

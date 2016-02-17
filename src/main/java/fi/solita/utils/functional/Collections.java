@@ -827,11 +827,11 @@ public abstract class Collections {
         return result;
     }
 
-    public static final <T> T[] newArray(Class<T> clazz, Iterable<T> elements) {
+    public static final <T> T[] newArray(Class<T> clazz, Iterable<? extends T> elements) {
         if (elements == null) {
             return null;
         }
-        List<T> list = newList(elements);
+        List<? extends T> list = newList(elements);
         @SuppressWarnings("unchecked")
         T[] ret = (T[])Array.newInstance(clazz, list.size());
         return list.toArray(ret);

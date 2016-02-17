@@ -15,6 +15,9 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         }
         return new Ordering<T>() {
             public int compare(T o1, T o2) {
+                if (o1 == null && o2 == null) {
+                    return 0;
+                }
                 return c.compare(o1, o2);
             }
             
@@ -25,6 +28,9 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     private static final Ordering Natural = new Ordering<Comparable>() {
         @SuppressWarnings("unchecked")
         public int compare(Comparable o1, Comparable o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
             return o1.compareTo(o2);
         }
     }; 

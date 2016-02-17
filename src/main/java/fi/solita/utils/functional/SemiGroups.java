@@ -133,6 +133,9 @@ public abstract class SemiGroups {
       public Comparator<T> apply(final Comparator<T> first, final Comparator<T> second) {
           return new Comparator<T>() {
               public int compare(T o1, T o2) {
+                  if (o1 == null && o2 == null) {
+                      return 0;
+                  }
                   int c = first.compare(o1, o2);
                   return c != 0 ? c : second.compare(o1, o2);
               }
