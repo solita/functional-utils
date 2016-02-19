@@ -290,6 +290,12 @@ class PartialApplicationHelper {
                     return ff.apply(replacePlaceholders(args, t, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22));
                 }
             };
+            case 23: return (FR) new Function23<Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,Object,R>() {
+                @Override
+                public R apply(Object p1, Object p2, Object p3, Object p4, Object p5, Object p6, Object p7, Object p8, Object p9, Object p10, Object p11, Object p12, Object p13, Object p14, Object p15, Object p16, Object p17, Object p18, Object p19, Object p20, Object p21, Object p22, Object p23) {
+                    return ff.apply(replacePlaceholders(args, t, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23));
+                }
+            };
         }
         throw new UnsupportedOperationException("Not implemented");
     }
