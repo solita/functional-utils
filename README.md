@@ -2,6 +2,8 @@
 
 Code generation (https://github.com/solita/meta-utils) is highly recommended since it provides first-class-functions in regular java code, thus greatly lessening the pain of using functional constructs.
 
+Travis CI: [![Build Status](https://travis-ci.org/solita/functional-utils.svg?branch=master)](https://travis-ci.org/solita/functional-utils)
+
 ## Installing
 
 Add the following file (or the latest version) to classpath:
