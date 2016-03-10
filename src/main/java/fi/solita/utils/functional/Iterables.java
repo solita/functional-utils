@@ -548,10 +548,15 @@ public abstract class Iterables {
         public char charAt(int index) {
             if (index < 0)
                 throw new IndexOutOfBoundsException();
-            for (int i = 0; i < index - memo.length(); ++i) {
-                memo.append(it.next());
+            Iterator<Character> it = iterator();
+            try {
+                for (int i = 0; i < index; ++i) {
+                    it.next();
+                }
+                return it.next();
+            } catch (NoSuchElementException e) {
+                throw new IndexOutOfBoundsException(index + " was greater than " + length());
             }
-            return memo.charAt(index);
         }
 
         
