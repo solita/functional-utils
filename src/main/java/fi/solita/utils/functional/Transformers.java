@@ -248,6 +248,15 @@ public abstract class Transformers {
         };
     }
     
+    public static final <T,R> Transformer<Option<? extends T>,Option<R>> mapOption(final Apply<? super T, R> f) {
+        return new Transformer<Option<? extends T>,Option<R>>() {
+            @Override
+            public Option<R> transform(Option<? extends T> source) {
+                return source.map(f);
+            }
+        };
+    }
+      
     public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> flatMap(final Apply<? super T, ? extends Iterable<R>> f) {
         return new Transformer<Iterable<? extends T>,Iterable<R>>() {
             @Override
@@ -256,7 +265,7 @@ public abstract class Transformers {
             }
         };
     }
-    
+   
     public static final Transformer<Iterable<?>, Long> size = new Transformer<Iterable<?>,Long>() {
         @Override
         public Long transform(Iterable<?> source) {
