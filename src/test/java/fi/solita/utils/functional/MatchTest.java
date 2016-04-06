@@ -17,47 +17,25 @@ public class MatchTest {
     
     @Test
     public void instance() {
-        for (String m: Match.instance(String.class, (Object)42)) {
-            fail("Should not have matched");
-        }
-        
-        for (Integer m: Match.instance(Integer.class, 42)) {
-            return;
-        }
-        fail("Should have matched");
+        assertFalse(Match.instance(String.class, (Object)42).isSuccess());
+        assertTrue(Match.instance(Integer.class, 42).isSuccess());
     }
     
     @Test
     public void singleton() {
-        for (Integer m: Match.singleton(Collections.<Integer>emptyList())) {
-            fail("Should not have matched");
-        }
-        for (Integer m: Match.singleton(newList(1,2))) {
-            fail("Should not have matched");
-        }
+        assertFalse(Match.singleton(Collections.<Integer>emptyList()).isSuccess());
+        assertFalse(Match.singleton(newList(1,2)).isSuccess());
         
-        for (Integer m: Match.singleton(newList(1))) {
-            return;
-        }
-        fail("Should have matched");
+        assertTrue(Match.singleton(newList(1)).isSuccess());
     }
     
     @Test
     public void pair() {
-        for (Pair<Integer, Integer> m: Match.pair(Collections.<Integer>emptyList())) {
-            fail("Should not have matched");
-        }
-        for (Pair<Integer, Integer> m: Match.pair(newList(1))) {
-            fail("Should not have matched");
-        }
-        for (Pair<Integer, Integer> m: Match.pair(newList(1,2,3))) {
-            fail("Should not have matched");
-        }
+        assertFalse(Match.pair(Collections.<Integer>emptyList()).isSuccess());
+        assertFalse(Match.pair(newList(1)).isSuccess());
+        assertFalse(Match.pair(newList(1,2,3)).isSuccess());
         
-        for (Pair<Integer, Integer> m: Match.pair(newList(1,2))) {
-            return;
-        }
-        fail("Should have matched");
+        assertTrue(Match.pair(newList(1,2)).isSuccess());
     }
     
     @Test
@@ -66,76 +44,58 @@ public class MatchTest {
          
          List<Character> matching = newList();
          
-         for (Pair<Integer,Integer> m: Match.iterable(null, null, someList)) {
-             matching.add('a');
-         }
-         for (Pair<Integer,Integer> m: Match.iterable(1, null, someList)) {
-             matching.add('b');
-         }
-         for (Pair<Integer,Integer> m: Match.iterable(1, 2, someList)) {
-             matching.add('c');
-         }
-         for (Pair<Object,Object> m: Match.iterable((Object)1, null, someList)) {
-             matching.add('d');
-         }
+         assertTrue(Match.iterable(null, null, someList).isSuccess());
+         assertTrue(Match.iterable(1, null, someList).isSuccess());
+         assertTrue(Match.iterable(1, 2, someList).isSuccess());
+         assertTrue(Match.iterable((Object)1, null, someList).isSuccess());
          
-         for (Pair<Integer,Integer> m: Match.iterable(2, null, someList)) {
-             matching.add('e');
-         }
-         for (Integer m: Match.iterable(1, someList)) {
-             matching.add('f');
-         }
-         for (Tuple3<Integer,Integer,Integer> m: Match.iterable(1, 2, 3, someList)) {
-             matching.add('g');
-         }
-         for (Object m: Match.iterable(1, new Object(), someList)) {
-             matching.add('h');
-         }
-         
-         assertEquals(newList('a', 'b', 'c', 'd'), matching);
+         assertFalse(Match.iterable(2, null, someList).isSuccess());
+         assertFalse(Match.iterable(1, someList).isSuccess());
+         assertFalse(Match.iterable(1, 2, 3, someList).isSuccess());
+         assertFalse(Match.iterable(1, new Object(), someList).isSuccess());
     }
     
     @Test
     public void startsWith() {
-        assertEquals(Some(Pair.of("foo", "bar")), Match.startsWith("foo", "foobar"));
-        assertEquals(Some(Pair.of("", "")),       Match.startsWith("", ""));
-        assertEquals(Some(Pair.of("", "bar")),    Match.startsWith("", "bar"));
-        assertEquals(Some(Pair.of("foo", "")),    Match.startsWith("foo", "foo"));
+        assertEquals(Try.success(Pair.of("foo", "bar")), Match.startsWith("foo", "foobar"));
+        assertEquals(Try.success(Pair.of("", "")),       Match.startsWith("", ""));
+        assertEquals(Try.success(Pair.of("", "bar")),    Match.startsWith("", "bar"));
+        assertEquals(Try.success(Pair.of("foo", "")),    Match.startsWith("foo", "foo"));
         
-        assertEquals(None(), Match.startsWith("foo", "bar"));
-        assertEquals(None(), Match.startsWith("foo", ""));
-        assertEquals(None(), Match.startsWith("foobar", "foo"));
+        assertTrue(Match.startsWith("foo", "bar").failure.isDefined());
+        assertTrue(Match.startsWith("foo", "").failure.isDefined());
+        assertTrue(Match.startsWith("foobar", "foo").failure.isDefined());
     }
     
     @Test
     public void endsWith() {
-        assertEquals(Some(Pair.of("foo", "bar")), Match.endsWith("bar", "foobar"));
-        assertEquals(Some(Pair.of("", "")),       Match.endsWith("", ""));
-        assertEquals(Some(Pair.of("bar", "")),    Match.endsWith("", "bar"));
-        assertEquals(Some(Pair.of("", "foo")),    Match.endsWith("foo", "foo"));
+        assertEquals(Try.success(Pair.of("foo", "bar")), Match.endsWith("bar", "foobar"));
+        assertEquals(Try.success(Pair.of("", "")),       Match.endsWith("", ""));
+        assertEquals(Try.success(Pair.of("bar", "")),    Match.endsWith("", "bar"));
+        assertEquals(Try.success(Pair.of("", "foo")),    Match.endsWith("foo", "foo"));
         
-        assertEquals(None(), Match.endsWith("foo", "bar"));
-        assertEquals(None(), Match.endsWith("foo", ""));
-        assertEquals(None(), Match.endsWith("foobar", "foo"));
+        assertTrue(Match.endsWith("foo", "bar").failure.isDefined());
+        assertTrue(Match.endsWith("foo", "").failure.isDefined());
+        assertTrue(Match.endsWith("foobar", "foo").failure.isDefined());
     }
     
     @Test
     public void stringPair() {
-        assertEquals(Some(Pair.of("a","b")), Match.pair('_', "a_b"));
-        assertEquals(Some(Pair.of("","b")),  Match.pair('_', "_b"));
-        assertEquals(Some(Pair.of("a","")),  Match.pair('_', "a_"));
-        assertEquals(Some(Pair.of("","")), Match.pair('_', "_"));
+        assertEquals(Try.success(Pair.of("a","b")), Match.pair('_', "a_b"));
+        assertEquals(Try.success(Pair.of("","b")),  Match.pair('_', "_b"));
+        assertEquals(Try.success(Pair.of("a","")),  Match.pair('_', "a_"));
+        assertEquals(Try.success(Pair.of("","")), Match.pair('_', "_"));
         
-        assertEquals(None(), Match.pair('_', "foo"));
-        assertEquals(None(), Match.pair('_', ""));
+        assertTrue(Match.pair('_', "foo").failure.isDefined());
+        assertTrue(Match.pair('_', "").failure.isDefined());
     }
     
     @Test
     public void groups() {
-        assertEquals(Some(newList("1","2")), Match.groups(Pattern.compile("(.*)_(.*)"), "1_2"));
-        assertEquals(Some(newList("foo")), Match.groups(Pattern.compile("(.*)"), "foo"));
+        assertEquals(Try.success(newList("1","2")), Match.groups(Pattern.compile("(.*)_(.*)"), "1_2"));
+        assertEquals(Try.success(newList("foo")), Match.groups(Pattern.compile("(.*)"), "foo"));
         
-        assertEquals(Some(emptyList()), Match.groups(Pattern.compile(".*"), "foo"));
-        assertEquals(None(), Match.groups(Pattern.compile("f(oo)"), "bar"));
+        assertEquals(Try.success(emptyList()), Match.groups(Pattern.compile(".*"), "foo"));
+        assertTrue(Match.groups(Pattern.compile("f(oo)"), "bar").failure.isDefined());
     }
 }
