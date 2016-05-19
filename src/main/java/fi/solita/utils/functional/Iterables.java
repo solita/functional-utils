@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newListOfSize;
 import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.isEmpty;
@@ -29,8 +30,8 @@ public abstract class Iterables {
             if (source instanceof Collection) {
                 return Some((long)((Collection<?>)source).size());
             }
-            if (source instanceof PossiblySizeAwareIterable) {
-                return ((PossiblySizeAwareIterable<?>)source).sizeEstimate();
+            if (source instanceof MyIterable) {
+                return ((MyIterable<?>)source).sizeEstimate();
             }
             if (source instanceof Option) {
                 return ((Option<?>)source).isDefined() ? SOME_ONE : SOME_ZERO;
@@ -54,22 +55,35 @@ public abstract class Iterables {
     };
     
     private static final Transformer<Iterable<Object>,Iterator<Object>> toIterator = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        
         public Iterator<Object> transform(Iterable<Object> source) {
             return source.iterator();
         }
     };
     
-    static abstract class PossiblySizeAwareIterable<T> implements Iterable<T> {
+    private static final Transformer<Iterable<Object>,Iterator<Object>> toIteratorForced = new Transformer<Iterable<Object>,Iterator<Object>>() {
+        public Iterator<Object> transform(Iterable<Object> source) {
+            if (source instanceof ForceableIterable) {
+                ((ForceableIterable) source).completeIterationNeeded();
+            }
+            return source.iterator();
+        }
+    };
+    
+    static interface PossiblySizeAwareIterable<T> extends Iterable<T> {
         public abstract Option<Long> sizeEstimate();
-        
-        
+    }
+    
+    static interface ForceableIterable {
+        public abstract void completeIterationNeeded();
+    }
+    
+    static abstract class MyIterable<T> implements Iterable<T>, PossiblySizeAwareIterable<T> {
         public String toString() {
             return getClass().getSimpleName() + Collections.newList(this).toString();
         }
     }
     
-    static final class RangeIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class RangeIterable<T> extends MyIterable<T> {
         private final Enumerable<T> enumeration;
         private final Option<T> from;
         private final Option<T> toInclusive;
@@ -128,7 +142,7 @@ public abstract class Iterables {
         }
     }
 
-    static final class RepeatingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class RepeatingIterable<T> extends MyIterable<T> {
         private final T value;
         private final Long amount;
 
@@ -173,18 +187,22 @@ public abstract class Iterables {
         }
     }
 
-    static final class TransposingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
+    static final class TransposingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<? extends Iterable<T>> elements;
+        private boolean force = false;
 
         public TransposingIterable(Iterable<? extends Iterable<T>> elements) {
             this.elements = elements;
         }
         
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
-                private final List<Iterator<T>> iterators = newList(map((Transformer<Iterable<T>,Iterator<T>>)(Object)toIterator, elements));
+                private final List<Iterator<T>> iterators = newList(map((Transformer<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
                 
                 
                 public boolean hasNext() {
@@ -213,17 +231,29 @@ public abstract class Iterables {
         }
     }
 
-    static final class ZippingIterable<A,B> extends PossiblySizeAwareIterable<Tuple2<A, B>> {
+    static final class ZippingIterable<A,B> extends MyIterable<Tuple2<A, B>> implements ForceableIterable {
         private final Iterable<A> elements1;
         private final Iterable<B> elements2;
+        private boolean force = false;
 
         public ZippingIterable(Iterable<A> elements1, Iterable<B> elements2) {
             this.elements1 = elements1;
             this.elements2 = elements2;
         }
 
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Iterator<Tuple2<A, B>> iterator() {
+            if (force) {
+                if (elements1 instanceof ForceableIterable) {
+                    ((ForceableIterable)elements1).completeIterationNeeded();
+                }
+                if (elements2 instanceof ForceableIterable) {
+                    ((ForceableIterable)elements2).completeIterationNeeded();
+                }
+            }
             return new Iterator<Tuple2<A, B>>() {
                 private final Iterator<A> it1 = elements1.iterator();
                 private final Iterator<B> it2 = elements2.iterator();
@@ -256,13 +286,15 @@ public abstract class Iterables {
         }
     }
 
-    static class ConcatenatingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static class ConcatenatingIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<? extends Iterable<? extends T>> elements;
+        private boolean force = false;
 
         public ConcatenatingIterable(Iterable<? extends Iterable<? extends T>> elements) {
             this.elements = elements;
+        public void completeIterationNeeded() {
+            this.force = true;
         }
-
         
         public Option<Long> sizeEstimate() {
             long s = 0;
@@ -280,7 +312,7 @@ public abstract class Iterables {
         public Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = Functional.map((Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)toIterator, elements).iterator();
+                private final Iterator<Iterator<? extends T>> it = Functional.map((Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
@@ -317,15 +349,19 @@ public abstract class Iterables {
         }
     }
 
-    static final class FilteringIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class FilteringIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<T> iterable;
         private final Apply<? super T, Boolean> filter;
+        private boolean force = false;
 
         public FilteringIterable(Iterable<T> iterable, Apply<? super T, Boolean> filter) {
             this.iterable = iterable;
             this.filter = filter;
         }
 
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Option<Long> sizeEstimate() {
             return None();
@@ -333,6 +369,9 @@ public abstract class Iterables {
 
         
         public Iterator<T> iterator() {
+            if (force && iterable instanceof ForceableIterable) {
+                ((ForceableIterable)iterable).completeIterationNeeded();
+            }
             return new Iterator<T>() {
                 private boolean hasNext;
                 private T next;
@@ -375,15 +414,19 @@ public abstract class Iterables {
         }
     }
 
-    static final class TransformingIterable<S,T> extends PossiblySizeAwareIterable<T> {
+    static final class TransformingIterable<S,T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<S> iterable;
         private final Apply<? super S, ? extends T> transformer;
+        private boolean force = false;
 
         public TransformingIterable(Iterable<S> iterable, Apply<? super S, ? extends T> transformer) {
             this.iterable = iterable;
             this.transformer = transformer;
         }
 
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
@@ -391,6 +434,9 @@ public abstract class Iterables {
 
         
         public Iterator<T> iterator() {
+            if (force && iterable instanceof ForceableIterable) {
+                ((ForceableIterable)iterable).completeIterationNeeded();
+            }
             return new Iterator<T>() {
                 private final Iterator<S> source = iterable.iterator();
 
@@ -412,13 +458,17 @@ public abstract class Iterables {
         }
     }
     
-    static final class ReversingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class ReversingIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<T> iterable;
+        private boolean force = false;
 
         public ReversingIterable(Iterable<T> iterable) {
             this.iterable = iterable;
         }
 
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Option<Long> sizeEstimate() {
             return resolveSize.apply(iterable);
@@ -426,6 +476,9 @@ public abstract class Iterables {
 
         
         public Iterator<T> iterator() {
+            if (force && iterable instanceof ForceableIterable) {
+                ((ForceableIterable)iterable).completeIterationNeeded();
+            }
             return new Iterator<T>() {
                 private final List<T> list = iterable instanceof List ? (List<T>)iterable : newList(iterable);
                 private final ListIterator<T> underlying = list.listIterator(list.size());
@@ -448,7 +501,7 @@ public abstract class Iterables {
         }
     }
     
-    static final class CharSequenceIterable extends PossiblySizeAwareIterable<Character> implements CharSequence {
+    static final class CharSequenceIterable extends MyIterable<Character> implements CharSequence {
         private final CharSequence chars;
 
         public CharSequenceIterable(CharSequence chars) {
@@ -513,7 +566,7 @@ public abstract class Iterables {
         }
     }
     
-    static class MemoizingCharSequenceIterable extends PossiblySizeAwareIterable<Character> implements CharSequence, Iterable<Character> {
+    static class MemoizingCharSequenceIterable extends MyIterable<Character> implements CharSequence, Iterable<Character> {
         private final StringBuilder memo = new StringBuilder();
         private final Iterator<Character> it;
         
@@ -604,20 +657,49 @@ public abstract class Iterables {
         }
     }
     
-    static final class SortingIterable<T> extends PossiblySizeAwareIterable<T> {
-        private final Iterable<T> iterable;
+    static final class SortingIterable<T> extends MyIterable<T> implements ForceableIterable {
+        private Iterable<T> iterable;
         private final Comparator<? super T> comparator;
+        private boolean force = false;
 
         public SortingIterable(Iterable<T> iterable, Comparator<? super T> comparator) {
             this.iterable = iterable;
             this.comparator = comparator;
         }
         
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
+        
         public Iterator<T> iterator() {
+            if (force && iterable instanceof ForceableIterable) {
+                ((ForceableIterable)iterable).completeIterationNeeded();
+            }
             long initialSize = resolveSize.apply(iterable).getOrElse(11l);
             if (initialSize == 0) {
                 return java.util.Collections.<T>emptyList().iterator();
             }
+            
+            if (force) {
+                List<T> sorted = null;
+                for (long size: Iterables.resolveSize.apply(iterable)) {
+                    sorted = newListOfSize(size);
+                }
+                if (sorted == null) {
+                    sorted = newList();
+                }
+
+                if (iterable instanceof Collection) {
+                    sorted.addAll((Collection<? extends T>) iterable);
+                } else {
+                    for (T t: iterable) {
+                        sorted.add(t);
+                    }
+                }
+                java.util.Collections.sort(sorted, comparator);
+                return sorted.iterator();
+            }
+            
             final PriorityQueue<T> queue = new PriorityQueue<T>((int)initialSize, comparator);
             if (iterable instanceof Collection) {
                 queue.addAll((Collection<T>)iterable);
@@ -650,9 +732,10 @@ public abstract class Iterables {
         }
     }
     
-    static final class TakingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class TakingIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<T> elements;
         private final long amount;
+        private boolean force = false;
 
         public TakingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
@@ -662,8 +745,14 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Iterator<T> iterator() {
+            if (force && elements instanceof ForceableIterable) {
+                ((ForceableIterable)elements).completeIterationNeeded();
+            }
             return new Iterator<T>() {
                 private long left = amount;
                 private final Iterator<T> it = elements.iterator();
@@ -703,9 +792,10 @@ public abstract class Iterables {
         }
     }
     
-    static final class DroppingIterable<T> extends PossiblySizeAwareIterable<T> {
+    static final class DroppingIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<T> elements;
         private final long amount;
+        private boolean force = false;
 
         public DroppingIterable(Iterable<T> elements, long amount) {
             if (amount < 0) {
@@ -715,8 +805,14 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Iterator<T> iterator() {
+            if (force && elements instanceof ForceableIterable) {
+                ((ForceableIterable)elements).completeIterationNeeded();
+            }
             Iterator<T> it = elements.iterator();
             long left = amount;
             while (left > 0 && it.hasNext()) {
@@ -737,15 +833,19 @@ public abstract class Iterables {
         }
     }
     
-    static final class GroupingIterable<T> extends PossiblySizeAwareIterable<Iterable<T>> {
+    static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<T> elements;
         private final Apply<Tuple2<T,T>, Boolean> comparator;
+        private boolean force = false;
 
         public GroupingIterable(Iterable<T> elements, Apply<Tuple2<T,T>, Boolean> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }
         
+        public void completeIterationNeeded() {
+            this.force = true;
+        }
         
         public Option<Long> sizeEstimate() {
             return None();
@@ -753,6 +853,9 @@ public abstract class Iterables {
         
         
         public Iterator<Iterable<T>> iterator() {
+            if (force && elements instanceof ForceableIterable) {
+                ((ForceableIterable)elements).completeIterationNeeded();
+            }
             return new Iterator<Iterable<T>>() {
                 private Iterable<T> remaining = elements;
                 

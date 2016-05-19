@@ -1,6 +1,8 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newSet;
+import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.distinct;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.flatMap;
@@ -14,6 +16,7 @@ import static fi.solita.utils.functional.Functional.reverse;
 import static fi.solita.utils.functional.Functional.size;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -237,5 +240,25 @@ public class FunctionalTest {
                 return super.iterator();
             }
         };
+    }
+    
+    @Test
+    public void testConcat() {
+        assertEquals(newList(1,2,3), newList(concat(newList(1,2,3), newList())));
+        assertEquals(newList(1,2,3), newList(concat(newList(1,2), newList(3))));
+        assertEquals(newList(1,2,3), newList(concat(newList(1), newList(2,3))));
+        assertEquals(newList(1,2,3), newList(concat(newList(), newList(1,2,3))));
+        
+        assertEquals(newList(1,2,3,4), newList(concat(concat(newList(1), newList(2)), concat(newList(3), newList(4)))));
+    }
+    
+    @Test
+    public void testConcatPerformance() {
+        // should be fast, otherwise somethings screwed up
+        Iterable<Integer> it = emptyList();
+        for (@SuppressWarnings("unused") Integer i: range(0, 100)) {
+            it = concat(it, newList(range(0, 5000)));
+        }
+        newSet(it);
     }
 }

@@ -22,6 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import fi.solita.utils.functional.Iterables.ForceableIterable;
+
 public abstract class Collections {
     
     public static final <T> List<T> emptyList() {
@@ -434,6 +436,9 @@ public abstract class Collections {
         if (unmodifiableListClass.isInstance(elements)) {
             return (List<T>)elements;
         }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
+        }
         List<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newListOfSize(size);
@@ -459,6 +464,9 @@ public abstract class Collections {
         if (unmodifiableSetClass.isInstance(elements)) {
             return (Set<T>)elements;
         }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
+        }
         Set<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
             ret = newSetOfSize((int)(size*1.5));
@@ -483,6 +491,9 @@ public abstract class Collections {
         if (unmodifiableSortedSetClass.isInstance(elements)) {
             return (SortedSet<T>)elements;
         }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
+        }
         SortedSet<T> ret = newSortedSet();
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
@@ -501,6 +512,9 @@ public abstract class Collections {
         if (unmodifiableSortedSetClass.isInstance(elements)) {
             return (SortedSet<T>)elements;
         }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
+        }
         SortedSet<T> ret = newSortedSet(comparator);
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
@@ -515,6 +529,9 @@ public abstract class Collections {
     public static final <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
+        }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
         }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
@@ -536,6 +553,9 @@ public abstract class Collections {
         }
         if (unmodifiableSortedMapClass.isInstance(elements)) {
             return (SortedMap<K,V>)elements;
+        }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
         }
         SortedMap<K, V> ret = newSortedMap(comparator);
         for (Map.Entry<? extends K, ? extends V> e: elements) {
@@ -662,6 +682,9 @@ public abstract class Collections {
     public static final <K, V> Map<K, List<V>> newMultimap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
+        }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
         }
         Map<K, List<V>> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
