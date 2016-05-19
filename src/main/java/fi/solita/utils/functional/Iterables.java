@@ -291,11 +291,30 @@ public abstract class Iterables {
         private boolean force = false;
 
         public ConcatenatingIterable(Iterable<? extends Iterable<? extends T>> elements) {
-            this.elements = elements;
+            if (elements instanceof Collection) {
+                this.elements = flattenNestedConcats((Collection<? extends Iterable<? extends T>>)elements);
+            } else {
+                this.elements = elements;
+            }
+        }
+        
         public void completeIterationNeeded() {
             this.force = true;
         }
         
+        @SuppressWarnings("unchecked")
+        private final Collection<? extends Iterable<? extends T>> flattenNestedConcats(Collection<? extends Iterable<? extends T>> elements) {
+            List<Iterable<? extends T>> ret = newList();
+            for (Iterable<? extends T> es: elements) {
+                if (es instanceof ConcatenatingIterable && ((ConcatenatingIterable<T>) es).elements instanceof Collection) {
+                    ret.addAll(flattenNestedConcats((Collection<? extends Iterable<? extends T>>)((ConcatenatingIterable<T>)es).elements));
+                } else {
+                    ret.add(es);
+                }
+            }
+            return ret;
+        }
+
         public Option<Long> sizeEstimate() {
             long s = 0;
             for (Option<Long> size: map(resolveSize, elements)) {
