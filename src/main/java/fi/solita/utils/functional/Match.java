@@ -10,8 +10,6 @@ import static fi.solita.utils.functional.FunctionalC.drop;
 import static fi.solita.utils.functional.FunctionalC.isEmpty;
 import static fi.solita.utils.functional.FunctionalC.span;
 import static fi.solita.utils.functional.FunctionalC.take;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.equalTo;
 import static fi.solita.utils.functional.Predicates.not;
 
@@ -20,6 +18,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Match {
+    public static final Try<String,String> nonEmptyString(String obj) {
+        if (obj == null || obj.trim().isEmpty()) {
+            return Try.failure("String was null or empty: " + obj);
+        }
+        return Try.success(obj);
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <S,T extends S> Try<String,T> instance(Class<T> clazz, S obj) {
         if (clazz.isInstance(obj)) {
