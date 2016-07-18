@@ -155,4 +155,10 @@ public abstract class Compare {
 
     @SuppressWarnings("unchecked")
     public static final Ordering<Tuple._23<? extends Comparable<?>>> by_23 = (Ordering<Tuple._23<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_23());
+    
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._24<? extends Comparable<?>>> by_24 = (Ordering<Tuple._24<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_24());
+    
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._25<? extends Comparable<?>>> by_25 = (Ordering<Tuple._25<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_25());
 }

@@ -89,6 +89,14 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple implements Tuple._
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16);
     }
     
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17> Tuple24<T1,T2,T3,T4,T5,T6,T7,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17> join(Tuple17<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17);
+    }
+    
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18> Tuple25<T1,T2,T3,T4,T5,T6,T7,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18> join(Tuple18<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18);
+    }
+    
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }
