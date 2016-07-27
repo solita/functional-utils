@@ -30,8 +30,8 @@ public abstract class Iterables {
             if (source instanceof Collection) {
                 return Some((long)((Collection<?>)source).size());
             }
-            if (source instanceof MyIterable) {
-                return ((MyIterable<?>)source).sizeEstimate();
+            if (source instanceof PossiblySizeAwareIterable) {
+                return ((PossiblySizeAwareIterable<?>)source).size();
             }
             if (source instanceof Option) {
                 return ((Option<?>)source).isDefined() ? SOME_ONE : SOME_ZERO;
@@ -70,7 +70,7 @@ public abstract class Iterables {
     };
     
     static interface PossiblySizeAwareIterable<T> extends Iterable<T> {
-        public abstract Option<Long> sizeEstimate();
+        public abstract Option<Long> size();
     }
     
     static interface ForceableIterable {
@@ -137,7 +137,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return knownSize.isDefined() ? Some(knownSize.get()) : Option.<Long>None();
         }
     }
@@ -157,7 +157,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return amount != null ? Some(amount) : Option.<Long>None();
         }
 
@@ -226,7 +226,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return None();
         }
     }
@@ -276,7 +276,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             for (long a: resolveSize.apply(elements1)) {
                 for (long b: resolveSize.apply(elements2)) {
                     return Some(Functional.min(a,b));
@@ -315,7 +315,7 @@ public abstract class Iterables {
             return ret;
         }
 
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             long s = 0;
             for (Option<Long> size: map(resolveSize, elements)) {
                 if (size.isDefined()) {
@@ -363,7 +363,7 @@ public abstract class Iterables {
         }
         
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return None();
         }
     }
@@ -382,7 +382,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return None();
         }
 
@@ -447,7 +447,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return resolveSize.apply(iterable);
         }
 
@@ -489,7 +489,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return resolveSize.apply(iterable);
         }
 
@@ -571,7 +571,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             if (chars instanceof String || chars instanceof StringBuilder || chars instanceof StringBuffer) {
                 return Some((long)chars.length());
             } else {
@@ -587,10 +587,11 @@ public abstract class Iterables {
     
     static class MemoizingCharSequenceIterable extends MyIterable<Character> implements CharSequence, Iterable<Character> {
         private final StringBuilder memo = new StringBuilder();
-        private final Iterator<Character> it;
+        private final Iterable<Character> iterable;
+        private Iterator<Character> it;
         
         public MemoizingCharSequenceIterable(Iterable<Character> chars) {
-            it = chars.iterator();
+            iterable = chars;
         }
         
         private int resolveLength() {
@@ -605,6 +606,9 @@ public abstract class Iterables {
          */
         
         public CharSequence subSequence(int start, int end) {
+            if (it == null) {
+                it = iterable.iterator();
+            }
             if (start < 0 || end < 0 || start > end || !it.hasNext() && end > length()) {
                 throw new IndexOutOfBoundsException();
             }
@@ -613,6 +617,9 @@ public abstract class Iterables {
         
         
         public int length() {
+            if (it == null) {
+                it = iterable.iterator();
+            }
             return resolveLength();
         }
         
@@ -637,6 +644,9 @@ public abstract class Iterables {
                 private int read = 0;
                 
                 public boolean hasNext() {
+                    if (it == null) {
+                        it = iterable.iterator();
+                    }
                     if (read == memo.length() && it.hasNext()) {
                         memo.append(it.next());
                     }
@@ -645,6 +655,9 @@ public abstract class Iterables {
 
                 
                 public Character next() {
+                    if (it == null) {
+                        it = iterable.iterator();
+                    }
                     if (read == memo.length()) {
                         memo.append(it.next());
                     }
@@ -661,7 +674,10 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
+            if (it == null) {
+                it = iterable.iterator();
+            }
             if (!it.hasNext()) {
                 return Some((long)memo.length());
             } else {
@@ -671,6 +687,9 @@ public abstract class Iterables {
         
         
         public String toString() {
+            if (it == null) {
+                it = iterable.iterator();
+            }
             resolveLength();
             return memo.toString();
         }
@@ -746,7 +765,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return resolveSize.apply(iterable);
         }
     }
@@ -798,15 +817,12 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(min(s.get(), amount));
             } else {
-                // a good guess, since it's probably rare that 'take' is
-                // called with an amount of significantly larger than the size
-                // of the iterable. Right?
-                return Some(amount);
+                return None();
             }
         }
     }
@@ -842,7 +858,7 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
                 return Some(max(s.get() - amount, 0l));
@@ -866,7 +882,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public Option<Long> sizeEstimate() {
+        public Option<Long> size() {
             return None();
         }
         

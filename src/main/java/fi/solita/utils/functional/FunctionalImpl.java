@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
+import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
@@ -210,10 +211,11 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
+        if (xs instanceof Collection && ((Collection<T>) xs).isEmpty()) {
+            return None();
+        }
+        
         if (xs instanceof List) {
-            if (((List<T>) xs).isEmpty()) {
-                return None();
-            }
             return Some(((List<T>) xs).get(((List<T>) xs).size()-1));
         } else {
             Iterator<T> it = xs.iterator();
@@ -230,6 +232,7 @@ final class FunctionalImpl {
     }
     
     static <T> Iterable<T> init(Iterable<T> xs) {
+        // TODO: make lazier to not need the actual size
         return xs == null ? null : take(size(xs)-1, xs);
     }
     
@@ -331,6 +334,10 @@ final class FunctionalImpl {
     }
     
     static boolean isEmpty(Iterable<?> xs) {
+        Option<Long> size = Iterables.resolveSize.apply(xs);
+        if (size.isDefined()) {
+            return size.get() == 0;
+        }
         return !xs.iterator().hasNext();
     }
     
@@ -361,7 +368,8 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
-        if (isEmpty(xs)) {
+        Option<Long> size = Iterables.resolveSize.apply(xs);
+        if (size.isDefined() && size.get() == 0) {
             return emptyList();
         }
         return new Iterables.SortingIterable<T>(xs, comparator);
@@ -399,15 +407,15 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
-        Option<? extends T> h = headOption(xs);
-        if (h.isDefined()) {
-            T ret = h.get();
-            for (T t : drop(1, xs)) {
+        T ret = null;
+        for (T t : xs) {
+            if (ret == null) {
+                ret = t;
+            } else {
                 ret = f.apply(Tuple.of(ret, t));
             }
-            return Some(ret);
         }
-        return None();
+        return Option.of(ret);
     }
     
     static long sum(Iterable<Long> xs) {
@@ -433,6 +441,7 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
+        xs = newList(xs);
         if (isEmpty(xs)) {
             return None();
         }
@@ -462,6 +471,7 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
+        xs = newList(xs);
         if (isEmpty(xs)) {
             return None();
         }
@@ -507,6 +517,7 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
+        xs = newList(xs);
         if (isEmpty(xs)) {
             return "";
         }
