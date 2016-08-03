@@ -2,34 +2,18 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Functional.distinct;
-import static fi.solita.utils.functional.Functional.drop;
-import static fi.solita.utils.functional.Functional.flatMap;
-import static fi.solita.utils.functional.Functional.flatten;
-import static fi.solita.utils.functional.Functional.group;
-import static fi.solita.utils.functional.Functional.head;
-import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.mkString;
-import static fi.solita.utils.functional.Functional.reduce;
-import static fi.solita.utils.functional.Functional.reverse;
-import static fi.solita.utils.functional.Functional.size;
-import static fi.solita.utils.functional.Functional.take;
-import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.Functional.*;
 import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import org.junit.Test;
 
 public class FunctionalTest {
@@ -260,5 +244,40 @@ public class FunctionalTest {
             it = concat(it, newList(range(0, 5000)));
         }
         newSet(it);
+    }
+    
+    @Test
+    public void testSpan() {
+        assertEquals(newList(1,2,3), newList(takeWhile(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5))));
+        assertEquals(newList(5), newList(dropWhile(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5))));
+        
+        Pair<Iterable<Integer>,Iterable<Integer>> pair = span(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5));
+        assertEquals(newList(1,2,3), newList(pair.left));
+        assertEquals(newList(5), newList(pair.right));
+    }
+    
+    @Test
+    public void testRangify1() {
+        assertEquals(newList(newList(1,3), newList(5)), newList(rangify(Enumerables.ints, newList(1,2,3,5))));
+    }
+    
+    @Test
+    public void testRangify2() {
+        assertEquals(newList((Object)newList(1,4)), newList(rangify(Enumerables.ints, newList(1,2,3,4))));
+    }
+    
+    @Test
+    public void testRangify3() {
+        assertEquals(emptyList(), newList(rangify(Enumerables.ints, Collections.<Integer>emptyList())));
+    }
+    
+    @Test
+    public void testRangify4() {
+        assertEquals(newList(newList(1),newList(1)), newList(rangify(Enumerables.ints, newList(1,1))));
+    }
+    
+    @Test
+    public void testRangify5() {
+        assertEquals(newList(newList(4,5),newList(1)), newList(rangify(Enumerables.ints, newList(4,5,1))));
     }
 }

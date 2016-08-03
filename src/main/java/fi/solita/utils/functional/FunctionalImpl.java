@@ -502,7 +502,25 @@ final class FunctionalImpl {
         return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Some(toInclusive));
     }
     
-    static String mkString(Iterable<Character> xs) {
+    @SuppressWarnings("unchecked")
+    static final <T> Iterable<List<T>> rangify(final Enumerable<T> enumeration, Iterable<T> xs) {
+        Iterable<Iterable<T>> ret = FunctionalImpl.group(new Predicate<Map.Entry<T,T>>() {
+            public boolean accept(Map.Entry<T,T> candidate) {
+                Option<T> succ = enumeration.succ(candidate.getKey());
+                return succ.isDefined() && succ.get().equals(candidate.getValue());
+            };
+        }, xs);
+        return (Iterable<List<T>>)(Object)map(minAndMax, ret);
+    }
+    
+    static final Transformer<Iterable<?>, List<?>> minAndMax = new Transformer<Iterable<?>,List<?>>() {
+        public List<?> transform(Iterable<?> source) {
+            List<?> ts = newList(source);
+            return ts.size() == 1 ? ts : newList(head(ts), last(ts));
+        };
+    };
+    
+    static final String mkString(Iterable<Character> xs) {
         if (xs == null) {
             return null;
         }

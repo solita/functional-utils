@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
@@ -348,6 +349,9 @@ public abstract class FunctionalC extends FunctionalS {
         return it(new RepeatingIterable<Character>(value, amount));
     }
     
+    public static final <T> Iterable<List<Character>> rangify(Enumerable<Character> enumeration, CharSequence xs) {
+        return FunctionalImpl.rangify(enumeration, it(xs));
+    }
     
     
     public static final String mkString(CharSequence xs) {

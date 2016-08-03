@@ -215,6 +215,10 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Iterable<T> range(Enumerable<T> enumeration, T from, T toInclusive) {
         return FunctionalImpl.range(enumeration, from, toInclusive);
     }
+    
+    public static final <T> Iterable<List<T>> rangify(Enumerable<T> enumeration, Iterable<T> xs) {
+        return FunctionalImpl.rangify(enumeration, xs);
+    }
 
     public static final <T> Iterable<T> repeat(T value) {
         return value == null ? null : new RepeatingIterable<T>(value);

@@ -904,15 +904,20 @@ public abstract class Iterables {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
-                    final T first = head(remaining);
-                    Pair<Iterable<T>, Iterable<T>> s = span(new Predicate<T>() {
-                        
+                    final Object[] prev = { GroupingIterable.class };
+                    List<T> s = newList(takeWhile(new Predicate<T>() {
                         public boolean accept(T candidate) {
-                            return comparator.apply(Tuple.of(candidate, first));
+                            if (prev[0] == GroupingIterable.class) {
+                                prev[0] = candidate;
+                                return true;
+                            }
+                            boolean ret = comparator.apply(Tuple.of((T)prev[0], candidate));
+                            prev[0] = candidate;
+                            return ret;
                         }
-                    }, remaining);
-                    remaining = s.right;
-                    return s.left;
+                    }, remaining));
+                    remaining = drop(s.size(), remaining);
+                    return s;
                 }
 
                 

@@ -398,6 +398,10 @@ public abstract class FunctionalA extends FunctionalM {
         return a == null ? null : new ZippingIterable<Integer,A>(FunctionalImpl.range(Enumerables.ints, 0), newList(a));
     }
     
+    public static final <T> Iterable<List<T>> rangify(Enumerable<T> enumeration, T[] xs) {
+        return FunctionalImpl.rangify(enumeration, newList(xs));
+    }
+    
     
     
     public static final CharSequence mkString(Character[] xs) {
