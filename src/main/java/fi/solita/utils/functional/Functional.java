@@ -84,7 +84,7 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.group(xs);
     }
     
-    public static final <T> Iterable<Iterable<T>> group(Apply<Tuple2<T,T>, Boolean> comparator, Iterable<T> xs) {
+    public static final <T> Iterable<Iterable<T>> group(Apply<Map.Entry<T,T>, Boolean> comparator, Iterable<T> xs) {
         return FunctionalImpl.group(comparator, xs);
     }
     
@@ -225,8 +225,9 @@ public abstract class Functional extends FunctionalC {
     }
 
     public static final <T> Iterable<T> repeat(T value, long amount) {
-        if (amount <= 0)
+        if (amount <= 0) {
             return emptyList();
+        }
         return value == null ? null : new RepeatingIterable<T>(value, amount);
     }
     
@@ -252,9 +253,5 @@ public abstract class Functional extends FunctionalC {
     
     public static final <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> xs) {
         return FunctionalImpl.transpose(xs);
-    }
-    
-    public static final CharSequence unlines(Iterable<? extends CharSequence> xs) {
-        return FunctionalImpl.unlines(xs);
     }
 }

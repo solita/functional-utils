@@ -12,7 +12,7 @@ public abstract class Transformers {
     public static final Transformer<String, String> append(final String suffix) { 
         return new Transformer<String, String>() {
             @Override
-            public String transform(String source) {
+            public final String transform(String source) {
                 return source == null ? null : source + suffix;
             }
         };
@@ -21,7 +21,7 @@ public abstract class Transformers {
     public static final Transformer<CharSequence, String> prepend(final CharSequence prefix) { 
         return new Transformer<CharSequence, String>() {
             @Override
-            public String transform(CharSequence source) {
+            public final String transform(CharSequence source) {
                 return prefix + source.toString();
             }
         };
@@ -30,7 +30,7 @@ public abstract class Transformers {
     public static final Transformer<String, String> replaceAll(final Pattern pattern, final String replacement) { 
         return new Transformer<String, String>() {
             @Override
-            public String transform(String source) {
+            public final String transform(String source) {
                 return source == null ? null : pattern.matcher(source).replaceAll(replacement);
             }
         };
@@ -39,13 +39,13 @@ public abstract class Transformers {
     public static final Transformer<String, String> removeWhitespace = new Transformer<String, String>() {
         private final Predicate<Character> whitespace = new Predicate<Character>() {
             @Override
-            public boolean accept(Character candidate) {
+            public final boolean accept(Character candidate) {
                 return Character.isWhitespace(candidate);
             }
         };
         
         @Override
-        public String transform(String source) {
+        public final String transform(String source) {
             if (source == null) {
                 return null;
             }
@@ -56,7 +56,7 @@ public abstract class Transformers {
     public static final Transformer<Map.Entry<?, ?>, String> join(final String delim) {
         return new Transformer<Map.Entry<?, ?>, String>() {
             @Override
-            public String transform(Map.Entry<?, ?> source) {
+            public final String transform(Map.Entry<?, ?> source) {
                 return source.getKey() + delim + source.getValue();
             }
         };
@@ -65,7 +65,7 @@ public abstract class Transformers {
     public static final Transformer<Tuple, String> mkString(final String delim, final Apply<Object,CharSequence> toString) {
           return new Transformer<Tuple, String>() {
               @Override
-              public String transform(Tuple source) {
+              public final String transform(Tuple source) {
                   return Functional.mkString(delim, Functional.map(toString, source.toArray()));
               }
           };
@@ -77,7 +77,7 @@ public abstract class Transformers {
         }
         return new Transformer<String, String>() {
             @Override
-            public String transform(String source) {
+            public final String transform(String source) {
                 return source.substring(0, Math.min(chars, source.length()));
             }
         };
@@ -85,7 +85,7 @@ public abstract class Transformers {
     
     private static final Transformer<Map.Entry<?, ?>,Map.Entry<?, ?>> flip = new Transformer<Map.Entry<?, ?>,Map.Entry<?, ?>>() {
         @Override
-        public Map.Entry<?, ?> transform(Map.Entry<?, ?> source) {
+        public final Map.Entry<?, ?> transform(Map.Entry<?, ?> source) {
             return Tuple.of(source.getValue(), source.getKey());
         }
     };
@@ -97,7 +97,7 @@ public abstract class Transformers {
     public static final Transformer<Integer, Integer> mod(final Integer mod) {
         return new Transformer<Integer, Integer>() {
             @Override
-            public Integer transform(Integer source) {
+            public final Integer transform(Integer source) {
                   return source % mod;
             }
         };
@@ -107,21 +107,21 @@ public abstract class Transformers {
     
     public static final Transformer<Long, Long> negate = new Transformer<Long,Long>() {
         @Override
-        public Long transform(Long source) {
+        public final Long transform(Long source) {
             return -1*source;
         }
     };
     
     public static final Transformer<Integer, Integer> negateInt = new Transformer<Integer,Integer>() {
         @Override
-        public Integer transform(Integer source) {
+        public final Integer transform(Integer source) {
             return -1*source;
         }
     };
     
     public static final Transformer<Short, Short> negateShort = new Transformer<Short,Short>() {
         @Override
-        public Short transform(Short source) {
+        public final Short transform(Short source) {
             return (short)(-1*source);
         }
     };
@@ -130,28 +130,28 @@ public abstract class Transformers {
     
     public static final Transformer<Short, Long> short2long = new Transformer<Short,Long>() {
         @Override
-        public Long transform(Short source) {
+        public final Long transform(Short source) {
             return source.longValue();
         }
     };
     
     public static final Transformer<Integer, Long> int2long = new Transformer<Integer,Long>() {
         @Override
-        public Long transform(Integer source) {
+        public final Long transform(Integer source) {
             return source.longValue();
         }
     };
     
     public static final Transformer<Object,String> toString = new Transformer<Object,String>() {
         @Override
-        public String transform(Object source) {
+        public final String transform(Object source) {
             return source.toString();
         }
     };
     
     private static final Transformer<Map.Entry<?,?>,?> left = new Transformer<Map.Entry<?,?>,Object>() {
         @Override
-        public Object transform(Map.Entry<?,?> source) {
+        public final Object transform(Map.Entry<?,?> source) {
             return source.getKey();
         }
     };
@@ -166,7 +166,7 @@ public abstract class Transformers {
     
     private static final Transformer<Map.Entry<?,?>,?> right = new Transformer<Map.Entry<?,?>,Object>() {
         @Override
-        public Object transform(Map.Entry<?,?> source) {
+        public final Object transform(Map.Entry<?,?> source) {
             return source.getValue();
         }
     };
@@ -181,7 +181,7 @@ public abstract class Transformers {
     
     private static final Transformer<Either<?,?>,Option<?>> eitherLeft = new Transformer<Either<?,?>,Option<?>>() {
         @Override
-        public Option<?> transform(Either<?,?> source) {
+        public final Option<?> transform(Either<?,?> source) {
             return source.left;
         }
     };
@@ -192,7 +192,7 @@ public abstract class Transformers {
     
     private static final Transformer<Either<?,?>,Option<?>> eitherRight = new Transformer<Either<?,?>,Option<?>>() {
         @Override
-        public Option<?> transform(Either<?,?> source) {
+        public final Option<?> transform(Either<?,?> source) {
             return source.right;
         }
     };
@@ -203,7 +203,7 @@ public abstract class Transformers {
     
     private static final Transformer<Option<?>,?> get = new Transformer<Option<?>,Object>() {
         @Override
-        public Object transform(Option<?> source) {
+        public final Object transform(Option<?> source) {
             return source.get();
         }
     };
@@ -215,7 +215,7 @@ public abstract class Transformers {
     public static final <T> Transformer<Option<T>,T> getOrElse(final T elseValue) {
         return new Transformer<Option<T>,T>() {
             @Override
-            public T transform(Option<T> source) {
+            public final T transform(Option<T> source) {
                 return source.getOrElse(elseValue);
             }
         };
@@ -223,14 +223,14 @@ public abstract class Transformers {
     
     public static final Transformer<String,Iterable<Character>> it = new Transformer<String,Iterable<Character>>() {
         @Override
-        public Iterable<Character> transform(String source) {
+        public final Iterable<Character> transform(String source) {
             return it(source);
         }
     };
     
     private static final Transformer<Iterable<?>, Object> head = new Transformer<Iterable<?>,Object>() {
         @Override
-        public Object transform(Iterable<?> source) {
+        public final Object transform(Iterable<?> source) {
             return Functional.head(source);
         }
     };
@@ -242,7 +242,7 @@ public abstract class Transformers {
     public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> map(final Apply<? super T, R> f) {
         return new Transformer<Iterable<? extends T>,Iterable<R>>() {
             @Override
-            public Iterable<R> transform(Iterable<? extends T> source) {
+            public final Iterable<R> transform(Iterable<? extends T> source) {
                 return Functional.map(f, source);
             }
         };
@@ -251,7 +251,7 @@ public abstract class Transformers {
     public static final <T,R> Transformer<Option<? extends T>,Option<R>> mapOption(final Apply<? super T, R> f) {
         return new Transformer<Option<? extends T>,Option<R>>() {
             @Override
-            public Option<R> transform(Option<? extends T> source) {
+            public final Option<R> transform(Option<? extends T> source) {
                 return source.map(f);
             }
         };
@@ -260,7 +260,7 @@ public abstract class Transformers {
     public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> flatMap(final Apply<? super T, ? extends Iterable<R>> f) {
         return new Transformer<Iterable<? extends T>,Iterable<R>>() {
             @Override
-            public Iterable<R> transform(Iterable<? extends T> source) {
+            public final Iterable<R> transform(Iterable<? extends T> source) {
                 return Functional.flatMap(f, source);
             }
         };
@@ -268,158 +268,158 @@ public abstract class Transformers {
    
     public static final Transformer<Iterable<?>, Long> size = new Transformer<Iterable<?>,Long>() {
         @Override
-        public Long transform(Iterable<?> source) {
+        public final Long transform(Iterable<?> source) {
             return Functional.size(source);
         }
     };
     
     private static final Transformer<Tuple._1<?>,?> _1 = new Transformer<Tuple._1<?>,Object>() {
         @Override
-        public Object transform(Tuple._1<?> source) {
+        public final Object transform(Tuple._1<?> source) {
             return source.get_1();
         }
     };
     private static final Transformer<Tuple._2<?>,?> _2 = new Transformer<Tuple._2<?>,Object>() {
         @Override
-        public Object transform(Tuple._2<?> source) {
+        public final Object transform(Tuple._2<?> source) {
             return source.get_2();
         }
     };
     private static final Transformer<Tuple._3<?>,?> _3 = new Transformer<Tuple._3<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._3<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._3<?> source) {
             return source.get_3();
         }
     };
     private static final Transformer<Tuple._4<?>,?> _4 = new Transformer<Tuple._4<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._4<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._4<?> source) {
             return source.get_4();
         }
     };
     private static final Transformer<Tuple._5<?>,?> _5 = new Transformer<Tuple._5<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._5<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._5<?> source) {
             return source.get_5();
         }
     };
     private static final Transformer<Tuple._6<?>,?> _6 = new Transformer<Tuple._6<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._6<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._6<?> source) {
             return source.get_6();
         }
     };
     private static final Transformer<Tuple._7<?>,?> _7 = new Transformer<Tuple._7<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._7<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._7<?> source) {
             return source.get_7();
         }
     };
     private static final Transformer<Tuple._8<?>,?> _8 = new Transformer<Tuple._8<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._8<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._8<?> source) {
             return source.get_8();
         }
     };
     private static final Transformer<Tuple._9<?>,?> _9 = new Transformer<Tuple._9<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._9<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._9<?> source) {
             return source.get_9();
         }
     };
     private static final Transformer<Tuple._10<?>,?> _10 = new Transformer<Tuple._10<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._10<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._10<?> source) {
             return source.get_10();
         }
     };
     private static final Transformer<Tuple._11<?>,?> _11 = new Transformer<Tuple._11<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._11<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._11<?> source) {
             return source.get_11();
         }
     };
     private static final Transformer<Tuple._12<?>,?> _12 = new Transformer<Tuple._12<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._12<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._12<?> source) {
             return source.get_12();
         }
     };
     private static final Transformer<Tuple._13<?>,?> _13 = new Transformer<Tuple._13<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._13<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._13<?> source) {
             return source.get_13();
         }
     };
     private static final Transformer<Tuple._14<?>,?> _14 = new Transformer<Tuple._14<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._14<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._14<?> source) {
             return source.get_14();
         }
     };
     private static final Transformer<Tuple._15<?>,?> _15 = new Transformer<Tuple._15<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._15<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._15<?> source) {
             return source.get_15();
         }
     };
     private static final Transformer<Tuple._16<?>,?> _16 = new Transformer<Tuple._16<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._16<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._16<?> source) {
             return source.get_16();
         }
     };
     private static final Transformer<Tuple._17<?>,?> _17 = new Transformer<Tuple._17<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._17<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._17<?> source) {
             return source.get_17();
         }
     };
     private static final Transformer<Tuple._18<?>,?> _18 = new Transformer<Tuple._18<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._18<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._18<?> source) {
             return source.get_18();
         }
     };
     private static final Transformer<Tuple._19<?>,?> _19 = new Transformer<Tuple._19<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._19<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._19<?> source) {
             return source.get_19();
         }
     };
     private static final Transformer<Tuple._20<?>,?> _20 = new Transformer<Tuple._20<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._20<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._20<?> source) {
             return source.get_20();
         }
     };
     private static final Transformer<Tuple._21<?>,?> _21 = new Transformer<Tuple._21<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._21<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._21<?> source) {
             return source.get_21();
         }
     };
     private static final Transformer<Tuple._22<?>,?> _22 = new Transformer<Tuple._22<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._22<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._22<?> source) {
             return source.get_22();
         }
     };
     private static final Transformer<Tuple._23<?>,?> _23 = new Transformer<Tuple._23<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._23<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._23<?> source) {
             return source.get_23();
         }
     };
     private static final Transformer<Tuple._24<?>,?> _24 = new Transformer<Tuple._24<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._24<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._24<?> source) {
             return source.get_24();
         }
     };
     private static final Transformer<Tuple._25<?>,?> _25 = new Transformer<Tuple._25<?>,Object>() {
         @Override
-        public Object transform(fi.solita.utils.functional.Tuple._25<?> source) {
+        public final Object transform(fi.solita.utils.functional.Tuple._25<?> source) {
             return source.get_25();
         }
     };

@@ -13,7 +13,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         final Function2<T1, T2, R> self = this;
         return new Function2<T1, T2, U>() {
             @Override
-            public U apply(T1 t1, T2 t2) {
+            public final U apply(T1 t1, T2 t2) {
                 return next.apply(self.apply(t1, t2));
             }
         };
@@ -23,7 +23,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<Map.Entry<? extends T1, ? extends T2>, R> tuppled() {
         return new Function1<Map.Entry<? extends T1, ? extends T2>, R>() {
             @Override
-            public R apply(Map.Entry<? extends T1, ? extends T2> t) {
+            public final R apply(Map.Entry<? extends T1, ? extends T2> t) {
                 return Function2.this.apply(t.getKey(), t.getValue());
             }
         };
@@ -32,10 +32,10 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T1, Function1<T2, R>> curried() {
         return new Function1<T1, Function1<T2,R>>() {
             @Override
-            public Function1<T2, R> apply(final T1 t1) {
+            public final Function1<T2, R> apply(final T1 t1) {
                 return new Function1<T2, R>() {
                     @Override
-                    public R apply(T2 t2) {
+                    public final R apply(T2 t2) {
                         return Function2.this.apply(t1, t2);
                     }
                 };
@@ -47,7 +47,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         final Function2<T1, T2, R> self = this;
         return new Function2<T2,T1,R>() {
             @Override
-            public R apply(T2 t2, T1 t1) {
+            public final R apply(T2 t2, T1 t1) {
                 return self.apply(t1, t2);
             }
         };
@@ -56,7 +56,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T2,R> ap(final T1 t) {
         return new Function1<T2,R>() {
             @Override
-            public R apply(T2 t2) {
+            public final R apply(T2 t2) {
                 return Function2.this.apply(t, t2);
             }
         };
@@ -66,7 +66,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         return new Function2<T1,T2,R>() {
             @SuppressWarnings("unchecked")
             @Override
-            public R apply(T1 t1, T2 t2) {
+            public final R apply(T1 t1, T2 t2) {
                 return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2);
             }
         };
@@ -75,7 +75,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     static final <T1,T2,R,FR extends Apply<?,R>> Function2<T1,T2,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
         return new Function2<T1,T2,FR>() {
             @Override
-            public FR apply(T1 t1, T2 t2) {
+            public final FR apply(T1 t1, T2 t2) {
                 return PartialApplicationHelper.makeSecondFunc(f, placeholders, t1, t2);
             }
         };
@@ -84,7 +84,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T2,R> apply(final T1 t1, GivenLater _2) {
         return new Function1<T2,R>() {
             @Override
-            public R apply(T2 t2) {
+            public final R apply(T2 t2) {
                 return Function2.this.apply(t1, t2);
             }
         };
@@ -93,7 +93,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T1,R> apply(GivenLater _1, final T2 t2) {
         return new Function1<T1,R>() {
             @Override
-            public R apply(T1 t1) {
+            public final R apply(T1 t1) {
                 return Function2.this.apply(t1, t2);
             }
         };
@@ -102,7 +102,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T1,Function1<T2,R>> apply(GivenLater _1, GivenEvenLater _2) {
         return new Function1<T1, Function1<T2,R>>() {
             @Override
-            public Function1<T2, R> apply(T1 t) {
+            public final Function1<T2, R> apply(T1 t) {
                 return apply(t);
             }
         };
@@ -111,7 +111,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
     public final Function1<T2,Function1<T1,R>> apply(GivenEvenLater _1, GivenLater _2) {
         return new Function1<T2, Function1<T1,R>>() {
             @Override
-            public Function1<T1, R> apply(T2 t) {
+            public final Function1<T1, R> apply(T2 t) {
                 return apply(t);
             }
         };

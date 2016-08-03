@@ -7,7 +7,7 @@ import java.util.Iterator;
 public abstract class Option<T> implements Iterable<T>, Serializable {
     private static final NoneImpl<Void> NoneInstance = new NoneImpl<Void>();
 
-    public static <T> Option<T> of(T t) {
+    public static final <T> Option<T> of(T t) {
         if (t == null) {
             return None();
         } else {
@@ -15,7 +15,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
         }
     }
 
-    public static <T> Option<T> Some(T t) {
+    public static final <T> Option<T> Some(T t) {
         if (t == null) {
             throw new IllegalArgumentException("Passed null to Some");
         }
@@ -23,7 +23,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Option<T> None() {
+    public static final <T> Option<T> None() {
         return (Option<T>) NoneInstance;
     }
 
@@ -47,46 +47,46 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public T get() {
+    public final T get() {
         throw new UnsupportedOperationException("Cannot get from None");
     }
     
     @Override
-    public T getOrElse(T orElse) {
+    public final T getOrElse(T orElse) {
         return orElse;
     }
     
     @Override
-    public <R> Option<R> map(Apply<? super T, R> f) {
+    public final <R> Option<R> map(Apply<? super T, R> f) {
         return None();
     }
     
     @Override
-    public <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
+    public final <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
         return ifNone.apply();
     }
     
     @Override
-    public <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
+    public final <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifNone;
     }
     
     @Override
-    public boolean isDefined() {
+    public final boolean isDefined() {
         return false;
     }
     
-    public Iterator<T> iterator() {
+    public final Iterator<T> iterator() {
         return Collections.<T>emptyList().iterator();
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "None";
     }
 }
 
-class SomeImpl<T> extends Option<T> {
+final class SomeImpl<T> extends Option<T> {
 
     protected final T t;
 
@@ -98,46 +98,46 @@ class SomeImpl<T> extends Option<T> {
     }
 
     @Override
-    public T get() {
+    public final T get() {
         return t;
     }
 
     @Override
-    public T getOrElse(T orElse) {
+    public final T getOrElse(T orElse) {
         return get();
     }
     
     @Override
-    public <R> Option<R> map(Apply<? super T, R> f) {
+    public final <R> Option<R> map(Apply<? super T, R> f) {
         return Some(f.apply(t));
     }
     
     @Override
-    public <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
+    public final <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone) {
         return ifSome.apply(t);
     }
     
     @Override
-    public <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
+    public final <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifSome.apply(t);
     }
 
     @Override
-    public boolean isDefined() {
+    public final boolean isDefined() {
         return true;
     }
 
-    public Iterator<T> iterator() {
+    public final Iterator<T> iterator() {
         return Collections.singleton(t).iterator();
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return 31 + t.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -149,7 +149,7 @@ class SomeImpl<T> extends Option<T> {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "Some(" + t + ")";
     }
 }

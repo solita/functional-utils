@@ -72,7 +72,7 @@ public abstract class FunctionalA extends FunctionalM {
     public static final <T> Iterable<T> flatten(T[][] xs) {
         return FunctionalImpl.flatten(map(new Transformer<T[], Iterable<T>>() {
             @Override
-            public Iterable<T> transform(T[] source) {
+            public final Iterable<T> transform(T[] source) {
                 return newList(source);
             }
         }, xs));
@@ -81,7 +81,7 @@ public abstract class FunctionalA extends FunctionalM {
     public static final <T> Iterable<T> flatten(T[] x, T[]... xs) {
         return FunctionalImpl.flatten(FunctionalImpl.map(new Transformer<T[], Iterable<T>>() {
             @Override
-            public Iterable<T> transform(T[] source) {
+            public final Iterable<T> transform(T[] source) {
                 return newList(source);
             }
         }, cons(x, xs)));
@@ -133,7 +133,7 @@ public abstract class FunctionalA extends FunctionalM {
         return FunctionalImpl.group(newList(xs));
     }
     
-    public static final <T> Iterable<Iterable<T>> group(Apply<Tuple2<T,T>, Boolean> comparator, T[] xs) {
+    public static final <T> Iterable<Iterable<T>> group(Apply<Map.Entry<T,T>, Boolean> comparator, T[] xs) {
         return FunctionalImpl.group(comparator, newList(xs));
     }
     
@@ -420,7 +420,7 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static <T> Iterable<T> distinct(T[] xs) {
+    public static final <T> Iterable<T> distinct(T[] xs) {
         return FunctionalImpl.distinct(newList(xs));
     }
     

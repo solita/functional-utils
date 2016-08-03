@@ -10,14 +10,14 @@ public abstract class Predicates {
     private static final class Impl {
         private static final Predicate<?> isNull = new Predicate<Object>() {
             @Override
-            public boolean accept(Object candidate) {
+            public final boolean accept(Object candidate) {
                 return candidate == null;
             }
         };
         
         private static final Predicate<Iterable<?>> empty = new Predicate<Iterable<?>>() {
             @Override
-            public boolean accept(Iterable<?> candidate) {
+            public final boolean accept(Iterable<?> candidate) {
                 return !candidate.iterator().hasNext();
             }
         };
@@ -26,7 +26,7 @@ public abstract class Predicates {
     public static final <T extends AnnotatedElement> Predicate<T> isAnnotationPresent(final Class<? extends Annotation> annotation) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.isAnnotationPresent(annotation);
             }
         };
@@ -35,7 +35,7 @@ public abstract class Predicates {
     public static final <T> Predicate<T> equalTo(final T element) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.equals(element);
             }
         };
@@ -45,7 +45,7 @@ public abstract class Predicates {
     public static final <T> Predicate<T> not(final Apply<T, Boolean> filter) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return !filter.apply(candidate);
             }
 
@@ -59,7 +59,7 @@ public abstract class Predicates {
     
     public static final Predicate<Integer> even = new Predicate<Integer>() {
         @Override
-        public boolean accept(Integer candidate) {
+        public final boolean accept(Integer candidate) {
             return candidate % 2 == 0;
         }
     };
@@ -69,7 +69,7 @@ public abstract class Predicates {
     public static final <T> Predicate<T> instanceOf(final Class<? extends T> c) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return c.isInstance(candidate);
             }
         };
@@ -83,7 +83,7 @@ public abstract class Predicates {
     public static final <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.compareTo(value) > 0;
             }
         };
@@ -92,7 +92,7 @@ public abstract class Predicates {
     public static final <T extends Comparable<T>> Predicate<T> lessThan(final T value) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.compareTo(value) < 0;
             }
         };
@@ -101,7 +101,7 @@ public abstract class Predicates {
     public static final <T extends Comparable<T>> Predicate<T> greaterThanOrEqualTo(final T value) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.compareTo(value) >= 0;
             }
         };
@@ -110,7 +110,7 @@ public abstract class Predicates {
     public static final <T extends Comparable<T>> Predicate<T> lessThanOrEqualTo(final T value) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return candidate.compareTo(value) <= 0;
             }
         };
@@ -119,7 +119,7 @@ public abstract class Predicates {
     public static final <T extends Comparable<T>> Predicate<T> between(final T beginInclusive, final T endInclusive) {
         return new Predicate<T>() {
             @Override
-            public boolean accept(T candidate) {
+            public final boolean accept(T candidate) {
                 return greaterThanOrEqualTo(beginInclusive).and(lessThanOrEqualTo(endInclusive)).accept(candidate);
             }
         };
@@ -128,7 +128,7 @@ public abstract class Predicates {
     public static final Predicate<String> matches(final Pattern pattern) {
         return new Predicate<String>() {
             @Override
-            public boolean accept(String candidate) {
+            public final boolean accept(String candidate) {
                 return pattern.matcher(candidate).matches();
             }
         };
@@ -137,7 +137,7 @@ public abstract class Predicates {
     public static final Predicate<String> lookingAt(final Pattern pattern) {
         return new Predicate<String>() {
             @Override
-            public boolean accept(String candidate) {
+            public final boolean accept(String candidate) {
                 return pattern.matcher(candidate).lookingAt();
             }
         };
@@ -145,14 +145,14 @@ public abstract class Predicates {
     
     public static final Predicate<Object> serializable = new Predicate<Object>() {
         @Override
-        public boolean accept(Object candidate) {
+        public final boolean accept(Object candidate) {
             return candidate instanceof Serializable || candidate != null && candidate.getClass().isPrimitive();
         }
     };
     
     public static final Predicate<Option<?>> defined = new Predicate<Option<?>>() {
         @Override
-        public boolean accept(Option<?> candidate) {
+        public final boolean accept(Option<?> candidate) {
             return candidate.isDefined();
         }
     };

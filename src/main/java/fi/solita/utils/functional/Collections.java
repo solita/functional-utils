@@ -71,7 +71,7 @@ public abstract class Collections {
         return new TreeSet<T>();
     }
     
-    public static final <T> SortedSet<T> newSortedSet(Comparator<T> comparator) {
+    public static final <T> SortedSet<T> newSortedSet(Comparator<? super T> comparator) {
         return new TreeSet<T>(comparator);
     }
 
@@ -83,7 +83,7 @@ public abstract class Collections {
         return new TreeMap<K,V>();
     }
     
-    public static final <K,V> SortedMap<K,V> newSortedMap(Comparator<K> comparator) {
+    public static final <K,V> SortedMap<K,V> newSortedMap(Comparator<? super K> comparator) {
         return new TreeMap<K,V>(comparator);
     }
     
@@ -157,122 +157,122 @@ public abstract class Collections {
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1) {
-        return Arrays.asList(e1);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2) {
-        return Arrays.asList(e1, e2);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3) {
-        return Arrays.asList(e1, e2, e3);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4) {
-        return Arrays.asList(e1, e2, e3, e4);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5) {
-        return Arrays.asList(e1, e2, e3, e4, e5);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
     }
     
     @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24) {
-        return Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24);
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
     }
     
     @SuppressWarnings("unchecked")
@@ -525,7 +525,7 @@ public abstract class Collections {
         return java.util.Collections.unmodifiableSortedSet(ret);
     }
     
-    public static final <T> SortedSet<T> newSortedSet(Comparator<T> comparator, Iterable<T> elements) {
+    public static final <T> SortedSet<T> newSortedSet(Comparator<? super T> comparator, Iterable<T> elements) {
         if (elements == null) {
             return null;
         }
@@ -567,7 +567,7 @@ public abstract class Collections {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <K, V> SortedMap<K, V> newSortedMap(Comparator<K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+    public static final <K, V> SortedMap<K, V> newSortedMap(Comparator<? super K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
         }

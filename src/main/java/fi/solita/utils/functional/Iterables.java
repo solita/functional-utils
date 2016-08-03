@@ -2,12 +2,12 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newListOfSize;
+import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.forall;
-import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.span;
 import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
@@ -18,50 +18,59 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 public abstract class Iterables {
+    // cache most used Some-object to reduce object allocation
+    @SuppressWarnings("unchecked")
+    private static final Option<Long>[] someCache = new Option[4096];
+    static {
+        for (int i = 0; i < someCache.length; ++i) {
+            someCache[i] = Some((long)i);
+        }
+    }
+    
+    private static final Option<Long> wrapSome(long size) {
+        return size < someCache.length ? someCache[(int)size] : Some(size);
+    }
+    
     public static final Transformer<Iterable<?>,Option<Long>> resolveSize = new Transformer<Iterable<?>,Option<Long>>() {
-        private final Option<Long> SOME_ZERO = Some(0l);
-        private final Option<Long> SOME_ONE = Some(1l);
-        
-        public Option<Long> transform(Iterable<?> source) {
+        public final Option<Long> transform(Iterable<?> source) {
             if (source instanceof Collection) {
-                return Some((long)((Collection<?>)source).size());
+                return wrapSome((long)((Collection<?>)source).size());
             }
             if (source instanceof PossiblySizeAwareIterable) {
                 return ((PossiblySizeAwareIterable<?>)source).size();
             }
             if (source instanceof Option) {
-                return ((Option<?>)source).isDefined() ? SOME_ONE : SOME_ZERO;
+                return ((Option<?>)source).isDefined() ? wrapSome(1) : wrapSome(0);
             }
             return None();
         }
     };
     
     private static final Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
-        
-        public Boolean transform(Iterator<?> source) {
+        public final Boolean transform(Iterator<?> source) {
             return source.hasNext();
         }
     };
     
     private static final Transformer<Iterator<Object>, Object> next = new Transformer<Iterator<Object>,Object>() {
-        
-        public Object transform(Iterator<Object> source) {
+        public final Object transform(Iterator<Object> source) {
             return source.next();
         }
     };
     
     private static final Transformer<Iterable<Object>,Iterator<Object>> toIterator = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        public Iterator<Object> transform(Iterable<Object> source) {
+        public final Iterator<Object> transform(Iterable<Object> source) {
             return source.iterator();
         }
     };
     
     private static final Transformer<Iterable<Object>,Iterator<Object>> toIteratorForced = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        public Iterator<Object> transform(Iterable<Object> source) {
+        public final Iterator<Object> transform(Iterable<Object> source) {
             if (source instanceof ForceableIterable) {
                 ((ForceableIterable) source).completeIterationNeeded();
             }
@@ -104,15 +113,15 @@ public abstract class Iterables {
             this.knownSize = knownSize;
         }
 
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             return new Iterator<T>() {
                 private Option<T> nextToReturn = from;
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return nextToReturn.isDefined();
                 }
 
-                public T next() {
+                public final T next() {
                     T ret;
                     try {
                         ret = nextToReturn.get();
@@ -130,15 +139,15 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
-            return knownSize.isDefined() ? Some(knownSize.get()) : Option.<Long>None();
+        public final Option<Long> size() {
+            return knownSize.isDefined() ? wrapSome(knownSize.get()) : Option.<Long>None();
         }
     }
 
@@ -157,21 +166,21 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> size() {
-            return amount != null ? Some(amount) : Option.<Long>None();
+        public final Option<Long> size() {
+            return amount != null ? wrapSome(amount) : Option.<Long>None();
         }
 
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             return new Iterator<T>() {
                 private int current = 0;
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return amount == null || current < amount;
                 }
 
                 
-                public T next() {
+                public final T next() {
                     if (amount != null && current == amount) {
                         throw new NoSuchElementException();
                     }
@@ -180,7 +189,7 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -195,23 +204,23 @@ public abstract class Iterables {
             this.elements = elements;
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Iterator<Iterable<T>> iterator() {
+        public final Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
                 private final List<Iterator<T>> iterators = newList(map((Transformer<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
                 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return !iterators.isEmpty() && forall(hasNext, iterators);
                 }
 
                 @SuppressWarnings("unchecked")
                 
-                public Iterable<T> next() {
+                public final Iterable<T> next() {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
@@ -219,14 +228,14 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return None();
         }
     }
@@ -241,11 +250,11 @@ public abstract class Iterables {
             this.elements2 = elements2;
         }
 
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Iterator<Tuple2<A, B>> iterator() {
+        public final Iterator<Tuple2<A, B>> iterator() {
             if (force) {
                 if (elements1 instanceof ForceableIterable) {
                     ((ForceableIterable)elements1).completeIterationNeeded();
@@ -259,27 +268,27 @@ public abstract class Iterables {
                 private final Iterator<B> it2 = elements2.iterator();
                 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return it1.hasNext() && it2.hasNext();
                 }
 
                 
-                public Tuple2<A, B> next() {
+                public final Tuple2<A, B> next() {
                     return Tuple.of(it1.next(), it2.next());
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             for (long a: resolveSize.apply(elements1)) {
                 for (long b: resolveSize.apply(elements2)) {
-                    return Some(Functional.min(a,b));
+                    return wrapSome(Math.min(a,b));
                 }
             }
             return None();
@@ -298,7 +307,7 @@ public abstract class Iterables {
             }
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
@@ -324,11 +333,11 @@ public abstract class Iterables {
                     return Option.None();
                 }
             }
-            return Some(s);
+            return wrapSome(s);
         }
 
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
                 private final Iterator<Iterator<? extends T>> it = Functional.map((Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
@@ -336,7 +345,7 @@ public abstract class Iterables {
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     while (!lastUsed.hasNext() && it.hasNext()) {
                         lastUsed = it.next();
                     }
@@ -344,13 +353,13 @@ public abstract class Iterables {
                 }
 
                 
-                public T next() {
+                public final T next() {
                     hasNext();
                     return lastUsed.next();
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -378,16 +387,16 @@ public abstract class Iterables {
             this.filter = filter;
         }
 
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return None();
         }
 
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
@@ -400,11 +409,11 @@ public abstract class Iterables {
                 }
 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return hasNext;
                 }
 
-                private void readNext() {
+                private final void readNext() {
                     hasNext = false;
                     while (!hasNext && source.hasNext()) {
                         T n = source.next();
@@ -416,7 +425,7 @@ public abstract class Iterables {
                 }
 
                 
-                public T next() {
+                public final T next() {
                     if (!hasNext) {
                         throw new NoSuchElementException();
                     }
@@ -426,7 +435,7 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -443,16 +452,16 @@ public abstract class Iterables {
             this.transformer = transformer;
         }
 
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return resolveSize.apply(iterable);
         }
 
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
@@ -460,17 +469,17 @@ public abstract class Iterables {
                 private final Iterator<S> source = iterable.iterator();
 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return source.hasNext();
                 }
 
                 
-                public T next() {
+                public final T next() {
                     return transformer.apply(source.next());
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -485,16 +494,16 @@ public abstract class Iterables {
             this.iterable = iterable;
         }
 
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return resolveSize.apply(iterable);
         }
 
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
@@ -503,17 +512,17 @@ public abstract class Iterables {
                 private final ListIterator<T> underlying = list.listIterator(list.size());
                 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return underlying.hasPrevious();
                 }
 
                 
-                public T next() {
+                public final T next() {
                     return underlying.previous();
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -528,26 +537,26 @@ public abstract class Iterables {
         }
         
         
-        public char charAt(int index) {
+        public final char charAt(int index) {
             return chars.charAt(index);
         }
 
         
-        public int length() {
+        public final int length() {
             return chars.length();
         }
 
         
-        public CharSequence subSequence(int start, int end) {
+        public final CharSequence subSequence(int start, int end) {
             return chars.subSequence(start, end);
         }
         
         
-        public Iterator<Character> iterator() {
+        public final Iterator<Character> iterator() {
             return new Iterator<Character>() {
                 private int read = 0;
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     try {
                         chars.charAt(read);
                         return true;
@@ -557,35 +566,35 @@ public abstract class Iterables {
                 }
 
                 
-                public Character next() {
+                public final Character next() {
                     char ret = chars.charAt(read);
                     read++;
                     return ret;
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             if (chars instanceof String || chars instanceof StringBuilder || chars instanceof StringBuffer) {
-                return Some((long)chars.length());
+                return wrapSome((long)chars.length());
             } else {
                 return None();
             }
         }
         
         
-        public String toString() {
+        public final String toString() {
             return chars.toString();
         }
     }
     
-    static class MemoizingCharSequenceIterable extends MyIterable<Character> implements CharSequence, Iterable<Character> {
+    static final class MemoizingCharSequenceIterable extends MyIterable<Character> implements CharSequence, Iterable<Character> {
         private final StringBuilder memo = new StringBuilder();
         private final Iterable<Character> iterable;
         private Iterator<Character> it;
@@ -594,7 +603,7 @@ public abstract class Iterables {
             iterable = chars;
         }
         
-        private int resolveLength() {
+        private final int resolveLength() {
             while (it.hasNext()) {
                 memo.append(it.next());
             }
@@ -605,7 +614,7 @@ public abstract class Iterables {
          * Does not neccessarily check if <i>end</i> is bigger than <i>length()<i>
          */
         
-        public CharSequence subSequence(int start, int end) {
+        public final CharSequence subSequence(int start, int end) {
             if (it == null) {
                 it = iterable.iterator();
             }
@@ -616,7 +625,7 @@ public abstract class Iterables {
         }
         
         
-        public int length() {
+        public final int length() {
             if (it == null) {
                 it = iterable.iterator();
             }
@@ -624,7 +633,7 @@ public abstract class Iterables {
         }
         
         
-        public char charAt(int index) {
+        public final char charAt(int index) {
             if (index < 0)
                 throw new IndexOutOfBoundsException();
             Iterator<Character> it = iterator();
@@ -639,11 +648,11 @@ public abstract class Iterables {
         }
 
         
-        public Iterator<Character> iterator() {
+        public final Iterator<Character> iterator() {
             return new Iterator<Character>() {
                 private int read = 0;
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     if (it == null) {
                         it = iterable.iterator();
                     }
@@ -654,7 +663,7 @@ public abstract class Iterables {
                 }
 
                 
-                public Character next() {
+                public final Character next() {
                     if (it == null) {
                         it = iterable.iterator();
                     }
@@ -667,26 +676,26 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             if (it == null) {
                 it = iterable.iterator();
             }
             if (!it.hasNext()) {
-                return Some((long)memo.length());
+                return wrapSome((long)memo.length());
             } else {
                 return None();
             }
         }
         
         
-        public String toString() {
+        public final String toString() {
             if (it == null) {
                 it = iterable.iterator();
             }
@@ -705,11 +714,11 @@ public abstract class Iterables {
             this.comparator = comparator;
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
@@ -748,24 +757,24 @@ public abstract class Iterables {
             }
             return new Iterator<T>() {
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return !queue.isEmpty();
                 }
 
                 
-                public T next() {
+                public final T next() {
                     return queue.remove();
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return resolveSize.apply(iterable);
         }
     }
@@ -783,11 +792,11 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && elements instanceof ForceableIterable) {
                 ((ForceableIterable)elements).completeIterationNeeded();
             }
@@ -796,12 +805,12 @@ public abstract class Iterables {
                 private final Iterator<T> it = elements.iterator();
 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return left > 0 && it.hasNext();
                 }
 
                 
-                public T next() {
+                public final T next() {
                     if (left == 0) {
                         throw new NoSuchElementException();
                     }
@@ -810,17 +819,17 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
-                return Some(min(s.get(), amount));
+                return wrapSome(min(s.get(), amount));
             } else {
                 return None();
             }
@@ -840,11 +849,11 @@ public abstract class Iterables {
             this.amount = amount;
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Iterator<T> iterator() {
+        public final Iterator<T> iterator() {
             if (force && elements instanceof ForceableIterable) {
                 ((ForceableIterable)elements).completeIterationNeeded();
             }
@@ -858,10 +867,10 @@ public abstract class Iterables {
         }
 
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             Option<Long> s = resolveSize.apply(elements);
             if (s.isDefined()) {
-                return Some(max(s.get() - amount, 0l));
+                return wrapSome(max(s.get() - amount, 0l));
             } else {
                 return None();
             }
@@ -870,24 +879,24 @@ public abstract class Iterables {
     
     static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<T> elements;
-        private final Apply<Tuple2<T,T>, Boolean> comparator;
+        private final Apply<Map.Entry<T,T>, Boolean> comparator;
         private boolean force = false;
 
-        public GroupingIterable(Iterable<T> elements, Apply<Tuple2<T,T>, Boolean> comparator) {
+        public GroupingIterable(Iterable<T> elements, Apply<Map.Entry<T,T>, Boolean> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }
         
-        public void completeIterationNeeded() {
+        public final void completeIterationNeeded() {
             this.force = true;
         }
         
-        public Option<Long> size() {
+        public final Option<Long> size() {
             return None();
         }
         
         
-        public Iterator<Iterable<T>> iterator() {
+        public final Iterator<Iterable<T>> iterator() {
             if (force && elements instanceof ForceableIterable) {
                 ((ForceableIterable)elements).completeIterationNeeded();
             }
@@ -895,12 +904,13 @@ public abstract class Iterables {
                 private Iterable<T> remaining = elements;
                 
                 
-                public boolean hasNext() {
+                public final boolean hasNext() {
                     return !isEmpty(remaining);
                 }
 
                 
-                public Iterable<T> next() {
+                @SuppressWarnings("unchecked")
+                public final Iterable<T> next() {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
@@ -921,7 +931,7 @@ public abstract class Iterables {
                 }
 
                 
-                public void remove() {
+                public final void remove() {
                     throw new UnsupportedOperationException();
                 }
             };

@@ -16,14 +16,14 @@ public abstract class FunctionalC extends FunctionalS {
 
     static final Transformer<CharSequence, Iterable<Character>> charSeq2iterable = new Transformer<CharSequence, Iterable<Character>>() {
         @Override
-        public Iterable<Character> transform(CharSequence source) {
+        public final Iterable<Character> transform(CharSequence source) {
             return it(source);
         }
     };
     
     private static final Transformer<Iterable<Character>, CharSequence> iterable2charSeq = new Transformer<Iterable<Character>, CharSequence>() {
         @Override
-        public CharSequence transform(Iterable<Character> source) {
+        public final CharSequence transform(Iterable<Character> source) {
             return it(source);
         }
     };
@@ -117,11 +117,11 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.map(Transformers.toString, group((CharSequence)xs));
     }
     
-    public static final Iterable<CharSequence> group(Apply<Tuple2<Character,Character>, Boolean> comparator, CharSequence xs) {
+    public static final Iterable<CharSequence> group(Apply<Map.Entry<Character,Character>, Boolean> comparator, CharSequence xs) {
         return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(comparator, it(xs)));
     }
     
-    public static final Iterable<String> group(Apply<Tuple2<Character,Character>, Boolean> comparator, String xs) {
+    public static final Iterable<String> group(Apply<Map.Entry<Character,Character>, Boolean> comparator, String xs) {
         return FunctionalImpl.map(Transformers.toString, group(comparator, (CharSequence)xs));
     }
     
@@ -316,7 +316,7 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.fold(f, it(xs));
     }
     
-    public static Option<Character> min(CharSequence xs) {
+    public static final Option<Character> min(CharSequence xs) {
         return FunctionalImpl.min(it(xs));
     }
     
@@ -374,13 +374,13 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
-    public static CharSequence distinct(CharSequence xs) {
+    public static final CharSequence distinct(CharSequence xs) {
         return it(FunctionalImpl.distinct(it(xs)));
     }
     
     
     
-    public static CharSequence unlines(Iterable<? extends CharSequence> xs) {
+    public static final CharSequence unlines(Iterable<? extends CharSequence> xs) {
         return FunctionalImpl.unlines(xs);
     }
 }

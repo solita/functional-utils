@@ -11,7 +11,7 @@ public abstract class Compare {
     
     public static final <S, T extends Iterable<? extends S>> Ordering<T> byIterable(final Comparator<S> c) {
         return new Ordering<T>() {
-            public int compare(T o1, T o2) {
+            public final int compare(T o1, T o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
                 }
@@ -47,7 +47,7 @@ public abstract class Compare {
     
     public static final <T,S> Ordering<S> by(final Apply<? super S, T> f, final Comparator<? super T> c) {
         return new Ordering<S>() {
-            public int compare(S o1, S o2) {
+            public final int compare(S o1, S o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
                 }
@@ -70,7 +70,7 @@ public abstract class Compare {
     
     public static final <T> Ordering<Option<T>> byOption(final Comparator<? super T> c) {
         return new Ordering<Option<T>>() {
-            public int compare(Option<T> o1, Option<T> o2) {
+            public final int compare(Option<T> o1, Option<T> o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
                 }

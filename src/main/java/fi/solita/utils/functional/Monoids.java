@@ -24,73 +24,73 @@ public abstract class Monoids {
         };
     }
     
-    public static class BooleanDisjunction extends SemiGroups.BooleanDisjunction implements Monoid<Boolean> {
+    public static final class BooleanDisjunction extends SemiGroups.BooleanDisjunction implements Monoid<Boolean> {
       public Boolean zero() {
           return false;
       }
   }
 
-  public static class BooleanConjunction extends SemiGroups.BooleanConjunction implements Monoid<Boolean> {
+  public static final class BooleanConjunction extends SemiGroups.BooleanConjunction implements Monoid<Boolean> {
       public Boolean zero() {
           return true;
       }
   }
 
-  public static class StringConcat extends SemiGroups.StringConcat implements Monoid<String> {
+  public static final class StringConcat extends SemiGroups.StringConcat implements Monoid<String> {
       public String zero() {
           return "";
       }
   }
   
-  public static class IntProduct extends SemiGroups.IntProduct implements Monoid<Integer> {
+  public static final class IntProduct extends SemiGroups.IntProduct implements Monoid<Integer> {
       public Integer zero() {
           return 1;
       }
   }
 
-  public static class IntSum extends SemiGroups.IntSum implements Monoid<Integer> {
+  public static final class IntSum extends SemiGroups.IntSum implements Monoid<Integer> {
       public Integer zero() {
           return 0;
       }
   }
 
-  public static class LongProduct extends SemiGroups.LongProduct implements Monoid<Long> {
+  public static final class LongProduct extends SemiGroups.LongProduct implements Monoid<Long> {
       public Long zero() {
           return 1l;
       }
   }
 
-  public static class LongSum extends SemiGroups.LongSum implements Monoid<Long> {
+  public static final class LongSum extends SemiGroups.LongSum implements Monoid<Long> {
       public Long zero() {
           return 0l;
       }
   }
   
-  public static class DoubleProduct extends SemiGroups.DoubleProduct implements Monoid<Double> {
+  public static final class DoubleProduct extends SemiGroups.DoubleProduct implements Monoid<Double> {
       public Double zero() {
           return 1.0;
       }
   }
 
-  public static class DoubleSum extends SemiGroups.DoubleSum implements Monoid<Double> {
+  public static final class DoubleSum extends SemiGroups.DoubleSum implements Monoid<Double> {
       public Double zero() {
           return 0.0;
       }
   }
   
-  public static class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
+  public static final class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
       public Apply<T, T> zero() {
           return Function.id();
       }
   }
   
-  public static class SetUnion<T> extends SemiGroups.SetUnion<T> implements Monoid<Set<T>> {
+  public static final class SetUnion<T> extends SemiGroups.SetUnion<T> implements Monoid<Set<T>> {
       public Set<T> zero() {
           return java.util.Collections.emptySet();
       }
   }
   
-  public static class SetIntersection<T> extends SemiGroups.SetIntersection<T> implements Monoid<Set<T>> {
+  public static final class SetIntersection<T> extends SemiGroups.SetIntersection<T> implements Monoid<Set<T>> {
       private static final Set<?> AllContainingSet = new AllContainingSet<Object>();
       static final class AllContainingSet<T> implements Set<T> {
           public int size() {
@@ -152,7 +152,7 @@ public abstract class Monoids {
       }
   }
   
-  public static class ComparatorConcat<T> extends SemiGroups.ComparatorConcat<T> implements Monoid<Comparator<T>> {
+  public static final class ComparatorConcat<T> extends SemiGroups.ComparatorConcat<T> implements Monoid<Comparator<T>> {
       public Comparator<T> zero() {
           return new Comparator<T>() {
               public int compare(T o1, T o2) {
@@ -162,7 +162,7 @@ public abstract class Monoids {
       }
   }
   
-  public static class MapCombine<K,V> extends SemiGroups.MapCombine<K, V> implements Monoid<Map<K,V>> {
+  public static final class MapCombine<K,V> extends SemiGroups.MapCombine<K, V> implements Monoid<Map<K,V>> {
       public MapCombine(SemiGroup<V> sg) {
           super(sg);
       }
@@ -190,16 +190,23 @@ public abstract class Monoids {
 
   public static final Monoid<Boolean> booleanDisjunction = new BooleanDisjunction();
   
+  private static final Monoid<Set<Object>> setUnion = new SetUnion<Object>();
+  private static final Monoid<Set<Object>> setIntersection = new SetIntersection<Object>();
+  private static final ComparatorConcat<Object> comparatorConcat = new ComparatorConcat<Object>();
+  
+  @SuppressWarnings("unchecked")
   public static final <T> Monoid<Set<T>> setUnion() {
-      return new SetUnion<T>();
+      return (Monoid<Set<T>>)(Object)setUnion;
   }
   
+  @SuppressWarnings("unchecked")
   public static final <T> Monoid<Set<T>> setIntersection() {
-      return new SetIntersection<T>();
+      return (Monoid<Set<T>>)(Object)setIntersection;
   }
   
+  @SuppressWarnings("unchecked")
   public static final <T> ComparatorConcat<T> comparatorConcat() {
-      return new ComparatorConcat<T>();
+      return (ComparatorConcat<T>)comparatorConcat;
   }
   
   public static final <K,V> MapCombine<K,V> mapCombine(SemiGroup<V> sg) {
