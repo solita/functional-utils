@@ -1,15 +1,16 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newArray;
-import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.FunctionalImpl.map;
-import static fi.solita.utils.functional.FunctionalM.find;
 import static fi.solita.utils.functional.Option.None;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public final class Builder<T> {
@@ -20,11 +21,11 @@ public final class Builder<T> {
     }
 
     private final Collection<? extends Apply<? super T,? extends Object>> members;
-    private final Map<Apply<? super T, ? extends Object>, Object> values;
+    private final Iterable<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
     private final Apply<Tuple, T> constructor;
 
     @SuppressWarnings("unchecked")
-    private Builder(Map<Apply<? super T,? extends Object>,Object> values, Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
+    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
         this.members = members;
         this.values = values;
         this.constructor = (Apply<Tuple, T>) constructor;
@@ -32,7 +33,7 @@ public final class Builder<T> {
     
     @SuppressWarnings("unchecked")
     private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
-        return new Builder<T>(Collections.<Apply<? super T, ? extends Object>,Object>emptyMap(), members, (Apply<? extends Tuple, T>) constructor);
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), members, (Apply<? extends Tuple, T>) constructor);
     }
     
     public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
@@ -40,27 +41,27 @@ public final class Builder<T> {
     }
 
     public final Builder<T> init(final T t) {
-        Map<Apply<? super T, ? extends Object>, Object> newValues = newMap(map(new Transformer<Apply<? super T,? extends Object>, Pair<Apply<? super T,? extends Object>,Object>>() {
+        List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(new Transformer<Apply<? super T,? extends Object>, Pair<? extends Apply<? super T,? extends Object>,? extends Object>>() {
             @SuppressWarnings("unchecked")
             @Override
-            public Pair<Apply<? super T,? extends Object>,Object> transform(Apply<? super T,? extends Object> source) {
+            public Pair<? extends Apply<? super T,? extends Object>,? extends Object> transform(Apply<? super T,? extends Object> source) {
                 return (Pair<Apply<? super T,? extends Object>,Object>)(Object)Pair.of(source, source.apply(t));
             }
         }, members));
         return new Builder<T>(newValues, members, constructor);
     }
 
-    public final <F1> Builder<T> with(final Apply<? super T,? super F1> member, final F1 newValue) {
+    public final <F1> Builder<T> with(Apply<? super T,? super F1> member, F1 newValue) {
         checkMember(member);
-        return new Builder<T>(Functional.with(member, newValue, values), members, constructor);
+        return new Builder<T>(cons(Pair.of(member, newValue), values), members, constructor);
     }
     
-    public final Builder<T> without(final Apply<T,? extends Option<?>> member) {
+    public final Builder<T> without(Apply<T,? extends Option<?>> member) {
         checkMember(member);
-        return new Builder<T>(Functional.with(member, None(), values), members, constructor);
+        return new Builder<T>(cons(Pair.of(member, None()), values), members, constructor);
     }
 
-    private void checkMember(final Apply<? super T, ?> member) {
+    private void checkMember(Apply<? super T, ?> member) {
         if (!members.contains(member)) {
             throw new IllegalArgumentException(member.toString());
         }
@@ -81,17 +82,21 @@ public final class Builder<T> {
         return constructor.apply(Tuple.of(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
             @Override
             public Object transform(Apply<? super T, ? extends Object> member) {
-                for (Object o: find(member, values)) {
-                    return o;
+                for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
+                    if (o.left.equals(member)) {
+                        return o.right;
+                    }
                 }
                 if (!allowIncomplete) {
                     // substitutes Options automatically as None if a complete instance is required
                     try {
                         // argh, if the field happens to be generated by meta-utils, as expected...
-                        Method fieldAccessor = member.getClass().getMethod("getMember");
-                        Class<?> fieldType = ((Field)fieldAccessor.invoke(member)).getType();
-                        if (Option.class.isAssignableFrom(fieldType)) {
-                            return None();
+                        if (member.getClass().getName().equals("fi.solita.utils.meta.MetaMember")) {
+                            Method fieldAccessor = member.getClass().getMethod("getMember");
+                            Class<?> fieldType = ((Field)fieldAccessor.invoke(member)).getType();
+                            if (Option.class.isAssignableFrom(fieldType)) {
+                                return None();
+                            }
                         }
                     } catch (InvocationTargetException e) {
                         throw new RuntimeException(e);

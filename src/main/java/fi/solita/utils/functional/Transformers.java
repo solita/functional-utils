@@ -145,7 +145,7 @@ public abstract class Transformers {
     public static final Transformer<Object,String> toString = new Transformer<Object,String>() {
         @Override
         public final String transform(Object source) {
-            return source.toString();
+            return source == null ? null : source.toString();
         }
     };
     

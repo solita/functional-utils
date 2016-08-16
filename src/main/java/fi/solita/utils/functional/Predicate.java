@@ -12,7 +12,7 @@ public abstract class Predicate<T> extends Function1<T, Boolean> {
     }
     
     @Override
-    public final Boolean apply(T t) {
+    public Boolean apply(T t) {
         return accept(t);
     }
     
