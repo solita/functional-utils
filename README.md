@@ -18,7 +18,7 @@ Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> C
 
 Just a few examples of using these utils.
 
-* [Builders and Lenses](#user-content-fisolitautilsfunctionalbuilder-and-fisolitautilsfunctionallens)
+* [Builders and Lenses](#user-content-fisolitautilsfunctionallensbuilder-and-fisolitautilsfunctionallenslens)
 * [Collections] (#user-content-fisolitautilsfunctionalcollections)
 * [Option] (#user-content-fisolitautilsfunctionaloption)
 * [Comparisons] (#user-content-fisolitautilsfunctionalcompare)
@@ -28,39 +28,46 @@ Just a few examples of using these utils.
 * [Pattern matching] (#user-content-fisolitautilsfunctionalmatch)
 * [Common functional stuff] (#user-content-fisolitautilsfunctionalfunctional)
 
-### fi.solita.utils.functional.Builder and fi.solita.utils.functional.Lens
+### fi.solita.utils.functional.lens.Builder and fi.solita.utils.functional.lens.Lens
 	class Department {
 	    final String name;
-
+	    final List<Employee> employees;
+	
 	    public static final Builder<Department> builder = Builder.of(Department_.$Fields(), Department_.$);
+	    
+	    public Department(String name, List<Employee> employees) {
+	        this.name = name;
+	        this.employees = employees;
+	    }
 	    
 	    public Department(String name) {
 	        this.name = name;
+	        this.employees = Collections.emptyList();
 	    }
 	}
-
+	
 	class Employee {
 	    final String name;
 	    final Option<Integer> salary;
 	    final Department department;
 	    
 	    public static final Builder<Employee> builder = Builder.of(Employee_.$Fields(), Employee_.$);
-
+	
 	    public Employee(String name, Option<Integer> salary, Department department) {
 	        this.name = name;
 	        this.salary = salary;
 	        this.department = department;
 	    }
 	}
-
+	
 	/** Generated in practice by meta-utils */
 	class Department_ {
-	    public static final Tuple1<Apply<Department,String>> $Fields() {
-	        return Tuple.of(name);
+	    public static final Tuple2<Apply<Department,String>,Apply<Department,List<Employee>>> $Fields() {
+	        return Tuple.of(name, employees);
 	    }
-	    public static final Apply<String, Department> $ = new Apply<String, Department>() {
-	        public Department apply(String t) {
-	            return new Department(t);
+	    public static final Function2<String, List<Employee>, Department> $ = new Function2<String, List<Employee>, Department>() {
+	        public Department apply(String t, List<Employee> e) {
+	            return new Department(t, e);
 	        }
 	    };
 	    public static final Apply<Department, String> name = new Apply<Department, String>() {
@@ -68,16 +75,21 @@ Just a few examples of using these utils.
 	            return t.name;
 	        }
 	    };
+	    public static final Apply<Department, List<Employee>> employees = new Apply<Department, List<Employee>>() {
+	        public List<Employee> apply(Department t) {
+	            return t.employees;
+	        }
+	    };
 	}
-
+	
 	/** Generated in practice by meta-utils */
 	class Employee_ {
 	    public static final Tuple3<Apply<Employee,String>,Apply<Employee,Option<Integer>>,Apply<Employee,Department>> $Fields() {
 	        return Tuple.of(name, salary, department);
 	    }
-	    public static final Apply<Tuple3<String, Option<Integer>, Department>, Employee> $ = new Apply<Tuple3<String,Option<Integer>,Department>, Employee>() {
-	        public Employee apply(Tuple3<String, Option<Integer>, Department> t) {
-	            return new Employee(t._1, t._2, t._3);
+	    public static final Function3<String, Option<Integer>, Department, Employee> $ = new Function3<String,Option<Integer>,Department,Employee>() {
+	        public Employee apply(String t1, Option<Integer> t2, Department t3) {
+	            return new Employee(t1, t2, t3);
 	        }
 	    };
 	    public static final Apply<Employee, String> name = new Apply<Employee, String>() {
@@ -104,9 +116,9 @@ Just a few examples of using these utils.
 	        }
 	    };
 	}
-
+	
 	public class BuilderAndLensExamples {
-
+	
 	    @Test
 	    public void builder() {
 	        Employee employee = Builder.of(Employee_.$Fields(), Employee_.$)
@@ -122,27 +134,50 @@ Just a few examples of using these utils.
 	    @Test
 	    public void lens() {
 	        Employee employee = new Employee("John", Some(42), new Department("Sales"));
-	        Lens<Employee,String> nameLens = Lens.of(Employee_.name, Employee.builder);
-
+	        Lens<Employee,String> name_ = Lens.of(Employee_.name, Employee.builder);
+	
 	        assertEquals("John", employee.name);
-	        assertEquals("John", nameLens.get(employee));
-
-	        Employee newEmployee = nameLens.set(employee, "Jane");
+	        assertEquals("John", name_.get(employee));
+	
+	        Employee newEmployee = name_.set(employee, "Jane");
 	        assertEquals("Jane", newEmployee.name);
 	    }
-
+	
 	    @Test
 	    public void deepLens() {
 	        Employee employee = new Employee("John", Some(42), new Department("Sales"));
-
-	        Lens<Employee, Department> employeeDepartmentLens = Lens.of(Employee_.department, Employee.builder);
-	        Lens<Department, String> departmentNameLens = Lens.of(Department_.name, Department.builder);
-	        Lens<Employee, String> employeeDepartmentNameLens = employeeDepartmentLens.andThen(departmentNameLens);
-
-	        assertEquals("Sales", employeeDepartmentNameLens.get(employee));
-
-	        Employee newEmployee = employeeDepartmentNameLens.set(employee, "IT");
+	
+	        Lens<Employee, Department> employeeDepartment_ = Lens.of(Employee_.department, Employee.builder);
+	        Lens<Department, String> departmentName_ = Lens.of(Department_.name, Department.builder);
+	        Lens<Employee, String> employeeDepartmentName_ = employeeDepartment_.andThen(departmentName_);
+	
+	        assertEquals("Sales", employeeDepartmentName_.get(employee));
+	
+	        Employee newEmployee = employeeDepartmentName_.set(employee, "IT");
 	        assertEquals("IT", newEmployee.department.name);
+	    }
+	    
+	    @Test
+	    public void listLens() {
+	        Department department = new Department("Sales", newList(new Employee("John", Some(42), new Department("IT"))));
+	
+	        Lens<Department, List<Employee>> departmentEmployees_ = Lens.of(Department_.employees, Department.builder);
+	        Lens<Employee, Option<Integer>> employeeSalary_ = Lens.of(Employee_.salary, Employee.builder);
+	
+	        assertEquals(newSet(42), newSet(flatMap(Employee_.salary, departmentEmployees_.get(department))));
+	
+	        
+	        Setter<Department,Option<Integer>> departmentSalaries_ = Lens.eachList(departmentEmployees_, employeeSalary_);
+	        assertEquals(newSet(69), newSet(flatMap(Employee_.salary, departmentSalaries_.set(department, Some(69)).employees)));
+	        
+	        
+	        Lens<Department, String> departmentName_ = Lens.of(Department_.name, Department.builder);
+	        Lens<Employee, Department> employeeDepartment_ = Lens.of(Employee_.department, Employee.builder);
+	        
+	        Setter<Department,Department> departmentEmployeeDepartments_ = Lens.eachList(departmentEmployees_, employeeDepartment_);
+	        Setter<Department,String> departmentEmployeeDepartmentsName_ = departmentEmployeeDepartments_.andThen(departmentName_);
+	        
+	        assertEquals(newSet("IT2"), newSet(map(Department_.name, map(Employee_.department, departmentEmployeeDepartmentsName_.set(department, "IT2").employees))));
 	    }
 	}
 

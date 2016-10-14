@@ -1,9 +1,9 @@
-package fi.solita.utils.functional;
+package fi.solita.utils.functional.lens;
 
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.cons;
-import static fi.solita.utils.functional.FunctionalImpl.map;
+import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Option.None;
 
 import java.lang.reflect.Field;
@@ -12,6 +12,63 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import fi.solita.utils.functional.Apply;
+import fi.solita.utils.functional.Collections;
+import fi.solita.utils.functional.Function;
+import fi.solita.utils.functional.Function10;
+import fi.solita.utils.functional.Function11;
+import fi.solita.utils.functional.Function12;
+import fi.solita.utils.functional.Function13;
+import fi.solita.utils.functional.Function14;
+import fi.solita.utils.functional.Function15;
+import fi.solita.utils.functional.Function16;
+import fi.solita.utils.functional.Function17;
+import fi.solita.utils.functional.Function18;
+import fi.solita.utils.functional.Function19;
+import fi.solita.utils.functional.Function2;
+import fi.solita.utils.functional.Function20;
+import fi.solita.utils.functional.Function21;
+import fi.solita.utils.functional.Function22;
+import fi.solita.utils.functional.Function23;
+import fi.solita.utils.functional.Function24;
+import fi.solita.utils.functional.Function25;
+import fi.solita.utils.functional.Function3;
+import fi.solita.utils.functional.Function4;
+import fi.solita.utils.functional.Function5;
+import fi.solita.utils.functional.Function6;
+import fi.solita.utils.functional.Function7;
+import fi.solita.utils.functional.Function8;
+import fi.solita.utils.functional.Function9;
+import fi.solita.utils.functional.Option;
+import fi.solita.utils.functional.Pair;
+import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Tuple;
+import fi.solita.utils.functional.Tuple1;
+import fi.solita.utils.functional.Tuple10;
+import fi.solita.utils.functional.Tuple11;
+import fi.solita.utils.functional.Tuple12;
+import fi.solita.utils.functional.Tuple13;
+import fi.solita.utils.functional.Tuple14;
+import fi.solita.utils.functional.Tuple15;
+import fi.solita.utils.functional.Tuple16;
+import fi.solita.utils.functional.Tuple17;
+import fi.solita.utils.functional.Tuple18;
+import fi.solita.utils.functional.Tuple19;
+import fi.solita.utils.functional.Tuple2;
+import fi.solita.utils.functional.Tuple20;
+import fi.solita.utils.functional.Tuple21;
+import fi.solita.utils.functional.Tuple22;
+import fi.solita.utils.functional.Tuple23;
+import fi.solita.utils.functional.Tuple24;
+import fi.solita.utils.functional.Tuple25;
+import fi.solita.utils.functional.Tuple3;
+import fi.solita.utils.functional.Tuple4;
+import fi.solita.utils.functional.Tuple5;
+import fi.solita.utils.functional.Tuple6;
+import fi.solita.utils.functional.Tuple7;
+import fi.solita.utils.functional.Tuple8;
+import fi.solita.utils.functional.Tuple9;
 
 public final class Builder<T> {
     public static final class IncompleteException extends RuntimeException {
@@ -65,6 +122,10 @@ public final class Builder<T> {
         if (!members.contains(member)) {
             throw new IllegalArgumentException(member.toString());
         }
+    }
+    
+    public final <U> Lens<T,U> toLens(Apply<? super T, U> getter) {
+        return Lens.of(getter, this);
     }
 
     /**

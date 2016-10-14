@@ -1,4 +1,4 @@
-package fi.solita.utils.functional;
+package fi.solita.utils.functional.lens;
 
 import static fi.solita.utils.functional.Option.None;
 import static org.junit.Assert.assertEquals;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import fi.solita.utils.functional.Builder.IncompleteException;
+import fi.solita.utils.functional.lens.Builder.IncompleteException;
 
 public class BuilderTest {
     @Test
