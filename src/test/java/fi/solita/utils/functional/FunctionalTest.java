@@ -280,4 +280,9 @@ public class FunctionalTest {
     public void testRangify5() {
         assertEquals(newList(newList(4,5),newList(1)), newList(rangify(Enumerables.ints, newList(4,5,1))));
     }
+    
+    @Test
+    public void flattenIgnoresNulls() {
+        assertEquals(newList("foo"), newList(flatten(newList((List<String>)null, newList("foo")))));
+    }
 }

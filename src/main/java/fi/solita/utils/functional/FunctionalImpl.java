@@ -433,7 +433,7 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <T> Iterable<T> concat(Iterable<? extends T> a, Iterable<? extends T> b) {
-        return a == null || b == null ? null : new ConcatenatingIterable<T>(Arrays.asList(a, b));
+        return a == null && b == null ? null : new ConcatenatingIterable<T>(Arrays.asList(a, b));
     }
     
     @SuppressWarnings("unchecked")

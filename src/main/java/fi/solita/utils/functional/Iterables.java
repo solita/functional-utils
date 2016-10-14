@@ -1,8 +1,10 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newListOfSize;
 import static fi.solita.utils.functional.Functional.drop;
+import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.map;
@@ -12,6 +14,8 @@ import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.isNull;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -300,7 +304,9 @@ public abstract class Iterables {
         private boolean force = false;
 
         public ConcatenatingIterable(Iterable<? extends Iterable<? extends T>> elements) {
-            if (elements instanceof Collection) {
+            if (elements == null) {
+                throw new IllegalArgumentException();
+            } else if (elements instanceof Collection) {
                 this.elements = flattenNestedConcats((Collection<? extends Iterable<? extends T>>)elements);
             } else {
                 this.elements = elements;
@@ -368,7 +374,7 @@ public abstract class Iterables {
     
     static final class FlatteningIterable<T> extends ConcatenatingIterable<T> {
         public FlatteningIterable(Iterable<? extends Iterable<? extends T>> elements) {
-            super(elements);
+            super(filter(not(isNull()), elements));
         }
         
         
@@ -448,6 +454,9 @@ public abstract class Iterables {
         private boolean force = false;
 
         public TransformingIterable(Iterable<S> iterable, Apply<? super S, ? extends T> transformer) {
+            if (iterable == null || transformer == null) {
+                throw new IllegalArgumentException();
+            }
             this.iterable = iterable;
             this.transformer = transformer;
         }
