@@ -80,6 +80,7 @@ public final class Builder<T> {
     private final Collection<? extends Apply<? super T,? extends Object>> members;
     private final Iterable<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
     private final Apply<Tuple, T> constructor;
+    private Class<T> resultTypeCache;
 
     @SuppressWarnings("unchecked")
     private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
@@ -95,6 +96,14 @@ public final class Builder<T> {
     
     public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
         return members;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public final Class<T> resultType() {
+        if (resultTypeCache == null) {
+            resultTypeCache = (Class<T>) buildAllowIncomplete().getClass();
+        }
+        return resultTypeCache;
     }
 
     public final Builder<T> init(final T t) {
@@ -139,8 +148,9 @@ public final class Builder<T> {
         return build(false);
     }
     
+    @SuppressWarnings("unchecked")
     private final T build(final boolean allowIncomplete) throws IncompleteException {
-        return constructor.apply(Tuple.of(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
+        T ret = constructor.apply(Tuple.of(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
             @Override
             public Object transform(Apply<? super T, ? extends Object> member) {
                 for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
@@ -174,6 +184,10 @@ public final class Builder<T> {
                 }
             }
         }, members))));
+        if (resultTypeCache == null) {
+            resultTypeCache = (Class<T>) ret.getClass();
+        }
+        return ret;
     }
     
     public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<? extends F1,T> constructor) {

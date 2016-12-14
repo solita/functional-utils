@@ -29,6 +29,16 @@ public class Setter<T,F> {
                     }
                 });
             }
+            
+            @Override
+            public String toString() {
+                return f2.toString() + "->" + otherLens.toString();
+            }
         });
+    }
+    
+    @Override
+    public String toString() {
+        return f2.toString();
     }
 }

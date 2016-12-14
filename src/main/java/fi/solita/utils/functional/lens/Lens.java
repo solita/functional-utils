@@ -119,6 +119,11 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     public final F get(T t) {
         return getter.apply(t);
     }
+    
+    @Override
+    public String toString() {
+        return "(" + getter.toString() + "," + super.toString() + ")";
+    }
 
     public final <O> Lens<T,O> andThen(final Lens<F,O> otherLens) {
         return new Lens<T,O>(new Apply<T,O>() {
