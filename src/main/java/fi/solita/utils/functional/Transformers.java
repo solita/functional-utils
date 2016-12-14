@@ -4,16 +4,18 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Predicates.not;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public abstract class Transformers {
     
-    public static final Transformer<String, String> append(final String suffix) { 
-        return new Transformer<String, String>() {
+    public static final Transformer<CharSequence, String> append(final CharSequence suffix) { 
+        return new Transformer<CharSequence, String>() {
             @Override
-            public final String transform(String source) {
-                return source == null ? null : source + suffix;
+            public final String transform(CharSequence source) {
+                return source == null ? null : source.toString() + suffix;
             }
         };
     }
@@ -264,6 +266,39 @@ public abstract class Transformers {
                 return Functional.flatMap(f, source);
             }
         };
+    }
+    
+    private static final Transformer<Object, List<Object>> newList = new Transformer<Object,List<Object>>() {
+        @Override
+        public final List<Object> transform(Object source) {
+            return Collections.newList(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<T,List<T>> newList() {
+        return (Transformer<T,List<T>>)(Object)newList;
+    }
+    
+    private static final Transformer<Object, Set<Object>> newSet = new Transformer<Object,Set<Object>>() {
+        @Override
+        public final Set<Object> transform(Object source) {
+            return Collections.newSet(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<T,Set<T>> newSet() {
+        return (Transformer<T,Set<T>>)(Object)newSet;
+    }
+    
+    private static final Transformer<Tuple2<Object,Object>, Map<Object,Object>> newMap = new Transformer<Tuple2<Object,Object>,Map<Object,Object>>() {
+        @Override
+        public final Map<Object,Object> transform(Tuple2<Object,Object> source) {
+            return Collections.newMap(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <K,V,T extends Tuple2<K,V>> Transformer<T,Map<K,V>> newMap() {
+        return (Transformer<T,Map<K,V>>)(Object)newMap;
     }
    
     public static final Transformer<Iterable<?>, Long> size = new Transformer<Iterable<?>,Long>() {
