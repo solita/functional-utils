@@ -16,10 +16,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     }
 
     public static final <T> Option<T> Some(T t) {
-        if (t == null) {
-            throw new IllegalArgumentException("Passed null to Some");
-        }
-        return of(t);
+        return new SomeImpl<T>(t);
     }
 
     @SuppressWarnings("unchecked")
@@ -91,9 +88,6 @@ final class SomeImpl<T> extends Option<T> {
     protected final T t;
 
     SomeImpl(T t) {
-        if (t == null) {
-            throw new IllegalArgumentException("Passed null to Some");
-        }
         this.t = t;
     }
 
