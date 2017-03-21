@@ -73,6 +73,10 @@ public class Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, t._1, t._2, t._3, t._4, t._5, t._6);
     }
     
+    public <A1,A2,A3,A4,A5,A6,A7> Tuple26<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,A1,A2,A3,A4,A5,A6,A7> join(Tuple7<A1,A2,A3,A4,A5,A6,A7> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, t._1, t._2, t._3, t._4, t._5, t._6, t._7);
+    }
+    
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }
