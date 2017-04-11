@@ -235,6 +235,17 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     
+    public static final <T> CharSequence every(int nth, CharSequence xs) {
+        return it(FunctionalImpl.every(nth, it(xs)));
+    }
+    
+    public static final <T> String every(int nth, String xs) {
+        return xs == null ? null : every(nth, (CharSequence)xs).toString();
+    }
+    
+    
+    
+    
     public static final boolean isEmpty(String xs) {
         return xs.isEmpty();
     }

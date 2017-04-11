@@ -205,6 +205,12 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
+    public static final <T> Iterable<T> every(int nth, T[] xs) {
+        return FunctionalImpl.every(nth, newList(xs));
+    }
+    
+    
+    
     public static final <T> boolean isEmpty(T[] xs) {
         return xs.length == 0;
     }
