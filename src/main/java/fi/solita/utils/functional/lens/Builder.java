@@ -16,6 +16,7 @@ import java.util.Map;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function;
+import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function10;
 import fi.solita.utils.functional.Function11;
 import fi.solita.utils.functional.Function12;
@@ -45,6 +46,7 @@ import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple;
+import fi.solita.utils.functional.Tuple0;
 import fi.solita.utils.functional.Tuple1;
 import fi.solita.utils.functional.Tuple10;
 import fi.solita.utils.functional.Tuple11;
@@ -94,6 +96,10 @@ public final class Builder<T> {
     @SuppressWarnings("unchecked")
     private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
         return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), members, (Apply<? extends Tuple, T>) constructor);
+    }
+    
+    private static <T> Builder<T> newBuilder(Function0<T> constructor) {
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), Collections.<Apply<? super T, ? extends Object>>emptyCollection(), (Apply<? extends Tuple, T>) constructor);
     }
     
     public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
@@ -190,6 +196,10 @@ public final class Builder<T> {
             resultTypeCache = (Class<T>) ret.getClass();
         }
         return ret;
+    }
+    
+    public static <T> Builder<T> of(Tuple0 members, Function0<T> constructor) {
+        return newBuilder(constructor);
     }
     
     public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<? extends F1,T> constructor) {
