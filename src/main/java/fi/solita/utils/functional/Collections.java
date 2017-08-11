@@ -976,7 +976,7 @@ public abstract class Collections {
     public static final <T> Iterable<T> lazily(final Supplier<Iterable<T>> s) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
-                return s.apply().iterator();
+                return s.get().iterator();
             }
         };
     }

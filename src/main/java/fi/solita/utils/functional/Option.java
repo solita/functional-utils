@@ -103,7 +103,7 @@ final class SomeImpl<T> extends Option<T> {
     
     @Override
     public final <R> Option<R> map(Apply<? super T, R> f) {
-        return Some(f.apply(t));
+        return Option.of(f.apply(t));
     }
     
     @Override

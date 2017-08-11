@@ -338,6 +338,10 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
+    public static final <T extends Comparable<T>> T min(T x, T y) {
+        return x.compareTo(y) <= 0 ? x : y;
+    }
+    
     public static final <T extends Comparable<T>> T min(T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.min(cons(x, xs)).get();
     }
@@ -347,6 +351,10 @@ public abstract class FunctionalA extends FunctionalM {
     }
     
     
+    
+    public static final <T extends Comparable<T>> T max(T x, T y) {
+        return x.compareTo(y) >= 0 ? x : y;
+    }
     
     public static final <T extends Comparable<T>> T max(T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.max(cons(x, xs)).get();

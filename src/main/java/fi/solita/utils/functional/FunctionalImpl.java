@@ -50,7 +50,7 @@ final class FunctionalImpl {
         return headOption(filter(predicate, xs));
     }
     
-    static final <K, V> Option<V> find(K key, Map<? extends K, V> map) {
+    static final <K, V> Option<V> find(K key, Map<? super K, V> map) {
         return map == null ? null : Option.of(map.get(key));
     }
     

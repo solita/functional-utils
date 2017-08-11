@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 public abstract class FunctionalM {
-    public static final <K, V> Option<V> find(K key, Map<? extends K, V> map) {
+    public static final <K, V> Option<V> find(K key, Map<? super K, V> map) {
         return FunctionalImpl.find(key, map);
     }
     

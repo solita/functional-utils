@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Functional.filter;
+import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.List;
@@ -201,6 +202,17 @@ public abstract class Transformers {
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Either<?,T>,Option<T>> eitherRight() {
         return (Transformer<Either<?,T>,Option<T>>)(Object)eitherRight;
+    }
+    
+    private static final Transformer<?,Option<?>> some = new Transformer<Object,Option<?>>() {
+        @Override
+        public final Option<?> transform(Object source) {
+            return Some(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<T,Option<T>> some() {
+        return (Transformer<T,Option<T>>)(Object)some;
     }
     
     private static final Transformer<Option<?>,?> get = new Transformer<Option<?>,Object>() {

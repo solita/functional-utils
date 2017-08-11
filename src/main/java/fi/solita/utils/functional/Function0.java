@@ -6,6 +6,10 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, Supplier<R>, Seri
 
     public abstract R apply();
     
+    public final R get() {
+        return apply();
+    }
+    
     public final <U> Function0<U> andThen(final Apply<? super R, ? extends U> next) {
         return new Function0<U>() {
             @Override

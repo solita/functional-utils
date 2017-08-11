@@ -33,13 +33,13 @@ public abstract class Function {
         };
     }
     
-    public static final <R> Function0<R> memoize(final Function0<R> apply) {
+    public static final <R> Function0<R> memoize(final Supplier<R> supplier) {
         return new Function0<R>() {
             private R r;
             @Override
             public final R apply() {
                 if (r == null) {
-                    r = apply.apply();
+                    r = supplier.get();
                 }
                 return r;
             }
