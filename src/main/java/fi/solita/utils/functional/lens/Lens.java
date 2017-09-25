@@ -588,4 +588,20 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
             }
         });
     }
+    
+    public static final <T> Lens<_29<T>,T> _29() {
+        return new Lens<_29<T>, T>(new Apply<_29<T>, T>() {
+            public T apply(_29<T> t) {
+                return t.get_29();
+            }
+        }, new Function2<_29<T>, Apply<T,T>, _29<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _29<T> apply(_29<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[28] = f.apply(t.get_29());
+                return (_29<T>) Tuple.of(vs);
+            }
+        });
+    }
 }

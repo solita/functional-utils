@@ -3,7 +3,7 @@ import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.*;
-import static fi.solita.utils.functional.FunctionalC.group;
+import static fi.solita.utils.functional.Functional.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.junit.Assert.*;
 
