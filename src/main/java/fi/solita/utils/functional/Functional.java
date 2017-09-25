@@ -203,6 +203,10 @@ public abstract class Functional extends FunctionalC {
     public static final <A, B, C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c) {
         return FunctionalImpl.zip(a, b, c);
     }
+    
+    public static final <A, B, C, D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c, Iterable<D> d) {
+        return FunctionalImpl.zip(a, b, c, d);
+    }
 
     public static final <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
         return new ZippingIterable<Integer, A>(range(0), a);

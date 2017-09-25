@@ -343,6 +343,10 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.zip(it(a), it(b), it(c)); 
     }
     
+    public static final Iterable<Tuple4<Character, Character, Character, Character>> zip(CharSequence a, CharSequence b, CharSequence c, CharSequence d) {
+        return FunctionalImpl.zip(it(a), it(b), it(c), it(d)); 
+    }
+    
     public static final Iterable<Tuple2<Integer, Character>> zipWithIndex(CharSequence a) {
         return a == null ? null : new ZippingIterable<Integer,Character>(range(0), it(a));
     }

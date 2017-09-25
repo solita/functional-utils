@@ -492,10 +492,22 @@ final class FunctionalImpl {
         return map((Transformer<Tuple2<Tuple2<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer, zip(zip(a, b), c));
     }
     
+    @SuppressWarnings("unchecked")
+    static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c, Iterable<D> d) {
+        return map((Transformer<Tuple2<Tuple2<A, B>, Tuple2<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
+    }
+    
     private static final Transformer<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
         @Override
         public final Tuple3<Object, Object, Object> transform(Tuple2<Tuple2<Object, Object>, Object> source) {
             return source._1.append(source._2);
+        }
+    };
+    
+    private static final Transformer<Tuple2<Tuple2<Object,Object>,Tuple2<Object,Object>>,Tuple4<Object,Object,Object,Object>> zip4Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Tuple2<Object,Object>>, Tuple4<Object, Object, Object, Object>>() {
+        @Override
+        public final Tuple4<Object, Object, Object, Object> transform(Tuple2<Tuple2<Object, Object>, Tuple2<Object, Object>> source) {
+            return source._1.join(source._2);
         }
     };
     
