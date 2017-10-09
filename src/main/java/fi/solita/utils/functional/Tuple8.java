@@ -31,6 +31,10 @@ public class Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> extends Tuple implements Tup
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, t);
     }
     
+    public <A1> Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, A1> join(Tuple1<A1> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, t._1);
+    }
+    
     public <A1,A2> Tuple10<T1,T2,T3,T4,T5,T6,T7,T8,A1,A2> join(Tuple2<A1,A2> t) {
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, t._1, t._2);
     }

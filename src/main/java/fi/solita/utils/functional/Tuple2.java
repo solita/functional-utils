@@ -20,6 +20,10 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple._1
         return Tuple.of(_1, _2, t);
     }
     
+    public <A1,A2> Tuple3<T1, T2, A1> join(Tuple1<A1> t) {
+        return Tuple.of(_1, _2, t._1);
+    }
+    
     public <A1,A2> Tuple4<T1, T2, A1, A2> join(Tuple2<A1,A2> t) {
         return Tuple.of(_1, _2, t._1, t._2);
     }

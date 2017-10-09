@@ -21,6 +21,10 @@ public class Tuple3<T1, T2, T3> extends Tuple implements Tuple._1<T1>, Tuple._2<
         return Tuple.of(_1, _2, _3, t);
     }
     
+    public <A1> Tuple4<T1, T2, T3, A1> join(Tuple1<A1> t) {
+        return Tuple.of(_1, _2, _3, t._1);
+    }
+    
     public <A1,A2> Tuple5<T1,T2,T3,A1,A2> join(Tuple2<A1,A2> t) {
         return Tuple.of(_1, _2, _3, t._1, t._2);
     }
