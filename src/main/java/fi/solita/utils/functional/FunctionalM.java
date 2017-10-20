@@ -21,14 +21,14 @@ public abstract class FunctionalM {
         return FunctionalImpl.map(f, map);
     }
     
-    public static <T,V> SortedMap<T, Iterable<V>> map(Apply<V,V> f, SortedMap<T,? extends Iterable<V>> m) {
-        return (SortedMap<T, Iterable<V>>) newSortedMap(m.comparator(), Functional.map(FunctionalM.<T,V>valueMapper(f), m.entrySet()));
+    public static <T,V,R> SortedMap<T, Iterable<R>> customMap(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> m) {
+        return (SortedMap<T, Iterable<R>>) newSortedMap(m.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), m.entrySet()));
     }
     
-    private static <T,V> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<V>>> valueMapper(final Apply<V,V> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<V>>>() {
+    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<V,R> f) {
+        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
             @Override
-            public Map.Entry<T, Iterable<V>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, Iterable<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), Functional.map(f, e.getValue()));
             }
         };
