@@ -21,7 +21,7 @@ public abstract class FunctionalM {
         return FunctionalImpl.map(f, map);
     }
     
-    public static <T,V,R> SortedMap<T, Iterable<R>> customMap(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> m) {
+    public static <T,V,R> SortedMap<T, Iterable<R>> map(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> m) {
         return (SortedMap<T, Iterable<R>>) newSortedMap(m.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), m.entrySet()));
     }
     
