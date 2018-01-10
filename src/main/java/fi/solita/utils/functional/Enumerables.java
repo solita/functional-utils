@@ -17,11 +17,11 @@ public abstract class Enumerables {
         }
     
         public Option<T> succ(T t) {
-                if (t.equals(maxBound)) return None(); else return Some(doSucc(t));
+                if (t == null || t.equals(maxBound)) return None(); else return Some(doSucc(t));
         }
 
         public Option<T> pred(T t) {
-              if (t.equals(minBound)) return None(); else return Some(doPred(t));
+              if (t == null || t.equals(minBound)) return None(); else return Some(doPred(t));
         }
         
         public T minBound() {
