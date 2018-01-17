@@ -320,6 +320,24 @@ public abstract class Transformers {
         }
     };
     
+    public static <A,B,T extends Tuple._1<A> & Tuple._2<B>> Transformer<T,Tuple2<A,B>> take2() {
+        return new Transformer<T, Tuple2<A,B>>() {
+            @Override
+            public Tuple2<A, B> transform(T source) {
+                return Tuple.of(source.get_1(), source.get_2());
+            }
+        };
+    }
+    
+    public static <A,B,C,T extends Tuple._1<A> & Tuple._2<B> & Tuple._3<C>> Transformer<T,Tuple3<A,B,C>> take3() {
+        return new Transformer<T, Tuple3<A,B,C>>() {
+            @Override
+            public Tuple3<A, B, C> transform(T source) {
+                return Tuple.of(source.get_1(), source.get_2(), source.get_3());
+            }
+        };
+    }
+    
     private static final Transformer<Tuple._1<?>,?> _1 = new Transformer<Tuple._1<?>,Object>() {
         @Override
         public final Object transform(Tuple._1<?> source) {
