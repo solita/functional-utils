@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import java.util.Map;
 
 public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
 
@@ -14,5 +15,20 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
         super(left, right);
         this.left = left;
         this.right = right;
+    }
+    
+    public final <A,B> Pair<A,B> bimap(Apply<? super LEFT, ? extends A> f, Apply<? super RIGHT, ? extends B> f2) {
+        Map.Entry<A, B> ret = BiFunctors.<LEFT,A,RIGHT,B>entry().bimap(f, f2, this);
+        return Pair.of(ret.getKey(), ret.getValue());
+    }
+
+    public final <A> Pair<A,RIGHT> first(Apply<? super LEFT, ? extends A> f) {
+        Map.Entry<A, RIGHT> ret = BiFunctors.<LEFT,A,RIGHT,RIGHT>entry().first(f, this);
+        return Pair.of(ret.getKey(), ret.getValue());
+    }
+
+    public final <B> Pair<LEFT,B> second(Apply<? super RIGHT, ? extends B> f) {
+        Map.Entry<LEFT, B> ret = BiFunctors.<LEFT,LEFT,RIGHT,B>entry().second(f, this);
+        return Pair.of(ret.getKey(), ret.getValue());
     }
 }

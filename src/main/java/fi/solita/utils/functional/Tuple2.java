@@ -12,6 +12,21 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple._1
         this._2 = _2;
     }
     
+    public <A,B> Tuple2<A,B> bimap(Apply<? super T1, ? extends A> f, Apply<? super T2, ? extends B> f2) {
+        Map.Entry<A, B> ret = BiFunctors.<T1,A,T2,B>entry().bimap(f, f2, this);
+        return Tuple.of(ret.getKey(), ret.getValue());
+    }
+
+    public <A> Tuple2<A,T2> first(Apply<? super T1, ? extends A> f) {
+        Map.Entry<A, T2> ret = BiFunctors.<T1,A,T2,T2>entry().first(f, this);
+        return Tuple.of(ret.getKey(), ret.getValue());
+    }
+
+    public <B> Tuple2<T1,B> second(Apply<? super T2, ? extends B> f) {
+        Map.Entry<T1, B> ret = BiFunctors.<T1,T1,T2,B>entry().second(f, this);
+        return Tuple.of(ret.getKey(), ret.getValue());
+    }
+    
     public <T> Tuple3<T, T1, T2> prepend(T t) {
         return Tuple.of(t, _1, _2);
     }
