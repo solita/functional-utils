@@ -296,8 +296,13 @@ public abstract class Collections {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T... elements) {
-        return newList(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29), elements));
+    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29) {
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T... elements) {
+        return newList(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30), elements));
     }
     
     public static final Set<Boolean> newSet(boolean[] array) {
@@ -480,8 +485,13 @@ public abstract class Collections {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T... elements) {
-        return newSet(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29), elements));
+    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29) {
+        return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T... elements) {
+        return newSet(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30), elements));
     }
     
     private static final Class<?> unmodifiableListClass = java.util.Collections.unmodifiableList(emptyList()).getClass();
@@ -765,8 +775,13 @@ public abstract class Collections {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V>... elements) {
-        return newMap(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29), elements));
+    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29) {
+        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V>... elements) {
+        return newMap(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30), elements));
     }
     
     public static final <K, V> Map<K, List<V>> newMultimap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
