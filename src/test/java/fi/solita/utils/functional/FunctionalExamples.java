@@ -129,7 +129,7 @@ public class FunctionalExamples {
         // span
         Pair<Iterable<Integer>, Iterable<Integer>> span = span(odd, someIterableOrArray);
         assertEquals(Pair.of(newList(1),         newList(2,3)),
-                     Pair.of(newList(span.left), newList(span.right)));
+                     Pair.of(newList(span.left()), newList(span.right())));
         
         // isEmpty
         boolean isEmpty = isEmpty(someIterableOrArray);

@@ -170,8 +170,8 @@ public final class Builder<T> {
             @Override
             public Object transform(Apply<? super T, ? extends Object> member) {
                 for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
-                    if (o.left.equals(member)) {
-                        return o.right;
+                    if (o._1.equals(member)) {
+                        return o._2;
                     }
                 }
                 if (!allowIncomplete) {

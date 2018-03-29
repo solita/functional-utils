@@ -28,8 +28,8 @@ public class TupleExamples {
         String valueByFieldAccess = tuple._2;
         
         Pair<Integer,String> pair = Pair.of(42, "right");
-        String right = pair.right;
-        int left = pair.left;
+        String right = pair.right();
+        int left = pair.left();
         
         Tuple2<String, Integer> appendedRight = Tuple.of("str").append(42);
         Tuple3<Boolean, String, Integer> prependedLeft = appendedRight.prepend(true);

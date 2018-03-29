@@ -229,8 +229,12 @@ public abstract class FunctionalC extends FunctionalS {
         if (xs == null) {
             return null;
         }
-        Pair<CharSequence,CharSequence> span = span(predicate, (CharSequence)xs);
-        return Pair.of(span.left.toString(), span.right.toString());
+        for (int i = 0; i < xs.length(); ++i) {
+            if (!predicate.apply(xs.charAt(i))) {
+                return Pair.of(xs.substring(0, i), xs.substring(i));
+            }
+        }
+        return Pair.of(xs, "");
     }
     
     

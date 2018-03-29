@@ -114,9 +114,9 @@ public abstract class Match {
         boolean cont = !isEmpty(xs);
         while (cont) {
             Pair<CharSequence,CharSequence> p = span(predicate, xs);
-            parts.add(p.left.toString());
-            xs = drop(1, p.right);
-            cont = !isEmpty(xs) || !isEmpty(p.right);
+            parts.add(p.left().toString());
+            xs = drop(1, p.right());
+            cont = !isEmpty(xs) || !isEmpty(p.right());
         }
         return parts;
     }

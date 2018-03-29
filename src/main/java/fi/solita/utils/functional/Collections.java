@@ -524,6 +524,9 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
+        if (ret instanceof ArrayList) {
+            ((ArrayList<?>) ret).trimToSize();
+        }
         return java.util.Collections.unmodifiableList(ret);
     }
 
@@ -539,7 +542,7 @@ public abstract class Collections {
         }
         Set<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newSetOfSize((int)(size*1.5));
+            ret = newSetOfSize(size);
         }
         if (ret == null) {
             ret = newSet();
@@ -605,7 +608,7 @@ public abstract class Collections {
         }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newMapOfSize((int)(size*1.5));
+            ret = newMapOfSize(size);
         }
         if (ret == null) {
             ret = newMap();

@@ -22,8 +22,8 @@ public class PairTest {
         Pair<Integer,String> pair = Pair.of(42, "foo");
         
         assertThat(pair, instanceOf(Map.Entry.class));
-        assertThat(pair.left, equalTo(pair._1));
-        assertThat(pair.right, equalTo(pair._2));
+        assertThat(pair.left(), equalTo(pair._1));
+        assertThat(pair.right(), equalTo(pair._2));
     }
     
     @Test
@@ -43,8 +43,8 @@ public class PairTest {
         assertThat(deserializedPair, instanceOf(Serializable.class));
         assertEquals(pair, deserializedPair);
         
-        assertEquals(pair.left, deserializedPair.left);
-        assertEquals(pair.right, deserializedPair.right);
+        assertEquals(pair.left(), deserializedPair.left());
+        assertEquals(pair.right(), deserializedPair.right());
         assertEquals(pair._1, deserializedPair._1);
         assertEquals(pair._2, deserializedPair._2);
     }

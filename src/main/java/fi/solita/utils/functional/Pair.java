@@ -8,13 +8,16 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
         return new Pair<LEFT, RIGHT>(left, right);
     }
     
-    public final LEFT left;
-    public final RIGHT right;
-    
     public Pair(LEFT left, RIGHT right) {
         super(left, right);
-        this.left = left;
-        this.right = right;
+    }
+    
+    public final LEFT left() {
+        return _1;
+    }
+    
+    public final RIGHT right() {
+        return _2;
     }
     
     public final <A,B> Pair<A,B> bimap(Apply<? super LEFT, ? extends A> f, Apply<? super RIGHT, ? extends B> f2) {

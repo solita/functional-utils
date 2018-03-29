@@ -25,11 +25,19 @@ public abstract class FunctionalM {
         return (SortedMap<T, Iterable<R>>) newSortedMap(m.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), m.entrySet()));
     }
     
+    public static <K,V,R> Map<R, V> mapKey(Apply<K,R> f, Map<K,V> m) {
+        return newMap(FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), m.entrySet()));
+    }
+    
+    public static <K,V,R> Map<K, R> mapValue(Apply<V,R> f, Map<K,V> m) {
+        return newMap(FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), m.entrySet()));
+    }
+    
     private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<V,R> f) {
         return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
             @Override
             public Map.Entry<T, Iterable<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
-                return Pair.of(e.getKey(), Functional.map(f, e.getValue()));
+                return Pair.of(e.getKey(), FunctionalImpl.map(f, e.getValue()));
             }
         };
     }

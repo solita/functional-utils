@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Function._;
+import static fi.solita.utils.functional.Function.__;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
@@ -131,7 +131,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function1<T1, Function2<T2,T3,R>>() {
             @Override
             public Function2<T2, T3, R> apply(T1 t) {
-                return Function3.this.apply(t, _, _);
+                return Function3.this.apply(t, __, __);
             }
         };
     }
@@ -140,7 +140,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function1<T2,Function2<T1,T3,R>>() {
             @Override
             public Function2<T1, T3, R> apply(T2 t2) {
-                return Function3.this.apply(_, t2, _);
+                return Function3.this.apply(__, t2, __);
             }
         };
     }
@@ -149,7 +149,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function2<T1,T2,Function1<T3,R>>() {
             @Override
             public Function1<T3, R> apply(T1 t1, T2 t2) {
-                return Function3.this.apply(t1, t2, _);
+                return Function3.this.apply(t1, t2, __);
             }
         };
     }
@@ -158,7 +158,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function2<T2,T3,Function1<T1,R>>() {
             @Override
             public Function1<T1, R> apply(T2 t2, T3 t3) {
-                return Function3.this.apply(_, t2, t3);
+                return Function3.this.apply(__, t2, t3);
             }
         };
     }
@@ -167,7 +167,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function2<T1,T3,Function1<T2,R>>() {
             @Override
             public Function1<T2, R> apply(T1 t1, T3 t3) {
-                return Function3.this.apply(t1, _, t3);
+                return Function3.this.apply(t1, __, t3);
             }
         };
     }
@@ -176,7 +176,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return new Function1<T3,Function2<T1,T2,R>>() {
             @Override
             public Function2<T1, T2, R> apply(T3 t3) {
-                return Function3.this.apply(_, _, t3);
+                return Function3.this.apply(__, __, t3);
             }
         };
     }

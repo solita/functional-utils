@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Function._;
 import static fi.solita.utils.functional.Function.__;
+import static fi.solita.utils.functional.Function.___;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class FunctionTest {
             }
          };
          
-         Function1<String, Function2<Character, Integer, Long>> ff = f.apply(_, __, __);
+         Function1<String, Function2<Character, Integer, Long>> ff = f.apply(__, ___, ___);
          Long res = ff.apply("foo").apply('4', 5);
          assertEquals(12l, res.longValue());
          
@@ -28,7 +28,7 @@ public class FunctionTest {
              }
          };
           
-         Function2<String, Integer, Function3<String, String, String, Long>> ggg = g.apply(_, __, __, __, _);
+         Function2<String, Integer, Function3<String, String, String, Long>> ggg = g.apply(__, ___, ___, ___, __);
          Long res2 = ggg.apply("foo", 2).apply("bar", "baz", "quux");
          assertEquals(15l, res2.longValue());
     }

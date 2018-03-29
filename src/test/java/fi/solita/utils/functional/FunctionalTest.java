@@ -252,8 +252,8 @@ public class FunctionalTest {
         assertEquals(newList(5), newList(dropWhile(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5))));
         
         Pair<Iterable<Integer>,Iterable<Integer>> pair = span(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5));
-        assertEquals(newList(1,2,3), newList(pair.left));
-        assertEquals(newList(5), newList(pair.right));
+        assertEquals(newList(1,2,3), newList(pair.left()));
+        assertEquals(newList(5), newList(pair.right()));
     }
     
     @Test

@@ -7,13 +7,13 @@ public abstract class Function {
     }
 
     public static enum GivenLater {
-        _
-    }
-    public static enum GivenEvenLater {
         __
     }
-    public static final GivenLater _ = GivenLater._;
-    public static final GivenEvenLater __ = GivenEvenLater.__;
+    public static enum GivenEvenLater {
+        ___
+    }
+    public static final GivenLater __ = GivenLater.__;
+    public static final GivenEvenLater ___ = GivenEvenLater.___;
     
     public static final <R> Function0<R> of(final R r) {
         return new Function0<R>() {
@@ -123,7 +123,7 @@ class PartialApplicationHelper {
         Object[] ret = Arrays.copyOf(paramsAndPlaceholders, paramsAndPlaceholders.length);
         int t = 0;
         for (int i = 0; i < ret.length; ++i) {
-            if (ret[i] == Function._) {
+            if (ret[i] == Function.__) {
                 ret[i] = actualParamsForPlaceholders[t];
                 t++;
                 if (t == actualParamsForPlaceholders.length) {
@@ -143,7 +143,7 @@ class PartialApplicationHelper {
         int ti = 0;
         int pi = 0;
         for (int i = 0; i < ret.length; ++i) {
-            if (args[i] == Function._) {
+            if (args[i] == Function.__) {
                 ret[i] = t[ti];
                 ti++;
             } else {
