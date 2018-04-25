@@ -32,6 +32,8 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     public abstract T getOrElse(T orElse);
     
     public abstract <R> Option<R> map(Apply<? super T, R> f);
+    
+    public abstract <R> Option<R> flatMap(Apply<? super T, Option<R>> f);
 
     public abstract <R> R cata(Apply<? super T, ? extends R> ifSome, Function0<? extends R> ifNone);
     
@@ -55,6 +57,11 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     
     @Override
     public final <R> Option<R> map(Apply<? super T, R> f) {
+        return None();
+    }
+    
+    @Override
+    public <R> Option<R> flatMap(Apply<? super T, Option<R>> f) {
         return None();
     }
     
@@ -104,6 +111,11 @@ final class SomeImpl<T> extends Option<T> {
     @Override
     public final <R> Option<R> map(Apply<? super T, R> f) {
         return Option.of(f.apply(t));
+    }
+    
+    @Override
+    public <R> Option<R> flatMap(Apply<? super T, Option<R>> f) {
+        return f.apply(t);
     }
     
     @Override
