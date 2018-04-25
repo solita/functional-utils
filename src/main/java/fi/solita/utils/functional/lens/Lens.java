@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedSet;
 import static fi.solita.utils.functional.Functional.map;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,14 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
             @Override
             public T apply(T t1, Apply<F, F> t2) {
                 return setter.apply(t1, t2);
+            }
+        });
+    }
+    
+    public static final <D,E,S> Setter<D,S> eachCollection(final Setter<D,Collection<E>> lens, final Setter<E,S> lens2) {
+        return eachIterable(lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+            public Collection<E> apply(Iterable<E> t) {
+                return newList(t);
             }
         });
     }
