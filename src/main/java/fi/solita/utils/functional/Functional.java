@@ -196,7 +196,7 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.max(xs);
     }
 
-    public static final <A, B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, Iterable<B> b) {
+    public static final <A, B> Iterable<Pair<A, B>> zip(Iterable<A> a, Iterable<B> b) {
         return FunctionalImpl.zip(a, b);
     }
 
@@ -208,7 +208,7 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.zip(a, b, c, d);
     }
 
-    public static final <A> Iterable<Tuple2<Integer, A>> zipWithIndex(Iterable<A> a) {
+    public static final <A> Iterable<Pair<Integer, A>> zipWithIndex(Iterable<A> a) {
         return new ZippingIterable<Integer, A>(range(0), a);
     }
 

@@ -244,7 +244,7 @@ public abstract class Iterables {
         }
     }
 
-    static final class ZippingIterable<A,B> extends MyIterable<Tuple2<A, B>> implements ForceableIterable {
+    static final class ZippingIterable<A,B> extends MyIterable<Pair<A, B>> implements ForceableIterable {
         private final Iterable<A> elements1;
         private final Iterable<B> elements2;
         private boolean force = false;
@@ -258,7 +258,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Iterator<Tuple2<A, B>> iterator() {
+        public final Iterator<Pair<A, B>> iterator() {
             if (force) {
                 if (elements1 instanceof ForceableIterable) {
                     ((ForceableIterable)elements1).completeIterationNeeded();
@@ -267,7 +267,7 @@ public abstract class Iterables {
                     ((ForceableIterable)elements2).completeIterationNeeded();
                 }
             }
-            return new Iterator<Tuple2<A, B>>() {
+            return new Iterator<Pair<A, B>>() {
                 private final Iterator<A> it1 = elements1.iterator();
                 private final Iterator<B> it2 = elements2.iterator();
                 
@@ -277,8 +277,8 @@ public abstract class Iterables {
                 }
 
                 
-                public final Tuple2<A, B> next() {
-                    return Tuple.of(it1.next(), it2.next());
+                public final Pair<A, B> next() {
+                    return Pair.of(it1.next(), it2.next());
                 }
 
                 

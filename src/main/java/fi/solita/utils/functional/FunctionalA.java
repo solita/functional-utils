@@ -366,15 +366,15 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static final <A,B> Iterable<Tuple2<A, B>> zip(A[] a, B[] b) {
+    public static final <A,B> Iterable<Pair<A, B>> zip(A[] a, B[] b) {
         return FunctionalImpl.zip(newList(a), newList(b));
     }
 
-    public static final <A,B> Iterable<Tuple2<A, B>> zip(A[] a, Iterable<B> b) {
+    public static final <A,B> Iterable<Pair<A, B>> zip(A[] a, Iterable<B> b) {
         return FunctionalImpl.zip(newList(a), b);
     }
 
-    public static final <A,B> Iterable<Tuple2<A, B>> zip(Iterable<A> a, B[] b) {
+    public static final <A,B> Iterable<Pair<A, B>> zip(Iterable<A> a, B[] b) {
         return FunctionalImpl.zip(a, newList(b));
     }
     
@@ -440,7 +440,7 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
-    public static final <A> Iterable<Tuple2<Integer, A>> zipWithIndex(A[] a) {
+    public static final <A> Iterable<Pair<Integer, A>> zipWithIndex(A[] a) {
         return a == null ? null : new ZippingIterable<Integer,A>(FunctionalImpl.range(Enumerables.ints, 0), newList(a));
     }
     

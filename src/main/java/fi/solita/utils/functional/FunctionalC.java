@@ -339,7 +339,7 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.max(it(xs));
     }
     
-    public static final Iterable<Tuple2<Character, Character>> zip(CharSequence a, CharSequence b) {
+    public static final Iterable<Pair<Character, Character>> zip(CharSequence a, CharSequence b) {
         return FunctionalImpl.zip(it(a), it(b));
     }
     
@@ -351,7 +351,7 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.zip(it(a), it(b), it(c), it(d)); 
     }
     
-    public static final Iterable<Tuple2<Integer, Character>> zipWithIndex(CharSequence a) {
+    public static final Iterable<Pair<Integer, Character>> zipWithIndex(CharSequence a) {
         return a == null ? null : new ZippingIterable<Integer,Character>(range(0), it(a));
     }
     

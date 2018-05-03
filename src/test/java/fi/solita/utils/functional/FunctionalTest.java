@@ -92,7 +92,7 @@ public class FunctionalTest {
     @Test
     public void testName() {
         @SuppressWarnings("unchecked")
-        Iterable<Tuple2<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
+        Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
         Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
             @Override
             public Iterable<String> transform(Tuple2<Integer,String> source) {
@@ -103,9 +103,9 @@ public class FunctionalTest {
         newList(c);
     }
     
-    public static final Function1<Iterable<String>, Iterable<Tuple2<Integer,String>>> zipWithIndex = new Function1<Iterable<String>, Iterable<Tuple2<Integer,String>>>() {
+    public static final Function1<Iterable<String>, Iterable<Pair<Integer,String>>> zipWithIndex = new Function1<Iterable<String>, Iterable<Pair<Integer,String>>>() {
         @Override
-        public Iterable<Tuple2<Integer, String>> apply(Iterable<String> t) {
+        public Iterable<Pair<Integer, String>> apply(Iterable<String> t) {
             return Functional.zipWithIndex(t);
         }
     };
