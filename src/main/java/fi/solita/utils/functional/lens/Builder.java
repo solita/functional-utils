@@ -10,8 +10,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
@@ -89,14 +91,14 @@ public final class Builder<T> {
         }
     }
 
-    private final Collection<? extends Apply<? super T,? extends Object>> members;
+    private final Set<? extends Apply<? super T,? extends Object>> members;
     private final Iterable<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
     private final Apply<Tuple, T> constructor;
     private Class<T> resultTypeCache;
 
     @SuppressWarnings("unchecked")
     private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
-        this.members = members;
+        this.members = new LinkedHashSet<Apply<? super T, ? extends Object>>(members);
         this.values = values;
         this.constructor = (Apply<Tuple, T>) constructor;
     }

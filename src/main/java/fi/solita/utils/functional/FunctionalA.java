@@ -4,6 +4,7 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.Some;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -124,7 +125,7 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     public static final <T> Iterable<List<T>> grouped(long groupSize, T[] xs) {
-        return FunctionalImpl.grouped(groupSize, newList(xs));
+        return FunctionalImpl.grouped(groupSize, Arrays.asList(xs));
     }
     
     

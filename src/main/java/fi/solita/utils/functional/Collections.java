@@ -26,6 +26,9 @@ import fi.solita.utils.functional.Iterables.ForceableIterable;
 
 public abstract class Collections {
     
+    private static final SortedMap<Object, Object> EMPTY_SORTED_MAP = java.util.Collections.unmodifiableSortedMap(new TreeMap<Object, Object>());
+    private static final SortedSet<Object> EMPTY_SORTED_SET = java.util.Collections.unmodifiableSortedSet(new TreeSet<Object>());
+
     public static final <T> List<T> emptyList() {
         return java.util.Collections.emptyList();
     }
@@ -34,16 +37,18 @@ public abstract class Collections {
         return java.util.Collections.emptySet();
     }
     
+    @SuppressWarnings("unchecked")
     public static final <T> SortedSet<T> emptySortedSet() {
-        return java.util.Collections.unmodifiableSortedSet(new TreeSet<T>());
+        return (SortedSet<T>) EMPTY_SORTED_SET;
     }
     
     public static final <K,V> Map<K,V> emptyMap() {
         return java.util.Collections.emptyMap();
     }
     
+    @SuppressWarnings("unchecked")
     public static final <K,V> SortedMap<K,V> emptySortedMap() {
-        return java.util.Collections.unmodifiableSortedMap(new TreeMap<K, V>());
+        return (SortedMap<K, V>) EMPTY_SORTED_MAP;
     }
     
     public static final <T> Collection<T> emptyCollection() {
@@ -527,7 +532,7 @@ public abstract class Collections {
         if (ret instanceof ArrayList) {
             ((ArrayList<?>) ret).trimToSize();
         }
-        return java.util.Collections.unmodifiableList(ret);
+        return ret.isEmpty() ? Collections.<T>emptyList() : java.util.Collections.unmodifiableList(ret);
     }
 
     public static final <T> Set<T> newSet(Iterable<T> elements) {
@@ -554,7 +559,7 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return java.util.Collections.unmodifiableSet(ret);
+        return ret.isEmpty() ? Collections.<T>emptySet() : java.util.Collections.unmodifiableSet(ret);
     }
     
     public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet(Iterable<T> elements) {
@@ -575,7 +580,7 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return java.util.Collections.unmodifiableSortedSet(ret);
+        return ret.isEmpty() ? Collections.<T>emptySortedSet() : java.util.Collections.unmodifiableSortedSet(ret);
     }
     
     public static final <T> SortedSet<T> newSortedSet(Comparator<? super T> comparator, Iterable<T> elements) {
@@ -596,7 +601,7 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return java.util.Collections.unmodifiableSortedSet(ret);
+        return ret.isEmpty() ? Collections.<T>emptySortedSet() : java.util.Collections.unmodifiableSortedSet(ret);
     }
 
     public static final <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
@@ -616,7 +621,7 @@ public abstract class Collections {
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
         }
-        return java.util.Collections.unmodifiableMap(ret);
+        return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
     }
     
     @SuppressWarnings("unchecked")
@@ -634,7 +639,7 @@ public abstract class Collections {
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
         }
-        return java.util.Collections.unmodifiableSortedMap(ret);
+        return ret.isEmpty() ? Collections.<K,V>emptySortedMap() : java.util.Collections.unmodifiableSortedMap(ret);
     }
     
     @SuppressWarnings("unchecked")
