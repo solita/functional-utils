@@ -248,23 +248,23 @@ Just a few examples of using these utils.
 	Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by_1;
 
 	List<Tuple2<String, Employee>> listOfTuples = newList();
-	sort(listOfTuples, by_1);
+	sort(by_1, listOfTuples);
 	// Employee does not implement comparable, but we can first map to _2 and then to salary
-	sort(listOfTuples, Compare.by(Transformers.<Employee>_2().andThen(salary)));
+	sort(Compare.by(Transformers.<Employee>_2().andThen(salary)), listOfTuples);
 
 	// sorted by the contents of an iterable
-	sort(Collections.<List<String>>newList(), Compare.<String>byIterable());
+	sort(Compare.<String>byIterable(), Collections.<List<String>>newList());
 
 	// sorted by the contents of an Option
-	sort(Collections.<Option<String>>newList(), Compare.<String>byOption());
+	sort(Compare.<String>byOption(), Collections.<Option<String>>newList());
 
 	// sorted by a function to an Option
-	sort(Collections.<Employee>newList(), Compare.byOption(name));
+	sort(Compare.byOption(name), Collections.<Employee>newList());
 
 	// and the same with explicit comparators
-	sort(Collections.<List<Employee>>newList(), Compare.byIterable(Compare.by(salary)));
-	sort(Collections.<Option<Employee>>newList(), Compare.byOption(Compare.by(salary)));
-	sort(Collections.<Employee>newList(), Compare.byOption(name, Ordering.Natural()));
+	sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newList());
+	sort(Compare.byOption(Compare.by(salary)), Collections.<Option<Employee>>newList());
+	sort(Compare.byOption(name, Ordering.Natural()), Collections.<Employee>newList());
 
 ### fi.solita.utils.functional.Tuple
 
@@ -324,7 +324,7 @@ Just a few examples of using these utils.
 	Function2<Integer, Integer, Integer> twoArg = mod;
 
 	int applied = length.apply("foo");
-	Iterable<Integer> mappedOverFunction = map(newList("a", "aa"), f);
+	Iterable<Integer> mappedOverFunction = map(f, newList("a", "aa"));
 
 	Function0<Integer> partiallyApplied = length.ap("foo");
 	int result = partiallyApplied.apply();
@@ -370,10 +370,10 @@ Just a few examples of using these utils.
 	// Longs (if assumed unbounded), Booleans and Strings are monoids,
 	// but they do not have "default instances of Monoid typeclass" so we
 	// must give one as a parameter.
-	long three = reduce(longs, Monoids.longSum);
-	long two = reduce(longs, Monoids.longProduct);
-	boolean notTrue = reduce(newList(true, false), Monoids.booleanConjunction);
-	String foobar = reduce(newList("foo", "bar"), Monoids.stringConcat);
+	long three = reduce(Monoids.longSum, longs);
+	long two = reduce(Monoids.longProduct, longs);
+	boolean notTrue = reduce(Monoids.booleanConjunction, newList(true, false));
+	String foobar = reduce(Monoids.stringConcat, newList("foo", "bar"));
 
 	// For classes having a default (SemiGroup) instance,
 	// no parameter is needed.
@@ -382,7 +382,7 @@ Just a few examples of using these utils.
 
 	Map<String, Long> first = newMap();
 	Map<String, Long> second = newMap();
-	Map<String, Long> valuesSummed = reduce(newList(first, second), Monoids.<String,Long>mapCombine(SemiGroups.longSum));
+	Map<String, Long> valuesSummed = reduce(Monoids.<String,Long>mapCombine(SemiGroups.longSum), newList(first, second));
 
 ### fi.solita.utils.functional.Match
 	for (Integer m: Match.instance(Integer.class, (Object)42)) {
