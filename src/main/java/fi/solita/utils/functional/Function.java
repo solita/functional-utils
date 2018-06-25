@@ -33,7 +33,7 @@ public abstract class Function {
         };
     }
     
-    public static final <R> Function0<R> memoize(final Supplier<R> supplier) {
+    public static final <R> Function0<R> memoize(final ApplyZero<R> supplier) {
         return new Function0<R>() {
             private R r;
             @Override

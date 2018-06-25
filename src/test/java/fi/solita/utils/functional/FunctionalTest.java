@@ -285,4 +285,22 @@ public class FunctionalTest {
     public void flattenIgnoresNulls() {
         assertEquals(newList("foo"), newList(flatten(newList((List<String>)null, newList("foo")))));
     }
+    
+    @Test
+    public void testForeach_apply() {
+        foreach(new Apply<Integer, Void>() {
+            public Void apply(Integer t) {
+                return null;
+            }
+        }, newList(42));
+    }
+    
+    @Test
+    public void testForeach_applyVoid() {
+        foreach(new ApplyVoid<Integer>() {
+            public void accept(Integer t) {
+                return;
+            }
+        }, newList(42));
+    }
 }

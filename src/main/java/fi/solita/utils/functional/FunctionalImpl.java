@@ -111,9 +111,10 @@ final class FunctionalImpl {
         }
     }
     
-    @SuppressWarnings("unchecked")
     static final <T> void foreach(ApplyVoid<? super T> procedure, Iterable<T> xs) {
-        foreach((Apply<? super T, Void>)procedure, xs);
+        for (T t: xs) {
+            procedure.accept(t);
+        }
     }
     
     /**

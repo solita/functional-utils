@@ -12,14 +12,14 @@ public abstract class Monoids {
     private Monoids() {
     }
     
-    public static final <T> Monoid<T> of(final SemiGroup<T> sg, final Function0<T> zero) {
+    public static final <T> Monoid<T> of(final SemiGroup<T> sg, final ApplyZero<T> zero) {
         return new Monoid<T>() {
             public T apply(Map.Entry<? extends T, ? extends T> t) {
                 return sg.apply(t);
             }
 
             public T zero() {
-                return zero.apply();
+                return zero.get();
             }
         };
     }

@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import fi.solita.utils.functional.Apply;
+import fi.solita.utils.functional.ApplyBi;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.FunctionalM;
@@ -37,7 +38,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
-    public static final <T,F> Lens<T,F> of(Apply<? super T, F> getter, final Function2<T, Apply<F,F>, T> setter) {
+    public static final <T,F> Lens<T,F> of(Apply<? super T, F> getter, final ApplyBi<T, Apply<F,F>, T> setter) {
         return new Lens<T,F>(getter, new Function2<T,Apply<F,F>,T>() {
             @Override
             public T apply(T t1, Apply<F, F> t2) {

@@ -16,9 +16,10 @@ import java.util.Map;
 import java.util.Set;
 
 import fi.solita.utils.functional.Apply;
+import fi.solita.utils.functional.ApplyBi;
+import fi.solita.utils.functional.ApplyZero;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function;
-import fi.solita.utils.functional.Function0;
 import fi.solita.utils.functional.Function10;
 import fi.solita.utils.functional.Function11;
 import fi.solita.utils.functional.Function12;
@@ -29,7 +30,6 @@ import fi.solita.utils.functional.Function16;
 import fi.solita.utils.functional.Function17;
 import fi.solita.utils.functional.Function18;
 import fi.solita.utils.functional.Function19;
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function20;
 import fi.solita.utils.functional.Function21;
 import fi.solita.utils.functional.Function22;
@@ -108,8 +108,12 @@ public final class Builder<T> {
         return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), members, (Apply<? extends Tuple, T>) constructor);
     }
     
-    private static <T> Builder<T> newBuilder(Function0<T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), Collections.<Apply<? super T, ? extends Object>>emptyCollection(), (Apply<? extends Tuple, T>) constructor);
+    private static <T> Builder<T> newBuilder(final ApplyZero<T> constructor) {
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), Collections.<Apply<? super T, ? extends Object>>emptyCollection(), new Apply<Tuple0, T>() {
+            public T apply(Tuple0 t) {
+                return constructor.get();
+            }
+        });
     }
     
     public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
@@ -208,7 +212,7 @@ public final class Builder<T> {
         return ret;
     }
     
-    public static <T> Builder<T> of(Tuple0 members, Function0<T> constructor) {
+    public static <T> Builder<T> of(Tuple0 members, ApplyZero<T> constructor) {
         return newBuilder(constructor);
     }
     
@@ -224,8 +228,11 @@ public final class Builder<T> {
     
     public static <T,F1,F2> Builder<T> of(
             Tuple2<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>> members, Function2<? super F1,? super F2,T> constructor) {
-        return newBuilder(Tuple.asList(members), constructor);
+                   ? extends Apply<? super T,F2>> members, final ApplyBi<? super F1,? super F2,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Tuple2<F1,F2>,T>() {
+            public T apply(Tuple2<F1,F2> t) {
+                return constructor.apply(t._1, t._2);
+            }});
     }
     
     public static <T,F1,F2,F3> Builder<T> of(

@@ -1011,7 +1011,7 @@ public abstract class Collections {
         return xs == null ? null : new Iterables.MemoizingCharSequenceIterable(xs);
     }
     
-    public static final <T> Iterable<T> lazily(final Supplier<Iterable<T>> s) {
+    public static final <T> Iterable<T> lazily(final ApplyZero<Iterable<T>> s) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return s.get().iterator();
