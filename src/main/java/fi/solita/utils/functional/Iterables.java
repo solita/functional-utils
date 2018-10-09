@@ -566,12 +566,7 @@ public abstract class Iterables {
                 private int read = 0;
                 
                 public final boolean hasNext() {
-                    try {
-                        chars.charAt(read);
-                        return true;
-                    } catch (IndexOutOfBoundsException e) {
-                        return false;
-                    }
+                    return read < chars.length();
                 }
 
                 

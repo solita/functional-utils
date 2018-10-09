@@ -578,9 +578,8 @@ final class FunctionalImpl {
         private final Set<T> visited = newSet();
         @Override
         public final boolean accept(T candidate) {
-            boolean ret = !visited.contains(candidate);
-            visited.add(candidate);
-            return ret;
+            boolean didNotContain = visited.add(candidate);
+            return didNotContain;
         }
     };
     
