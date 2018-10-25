@@ -3,6 +3,7 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -202,6 +203,18 @@ public abstract class FunctionalA extends FunctionalM {
     
     public static final <T> Iterable<T> dropWhile(Apply<? super T, Boolean> predicate, T[] xs) {
         return FunctionalImpl.dropWhile(predicate, newList(xs));
+    }
+    
+    
+    
+    public static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, T[] xs) {
+        return FunctionalImpl.span(predicate, newList(xs));
+    }
+
+    
+    
+    public static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, T[] xs) {
+        return FunctionalImpl.partition(predicate, newList(xs));
     }
     
     

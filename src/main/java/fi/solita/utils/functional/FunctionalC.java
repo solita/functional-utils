@@ -4,6 +4,7 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Comparator;
 import java.util.List;
@@ -237,6 +238,13 @@ public abstract class FunctionalC extends FunctionalS {
         return Pair.of(xs, "");
     }
     
+    public static final Pair<CharSequence, CharSequence> partition(Apply<Character, Boolean> predicate, CharSequence xs) {
+        return Pair.of(filter(predicate, xs), filter(not(predicate), xs));
+    }
+    
+    public static final Pair<String, String> partition(Apply<Character, Boolean> predicate, String xs) {
+        return partition(predicate, (CharSequence)xs).bimap(Transformers.toString, Transformers.toString);
+    }
     
     
     public static final <T> CharSequence every(int nth, CharSequence xs) {

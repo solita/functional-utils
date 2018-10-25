@@ -334,6 +334,11 @@ final class FunctionalImpl {
         return xs == null ? null : Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
+    static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
+        // TODO: a more efficient implementation
+        return xs == null ? null : Pair.of(filter(predicate, xs), filter(not(predicate), xs));
+    }
+    
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {
         // TODO: optimize...
         return Functional.map(Transformers.<T>right(), Functional.filter(Transformers.<Integer>_1().andThen(Predicates.divisible(nth)), Functional.zipWithIndex(xs)));

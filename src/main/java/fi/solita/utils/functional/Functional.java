@@ -131,6 +131,10 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
         return FunctionalImpl.span(predicate, xs);
     }
+    
+    public static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
+        return FunctionalImpl.partition(predicate, xs);
+    }
 
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {
         return FunctionalImpl.every(nth, xs);
