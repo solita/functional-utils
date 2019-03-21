@@ -33,6 +33,15 @@ public abstract class Function {
         };
     }
     
+    public static final <T1, T2, R> Function2<T1, T2, R> of(final ApplyBi<T1, T2, R> apply) {
+        return new Function2<T1, T2, R>() {
+            @Override
+            public final R apply(T1 t1, T2 t2) {
+                return apply.apply(t1, t2);
+            }
+        };
+    }
+    
     public static final <R> Function0<R> memoize(final ApplyZero<R> supplier) {
         return new Function0<R>() {
             private R r;

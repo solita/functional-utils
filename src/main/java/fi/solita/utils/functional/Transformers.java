@@ -253,6 +253,24 @@ public abstract class Transformers {
         return (Transformer<Iterable<T>,T>)(Object)head;
     }
     
+    private static final Transformer<Iterable<?>, Object> tail = new Transformer<Iterable<?>,Object>() {
+        @Override
+        public final Object transform(Iterable<?> source) {
+            return Functional.tail(source);
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Iterable<T>,Iterable<T>> tail() {
+        return (Transformer<Iterable<T>,Iterable<T>>)(Object)tail;
+    }
+    
+    public static final Transformer<String, String> tailStr = new Transformer<String,String>() {
+        @Override
+        public final String transform(String source) {
+            return Functional.tail(source);
+        }
+    };
+    
     public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> map(final Apply<? super T, R> f) {
         return new Transformer<Iterable<? extends T>,Iterable<R>>() {
             @Override

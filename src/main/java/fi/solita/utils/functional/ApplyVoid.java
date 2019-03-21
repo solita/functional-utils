@@ -1,5 +1,7 @@
 package fi.solita.utils.functional;
 
-public interface ApplyVoid<T> {
+import java.io.Serializable;
+
+public interface ApplyVoid<T> extends Serializable {
     void accept(T t);
 }

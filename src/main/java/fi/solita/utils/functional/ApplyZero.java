@@ -1,5 +1,7 @@
 package fi.solita.utils.functional;
 
-public interface ApplyZero<T> {
+import java.io.Serializable;
+
+public interface ApplyZero<T> extends Serializable {
     T get();
 }

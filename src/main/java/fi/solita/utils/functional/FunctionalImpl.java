@@ -34,12 +34,12 @@ final class FunctionalImpl {
      */
     @SuppressWarnings("unchecked")
     static final <T> Iterable<T> subtract(Iterable<? extends T> a, final Collection<? extends T> b) {
-        return (Iterable<T>) filter(new Predicate<T>() {
+        return  (Iterable<T>) (b == null ? a : filter(new Predicate<T>() {
             @Override
             public final boolean accept(T object) {
                 return !b.contains(object);
             }
-        }, a);
+        }, a));
     }
     
     static final <T> Iterable<T> remove(T toRemove, Iterable<T> xs) {
@@ -606,13 +606,16 @@ final class FunctionalImpl {
             return null;
         }
         Iterable<String> lineSeparators = Functional.repeat(System.getProperty("line.separator"));
-        CharSequence first = head(xs);
+        Option<? extends CharSequence> first = headOption(xs);
+        if (!first.isDefined()) {
+            return "";
+        }
         Iterable<CharSequence> rest = map(new Transformer<Tuple2<String,? extends CharSequence>,CharSequence>() {
             @Override
             public final CharSequence transform(Tuple2<String, ? extends CharSequence> source) {
                 return Functional.concat(source._1, source._2);
             }
         }, zip(lineSeparators, tail(xs)));
-        return it(flatten(map(FunctionalC.charSeq2iterable, cons(first, rest))));
+        return it(flatten(map(FunctionalC.charSeq2iterable, cons(first.get(), rest))));
     }
 }

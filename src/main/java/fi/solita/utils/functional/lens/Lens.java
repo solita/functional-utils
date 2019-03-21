@@ -4,6 +4,7 @@ import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedSet;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,11 +14,44 @@ import java.util.SortedSet;
 
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.ApplyBi;
+import fi.solita.utils.functional.Either;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.FunctionalM;
+import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Tuple;
-import fi.solita.utils.functional.Tuple.*;
+import fi.solita.utils.functional.Tuple._1;
+import fi.solita.utils.functional.Tuple._10;
+import fi.solita.utils.functional.Tuple._11;
+import fi.solita.utils.functional.Tuple._12;
+import fi.solita.utils.functional.Tuple._13;
+import fi.solita.utils.functional.Tuple._14;
+import fi.solita.utils.functional.Tuple._15;
+import fi.solita.utils.functional.Tuple._16;
+import fi.solita.utils.functional.Tuple._17;
+import fi.solita.utils.functional.Tuple._18;
+import fi.solita.utils.functional.Tuple._19;
+import fi.solita.utils.functional.Tuple._2;
+import fi.solita.utils.functional.Tuple._20;
+import fi.solita.utils.functional.Tuple._21;
+import fi.solita.utils.functional.Tuple._22;
+import fi.solita.utils.functional.Tuple._23;
+import fi.solita.utils.functional.Tuple._24;
+import fi.solita.utils.functional.Tuple._25;
+import fi.solita.utils.functional.Tuple._26;
+import fi.solita.utils.functional.Tuple._27;
+import fi.solita.utils.functional.Tuple._28;
+import fi.solita.utils.functional.Tuple._29;
+import fi.solita.utils.functional.Tuple._3;
+import fi.solita.utils.functional.Tuple._30;
+import fi.solita.utils.functional.Tuple._31;
+import fi.solita.utils.functional.Tuple._32;
+import fi.solita.utils.functional.Tuple._4;
+import fi.solita.utils.functional.Tuple._5;
+import fi.solita.utils.functional.Tuple._6;
+import fi.solita.utils.functional.Tuple._7;
+import fi.solita.utils.functional.Tuple._8;
+import fi.solita.utils.functional.Tuple._9;
 
 public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     private final Apply<? super T, F> getter;
@@ -145,6 +179,48 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 return modify(tt, new Apply<F,F>() {
                     public F apply(F f) {
                         return otherLens.modify(f, fo);
+                    }
+                });
+            }
+        });
+    }
+    
+    public static final <T> Lens<T,T> id() {
+        return Lens.of(Function.<T>id(), new ApplyBi<T, Apply<T,T>, T>() {
+            public T apply(T t1, Apply<T, T> t2) {
+                return t2.apply(t1);
+            }
+        });
+    }
+    
+    public static final <L,R> Lens<Either<L,R>,Option<L>> left() {
+        return new Lens<Either<L,R>, Option<L>>(new Apply<Either<L,R>, Option<L>>() {
+            public Option<L> apply(Either<L, R> t) {
+                return t.left;
+            }
+        }, new Function2<Either<L,R>, Apply<Option<L>,Option<L>>, Either<L,R>>() {
+            @Override
+            public Either<L, R> apply(Either<L, R> t, final Apply<Option<L>, Option<L>> f) {
+                return t.first(new Apply<L, L>() {
+                    public L apply(L t) {
+                        return f.apply(Some(t)).get();
+                    }
+                });
+            }
+        });
+    }
+    
+    public static final <L,R> Lens<Either<L,R>,Option<R>> right() {
+        return new Lens<Either<L,R>, Option<R>>(new Apply<Either<L,R>, Option<R>>() {
+            public Option<R> apply(Either<L, R> t) {
+                return t.right;
+            }
+        }, new Function2<Either<L,R>, Apply<Option<R>,Option<R>>, Either<L,R>>() {
+            @Override
+            public Either<L, R> apply(Either<L, R> t, final Apply<Option<R>, Option<R>> f) {
+                return t.second(new Apply<R, R>() {
+                    public R apply(R t) {
+                        return f.apply(Some(t)).get();
                     }
                 });
             }
