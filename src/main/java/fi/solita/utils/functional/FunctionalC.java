@@ -304,11 +304,11 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     public static final CharSequence concat(CharSequence a, CharSequence b) {
-        return it(FunctionalImpl.concat(it(a), it(b)));
+        return a == null && b == null ? null : a == null ? b : b == null ? a : it(FunctionalImpl.concat(it(a), it(b)));
     }
     
     public static final String concat(String a, String b) {
-        return a == null || b == null ? null : a + b;
+        return a == null && b == null ? null : a == null ? b : b == null ? a : a + b;
     }
     
     

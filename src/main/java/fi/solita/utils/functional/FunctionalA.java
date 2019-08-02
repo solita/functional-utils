@@ -3,7 +3,6 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -274,23 +273,23 @@ public abstract class FunctionalA extends FunctionalM {
     }
 
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3) {
-        return x1 == null && x2 == null && x3 == null ? null : new ConcatenatingIterable<T>(newList(x1, x2, x3));
+        return x1 == null && x2 == null && x3 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3)));
     }
     
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4) {
-        return x1 == null && x2 == null && x3 == null && x4 == null ? null : new ConcatenatingIterable<T>(newList(x1, x2, x3, x4));
+        return x1 == null && x2 == null && x3 == null && x4 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4)));
     }
     
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5) {
-        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null ? null : new ConcatenatingIterable<T>(newList(x1, x2, x3, x4, x5));
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5)));
     }
     
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6) {
-        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null ? null : new ConcatenatingIterable<T>(newList(x1, x2, x3, x4, x5, x6));
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6)));
     }
     
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T>... xs) {
-        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && xs == null ? null : new ConcatenatingIterable<T>(concat(newList(x1, x2, x3, x4, x5, x6), xs));
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && xs == null ? null : new ConcatenatingIterable<T>(concat(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6)), xs));
     }
     
     
