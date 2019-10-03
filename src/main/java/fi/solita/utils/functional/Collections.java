@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,10 @@ public abstract class Collections {
         return new HashMap<K, V>();
     }
     
+    public static final <K,V> Map<K,V> newLinkedMap() {
+        return new LinkedHashMap<K,V>();
+    }
+    
     public static final <K extends Comparable<? super K>,V> SortedMap<K,V> newSortedMap() {
         return new TreeMap<K,V>();
     }
@@ -114,6 +119,10 @@ public abstract class Collections {
 
     public static final <K,V> Map<K,V> newMapOfSize(long initialSize) {
         return new HashMap<K,V>((int)initialSize);
+    }
+    
+    public static final <K,V> Map<K,V> newLinkedMapOfSize(long initialSize) {
+        return new LinkedHashMap<K,V>((int)initialSize);
     }
     
     public static final <T> Collection<T> newCollectionOfSize(long initialSize) {
@@ -644,13 +653,30 @@ public abstract class Collections {
         return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
     }
     
+    public static final <K, V> Map<K, V> newLinkedMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        if (elements == null) {
+            return null;
+        }
+        if (elements instanceof ForceableIterable) {
+            ((ForceableIterable) elements).completeIterationNeeded();
+        }
+        Map<K, V> ret = null;
+        for (long size: Iterables.resolveSize.apply(elements)) {
+            ret = newLinkedMapOfSize(size);
+        }
+        if (ret == null) {
+            ret = newLinkedMap();
+        }
+        for (Map.Entry<? extends K, ? extends V> e: elements) {
+            ret.put(e.getKey(), e.getValue());
+        }
+        return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <K, V> SortedMap<K, V> newSortedMap(Comparator<? super K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
-        }
-        if (unmodifiableSortedMapClass.isInstance(elements)) {
-            return (SortedMap<K,V>)elements;
         }
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();

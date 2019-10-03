@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.newLinkedMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSortedMap;
@@ -23,6 +24,10 @@ public abstract class FunctionalM {
     
     public static <T,V,R> SortedMap<T, Iterable<R>> map(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> m) {
         return (SortedMap<T, Iterable<R>>) newSortedMap(m.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), m.entrySet()));
+    }
+    
+    public static <T,V,R> Map<T, Iterable<R>> mapValues(Apply<V,R> f, Map<T,? extends Iterable<V>> m) {
+        return newLinkedMap(Functional.map(FunctionalM.<T,V,R>valueMapper(f), m.entrySet()));
     }
     
     public static <K,V,R> Map<R, V> mapKey(Apply<K,R> f, Map<K,V> m) {

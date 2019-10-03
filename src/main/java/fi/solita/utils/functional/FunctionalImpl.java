@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -94,7 +96,13 @@ final class FunctionalImpl {
     }
     
     static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
-        return Collections.newMap(map(f, map.entrySet()));
+        // to preserve iteration order
+        LinkedHashMap<K2, V2> ret = new LinkedHashMap<K2, V2>();
+        for (Map.Entry<K1, V1> k: map.entrySet()) {
+            Entry<? extends K2, ? extends V2> entry = f.apply(k);
+            ret.put(entry.getKey(), entry.getValue());
+        }
+        return ret;
     }
     
     static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<? extends T>> f, Iterable<S> xs) {
