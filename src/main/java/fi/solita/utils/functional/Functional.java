@@ -99,7 +99,7 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Iterable<T> tail(Iterable<T> xs) {
         return FunctionalImpl.tail(xs);
     }
-
+    
     public static final <T> T last(Iterable<T> xs) {
         return FunctionalImpl.last(xs);
     }
@@ -134,6 +134,14 @@ public abstract class Functional extends FunctionalC {
     
     public static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
         return FunctionalImpl.partition(predicate, xs);
+    }
+    
+    public static final <T> Pair<Iterable<T>,Iterable<T>> split(int i, Iterable<T> xs) {
+        return FunctionalImpl.split(i, xs);
+    }
+    
+    public static <T> Pair<T, Iterable<T>> split(Iterable<T> xs) {
+        return FunctionalImpl.split(xs);
     }
 
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {

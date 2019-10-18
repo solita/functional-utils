@@ -218,6 +218,16 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     
+    public static final <T> Pair<Iterable<T>,Iterable<T>> split(int i, T[] xs) {
+        return FunctionalImpl.split(i, newList(xs));
+    }
+    
+    public static <T> Pair<T, Iterable<T>> split(T[] xs) {
+        return xs == null ? null : Pair.of(xs[0], tail(xs));
+    }
+    
+    
+    
     public static final <T> Iterable<T> every(int nth, T[] xs) {
         return FunctionalImpl.every(nth, newList(xs));
     }

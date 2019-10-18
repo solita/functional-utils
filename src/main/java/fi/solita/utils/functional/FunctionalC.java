@@ -247,6 +247,25 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     
+    
+    public static final Pair<CharSequence,CharSequence> split(int i, CharSequence xs) {
+        return xs == null ? null : Pair.of(xs.subSequence(0, i), xs.subSequence(i, xs.length()));
+    }
+    
+    public static <T> Pair<Character, CharSequence> split(CharSequence xs) {
+        return xs == null ? null : Pair.of(xs.charAt(0), xs.subSequence(1, xs.length()));
+    }
+    
+    public static final Pair<String,String> split(int i, String xs) {
+        return xs == null ? null : Pair.of(xs.substring(0, i), xs.substring(i));
+    }
+    
+    public static <T> Pair<Character, String> split(String xs) {
+        return xs == null ? null : Pair.of(xs.charAt(0), xs.substring(1));
+    }
+    
+    
+    
     public static final <T> CharSequence every(int nth, CharSequence xs) {
         return it(FunctionalImpl.every(nth, it(xs)));
     }

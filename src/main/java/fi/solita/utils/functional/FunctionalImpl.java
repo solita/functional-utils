@@ -347,6 +347,16 @@ final class FunctionalImpl {
         return xs == null ? null : Pair.of(filter(predicate, xs), filter(not(predicate), xs));
     }
     
+    public static <T> Pair<Iterable<T>, Iterable<T>> split(int i, Iterable<T> xs) {
+        // TODO: a more efficient implementation
+        return xs == null ? null : Pair.of(take(i, xs), drop(i, xs));
+    }
+    
+    public static <T> Pair<T, Iterable<T>> split(Iterable<T> xs) {
+        // TODO: a more efficient implementation
+        return xs == null ? null : Pair.of(head(xs), tail(xs));
+    }
+    
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {
         // TODO: optimize...
         return Functional.map(Transformers.<T>right(), Functional.filter(Transformers.<Integer>_1().andThen(Predicates.divisible(nth)), Functional.zipWithIndex(xs)));

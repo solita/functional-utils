@@ -303,4 +303,22 @@ public class FunctionalTest {
             }
         }, newList(42));
     }
+    
+    @Test
+    public void testSplit() {
+        assertEquals(Pair.of(1, newList())   , force(split(newList(1))));
+        assertEquals(Pair.of(1, newList(2))  , force(split(newList(1,2))));
+        assertEquals(Pair.of(1, newList(2,3)), force(split(newList(1,2,3))));
+        
+        assertEquals(Pair.of(newList(1)  , newList()) , force2(split(1, newList(1))));
+        assertEquals(Pair.of(newList(1)  , newList(2)), force2(split(1, newList(1,2))));
+        assertEquals(Pair.of(newList(1,2), newList(3)), force2(split(2, newList(1,2,3))));
+    }
+    
+    private static <T> Pair<T,List<T>> force(Pair<T,Iterable<T>> p) {
+        return Pair.of(p.left(), newList(p.right()));
+    }
+    private static <T> Pair<List<T>,List<T>> force2(Pair<Iterable<T>,Iterable<T>> p) {
+        return Pair.of(newList(p.left()), newList(p.right()));
+    }
 }
