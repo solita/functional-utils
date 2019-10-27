@@ -31,11 +31,11 @@ public abstract class FunctionalM {
     }
     
     public static <K,V,R> Map<R, V> mapKey(Apply<K,R> f, Map<K,V> m) {
-        return newMap(FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), m.entrySet()));
+        return newLinkedMap(FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), m.entrySet()));
     }
     
     public static <K,V,R> Map<K, R> mapValue(Apply<V,R> f, Map<K,V> m) {
-        return newMap(FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), m.entrySet()));
+        return newLinkedMap(FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), m.entrySet()));
     }
     
     private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<V,R> f) {

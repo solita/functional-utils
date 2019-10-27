@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
+import static fi.solita.utils.functional.Collections.newLinkedMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newSet;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,7 +61,8 @@ final class FunctionalImpl {
     }
     
     static final <T, E> Map<T, E> filter(Apply<Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
-        return Collections.newMap(filter(predicate, map.entrySet()));
+        // to preserve iteration order
+        return Collections.newLinkedMap(filter(predicate, map.entrySet()));
     }
     
     static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<S> xs) {
@@ -97,7 +98,7 @@ final class FunctionalImpl {
     
     static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
         // to preserve iteration order
-        LinkedHashMap<K2, V2> ret = new LinkedHashMap<K2, V2>();
+        Map<K2, V2> ret = newLinkedMap();
         for (Map.Entry<K1, V1> k: map.entrySet()) {
             Entry<? extends K2, ? extends V2> entry = f.apply(k);
             ret.put(entry.getKey(), entry.getValue());
