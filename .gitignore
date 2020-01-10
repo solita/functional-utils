@@ -8,3 +8,4 @@ target
 .DS_Store
 .apt_generated
 .settings/org.eclipse.jdt.core.prefs
+/.apt_generated_tests/

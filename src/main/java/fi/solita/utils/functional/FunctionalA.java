@@ -373,6 +373,10 @@ public abstract class FunctionalA extends FunctionalM {
         return FunctionalImpl.min(newList(xs));
     }
     
+    public static final <T> T minBy(Comparator<? super T> comparator, T x, T y) {
+        return comparator.compare(x, y) <= 0 ? x : y;
+    }
+    
     
     
     public static final <T extends Comparable<T>> T max(T x, T y) {
@@ -385,6 +389,10 @@ public abstract class FunctionalA extends FunctionalM {
     
     public static final <T extends Comparable<T>> Option<T> max(T[] xs) {
         return FunctionalImpl.max(newList(xs));
+    }
+    
+    public static final <T> T maxBy(Comparator<? super T> comparator, T x, T y) {
+        return comparator.compare(x, y) >= 0 ? x : y;
     }
     
     

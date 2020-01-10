@@ -54,7 +54,7 @@ import fi.solita.utils.functional.Tuple._8;
 import fi.solita.utils.functional.Tuple._9;
 
 public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
-    private final Apply<? super T, F> getter;
+    public final Apply<? super T, F> getter;
     
     private Lens(Apply<? super T, F> getter, Function2<T,Apply<F,F>,T> setter) {
         super(setter);
