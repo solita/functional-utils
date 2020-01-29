@@ -5,7 +5,6 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newLinkedMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
-import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.equalTo;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -595,17 +593,8 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> distinct(Iterable<T> xs) {
-        return filter(new DistinctPredicate<T>(), xs);
+        return new Iterables.DistinctIterable<T>(xs);
     }
-    
-    protected static final class DistinctPredicate<T> extends Predicate<T> {
-        private final Set<T> visited = newSet();
-        @Override
-        public final boolean accept(T candidate) {
-            boolean didNotContain = visited.add(candidate);
-            return didNotContain;
-        }
-    };
     
     static final <T,R> Iterable<R> sequence(final T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
         return map(new Transformer<Apply<? super T,? extends R>, R>() {

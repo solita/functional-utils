@@ -1,8 +1,8 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newListOfSize;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.forall;
@@ -25,6 +25,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 public abstract class Iterables {
     // cache most used Some-object to reduce object allocation
@@ -380,6 +381,69 @@ public abstract class Iterables {
         
         public Option<Long> size() {
             return None();
+        }
+    }
+    
+    static class DistinctIterable<T> extends MyIterable<T> implements ForceableIterable {
+        private final Iterable<T> iterable;
+        private boolean force = false;
+
+        public DistinctIterable(Iterable<T> iterable) {
+            this.iterable = iterable;
+        }
+        
+        public final void completeIterationNeeded() {
+            this.force = true;
+        }
+        
+        public final Option<Long> size() {
+            return None();
+        }
+        
+        public Iterator<T> iterator() {
+            final Set<T> visited = newSet();
+            if (force && iterable instanceof ForceableIterable) {
+                ((ForceableIterable)iterable).completeIterationNeeded();
+            }
+            return new Iterator<T>() {
+                private boolean hasNext;
+                private T next;
+                private final Iterator<T> source = iterable.iterator();
+                {
+                    readNext();
+                }
+
+                
+                public final boolean hasNext() {
+                    return hasNext;
+                }
+
+                private final void readNext() {
+                    hasNext = false;
+                    while (!hasNext && source.hasNext()) {
+                        T n = source.next();
+                        if (visited.add(n)) {
+                            next = n;
+                            hasNext = true;
+                        }
+                    }
+                }
+
+                
+                public final T next() {
+                    if (!hasNext) {
+                        throw new NoSuchElementException();
+                    }
+                    T ret = (T) next;
+                    readNext();
+                    return ret;
+                }
+
+                
+                public final void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
         }
     }
 

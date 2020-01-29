@@ -154,6 +154,13 @@ public class FunctionalTest {
     }
     
     @Test
+    public void distinctWorksTwice() {
+        Iterable<Integer> xs = distinct(newList(1,2,3,3,2,1,4));
+        assertEquals(newList(1,2,3,4), newList(xs));
+        assertEquals(newList(1,2,3,4), newList(xs));
+    }
+    
+    @Test
     public void traversalFusionByComposingMonoids() {
         // lista, joka varmistaa että sen voi iteroida vain kerran
         List<Double> list = listOf(1.0, 2.0, 3.0, 4.0);
