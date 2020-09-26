@@ -2,10 +2,19 @@ package fi.solita.utils.functional;
 
 import java.io.Serializable;
 
+/**
+ * Most basic function from {@code T} to {@code R} 
+ */
 public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
     
+    /**
+     * Apply this function to value {@code t}.
+     */
     public abstract R apply(T t);
 
+    /**
+     * @return function composition with {@code next}.
+     */
     public <U> Function1<T, U> andThen(final Apply<? super R, ? extends U> next) {
         return new Function1<T, U>() {
             @Override
@@ -15,6 +24,9 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
+    /**
+     * @return reverse function composition with {@code next}.
+     */
     public final <U> Function1<U, R> compose(final Apply<? super U, ? extends T> next) {
         return new Function1<U, R>() {
             @Override
@@ -24,6 +36,9 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
 
+    /**
+     * @return this function taking its arguments as a tupple.
+     */
     public final Function1<Tuple1<T>, R> tuppled() {
         return new Function1<Tuple1<T>, R>() {
             @Override
@@ -33,11 +48,14 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
-    public final Function0<R> ap(final T t) {
+    /**
+     * partially apply {@code arg1}.
+     */
+    public final Function0<R> ap(final T arg1) {
         return new Function0<R>() {
             @Override
             public final R apply() {
-                return Function1.this.apply(t);
+                return Function1.this.apply(arg1);
             }
         };
     }

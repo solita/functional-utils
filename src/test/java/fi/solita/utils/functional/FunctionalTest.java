@@ -77,6 +77,43 @@ public class FunctionalTest {
         assertThat(mkString("", map(toString, t)), equalTo("[1][2]"));
     }
     
+    @Test
+    public void testTranspose3() {
+         List<String> row1 = newList("1","2");
+         List<String> row2 = newList("3");
+         List<List<String>> m = newList(row1, row2);
+         
+         Iterable<Iterable<String>> t = transpose(m);
+         
+         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3]"));
+         assertThat(mkString("", map(toString, t)), equalTo("[1, 3]"));
+    }
+    
+    @Test
+    public void testTranspose4() {
+         List<String> row1 = newList("1");
+         List<String> row2 = newList("2", "3");
+         List<List<String>> m = newList(row1, row2);
+         
+         Iterable<Iterable<String>> t = transpose(m);
+         
+         assertThat(mkString("", map(toString, m)), equalTo("[1][2, 3]"));
+         assertThat(mkString("", map(toString, t)), equalTo("[1, 2]"));
+    }
+    
+    
+    @Test
+    public void testTranspose5() {
+         List<String> row1 = newList("1","2");
+         List<String> row2 = newList("3", "4", "5");
+         List<List<String>> m = newList(row1, row2);
+         
+         Iterable<Iterable<String>> t = transpose(m);
+         
+         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3, 4, 5]"));
+         assertThat(mkString("", map(toString, t)), equalTo("[1, 3][2, 4]"));
+    }
+    
     private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
         @Override
         public String transform(Object source) {

@@ -5,14 +5,20 @@ public class Tuple1<T1> extends Tuple implements Tuple._1<T1> {
 
     public final T1 _1;
     
-    public Tuple1(T1 t1) {
+    Tuple1(T1 t1) {
         this._1 = t1;
     }
     
+    /**
+     * @return this tuple with {@code t} prepended to the left.
+     */
     public <T> Tuple2<T, T1> prepend(T t) {
         return Tuple.of(t, _1);
     }
     
+    /**
+     * @return this tuple with {@code t} appended to the right.
+     */
     public <T> Tuple2<T1, T> append(T t) {
         return Tuple.of(_1, t);
     }

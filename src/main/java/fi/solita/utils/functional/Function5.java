@@ -3,10 +3,11 @@ package fi.solita.utils.functional;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunction<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R> {
+public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunction<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R, T1> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5);
 
+    @Override
     public final <U> Function5<T1, T2, T3, T4, T5, U> andThen(final Apply<? super R, ? extends U> next) {
         final Function5<T1, T2, T3, T4, T5, R> self = this;
         return new Function5<T1, T2, T3, T4, T5, U>() {
@@ -17,6 +18,7 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
         };
     }
 
+    @Override
     public final Function1<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R> tuppled() {
         return new Function1<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R>() {
             @Override
@@ -26,6 +28,7 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
         };
     }
     
+    @Override
     public Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, R>>>>> curried() {
         return new Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, R>>>>>() {
             @Override
@@ -52,6 +55,7 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
         return ap(t1).ap(t2);
     }
     
+    @Override
     public final Function4<T2,T3,T4,T5,R> ap(final T1 t) {
         return new Function4<T2,T3,T4,T5,R>() {
             @Override

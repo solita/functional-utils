@@ -4,10 +4,11 @@ import static fi.solita.utils.functional.Function.__;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3<? extends T1,? extends T2,? extends T3>, R> {
+public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3<? extends T1,? extends T2,? extends T3>, R, T1> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3);
     
+    @Override
     public final <U> Function3<T1, T2, T3, U> andThen(final Apply<? super R, ? extends U> next) {
         final Function3<T1, T2, T3, R> self = this;
         return new Function3<T1, T2, T3, U>() {
@@ -18,6 +19,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         };
     }
     
+    @Override
     public final Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R> tuppled() { 
         return new Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R>() {
             @Override
@@ -26,7 +28,8 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
             }
         };
     }
-    
+
+    @Override
     public Function1<T1, Function1<T2, Function1<T3, R>>> curried() {
         return new Function1<T1, Function1<T2, Function1<T3, R>>>() {
             @Override
@@ -41,17 +44,21 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         };
     }
     
-    public final Function1<T3,R> ap(final T1 t1, final T2 t2) {
-        return ap(t1).ap(t2);
-    }
-    
-    public final Function2<T2,T3,R> ap(final T1 t1) {
+    @Override
+    public final Function2<T2,T3,R> ap(final T1 arg1) {
         return new Function2<T2,T3,R>() {
             @Override
-            public R apply(T2 t2, T3 t3) {
-                return Function3.this.apply(t1, t2, t3);
+            public R apply(T2 arg2, T3 arg3) {
+                return Function3.this.apply(arg1, arg2, arg3);
             }
         };
+    }
+    
+    /**
+     * partially apply first two arguments {@code arg1} and {@code arg2}.
+     */
+    public final Function1<T3,R> ap(final T1 arg1, final T2 arg2) {
+        return ap(arg1).ap(arg2);
     }
     
     static final <T1,T2,T3,R> Function3<T1,T2,T3,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {

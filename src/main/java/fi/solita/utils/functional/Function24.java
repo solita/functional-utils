@@ -1,9 +1,10 @@
 package fi.solita.utils.functional;
 
-public abstract class Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, R> extends MultiParamFunction<Tuple24<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8, ? extends T9, ? extends T10, ? extends T11, ? extends T12, ? extends T13, ? extends T14, ? extends T15, ? extends T16, ? extends T17, ? extends T18, ? extends T19, ? extends T20, ? extends T21, ? extends T22, ? extends T23, ? extends T24>, R> {
+public abstract class Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, R> extends MultiParamFunction<Tuple24<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8, ? extends T9, ? extends T10, ? extends T11, ? extends T12, ? extends T13, ? extends T14, ? extends T15, ? extends T16, ? extends T17, ? extends T18, ? extends T19, ? extends T20, ? extends T21, ? extends T22, ? extends T23, ? extends T24>, R, T1> {
 
     public abstract R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, T21 t21, T22 t22, T23 t23, T24 t24);
 
+    @Override
     public final <U> Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, U> andThen(final Apply<? super R, ? extends U> next) {
         final Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, R> self = this;
         return new Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, U>() {
@@ -14,6 +15,7 @@ public abstract class Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
         };
     }
 
+    @Override
     public final Function1<Tuple24<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8, ? extends T9, ? extends T10, ? extends T11, ? extends T12, ? extends T13, ? extends T14, ? extends T15, ? extends T16, ? extends T17, ? extends T18, ? extends T19, ? extends T20, ? extends T21, ? extends T22, ? extends T23, ? extends T24>, R> tuppled() {
         return new Function1<Tuple24<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5, ? extends T6, ? extends T7, ? extends T8, ? extends T9, ? extends T10, ? extends T11, ? extends T12, ? extends T13, ? extends T14, ? extends T15, ? extends T16, ? extends T17, ? extends T18, ? extends T19, ? extends T20, ? extends T21, ? extends T22, ? extends T23, ? extends T24>, R>() {
             @Override
@@ -23,6 +25,7 @@ public abstract class Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
         };
     }
     
+    @Override
     public Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, Function1<T6, Function1<T7, Function1<T8, Function1<T9, Function1<T10, Function1<T11, Function1<T12, Function1<T13, Function1<T14, Function1<T15, Function1<T16, Function1<T17, Function1<T18, Function1<T19, Function1<T20, Function1<T21, Function1<T22, Function1<T23, Function1<T24, R>>>>>>>>>>>>>>>>>>>>>>>> curried() {
         return new Function1<T1, Function1<T2, Function1<T3, Function1<T4, Function1<T5, Function1<T6, Function1<T7, Function1<T8, Function1<T9, Function1<T10, Function1<T11, Function1<T12, Function1<T13, Function1<T14, Function1<T15, Function1<T16, Function1<T17, Function1<T18, Function1<T19, Function1<T20, Function1<T21, Function1<T22, Function1<T23, Function1<T24, R>>>>>>>>>>>>>>>>>>>>>>>>() {
             @Override
@@ -125,6 +128,7 @@ public abstract class Function24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
         return ap(t1).ap(t2);
     }
     
+    @Override
     public final Function23<T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,R> ap(final T1 t) {
         return new Function23<T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,R>() {
             @Override

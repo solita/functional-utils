@@ -15,15 +15,21 @@ public abstract class Function {
     public static final GivenLater __ = GivenLater.__;
     public static final GivenEvenLater ___ = GivenEvenLater.___;
     
-    public static final <R> Function0<R> of(final R r) {
+    /**
+     * @return {@code value} as a constant supplier.
+     */
+    public static final <R> Function0<R> of(final R value) {
         return new Function0<R>() {
             @Override
             public final R apply() {
-                return r;
+                return value;
             }
         };
     }
 
+    /**
+     * @return a concrete version of {@code apply}.
+     */
     public static final <T, R> Function1<T, R> of(final Apply<T, R> apply) {
         return new Function1<T, R>() {
             @Override
@@ -33,6 +39,9 @@ public abstract class Function {
         };
     }
     
+    /**
+     * @return a concrete version of {@code apply}.
+     */
     public static final <T1, T2, R> Function2<T1, T2, R> of(final ApplyBi<T1, T2, R> apply) {
         return new Function2<T1, T2, R>() {
             @Override
@@ -42,6 +51,9 @@ public abstract class Function {
         };
     }
     
+    /**
+     * @return a wrapper for {@code supplier}, which memorizes the value thus invoking {@code supplier} only once.
+     */
     public static final <R> Function0<R> memoize(final ApplyZero<R> supplier) {
         return new Function0<R>() {
             private R r;
@@ -62,29 +74,41 @@ public abstract class Function {
         }
     };
 
+    /**
+     * @return identity function.
+     */
     @SuppressWarnings("unchecked")
     public static final <T> Function1<T, T> id() {
         return (Function1<T, T>) ID;
     }
     
-    public static final <T,R> Function1<T,R> constant(final R r) {
+    /**
+     * @return a constant function ignoring its argument and returning always {@code value}.
+     */
+    public static final <T,R> Function1<T,R> constant(final R value) {
         return new Function1<T, R>() {
             @Override
             public final R apply(T ignored) {
-                return r;
+                return value;
             }
         };
     }
 
-    public static final <R, E extends Throwable> Function0.Ex1<R,E> throwing(final E e) {
+    /**
+     * @return a function which always throws {@code throwable} on invokation.
+     */
+    public static final <R, E extends Throwable> Function0.Ex1<R,E> throwing(final E throwable) {
         return new Function0.Ex1<R,E>() {
             @Override
             public final R apply() throws E {
-                throw e;
+                throw throwable;
             }
         };
     }
 
+    /**
+     * @return {@code f} with its arguments flipped.
+     */
     public static final <A, B, C> Function1<B, Function1<A, C>> flip(final Apply<A, ? extends Apply<B, C>> f) {
         return new Function1<B, Function1<A, C>>() {
             @Override
@@ -99,6 +123,9 @@ public abstract class Function {
         };
     }
 
+    /**
+     * @return 2-parameter version of {@code f}.
+     */
     public static final <A, B, C> Function2<A, B, C> uncurried(final Apply<A, ? extends Apply<B, C>> f) {
         return new Function2<A, B, C>() {
             @Override
@@ -108,6 +135,9 @@ public abstract class Function {
         };
     }
 
+    /**
+     * @return 3-parameter version of {@code f}.
+     */
     public static final <A, B, C, D> Function3<A, B, C, D> uncurried2(final Apply<A, ? extends Apply<B, ? extends Apply<C, D>>> f) {
         return new Function3<A, B, C, D>() {
             @Override
@@ -117,6 +147,9 @@ public abstract class Function {
         };
     }
 
+    /**
+     * @return 4-parameter version of {@code f}.
+     */
     public static final <A, B, C, D, E> Function4<A, B, C, D, E> uncurried3(final Apply<A, ? extends Apply<B, ? extends Apply<C, ? extends Apply<D, E>>>> f) {
         return new Function4<A, B, C, D, E>() {
             @Override

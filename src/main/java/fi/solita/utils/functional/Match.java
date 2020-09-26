@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Pattern matching.
+ */
 public abstract class Match {
     public static final Try<String,String> nonEmptyString(String obj) {
         if (obj == null || obj.trim().isEmpty()) {

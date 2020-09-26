@@ -88,6 +88,9 @@ import fi.solita.utils.functional.Tuple7;
 import fi.solita.utils.functional.Tuple8;
 import fi.solita.utils.functional.Tuple9;
 
+/**
+ * A thing able to build an object given a constructor and a correspondingly ordered list of members.
+ */
 public final class Builder<T> {
     public static final class IncompleteException extends RuntimeException {
         public IncompleteException(Apply<?, ?> member) {
@@ -124,6 +127,9 @@ public final class Builder<T> {
         return members;
     }
     
+    /**
+     * @return type this builder can build.
+     */
     @SuppressWarnings("unchecked")
     public final Class<T> resultType() {
         if (resultTypeCache == null) {
@@ -132,6 +138,9 @@ public final class Builder<T> {
         return resultTypeCache;
     }
 
+    /**
+     * @return a copy of this builder initialized with data from given object.
+     */
     public final Builder<T> init(final T t) {
         List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(new Transformer<Apply<? super T,? extends Object>, Pair<? extends Apply<? super T,? extends Object>,? extends Object>>() {
             @SuppressWarnings("unchecked")
@@ -143,11 +152,17 @@ public final class Builder<T> {
         return new Builder<T>(newValues, members, constructor);
     }
 
+    /**
+     * @return a copy of this builder with {@code member} initialized to value {@code newValue}.
+     */
     public final <F1> Builder<T> with(Apply<? super T,? super F1> member, F1 newValue) {
         checkMember(member);
         return new Builder<T>(cons(Pair.of(member, newValue), values), members, constructor);
     }
     
+    /**
+     * @return a copy of this builder with value for {@code member} removed.
+     */
     public final Builder<T> without(Apply<T,? extends Option<?>> member) {
         checkMember(member);
         return new Builder<T>(cons(Pair.of(member, None()), values), members, constructor);
@@ -159,12 +174,15 @@ public final class Builder<T> {
         }
     }
     
+    /**
+     * @return a lens from this builder and {@code getter}.
+     */
     public final <U> Lens<T,U> toLens(Apply<? super T, U> getter) {
         return Lens.of(getter, this);
     }
 
     /**
-     * Substitutes <i>null</i> for missing values. Might thus fail if primitives as constructor arguments.
+     * Substitutes <i>null</i> for missing values. Might thus fail if there are primitives as constructor arguments.
      */
     public final T buildAllowIncomplete() {
         return build(true);

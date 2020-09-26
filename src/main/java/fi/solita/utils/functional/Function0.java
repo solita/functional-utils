@@ -2,14 +2,23 @@ package fi.solita.utils.functional;
 
 import java.io.Serializable;
 
+/**
+ * Function taking no arguments, only producing a value.
+ */
 public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Serializable {
 
     public abstract R apply();
     
+    /**
+     * @return the value.
+     */
     public final R get() {
         return apply();
     }
     
+    /**
+     * @return function composition: {@code next(this())}
+     */
     public final <U> Function0<U> andThen(final Apply<? super R, ? extends U> next) {
         return new Function0<U>() {
             @Override

@@ -1,16 +1,20 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Functional.reduce;
-
 import java.util.Comparator;
 import java.util.Map;
 
+/**
+ * Extension to Comparator.
+ */
 public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> {
     
-    public static final <T> Ordering<T> of(final Comparator<? super T> c) {
-        if (c instanceof Ordering) {
+    /**
+     * @return {@code comparator} converted to an {@code Ordering}.
+     */
+    public static final <T> Ordering<T> of(final Comparator<? super T> comparator) {
+        if (comparator instanceof Ordering) {
             @SuppressWarnings("unchecked")
-            Ordering<T> ret = (Ordering<T>) c;
+            Ordering<T> ret = (Ordering<T>) comparator;
             return ret;
         }
         return new Ordering<T>() {
@@ -18,9 +22,8 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
                 if (o1 == null && o2 == null) {
                     return 0;
                 }
-                return c.compare(o1, o2);
+                return comparator.compare(o1, o2);
             }
-            
         };
     }
     
@@ -34,11 +37,18 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
             return o1.compareTo(o2);
         }
     }; 
+    
+    /**
+     * @return natural ordering.
+     */
     @SuppressWarnings("unchecked")
     public static final <T extends Comparable<?>> Ordering<T> Natural() {
         return Natural;
     }
     
+    /**
+     * @return reversed ordering.
+     */
     public final Ordering<T> reverse() {
         return of(java.util.Collections.reverseOrder(this));
     }
@@ -51,7 +61,10 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(Monoids.comparatorConcat().zero());
     }
     
+    /**
+     * @return composition of {@code this} and {@code next}.
+     */
     public final Ordering<T> then(Comparator<? super T> next) {
-        return reduce(this, of(next));
+        return apply(Pair.of(this, Ordering.of(next)));
     }
 }

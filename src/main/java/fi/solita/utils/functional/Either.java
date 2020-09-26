@@ -7,20 +7,35 @@ import static fi.solita.utils.functional.Option.Some;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Simple binary sum type. Either "left" or "right".
+ */
 public class Either<L,R> implements Serializable {
 
-    public static final <L,R> Either<L,R> left(L left) {
-        return new Either<L, R>(Some(left), Option.<R>None());
+    /**
+     * @return {@code value} wrapped into left side of Either.
+     */
+    public static final <L,R> Either<L,R> left(L value) {
+        return new Either<L, R>(Some(value), Option.<R>None());
     }
 
-    public static final <L,R> Either<L,R> right(R right) {
-        return new Either<L, R>(Option.<L>None(), Some(right));
+    /**
+     * @return {@code value} wrapped into right side of Either.
+     */
+    public static final <L,R> Either<L,R> right(R value) {
+        return new Either<L, R>(Option.<L>None(), Some(value));
     }
     
+    /**
+     * @return value from either the left side or the right.
+     */
     public static final <T> T get(Either<? extends T, ? extends T> e) {
         return e.isLeft() ? e.left.get() : e.right.get();
     }
     
+    /**
+     * @return value of either in a list.
+     */
     public static final <T> List<T> asList(Either<? extends T, ? extends T> either) {
         return newList(concat(either.left, either.right));
     }
@@ -30,25 +45,47 @@ public class Either<L,R> implements Serializable {
         this.right = right;
     }
 
+    /**
+     * Left side.
+     */
     public final Option<L> left;
+    
+    /**
+     * Right side.
+     */
     public final Option<R> right;
     
+    /**
+     * @return whether this Either has a Left element.
+     */
     public final boolean isLeft() {
         return left.isDefined();
     }
     
+    /**
+     * @return whether this Either has a Right element.
+     */
     public final boolean isRight() {
         return right.isDefined();
     }
     
-    public final <A,B> Either<A,B> bimap(Apply<? super L, ? extends A> f, Apply<? super R, ? extends B> f2) {
-        return BiFunctors.<L,A,R,B>either().bimap(f, f2, this);
+    /**
+     * @return left side transformed with {@code fLeft} or right side transformed with {@code fRight}.
+     */
+    public final <A,B> Either<A,B> bimap(Apply<? super L, ? extends A> fLeft, Apply<? super R, ? extends B> fRight) {
+        return BiFunctors.<L,A,R,B>either().bimap(fLeft, fRight, this);
     }
 
+    /**
+     * @return left side transformed with {@code f}.
+     */
     public final <A> Either<A,R> first(Apply<? super L, ? extends A> f) {
         return BiFunctors.<L,A,R,R>either().first(f, this);
     }
 
+    /**
+     * @return rigth side transformed with {@code f}.
+     */
     public final <B> Either<L,B> second(Apply<? super R, ? extends B> f) {
         return BiFunctors.<L,L,R,B>either().second(f, this);
     }

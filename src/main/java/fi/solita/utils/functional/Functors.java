@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Functional.map;
 
 public abstract class Functors {
     private Functors() {
@@ -9,7 +9,7 @@ public abstract class Functors {
     public static final <A,B> Functor<Iterable<?>, A, B, Iterable<A>, Iterable<B>> iterable() {
         return new Functor<Iterable<?>, A, B, Iterable<A>, Iterable<B>>() {
             public Iterable<B> fmap(Apply<? super A, ? extends B> f, Iterable<A> as) {
-                return new Iterables.TransformingIterable<A, B>(as, f);
+                return map(f, as);
             }
         };
     }
@@ -18,7 +18,7 @@ public abstract class Functors {
         return new Functor<Option<?>, A, B, Option<A>, Option<B>>() {
             @SuppressWarnings("unchecked")
             public Option<B> fmap(Apply<? super A, ? extends B> f, Option<A> as) {
-                return (Option<B>) (as.isDefined() ? Some(f.apply(as.get())) : Option.<B>None());
+                return (Option<B>) as.map(f);
             }
         };
     }

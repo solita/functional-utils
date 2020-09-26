@@ -10,172 +10,279 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Simple product types.
+ */
 public abstract class Tuple implements Serializable {
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     public static <T> List<T> asList(Tuple0 tuple) {
         return emptyList();
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple1<T> tuple) {
         return Arrays.asList(tuple._1);
     }
 
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple2<? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple3<? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple4<? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple5<? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple6<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple7<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple8<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple9<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple10<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple11<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple12<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple13<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple14<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple15<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple16<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple17<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple18<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple19<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple20<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple21<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple22<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple23<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple24<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple25<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple26<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple27<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple28<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple29<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple30<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple31<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31);
     }
     
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
     @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple32<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32);
     }
     
+    /**
+     * <i>Unsafe!</i> Will fail if given more than 32 arguments.
+     * 
+     * @return tuple of given values {@code ts}.
+     */
     public static Tuple of(Object... ts) {
         switch (ts.length) {
             case 0: return Tuple.of();
@@ -215,266 +322,464 @@ public abstract class Tuple implements Serializable {
         throw new UnsupportedOperationException("Tuple29 not implemented");
     }
     
+    /**
+     * @return an empty tuple.
+     */
     public static Tuple0 of() {
         return new Tuple0();
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1> Tuple1<T1> of(T1 _1) {
         return new Tuple1<T1>(_1);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2> Tuple2<T1, T2> of(T1 _1, T2 _2) {
-        return new Pair<T1, T2>(_1, _2);
+        return Pair.of(_1, _2);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3> Tuple3<T1, T2, T3> of(T1 _1, T2 _2, T3 _3) {
         return new Tuple3<T1, T2, T3>(_1, _2, _3);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> of(T1 _1, T2 _2, T3 _3, T4 _4) {
         return new Tuple4<T1, T2, T3, T4>(_1, _2, _3, _4);
     }
 
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5) {
         return new Tuple5<T1, T2, T3, T4, T5>(_1, _2, _3, _4, _5);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6> Tuple6<T1, T2, T3, T4, T5, T6> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6) {
         return new Tuple6<T1, T2, T3, T4, T5, T6>(_1, _2, _3, _4, _5, _6);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7> Tuple7<T1, T2, T3, T4, T5, T6, T7> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7) {
         return new Tuple7<T1, T2, T3, T4, T5, T6, T7>(_1, _2, _3, _4, _5, _6, _7);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8> Tuple8<T1, T2, T3, T4, T5, T6, T7, T8> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8) {
         return new Tuple8<T1, T2, T3, T4, T5, T6, T7, T8>(_1, _2, _3, _4, _5, _6, _7, _8);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9> Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9) {
         return new Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(_1, _2, _3, _4, _5, _6, _7, _8, _9);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10) {
         return new Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11) {
         return new Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12) {
         return new Tuple12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13) {
         return new Tuple13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14) {
         return new Tuple14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15) {
         return new Tuple15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16) {
         return new Tuple16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17) {
         return new Tuple17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18) {
         return new Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19) {
         return new Tuple19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20) {
         return new Tuple20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21) {
         return new Tuple21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22) {
         return new Tuple22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23> Tuple23<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23) {
         return new Tuple23<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> Tuple24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24) {
         return new Tuple24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25> Tuple25<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25) {
         return new Tuple25<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26> Tuple26<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26) {
         return new Tuple26<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27> Tuple27<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27) {
         return new Tuple27<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28> Tuple28<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28) {
         return new Tuple28<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29> Tuple29<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29) {
         return new Tuple29<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30> Tuple30<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30) {
         return new Tuple30<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> Tuple31<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31) {
         return new Tuple31<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
     public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> Tuple32<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31, T32 _32) {
         return new Tuple32<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32);
     }
     
     public static interface _1<T> {
+        /**
+         * @return value in position 1. Normally you should use field {@code _1} instead.
+         */
         T get_1();
     }
     
     public static interface _2<T> {
+        /**
+         * @return value in position 2. Normally you should use field {@code _2} instead.
+         */
         T get_2();
     }
     
     public static interface _3<T> {
+        /**
+         * @return value in position 3. Normally you should use field {@code _3} instead.
+         */
         T get_3();
     }
     
     public static interface _4<T> {
+        /**
+         * @return value in position 4. Normally you should use field {@code _4} instead.
+         */
         T get_4();
     }
     
     public static interface _5<T> {
+        /**
+         * @return value in position 5. Normally you should use field {@code _5} instead.
+         */
         T get_5();
     }
     
     public static interface _6<T> {
+        /**
+         * @return value in position 6. Normally you should use field {@code _6} instead.
+         */
         T get_6();
     }
     
     public static interface _7<T> {
+        /**
+         * @return value in position 7. Normally you should use field {@code _7} instead.
+         */
         T get_7();
     }
     
     public static interface _8<T> {
+        /**
+         * @return value in position 8. Normally you should use field {@code _8} instead.
+         */
         T get_8();
     }
     
     public static interface _9<T> {
+        /**
+         * @return value in position 9. Normally you should use field {@code _9} instead.
+         */
         T get_9();
     }
     
     public static interface _10<T> {
+        /**
+         * @return value in position 10. Normally you should use field {@code _10} instead.
+         */
         T get_10();
     }
     
     public static interface _11<T> {
+        /**
+         * @return value in position 11. Normally you should use field {@code _11} instead.
+         */
         T get_11();
     }
     
     public static interface _12<T> {
+        /**
+         * @return value in position 12. Normally you should use field {@code _12} instead.
+         */
         T get_12();
     }
     
     public static interface _13<T> {
+        /**
+         * @return value in position 13. Normally you should use field {@code _13} instead.
+         */
         T get_13();
     }
     
     public static interface _14<T> {
+        /**
+         * @return value in position 14. Normally you should use field {@code _14} instead.
+         */
         T get_14();
     }
     
     public static interface _15<T> {
+        /**
+         * @return value in position 15. Normally you should use field {@code _15} instead.
+         */
         T get_15();
     }
     
     public static interface _16<T> {
+        /**
+         * @return value in position 16. Normally you should use field {@code _16} instead.
+         */
         T get_16();
     }
     
     public static interface _17<T> {
+        /**
+         * @return value in position 17. Normally you should use field {@code _17} instead.
+         */
         T get_17();
     }
     
     public static interface _18<T> {
+        /**
+         * @return value in position 18. Normally you should use field {@code _18} instead.
+         */
         T get_18();
     }
     
     public static interface _19<T> {
+        /**
+         * @return value in position 19. Normally you should use field {@code _19} instead.
+         */
         T get_19();
     }
     
     public static interface _20<T> {
+        /**
+         * @return value in position 20. Normally you should use field {@code _20} instead.
+         */
         T get_20();
     }
     
     public static interface _21<T> {
+        /**
+         * @return value in position 21. Normally you should use field {@code _21} instead.
+         */
         T get_21();
     }
     
     public static interface _22<T> {
+        /**
+         * @return value in position 22. Normally you should use field {@code _22} instead.
+         */
         T get_22();
     }
     
     public static interface _23<T> {
+        /**
+         * @return value in position 23. Normally you should use field {@code _23} instead.
+         */
         T get_23();
     }
     
     public static interface _24<T> {
+        /**
+         * @return value in position 24. Normally you should use field {@code _24} instead.
+         */
         T get_24();
     }
     
     public static interface _25<T> {
+        /**
+         * @return value in position 25. Normally you should use field {@code _25} instead.
+         */
         T get_25();
     }
     
     public static interface _26<T> {
+        /**
+         * @return value in position 26. Normally you should use field {@code _26} instead.
+         */
         T get_26();
     }
     
     public static interface _27<T> {
+        /**
+         * @return value in position 27. Normally you should use field {@code _27} instead.
+         */
         T get_27();
     }
     
     public static interface _28<T> {
+        /**
+         * @return value in position 28. Normally you should use field {@code _28} instead.
+         */
         T get_28();
     }
     
     public static interface _29<T> {
+        /**
+         * @return value in position 29. Normally you should use field {@code _29} instead.
+         */
         T get_29();
     }
     
     public static interface _30<T> {
+        /**
+         * @return value in position 30. Normally you should use field {@code _30} instead.
+         */
         T get_30();
     }
     
     public static interface _31<T> {
+        /**
+         * @return value in position 31. Normally you should use field {@code _31} instead.
+         */
         T get_31();
     }
     
     public static interface _32<T> {
+        /**
+         * @return value in position 32. Normally you should use field {@code _32} instead.
+         */
         T get_32();
     }
 
+    /**
+     * @return untyped array containing values of this tuple.
+     */
     public abstract Object[] toArray();
     
     @Override

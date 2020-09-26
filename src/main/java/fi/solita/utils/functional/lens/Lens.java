@@ -53,6 +53,9 @@ import fi.solita.utils.functional.Tuple._7;
 import fi.solita.utils.functional.Tuple._8;
 import fi.solita.utils.functional.Tuple._9;
 
+/**
+ * Purely functional getter and setter. 
+ */
 public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     public final Apply<? super T, F> getter;
     
@@ -61,6 +64,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         this.getter = getter;
     }
 
+    /**
+     * @return a lens targetting member {@code getter} using {@code builder}.
+     */
     public static final <T,F> Lens<T,F> of(final Apply<? super T, F> getter, final Builder<T> builder) {
         return new Lens<T,F>(getter, new Function2<T,Apply<F,F>,T>() {
             @Override
@@ -72,6 +78,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return a lens targetting member {@code getter} using {@code setter}.
+     */
     public static final <T,F> Lens<T,F> of(Apply<? super T, F> getter, final ApplyBi<T, Apply<F,F>, T> setter) {
         return new Lens<T,F>(getter, new Function2<T,Apply<F,F>,T>() {
             @Override
@@ -81,39 +90,51 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
-    public static final <D,E,S> Setter<D,S> eachCollection(final Setter<D,Collection<E>> lens, final Setter<E,S> lens2) {
-        return eachIterable(lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+    /**
+     * @return a setter targetting each member of the collection behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachCollection(final Setter<D,Collection<E>> setter, final Setter<E,S> setter2) {
+        return eachIterable(setter, setter2, new Apply<Iterable<E>, Collection<E>>() {
             public Collection<E> apply(Iterable<E> t) {
                 return newList(t);
             }
         });
     }
     
-    public static final <D,E,S> Setter<D,S> eachList(final Setter<D,List<E>> lens, final Setter<E,S> lens2) {
-        return eachIterable(lens, lens2, new Apply<Iterable<E>, List<E>>() {
+    /**
+     * @return a setter targetting each member of the list behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachList(final Setter<D,List<E>> setter, final Setter<E,S> setter2) {
+        return eachIterable(setter, setter2, new Apply<Iterable<E>, List<E>>() {
             public List<E> apply(Iterable<E> t) {
                 return newList(t);
             }
         });
     }
     
-    public static final <D,E,S> Setter<D,S> eachSet(final Setter<D,Set<E>> lens, final Setter<E,S> lens2) {
-        return eachIterable(lens, lens2, new Apply<Iterable<E>, Set<E>>() {
+    /**
+     * @return a setter targetting each member of the set behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachSet(final Setter<D,Set<E>> setter, final Setter<E,S> setter2) {
+        return eachIterable(setter, setter2, new Apply<Iterable<E>, Set<E>>() {
             public Set<E> apply(Iterable<E> t) {
                 return newSet(t);
             }
         });
     }
     
-    public static final <D,E,S> Setter<D,S> eachSortedSet(final Setter<D,SortedSet<E>> lens, final Setter<E,S> lens2) {
+    /**
+     * @return a setter targetting each member of the sortedset behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachSortedSet(final Setter<D,SortedSet<E>> setter, final Setter<E,S> setter2) {
         return new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
             @Override
             public D apply(D d, final Apply<S, S> f) {
-                return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
+                return setter.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
                     public SortedSet<E> apply(SortedSet<E> c) {
                         return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
                             public E apply(E e) {
-                                return lens2.modify(e, f);
+                                return setter2.modify(e, f);
                             }
                         }, c));
                     };
@@ -122,8 +143,11 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
-    public static final <D,E,S> Setter<D,S> eachIterable(final Setter<D,Iterable<E>> lens, final Setter<E,S> lens2) {
-        return eachIterable(lens, lens2, Function.<Iterable<E>>id());
+    /**
+     * @return a setter targetting each member of the iterable behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachIterable(final Setter<D,Iterable<E>> setter, final Setter<E,S> setter2) {
+        return eachIterable(setter, setter2, Function.<Iterable<E>>id());
     }
     
     private static final <D,E,S,C extends Iterable<E>> Setter<D,S> eachIterable(final Setter<D,C> lens, final Setter<E,S> lens2, final Apply<Iterable<E>,C> wrap) {
@@ -156,10 +180,16 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @see #get
+     */
     public F apply(T t) {
         return get(t);
     }
 
+    /**
+     * @return the value this lens is targetting in {@code t}.
+     */
     public final F get(T t) {
         return getter.apply(t);
     }
@@ -169,6 +199,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         return "(" + getter.toString() + "," + super.toString() + ")";
     }
 
+    /**
+     * @return composition of this and {@code otherLens}.
+     */
     public final <O> Lens<T,O> andThen(final Lens<F,O> otherLens) {
         return new Lens<T,O>(new Apply<T,O>() {
             public O apply(T t) {
@@ -185,6 +218,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return identity lens.
+     */
     public static final <T> Lens<T,T> id() {
         return Lens.of(Function.<T>id(), new ApplyBi<T, Apply<T,T>, T>() {
             public T apply(T t1, Apply<T, T> t2) {
@@ -193,6 +229,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting left side of an Either.
+     */
     public static final <L,R> Lens<Either<L,R>,Option<L>> left() {
         return new Lens<Either<L,R>, Option<L>>(new Apply<Either<L,R>, Option<L>>() {
             public Option<L> apply(Either<L, R> t) {
@@ -210,6 +249,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting right side of an Either.
+     */
     public static final <L,R> Lens<Either<L,R>,Option<R>> right() {
         return new Lens<Either<L,R>, Option<R>>(new Apply<Either<L,R>, Option<R>>() {
             public Option<R> apply(Either<L, R> t) {
@@ -227,6 +269,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 1 of a tuple.
+     */
     public static final <T> Lens<_1<T>,T> _1() {
         return new Lens<_1<T>, T>(new Apply<_1<T>, T>() {
             public T apply(_1<T> t) {
@@ -243,6 +288,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 2 of a tuple.
+     */
     public static final <T> Lens<_2<T>,T> _2() {
         return new Lens<_2<T>, T>(new Apply<_2<T>, T>() {
             public T apply(_2<T> t) {
@@ -259,6 +307,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 3 of a tuple.
+     */
     public static final <T> Lens<_3<T>,T> _3() {
         return new Lens<_3<T>, T>(new Apply<_3<T>, T>() {
             public T apply(_3<T> t) {
@@ -275,6 +326,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 4 of a tuple.
+     */
     public static final <T> Lens<_4<T>,T> _4() {
         return new Lens<_4<T>, T>(new Apply<_4<T>, T>() {
             public T apply(_4<T> t) {
@@ -291,6 +345,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 5 of a tuple.
+     */
     public static final <T> Lens<_5<T>,T> _5() {
         return new Lens<_5<T>, T>(new Apply<_5<T>, T>() {
             public T apply(_5<T> t) {
@@ -307,6 +364,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 6 of a tuple.
+     */
     public static final <T> Lens<_6<T>,T> _6() {
         return new Lens<_6<T>, T>(new Apply<_6<T>, T>() {
             public T apply(_6<T> t) {
@@ -323,6 +383,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 7 of a tuple.
+     */
     public static final <T> Lens<_7<T>,T> _7() {
         return new Lens<_7<T>, T>(new Apply<_7<T>, T>() {
             public T apply(_7<T> t) {
@@ -339,6 +402,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 8 of a tuple.
+     */
     public static final <T> Lens<_8<T>,T> _8() {
         return new Lens<_8<T>, T>(new Apply<_8<T>, T>() {
             public T apply(_8<T> t) {
@@ -355,6 +421,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 9 of a tuple.
+     */
     public static final <T> Lens<_9<T>,T> _9() {
         return new Lens<_9<T>, T>(new Apply<_9<T>, T>() {
             public T apply(_9<T> t) {
@@ -371,6 +440,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 10 of a tuple.
+     */
     public static final <T> Lens<_10<T>,T> _10() {
         return new Lens<_10<T>, T>(new Apply<_10<T>, T>() {
             public T apply(_10<T> t) {
@@ -387,6 +459,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 11 of a tuple.
+     */
     public static final <T> Lens<_11<T>,T> _11() {
         return new Lens<_11<T>, T>(new Apply<_11<T>, T>() {
             public T apply(_11<T> t) {
@@ -403,6 +478,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 12 of a tuple.
+     */
     public static final <T> Lens<_12<T>,T> _12() {
         return new Lens<_12<T>, T>(new Apply<_12<T>, T>() {
             public T apply(_12<T> t) {
@@ -419,6 +497,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 13 of a tuple.
+     */
     public static final <T> Lens<_13<T>,T> _13() {
         return new Lens<_13<T>, T>(new Apply<_13<T>, T>() {
             public T apply(_13<T> t) {
@@ -435,6 +516,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 14 of a tuple.
+     */
     public static final <T> Lens<_14<T>,T> _14() {
         return new Lens<_14<T>, T>(new Apply<_14<T>, T>() {
             public T apply(_14<T> t) {
@@ -451,6 +535,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 15 of a tuple.
+     */
     public static final <T> Lens<_15<T>,T> _15() {
         return new Lens<_15<T>, T>(new Apply<_15<T>, T>() {
             public T apply(_15<T> t) {
@@ -467,6 +554,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 16 of a tuple.
+     */
     public static final <T> Lens<_16<T>,T> _16() {
         return new Lens<_16<T>, T>(new Apply<_16<T>, T>() {
             public T apply(_16<T> t) {
@@ -483,6 +573,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 17 of a tuple.
+     */
     public static final <T> Lens<_17<T>,T> _17() {
         return new Lens<_17<T>, T>(new Apply<_17<T>, T>() {
             public T apply(_17<T> t) {
@@ -499,6 +592,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 18 of a tuple.
+     */
     public static final <T> Lens<_18<T>,T> _18() {
         return new Lens<_18<T>, T>(new Apply<_18<T>, T>() {
             public T apply(_18<T> t) {
@@ -515,6 +611,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 19 of a tuple.
+     */
     public static final <T> Lens<_19<T>,T> _19() {
         return new Lens<_19<T>, T>(new Apply<_19<T>, T>() {
             public T apply(_19<T> t) {
@@ -531,6 +630,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 20 of a tuple.
+     */
     public static final <T> Lens<_20<T>,T> _20() {
         return new Lens<_20<T>, T>(new Apply<_20<T>, T>() {
             public T apply(_20<T> t) {
@@ -547,6 +649,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 21 of a tuple.
+     */
     public static final <T> Lens<_21<T>,T> _21() {
         return new Lens<_21<T>, T>(new Apply<_21<T>, T>() {
             public T apply(_21<T> t) {
@@ -563,6 +668,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 22 of a tuple.
+     */
     public static final <T> Lens<_22<T>,T> _22() {
         return new Lens<_22<T>, T>(new Apply<_22<T>, T>() {
             public T apply(_22<T> t) {
@@ -579,6 +687,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 23 of a tuple.
+     */
     public static final <T> Lens<_23<T>,T> _23() {
         return new Lens<_23<T>, T>(new Apply<_23<T>, T>() {
             public T apply(_23<T> t) {
@@ -595,6 +706,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 24 of a tuple.
+     */
     public static final <T> Lens<_24<T>,T> _24() {
         return new Lens<_24<T>, T>(new Apply<_24<T>, T>() {
             public T apply(_24<T> t) {
@@ -611,6 +725,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 25 of a tuple.
+     */
     public static final <T> Lens<_25<T>,T> _25() {
         return new Lens<_25<T>, T>(new Apply<_25<T>, T>() {
             public T apply(_25<T> t) {
@@ -627,6 +744,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 26 of a tuple.
+     */
     public static final <T> Lens<_26<T>,T> _26() {
         return new Lens<_26<T>, T>(new Apply<_26<T>, T>() {
             public T apply(_26<T> t) {
@@ -643,6 +763,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 27 of a tuple.
+     */
     public static final <T> Lens<_27<T>,T> _27() {
         return new Lens<_27<T>, T>(new Apply<_27<T>, T>() {
             public T apply(_27<T> t) {
@@ -659,6 +782,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 28 of a tuple.
+     */
     public static final <T> Lens<_28<T>,T> _28() {
         return new Lens<_28<T>, T>(new Apply<_28<T>, T>() {
             public T apply(_28<T> t) {
@@ -675,6 +801,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 29 of a tuple.
+     */
     public static final <T> Lens<_29<T>,T> _29() {
         return new Lens<_29<T>, T>(new Apply<_29<T>, T>() {
             public T apply(_29<T> t) {
@@ -691,6 +820,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 30 of a tuple.
+     */
     public static final <T> Lens<_30<T>,T> _30() {
         return new Lens<_30<T>, T>(new Apply<_30<T>, T>() {
             public T apply(_30<T> t) {
@@ -707,6 +839,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 31 of a tuple.
+     */
     public static final <T> Lens<_31<T>,T> _31() {
         return new Lens<_31<T>, T>(new Apply<_31<T>, T>() {
             public T apply(_31<T> t) {
@@ -723,6 +858,9 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    /**
+     * @return lens targetting field 32 of a tuple.
+     */
     public static final <T> Lens<_32<T>,T> _32() {
         return new Lens<_32<T>, T>(new Apply<_32<T>, T>() {
             public T apply(_32<T> t) {

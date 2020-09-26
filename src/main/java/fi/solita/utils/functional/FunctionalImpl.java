@@ -28,18 +28,14 @@ import fi.solita.utils.functional.Iterables.TransposingIterable;
 import fi.solita.utils.functional.Iterables.ZippingIterable;
 
 final class FunctionalImpl {
-    /**
-     * Returns a new iterable <code>a - b</code>, i.e. one that contains all elements of <code>a</code> that
-     * don't exist in <code>b</code>.
-     */
     @SuppressWarnings("unchecked")
-    static final <T> Iterable<T> subtract(Iterable<? extends T> a, final Collection<? extends T> b) {
-        return  (Iterable<T>) (b == null ? a : filter(new Predicate<T>() {
+    static final <T> Iterable<T> subtract(Iterable<? extends T> xs, final Collection<? extends T> toSubtract) {
+        return  (Iterable<T>) (toSubtract == null ? xs : filter(new Predicate<T>() {
             @Override
             public final boolean accept(T object) {
-                return !b.contains(object);
+                return !toSubtract.contains(object);
             }
-        }, a));
+        }, xs));
     }
     
     static final <T> Iterable<T> remove(T toRemove, Iterable<T> xs) {
@@ -347,14 +343,13 @@ final class FunctionalImpl {
         return xs == null ? null : Pair.of(map(Transformers.<L>eitherLeft().andThen(Transformers.<L>get()), filter(Predicates.isLeft, ys)), map(Transformers.<R>eitherRight().andThen(Transformers.<R>get()), filter(Predicates.isRight, ys)));
     }
     
-    public static <T> Pair<Iterable<T>, Iterable<T>> split(int i, Iterable<T> xs) {
+    public static <T> Pair<Iterable<T>, Iterable<T>> split(int amount, Iterable<T> xs) {
         // TODO: a more efficient implementation
-        return xs == null ? null : Pair.of(take(i, xs), drop(i, xs));
+        return xs == null ? null : Pair.of(take(amount, xs), drop(amount, xs));
     }
     
     public static <T> Pair<T, Iterable<T>> split(Iterable<T> xs) {
-        // TODO: a more efficient implementation
-        return xs == null ? null : Pair.of(head(xs), tail(xs));
+        return split(1, xs).first(Transformers.<T>head());
     }
     
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {
@@ -414,8 +409,8 @@ final class FunctionalImpl {
         return fold(head(xs), xs);
     }
     
-    static final <T> T reduce(Monoid<T> m, Iterable<? extends T> xs) {
-        return xs == null ? null : fold(m, cons(m.zero(), xs)).get();
+    static final <T> T reduce(Monoid<T> monoid, Iterable<? extends T> xs) {
+        return xs == null ? null : fold(monoid, cons(monoid.zero(), xs)).get();
     }
     
     static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
@@ -465,18 +460,6 @@ final class FunctionalImpl {
         return a == null && b == null ? null : a == null ? (Iterable<T>)b : b == null ? (Iterable<T>)a : new ConcatenatingIterable<T>(Arrays.asList(a, b));
     }
     
-    @SuppressWarnings("unchecked")
-    static final <T extends Comparable<? super T>> Option<T> min(Iterable<T> xs) {
-        if (xs == null) {
-            return null;
-        }
-        xs = newList(xs);
-        if (isEmpty(xs)) {
-            return None();
-        }
-        return Some(fold(head(xs), (Apply<Map.Entry<? extends T,? extends T>,T>)(Object)smaller, tail(xs)));
-    }
-    
     @SuppressWarnings("rawtypes")
     private static final Function2<Comparable,Comparable,Comparable> smaller = new Function2<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
@@ -496,6 +479,18 @@ final class FunctionalImpl {
     };
     
     @SuppressWarnings("unchecked")
+    static final <T extends Comparable<? super T>> Option<T> min(Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
+        xs = newList(xs);
+        if (isEmpty(xs)) {
+            return None();
+        }
+        return fold((Apply<Map.Entry<? extends T,? extends T>,T>)(Object)smaller, xs);
+    }
+    
+    @SuppressWarnings("unchecked")
     static final <T extends Comparable<? super T>> Option<T> max(Iterable<T> xs) {
         if (xs == null) {
             return null;
@@ -504,7 +499,39 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return Some(fold(head(xs), (Apply<Map.Entry<? extends T,? extends T>,T>)(Object)bigger, tail(xs)));
+        return fold((Apply<Map.Entry<? extends T,? extends T>,T>)(Object)bigger, xs);
+    }
+    
+    static final <T> Option<T> minBy(final Comparator<? super T> comparator, Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
+        xs = newList(xs);
+        if (isEmpty(xs)) {
+            return None();
+        }
+        return fold(new Function2<T, T, T>() {
+             @Override
+            public T apply(T t1, T t2) {
+                return comparator.compare(t1, t2) > 0 ? t2 : t1;
+            }
+        }, xs);
+    }
+    
+    static final <T> Option<T> maxBy(final Comparator<? super T> comparator, Iterable<T> xs) {
+        if (xs == null) {
+            return null;
+        }
+        xs = newList(xs);
+        if (isEmpty(xs)) {
+            return None();
+        }
+        return fold(new Function2<T, T, T>() {
+             @Override
+            public T apply(T t1, T t2) {
+                return comparator.compare(t1, t2) < 0 ? t2 : t1;
+            }
+        }, xs);
     }
     
     static final <A,B> Iterable<Pair<A, B>> zip(Iterable<A> a, Iterable<B> b) {
@@ -519,6 +546,10 @@ final class FunctionalImpl {
     @SuppressWarnings("unchecked")
     static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c, Iterable<D> d) {
         return map((Transformer<Pair<Pair<A, B>, Pair<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
+    }
+    
+    static final <A> Iterable<Pair<Integer, A>> zipWithIndex(Iterable<A> xs) {
+        return new ZippingIterable<Integer, A>(range(Enumerables.ints, 0), xs);
     }
     
     private static final Transformer<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {

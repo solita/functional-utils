@@ -108,7 +108,7 @@ public abstract class Iterables {
         }
         
         public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, long knownSize) {
-            this(enumeration, from, Some(toInclusive), Some(knownSize));
+            this(enumeration, from, Some(toInclusive), wrapSome(knownSize));
         }
 
         private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Long> knownSize) {

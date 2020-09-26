@@ -5,10 +5,14 @@ import java.util.Map;
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
 
-public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<? extends T1,? extends T2>, R> implements ApplyBi<T1, T2, R> {
+/**
+ * Two argument function from {@code T1} and {@code T2} to {@code R}
+ */
+public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<? extends T1,? extends T2>, R, T1> implements ApplyBi<T1, T2, R> {
 
     public abstract R apply(T1 t1, T2 t2);
     
+    @Override
     public final <U> Function2<T1, T2, U> andThen(final Apply<? super R, ? extends U> next) {
         final Function2<T1, T2, R> self = this;
         return new Function2<T1, T2, U>() {
@@ -29,6 +33,7 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
+    @Override
     public final Function1<T1, Function1<T2, R>> curried() {
         return new Function1<T1, Function1<T2,R>>() {
             @Override
@@ -43,6 +48,9 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
+    /**
+     * @return this function with arguments flipped.
+     */
     public final Function2<T2,T1,R> swap() {
         final Function2<T1, T2, R> self = this;
         return new Function2<T2,T1,R>() {
@@ -53,11 +61,54 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
-    public final Function1<T2,R> ap(final T1 t) {
+    @Override
+    public final Function1<T2,R> ap(final T1 arg1) {
         return new Function1<T2,R>() {
             @Override
-            public final R apply(T2 t2) {
-                return Function2.this.apply(t, t2);
+            public final R apply(T2 arg2) {
+                return Function2.this.apply(arg1, arg2);
+            }
+        };
+    }
+    
+    /**
+     * partially apply first argument {@code arg1}.
+     */
+    public final Function1<T2,R> apply(final T1 arg1, GivenLater _2) {
+        return new Function1<T2,R>() {
+            @Override
+            public final R apply(T2 arg2) {
+                return Function2.this.apply(arg1, arg2);
+            }
+        };
+    }
+
+    /**
+     * partially apply second argument {@code arg2}.
+     */
+    public final Function1<T1,R> apply(GivenLater _1, final T2 arg2) {
+        return new Function1<T1,R>() {
+            @Override
+            public final R apply(T1 arg1) {
+                return Function2.this.apply(arg1, arg2);
+            }
+        };
+    }
+    
+    public final Function1<T1,Function1<T2,R>> apply(GivenLater _1, GivenEvenLater _2) {
+        return new Function1<T1, Function1<T2,R>>() {
+            @Override
+            public final Function1<T2, R> apply(T1 t) {
+                return apply(t);
+            }
+        };
+    }
+    
+    public final Function1<T2,Function1<T1,R>> apply(GivenEvenLater _1, GivenLater _2) {
+        return new Function1<T2, Function1<T1,R>>() {
+            @Override
+            public final Function1<T1, R> apply(T2 t) {
+                return apply(t);
             }
         };
     }
@@ -77,42 +128,6 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
             @Override
             public final FR apply(T1 t1, T2 t2) {
                 return PartialApplicationHelper.makeSecondFunc(f, placeholders, t1, t2);
-            }
-        };
-    }
-    
-    public final Function1<T2,R> apply(final T1 t1, GivenLater _2) {
-        return new Function1<T2,R>() {
-            @Override
-            public final R apply(T2 t2) {
-                return Function2.this.apply(t1, t2);
-            }
-        };
-    }
-
-    public final Function1<T1,R> apply(GivenLater _1, final T2 t2) {
-        return new Function1<T1,R>() {
-            @Override
-            public final R apply(T1 t1) {
-                return Function2.this.apply(t1, t2);
-            }
-        };
-    }
-    
-    public final Function1<T1,Function1<T2,R>> apply(GivenLater _1, GivenEvenLater _2) {
-        return new Function1<T1, Function1<T2,R>>() {
-            @Override
-            public final Function1<T2, R> apply(T1 t) {
-                return apply(t);
-            }
-        };
-    }
-    
-    public final Function1<T2,Function1<T1,R>> apply(GivenEvenLater _1, GivenLater _2) {
-        return new Function1<T2, Function1<T1,R>>() {
-            @Override
-            public final Function1<T1, R> apply(T2 t) {
-                return apply(t);
             }
         };
     }
