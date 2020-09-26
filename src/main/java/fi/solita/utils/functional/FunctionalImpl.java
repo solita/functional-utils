@@ -2,9 +2,9 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
-import static fi.solita.utils.functional.Collections.newLinkedMap;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newMutableLinkedMap;
+import static fi.solita.utils.functional.Collections.newMutableMap;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.equalTo;
@@ -92,7 +92,7 @@ final class FunctionalImpl {
     
     static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
         // to preserve iteration order
-        Map<K2, V2> ret = newLinkedMap();
+        Map<K2, V2> ret = newMutableLinkedMap();
         for (Map.Entry<K1, V1> k: map.entrySet()) {
             Entry<? extends K2, ? extends V2> entry = f.apply(k);
             ret.put(entry.getKey(), entry.getValue());
@@ -132,10 +132,10 @@ final class FunctionalImpl {
         }
 
         Option<Long> estimatedSize = Iterables.resolveSize.apply(xs);
-        List<List<T>> target = estimatedSize.isDefined() ? Collections.<List<T>>newListOfSize(estimatedSize.get() / groupSize) : Collections.<List<T>>newList();
+        List<List<T>> target = estimatedSize.isDefined() ? Collections.<List<T>>newMutableListOfSize(estimatedSize.get() / groupSize) : Collections.<List<T>>newMutableList();
         Iterator<T> it = xs.iterator();
         while (it.hasNext()) {
-            List<T> group = Collections.newListOfSize((int)groupSize);
+            List<T> group = Collections.newMutableListOfSize((int)groupSize);
             for (int i = 0; i < groupSize; ++i) {
                 if (it.hasNext()) {
                     group.add(it.next());
@@ -171,7 +171,7 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
-        Map<G, List<T>> target = newMap();
+        Map<G, List<T>> target = newMutableMap();
         for (T t: xs) {
             G g = f.apply(t);
             Option<List<T>> groupOption = find(g, target);
@@ -179,7 +179,7 @@ final class FunctionalImpl {
             if (groupOption.isDefined()) {
                 group = groupOption.get();
             } else {
-                group = Collections.newList();
+                group = Collections.newMutableList();
                 target.put(g, group);
             }
             group.add(t);

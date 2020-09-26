@@ -1,5 +1,5 @@
 package fi.solita.utils.functional;
-import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Functional.sort;
 
 import java.util.List;
@@ -37,23 +37,23 @@ public class CompareExamples {
         
         Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by_1;
 
-        List<Tuple2<String, Employee>> listOfTuples = newList();
+        List<Tuple2<String, Employee>> listOfTuples = newMutableList();
         sort(by_1, listOfTuples);
         // Employee does not implement comparable, but we can first map to _2 and then to salary
         sort(Compare.by(Transformers.<Employee>_2().andThen(salary)), listOfTuples);
         
         // sorted by the contents of an iterable
-        sort(Compare.<String>byIterable(), Collections.<List<String>>newList());
+        sort(Compare.<String>byIterable(), Collections.<List<String>>newMutableList());
 
         // sorted by the contents of an Option
-        sort(Compare.<String>byOption(), Collections.<Option<String>>newList());
+        sort(Compare.<String>byOption(), Collections.<Option<String>>newMutableList());
         
         // sorted by a function to an Option
-        sort(Compare.byOption(name), Collections.<Employee>newList());
+        sort(Compare.byOption(name), Collections.<Employee>newMutableList());
         
         // and the same with explicit comparators
-        sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newList());
-        sort(Compare.byOption(Compare.by(salary)), Collections.<Option<Employee>>newList());
-        sort(Compare.byOption(name, Ordering.Natural()), Collections.<Employee>newList());
+        sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newMutableList());
+        sort(Compare.byOption(Compare.by(salary)), Collections.<Option<Employee>>newMutableList());
+        sort(Compare.byOption(name, Ordering.Natural()), Collections.<Employee>newMutableList());
     }
 }

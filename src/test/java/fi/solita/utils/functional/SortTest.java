@@ -2,9 +2,9 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.sort;
 import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.FunctionalS.range;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;

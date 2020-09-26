@@ -1,7 +1,5 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.sequence;
 import static fi.solita.utils.functional.Option.Some;
 
 import org.junit.Test;

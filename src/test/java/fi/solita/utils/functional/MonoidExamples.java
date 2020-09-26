@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newMutableMap;
 import static fi.solita.utils.functional.Functional.reduce;
 
 import java.util.List;
@@ -28,8 +28,8 @@ public class MonoidExamples {
         List<Distance> distances = newList(new Distance(1), new Distance(2));
         Option<Distance> reduced = reduce(distances);
         
-        Map<String, Long> first = newMap();
-        Map<String, Long> second = newMap();
+        Map<String, Long> first = newMutableMap();
+        Map<String, Long> second = newMutableMap();
         Map<String, Long> valuesSummed = reduce(Monoids.<String,Long>mapCombine(SemiGroups.longSum), newList(first, second));
     }
     

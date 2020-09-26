@@ -2,10 +2,10 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.sequence;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
-import static org.junit.Assert.*;
+import static fi.solita.utils.functional.Collections.newMutableList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -42,7 +42,7 @@ public class MatchTest {
     public void iterable() {
          List<Integer> someList = newList(1,2);
          
-         List<Character> matching = newList();
+         List<Character> matching = newMutableList();
          
          assertTrue(Match.iterable(null, null, someList).isSuccess());
          assertTrue(Match.iterable(1, null, someList).isSuccess());

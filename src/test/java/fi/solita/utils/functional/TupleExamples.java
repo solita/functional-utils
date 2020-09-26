@@ -1,5 +1,5 @@
 package fi.solita.utils.functional;
-import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Functional.map;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class TupleExamples {
         Tuple2<Integer,String> prefix2 = bigtuple.take2();
         Tuple3<Integer, String, Boolean> prefix3 = bigtuple.take3();
         
-        List<Pair<String,Integer>> listOfTuples = newList();
+        List<Pair<String,Integer>> listOfTuples = newMutableList();
         Iterable<Integer> projection = map(Transformers.<Integer>_2(), listOfTuples);
     }
 }

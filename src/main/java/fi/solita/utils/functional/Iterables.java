@@ -1,8 +1,9 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Collections.newListOfSize;
-import static fi.solita.utils.functional.Collections.newSet;
+import static fi.solita.utils.functional.Collections.newMutableList;
+import static fi.solita.utils.functional.Collections.newMutableListOfSize;
+import static fi.solita.utils.functional.Collections.newMutableSet;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.filter;
 import static fi.solita.utils.functional.Functional.forall;
@@ -320,7 +321,7 @@ public abstract class Iterables {
         
         @SuppressWarnings("unchecked")
         private final Collection<? extends Iterable<? extends T>> flattenNestedConcats(Collection<? extends Iterable<? extends T>> elements) {
-            List<Iterable<? extends T>> ret = newList();
+            List<Iterable<? extends T>> ret = newMutableList();
             for (Iterable<? extends T> es: elements) {
                 if (es instanceof ConcatenatingIterable && ((ConcatenatingIterable<T>) es).elements instanceof Collection) {
                     ret.addAll(flattenNestedConcats((Collection<? extends Iterable<? extends T>>)((ConcatenatingIterable<T>)es).elements));
@@ -401,7 +402,7 @@ public abstract class Iterables {
         }
         
         public Iterator<T> iterator() {
-            final Set<T> visited = newSet();
+            final Set<T> visited = newMutableSet();
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
@@ -798,10 +799,10 @@ public abstract class Iterables {
             if (force) {
                 List<T> sorted = null;
                 for (long size: Iterables.resolveSize.apply(iterable)) {
-                    sorted = newListOfSize(size);
+                    sorted = newMutableListOfSize(size);
                 }
                 if (sorted == null) {
-                    sorted = newList();
+                    sorted = newMutableList();
                 }
 
                 if (iterable instanceof Collection) {

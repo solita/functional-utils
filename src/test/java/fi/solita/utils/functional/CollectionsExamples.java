@@ -3,6 +3,9 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newMutableList;
+import static fi.solita.utils.functional.Collections.newMutableMap;
+import static fi.solita.utils.functional.Collections.newMutableSet;
 import static fi.solita.utils.functional.Collections.newSet;
 
 import java.util.List;
@@ -16,9 +19,9 @@ public class CollectionsExamples {
     @SuppressWarnings("unused")
     @Test
     public void examples() {
-        List<Integer> emptyList = newList();
-        Set<String> emptySet = newSet();
-        Map<Long, Integer> emptyMap = newMap();
+        List<Integer> emptyList = newMutableList();
+        Set<String> emptySet = newMutableSet();
+        Map<Long, Integer> emptyMap = newMutableMap();
         
         int[] primitiveArray = new int[]{1, 2, 3};
         List<Integer> listFromPrimitives = newList(primitiveArray);

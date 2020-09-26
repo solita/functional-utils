@@ -4,7 +4,7 @@ import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.last;
 import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.tail;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

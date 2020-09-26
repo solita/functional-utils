@@ -2,7 +2,7 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Function.__;
 import static fi.solita.utils.functional.Function.___;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

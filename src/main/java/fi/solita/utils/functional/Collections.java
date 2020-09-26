@@ -95,112 +95,112 @@ public abstract class Collections {
     /**
      * @return some implementation of an empty <b>mutable</b> List.
      */
-    public static final <T> List<T> newList() {
+    public static final <T> List<T> newMutableList() {
         return new ArrayList<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> Set.
      */
-    public static final <T> Set<T> newSet() {
+    public static final <T> Set<T> newMutableSet() {
         return new HashSet<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> SortedSet.
      */
-    public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet() {
+    public static final <T extends Comparable<? super T>> SortedSet<T> newMutableSortedSet() {
         return new TreeSet<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> SortedSet, using {@link comparator} for ordering.
      */
-    public static final <T> SortedSet<T> newSortedSet(Comparator<? super T> comparator) {
+    public static final <T> SortedSet<T> newMutableSortedSet(Comparator<? super T> comparator) {
         return new TreeSet<T>(comparator);
     }
 
     /**
      * @return some implementation of an empty <b>mutable</b> Map.
      */
-    public static final <K, V> Map<K, V> newMap() {
+    public static final <K, V> Map<K, V> newMutableMap() {
         return new HashMap<K, V>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> LinkedMap.
      */
-    public static final <K,V> Map<K,V> newLinkedMap() {
+    public static final <K,V> Map<K,V> newMutableLinkedMap() {
         return new LinkedHashMap<K,V>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> SortedMap.
      */
-    public static final <K extends Comparable<? super K>,V> SortedMap<K,V> newSortedMap() {
+    public static final <K extends Comparable<? super K>,V> SortedMap<K,V> newMutableSortedMap() {
         return new TreeMap<K,V>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> SortedMap, using {@code comparator} for ordering.
      */
-    public static final <K,V> SortedMap<K,V> newSortedMap(Comparator<? super K> comparator) {
+    public static final <K,V> SortedMap<K,V> newMutableSortedMap(Comparator<? super K> comparator) {
         return new TreeMap<K,V>(comparator);
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> Queue.
      */
-    public static final <T> Queue<T> newQueue() {
+    public static final <T> Queue<T> newMutableQueue() {
         return new LinkedList<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> Deque.
      */
-    public static final <T> Deque<T> newDeque() {
+    public static final <T> Deque<T> newMutableDeque() {
         return new LinkedList<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> Collection.
      */
-    public static final <T> Collection<T> newCollection() {
+    public static final <T> Collection<T> newMutableCollection() {
         return new ArrayList<T>();
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> List with {@code initialCapacity}.
      */
-    public static final <T> List<T> newListOfSize(long initialCapacity) {
+    public static final <T> List<T> newMutableListOfSize(long initialCapacity) {
         return new ArrayList<T>((int)initialCapacity);
     }
 
     /**
      * @return some implementation of an empty <b>mutable</b> Set with {@code initialCapacity}.
      */
-    public static final <T> Set<T> newSetOfSize(long initialCapacity) {
+    public static final <T> Set<T> newMutableSetOfSize(long initialCapacity) {
         return new HashSet<T>((int)initialCapacity);
     }
 
     /**
      * @return some implementation of an empty <b>mutable</b> Map with {@code initialCapacity}.
      */
-    public static final <K,V> Map<K,V> newMapOfSize(long initialCapacity) {
+    public static final <K,V> Map<K,V> newMutableMapOfSize(long initialCapacity) {
         return new HashMap<K,V>((int)initialCapacity);
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> LinedMap with {@code initialCapacity}.
      */
-    public static final <K,V> Map<K,V> newLinkedMapOfSize(long initialCapacity) {
+    public static final <K,V> Map<K,V> newMutableLinkedMapOfSize(long initialCapacity) {
         return new LinkedHashMap<K,V>((int)initialCapacity);
     }
     
     /**
      * @return some implementation of an empty <b>mutable</b> Collection with {@code initialCapacity}.
      */
-    public static final <T> Collection<T> newCollectionOfSize(long initialCapacity) {
+    public static final <T> Collection<T> newMutableCollectionOfSize(long initialCapacity) {
         return new ArrayList<T>((int)initialCapacity);
     }
     
@@ -874,10 +874,10 @@ public abstract class Collections {
         }
         List<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newListOfSize(size);
+            ret = newMutableListOfSize(size);
         }
         if (ret == null) {
-            ret = newList();
+            ret = newMutableList();
         }
 
         if (elements instanceof Collection) {
@@ -908,10 +908,10 @@ public abstract class Collections {
         }
         Set<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newSetOfSize(size);
+            ret = newMutableSetOfSize(size);
         }
         if (ret == null) {
-            ret = newSet();
+            ret = newMutableSet();
         }
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
@@ -936,7 +936,7 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedSet<T> ret = newSortedSet();
+        SortedSet<T> ret = newMutableSortedSet();
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
         } else {
@@ -960,7 +960,7 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedSet<T> ret = newSortedSet(comparator);
+        SortedSet<T> ret = newMutableSortedSet(comparator);
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
         } else {
@@ -985,10 +985,10 @@ public abstract class Collections {
         }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newMapOfSize(size);
+            ret = newMutableMapOfSize(size);
         }
         if (ret == null) {
-            ret = newMap();
+            ret = newMutableMap();
         }
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
@@ -1010,10 +1010,10 @@ public abstract class Collections {
         }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newLinkedMapOfSize(size);
+            ret = newMutableLinkedMapOfSize(size);
         }
         if (ret == null) {
-            ret = newLinkedMap();
+            ret = newMutableLinkedMap();
         }
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
@@ -1033,7 +1033,7 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedMap<K, V> ret = newSortedMap();
+        SortedMap<K, V> ret = newMutableSortedMap();
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
         }
@@ -1052,7 +1052,7 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedMap<K, V> ret = newSortedMap(comparator);
+        SortedMap<K, V> ret = newMutableSortedMap(comparator);
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             ret.put(e.getKey(), e.getValue());
         }
@@ -1389,15 +1389,15 @@ public abstract class Collections {
         }
         Map<K, List<V>> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
-            ret = newMapOfSize((int)(size*1.5));
+            ret = newMutableMapOfSize((int)(size*1.5));
         }
         if (ret == null) {
-            ret = newMap();
+            ret = newMutableMap();
         }
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             List<V> values = ret.get(e.getKey());
             if (values == null) {
-                values = newList();
+                values = newMutableList();
                 ret.put(e.getKey(), values);
             }
             values.add(e.getValue());

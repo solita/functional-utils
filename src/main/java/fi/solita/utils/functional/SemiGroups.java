@@ -1,6 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.newMapOfSize;
+import static fi.solita.utils.functional.Collections.newMutableMapOfSize;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
@@ -225,7 +225,7 @@ public abstract class SemiGroups {
  
       @Override
       public final Map<K, V> apply(Map<K, V> t1, Map<K, V> t2) {
-          Map<K, V> ret = newMapOfSize(t1.size() + t2.size());
+          Map<K, V> ret = newMutableMapOfSize(t1.size() + t2.size());
           ret.putAll(t1);
           for (Map.Entry<K, V> entry: t2.entrySet()) {
           	  V valOrNull = ret.get(entry.getKey());

@@ -1,19 +1,42 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Functional.*;
+import static fi.solita.utils.functional.Functional.concat;
+import static fi.solita.utils.functional.Functional.distinct;
+import static fi.solita.utils.functional.Functional.drop;
+import static fi.solita.utils.functional.Functional.dropWhile;
+import static fi.solita.utils.functional.Functional.flatMap;
+import static fi.solita.utils.functional.Functional.flatten;
+import static fi.solita.utils.functional.Functional.foreach;
 import static fi.solita.utils.functional.Functional.group;
+import static fi.solita.utils.functional.Functional.head;
+import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.mkString;
+import static fi.solita.utils.functional.Functional.rangify;
+import static fi.solita.utils.functional.Functional.reduce;
+import static fi.solita.utils.functional.Functional.reverse;
+import static fi.solita.utils.functional.Functional.size;
+import static fi.solita.utils.functional.Functional.span;
+import static fi.solita.utils.functional.Functional.split;
+import static fi.solita.utils.functional.Functional.take;
+import static fi.solita.utils.functional.Functional.takeWhile;
+import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+
 import org.junit.Test;
 
 public class FunctionalTest {
@@ -272,10 +295,10 @@ public class FunctionalTest {
     
     @Test
     public void testConcat() {
-        assertEquals(newList(1,2,3), newList(concat(newList(1,2,3), newList())));
+        assertEquals(newList(1,2,3), newList(concat(newList(1,2,3), newMutableList())));
         assertEquals(newList(1,2,3), newList(concat(newList(1,2), newList(3))));
         assertEquals(newList(1,2,3), newList(concat(newList(1), newList(2,3))));
-        assertEquals(newList(1,2,3), newList(concat(newList(), newList(1,2,3))));
+        assertEquals(newList(1,2,3), newList(concat(newMutableList(), newList(1,2,3))));
         
         assertEquals(newList(1,2,3,4), newList(concat(concat(newList(1), newList(2)), concat(newList(3), newList(4)))));
     }
@@ -350,11 +373,11 @@ public class FunctionalTest {
     
     @Test
     public void testSplit() {
-        assertEquals(Pair.of(1, newList())   , force(split(newList(1))));
+        assertEquals(Pair.of(1, newMutableList())   , force(split(newList(1))));
         assertEquals(Pair.of(1, newList(2))  , force(split(newList(1,2))));
         assertEquals(Pair.of(1, newList(2,3)), force(split(newList(1,2,3))));
         
-        assertEquals(Pair.of(newList(1)  , newList()) , force2(split(1, newList(1))));
+        assertEquals(Pair.of(newList(1)  , newMutableList()) , force2(split(1, newList(1))));
         assertEquals(Pair.of(newList(1)  , newList(2)), force2(split(1, newList(1,2))));
         assertEquals(Pair.of(newList(1,2), newList(3)), force2(split(2, newList(1,2,3))));
     }

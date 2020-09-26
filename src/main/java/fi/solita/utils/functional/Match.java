@@ -2,7 +2,8 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Collections.newListOfSize;
+import static fi.solita.utils.functional.Collections.newMutableList;
+import static fi.solita.utils.functional.Collections.newMutableListOfSize;
 import static fi.solita.utils.functional.Functional.zipWithIndex;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.zip;
@@ -112,7 +113,7 @@ public abstract class Match {
 
     private static final List<String> split(char separator, CharSequence xs) {
         Predicate<Character> predicate = not(equalTo(separator));
-        List<String> parts = newList();
+        List<String> parts = newMutableList();
         
         boolean cont = !isEmpty(xs);
         while (cont) {
@@ -127,7 +128,7 @@ public abstract class Match {
     public static final Try<String,List<String>> groups(Pattern regex, CharSequence xs) {
         Matcher matcher = regex.matcher(xs);
         if (matcher.matches()) {
-            List<String> groups = newListOfSize(max(0, matcher.groupCount() - 1));
+            List<String> groups = newMutableListOfSize(max(0, matcher.groupCount() - 1));
             for (int i = 1; i <= matcher.groupCount(); ++i) {
                 groups.add(matcher.group(i));
             }
