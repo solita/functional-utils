@@ -260,6 +260,20 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple._1
         return Tuple.of(_1, _2, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18, t._19, t._20, t._21, t._22, t._23, t._24, t._25, t._26, t._27, t._28, t._29, t._30);
     }
     
+    /**
+     * @return a prefix of this tuple.
+     */
+    public Tuple1<T1> take1() {
+        return Tuple.of(_1);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple1<T2> drop1() {
+        return Tuple.of(_2);
+    }
+    
     public T1 getKey() {
         return _1;
     }

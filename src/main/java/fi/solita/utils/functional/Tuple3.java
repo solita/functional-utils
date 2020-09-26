@@ -233,8 +233,29 @@ public class Tuple3<T1, T2, T3> extends Tuple implements Tuple._1<T1>, Tuple._2<
     /**
      * @return a prefix of this tuple.
      */
+    public Tuple1<T1> take1() {
+        return Tuple.of(_1);
+    }
+    
+    /**
+     * @return a prefix of this tuple.
+     */
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple2<T2, T3> drop1() {
+        return Tuple.of(_2, _3);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple1<T3> drop2() {
+        return Tuple.of(_3);
     }
     
     public T1 get_1() {

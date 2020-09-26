@@ -198,6 +198,13 @@ public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> extends Tuple impl
     /**
      * @return a prefix of this tuple.
      */
+    public Tuple1<T1> take1() {
+        return Tuple.of(_1);
+    }
+    
+    /**
+     * @return a prefix of this tuple.
+     */
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }
@@ -249,6 +256,69 @@ public class Tuple10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> extends Tuple impl
      */
     public Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> take9() {
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple9<T2, T3, T4, T5, T6, T7, T8, T9, T10> drop1() {
+        return Tuple.of(_2, _3, _4, _5, _6, _7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple8<T3, T4, T5, T6, T7, T8, T9, T10> drop2() {
+        return Tuple.of(_3, _4, _5, _6, _7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple7<T4, T5, T6, T7, T8, T9, T10> drop3() {
+        return Tuple.of(_4, _5, _6, _7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple6<T5, T6, T7, T8, T9, T10> drop4() {
+        return Tuple.of(_5, _6, _7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple5<T6, T7, T8, T9, T10> drop5() {
+        return Tuple.of(_6, _7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple4<T7, T8, T9, T10> drop6() {
+        return Tuple.of(_7, _8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple3<T8, T9, T10> drop7() {
+        return Tuple.of(_8, _9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple2<T9, T10> drop8() {
+        return Tuple.of(_9, _10);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple1<T10> drop9() {
+        return Tuple.of(_10);
     }
 
     public T1 get_1() {

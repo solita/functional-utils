@@ -228,6 +228,13 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple
     /**
      * @return a prefix of this tuple.
      */
+    public Tuple1<T1> take1() {
+        return Tuple.of(_1);
+    }
+    
+    /**
+     * @return a prefix of this tuple.
+     */
     public Tuple2<T1, T2> take2() {
         return Tuple.of(_1, _2);
     }
@@ -237,6 +244,27 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple
      */
     public Tuple3<T1, T2, T3> take3() {
         return Tuple.of(_1, _2, _3);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple3<T2, T3, T4> drop1() {
+        return Tuple.of(_2, _3, _4);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple2<T3, T4> drop2() {
+        return Tuple.of(_3, _4);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple1<T4> drop3() {
+        return Tuple.of(_4);
     }
     
     public T1 get_1() {
