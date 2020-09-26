@@ -341,9 +341,10 @@ final class FunctionalImpl {
         return xs == null ? null : Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
-    static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
+    static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, Iterable<T> xs) {
         // TODO: a more efficient implementation
-        return xs == null ? null : Pair.of(filter(predicate, xs), filter(not(predicate), xs));
+        Iterable<Either<L, R>> ys = map(f, xs);
+        return xs == null ? null : Pair.of(map(Transformers.<L>eitherLeft().andThen(Transformers.<L>get()), filter(Predicates.isLeft, ys)), map(Transformers.<R>eitherRight().andThen(Transformers.<R>get()), filter(Predicates.isRight, ys)));
     }
     
     public static <T> Pair<Iterable<T>, Iterable<T>> split(int i, Iterable<T> xs) {
@@ -465,7 +466,7 @@ final class FunctionalImpl {
     }
     
     @SuppressWarnings("unchecked")
-    static final <T extends Comparable<T>> Option<T> min(Iterable<T> xs) {
+    static final <T extends Comparable<? super T>> Option<T> min(Iterable<T> xs) {
         if (xs == null) {
             return null;
         }
@@ -495,7 +496,7 @@ final class FunctionalImpl {
     };
     
     @SuppressWarnings("unchecked")
-    static final <T extends Comparable<T>> Option<T> max(Iterable<T> xs) {
+    static final <T extends Comparable<? super T>> Option<T> max(Iterable<T> xs) {
         if (xs == null) {
             return null;
         }

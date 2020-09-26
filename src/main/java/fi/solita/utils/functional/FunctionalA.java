@@ -212,8 +212,8 @@ public abstract class FunctionalA extends FunctionalM {
 
     
     
-    public static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, T[] xs) {
-        return FunctionalImpl.partition(predicate, newList(xs));
+    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, T[] xs) {
+        return FunctionalImpl.partition(f, newList(xs));
     }
     
     

@@ -132,8 +132,8 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.span(predicate, xs);
     }
     
-    public static final <T> Pair<Iterable<T>, Iterable<T>> partition(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
-        return FunctionalImpl.partition(predicate, xs);
+    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, Iterable<T> xs) {
+        return FunctionalImpl.partition(f, xs);
     }
     
     public static final <T> Pair<Iterable<T>,Iterable<T>> split(int i, Iterable<T> xs) {
@@ -200,11 +200,11 @@ public abstract class Functional extends FunctionalC {
         return FunctionalImpl.fold(f, xs);
     }
 
-    public static <T extends Comparable<T>> Option<T> min(Iterable<T> xs) {
+    public static <T extends Comparable<? super T>> Option<T> min(Iterable<T> xs) {
         return FunctionalImpl.min(xs);
     }
 
-    public static final <T extends Comparable<T>> Option<T> max(Iterable<T> xs) {
+    public static final <T extends Comparable<? super T>> Option<T> max(Iterable<T> xs) {
         return FunctionalImpl.max(xs);
     }
 
