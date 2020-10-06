@@ -9,7 +9,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple implements Tuple._1<T1>, T
     public final T4 _4;
     public final T5 _5;
     
-    Tuple5(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5) {
+    public Tuple5(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;

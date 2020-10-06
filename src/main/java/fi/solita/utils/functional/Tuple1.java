@@ -5,7 +5,7 @@ public class Tuple1<T1> extends Tuple implements Tuple._1<T1> {
 
     public final T1 _1;
     
-    Tuple1(T1 t1) {
+    public Tuple1(T1 t1) {
         this._1 = t1;
     }
     

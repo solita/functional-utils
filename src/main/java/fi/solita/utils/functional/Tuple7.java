@@ -11,7 +11,7 @@ public class Tuple7<T1, T2, T3, T4, T5, T6, T7> extends Tuple implements Tuple._
     public final T6 _6;
     public final T7 _7;
     
-    Tuple7(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7) {
+    public Tuple7(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;

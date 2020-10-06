@@ -14,7 +14,7 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
         return new Pair<LEFT, RIGHT>(left, right);
     }
     
-    private Pair(LEFT left, RIGHT right) {
+    public Pair(LEFT left, RIGHT right) {
         super(left, right);
     }
     

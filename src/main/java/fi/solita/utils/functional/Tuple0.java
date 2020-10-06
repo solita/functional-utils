@@ -5,7 +5,7 @@ package fi.solita.utils.functional;
  */
 public class Tuple0 extends Tuple {
 
-    Tuple0() {
+    public Tuple0() {
     }
     
     /**
