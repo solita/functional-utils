@@ -3,10 +3,12 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newLinkedMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMap;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 
 /**
@@ -49,6 +51,20 @@ public abstract class FunctionalM {
     }
     
     /**
+     * @return {@code map} with elements of values transformed with {@code f}.
+     */
+    public static <T,V,R> Map<T, List<R>> mapValueList(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
+        return newLinkedMap(Functional.map(FunctionalM.<T,V,R>valueMapperList(f), map.entrySet()));
+    }
+    
+    /**
+     * @return {@code map} with elements of values transformed with {@code f}.
+     */
+    public static <T,V,R> Map<T, Set<R>> mapValueSet(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
+        return newLinkedMap(Functional.map(FunctionalM.<T,V,R>valueMapperSet(f), map.entrySet()));
+    }
+    
+    /**
      * <i>Unsafe!</i> mapping multiple values to same key will lose entries.
      * 
      * @return {@code map} with keys transformed with {@code f}.
@@ -69,6 +85,24 @@ public abstract class FunctionalM {
             @Override
             public Map.Entry<T, Iterable<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), FunctionalImpl.map(f, e.getValue()));
+            }
+        };
+    }
+    
+    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, List<R>>> valueMapperList(final Apply<V,R> f) {
+        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, List<R>>>() {
+            @Override
+            public Map.Entry<T, List<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+                return Pair.of(e.getKey(), newList(FunctionalImpl.map(f, e.getValue())));
+            }
+        };
+    }
+    
+    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Set<R>>> valueMapperSet(final Apply<V,R> f) {
+        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Set<R>>>() {
+            @Override
+            public Map.Entry<T, Set<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+                return Pair.of(e.getKey(), newSet(FunctionalImpl.map(f, e.getValue())));
             }
         };
     }
