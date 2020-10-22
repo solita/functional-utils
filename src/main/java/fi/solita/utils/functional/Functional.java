@@ -242,6 +242,8 @@ public abstract class Functional extends FunctionalC {
     }
 
     /**
+     * For example: <code>takeWhile(even, [2,4,6,7,8]) == [2,4,6]</code>.
+     * 
      * @return longest prefix of {@code xs} where all elements satisfy {@code predicate}.
      */
     public static final <T> Iterable<T> takeWhile(Apply<? super T, Boolean> predicate, Iterable<T> xs) {
@@ -249,7 +251,7 @@ public abstract class Functional extends FunctionalC {
     }
 
     /**
-     * For example: <code>dropWhile(even, [2,4,6,7,8]) == [2,4,6]</code>.
+     * For example: <code>dropWhile(even, [2,4,6,7,8]) == [7,8]</code>.
      * 
      * @return elements in {@code xs} since the first one not satisfying {@code predicate}.
      */
