@@ -204,6 +204,17 @@ public abstract class Transformers {
         return (Transformer<Either<?,T>,Option<T>>)(Object)eitherRight;
     }
     
+    private static final Transformer<Map<Object,Object>,Set<Map.Entry<Object,Object>>> mapEntrySet = new Transformer<Map<Object,Object>,Set<Map.Entry<Object,Object>>>() {
+        @Override
+        public final Set<Map.Entry<Object,Object>> transform(Map<Object,Object> source) {
+            return source.entrySet();
+        }
+    };
+    @SuppressWarnings("unchecked")
+    public static final <K,V> Transformer<Map<K,V>,Set<Map.Entry<K,V>>> mapEntrySet() {
+        return (Transformer<Map<K,V>,Set<Map.Entry<K,V>>>)(Object)mapEntrySet;
+    }
+    
     private static final Transformer<?,Option<?>> some = new Transformer<Object,Option<?>>() {
         @Override
         public final Option<?> transform(Object source) {

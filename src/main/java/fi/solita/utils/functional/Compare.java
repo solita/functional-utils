@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Map;
 
 public abstract class Compare {
     
@@ -24,6 +25,14 @@ public abstract class Compare {
      */
     public static final <T extends Comparable<T>> Ordering<Option<T>> byOption() {
         return byOption(Ordering.<T>Natural());
+    }
+    
+    public static final <K extends Comparable<K>, V extends Comparable<V>> Ordering<Map<K,V>> byMap() {
+        return byMap(Ordering.<K>Natural(), Ordering.<V>Natural());
+    }
+    
+    public static final <K, V> Ordering<Map<K,V>> byMap(final Comparator<K> keyComparator, final Comparator<V> valueComparator) {
+        return by(Transformers.<K,V>mapEntrySet(), byIterable(by(Transformers.<K,V>key(), keyComparator).then(by(Transformers.<K,V>value(), valueComparator))));
     }
     
     /**
@@ -112,6 +121,14 @@ public abstract class Compare {
                 }
             }
         };
+    }
+    
+    public static final <K extends Comparable<K>,V> Ordering<Map.Entry<K,V>> byKey() {
+        return by(Transformers.<K,V>key());
+    }
+    
+    public static final <K,V extends Comparable<K>> Ordering<Map.Entry<K,V>> byValue() {
+        return by(Transformers.<K,V>value());
     }
     
     /**
