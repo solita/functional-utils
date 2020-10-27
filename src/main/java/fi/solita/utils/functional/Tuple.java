@@ -776,6 +776,10 @@ public abstract class Tuple implements Serializable {
          */
         T get_32();
     }
+    
+    public static interface Tailable<T> {
+        T drop1();
+    }
 
     /**
      * @return untyped array containing values of this tuple.

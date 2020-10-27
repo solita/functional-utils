@@ -2,7 +2,7 @@ package fi.solita.utils.functional;
 
 import java.util.Map;
 
-public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple._1<T1>, Tuple._2<T2> {
+public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Tailable<Tuple1<T2>>, Tuple._1<T1>, Tuple._2<T2> {
 
     public final T1 _1;
     public final T2 _2;

@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
 
-public class Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> extends Tuple implements Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4>, Tuple._5<T5>, Tuple._6<T6>, Tuple._7<T7>, Tuple._8<T8>, Tuple._9<T9>, Tuple._10<T10>, Tuple._11<T11>, Tuple._12<T12>, Tuple._13<T13>, Tuple._14<T14>, Tuple._15<T15>, Tuple._16<T16>, Tuple._17<T17>, Tuple._18<T18> {
+public class Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> extends Tuple implements Tuple.Tailable<Tuple17<T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18>>, Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4>, Tuple._5<T5>, Tuple._6<T6>, Tuple._7<T7>, Tuple._8<T8>, Tuple._9<T9>, Tuple._10<T10>, Tuple._11<T11>, Tuple._12<T12>, Tuple._13<T13>, Tuple._14<T14>, Tuple._15<T15>, Tuple._16<T16>, Tuple._17<T17>, Tuple._18<T18> {
 
     public final T1 _1;
     public final T2 _2;
@@ -165,8 +165,8 @@ public class Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
     /**
      * @return a prefix of this tuple.
      */
-    public Tuple2<T1, T2> take2() {
-        return Tuple.of(_1, _2);
+    public Pair<T1, T2> take2() {
+        return Pair.of(_1, _2);
     }
     
     /**
@@ -382,8 +382,8 @@ public class Tuple18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple2<T17, T18> drop16() {
-        return Tuple.of(_17, _18);
+    public Pair<T17, T18> drop16() {
+        return Pair.of(_17, _18);
     }
 
     /**

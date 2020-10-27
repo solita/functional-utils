@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
 
-public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4> {
+public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple.Tailable<Tuple3<T2,T3,T4>>, Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4> {
 
     public final T1 _1;
     public final T2 _2;
@@ -235,8 +235,8 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple
     /**
      * @return a prefix of this tuple.
      */
-    public Tuple2<T1, T2> take2() {
-        return Tuple.of(_1, _2);
+    public Pair<T1, T2> take2() {
+        return Pair.of(_1, _2);
     }
     
     /**
@@ -256,8 +256,8 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple implements Tuple._1<T1>, Tuple
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple2<T3, T4> drop2() {
-        return Tuple.of(_3, _4);
+    public Pair<T3, T4> drop2() {
+        return Pair.of(_3, _4);
     }
     
     /**

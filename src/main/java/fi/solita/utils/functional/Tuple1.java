@@ -12,19 +12,19 @@ public class Tuple1<T1> extends Tuple implements Tuple._1<T1> {
     /**
      * @return this tuple with {@code t} prepended to the left.
      */
-    public <T> Tuple2<T, T1> prepend(T t) {
-        return Tuple.of(t, _1);
+    public <T> Pair<T, T1> prepend(T t) {
+        return Pair.of(t, _1);
     }
     
     /**
      * @return this tuple with {@code t} appended to the right.
      */
-    public <T> Tuple2<T1, T> append(T t) {
-        return Tuple.of(_1, t);
+    public <T> Pair<T1, T> append(T t) {
+        return Pair.of(_1, t);
     }
     
-    public <A1,A2> Tuple2<T1, A1> join(Tuple1<A1> t) {
-        return Tuple.of(_1, t._1);
+    public <A1,A2> Pair<T1, A1> join(Tuple1<A1> t) {
+        return Pair.of(_1, t._1);
     }
     
     public <A1,A2> Tuple3<T1, A1, A2> join(Tuple2<A1,A2> t) {
