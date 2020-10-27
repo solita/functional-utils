@@ -54,7 +54,7 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     }
     
     public final Ordering<T> apply(Map.Entry<? extends Ordering<T>,? extends Ordering<T>> t) {
-        return of(Monoids.<T>comparatorConcat().apply(t.getKey(), t.getValue()));
+        return of(Monoids.<T>comparatorConcat().apply(t));
     }
 
     public final Ordering<T> zero() {

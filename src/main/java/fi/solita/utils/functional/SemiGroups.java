@@ -6,12 +6,12 @@ import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public abstract class SemiGroups {
-    private SemiGroups() {}
-    
     
     public static final SemiGroup<Integer> intSum = Monoids.intSum;
 
@@ -31,6 +31,48 @@ public abstract class SemiGroups {
 
     public static final SemiGroup<Boolean> booleanDisjunction = Monoids.booleanDisjunction;
     
+    /**
+     * @return SemiGroup that always keeps the first element and discards the second.
+     */
+    @SuppressWarnings("unchecked")
+    public static final <T> SemiGroup<T> first() {
+        return (SemiGroup<T>) first;
+    }
+    
+    /**
+     * @return SemiGroup that always keeps the second element and discards the first.
+     */
+    @SuppressWarnings("unchecked")
+    public static final <T> SemiGroup<T> last() {
+        return (SemiGroup<T>) last;
+    }
+    
+    /**
+     * @return SemiGroup that always fails with an error.
+     */
+    public static final <T> SemiGroup<T> fail() {
+        return new SemiGroup<T>() {
+            public T apply(Entry<? extends T, ? extends T> t) {
+                throw new RuntimeException(SemiGroup.class.getName() + ".fail() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
+            }
+        };
+    }
+    
+    /**
+     * @return SemiGroup that fails with an error on unequal (by Java equality) values.
+     */
+    public static final <T> SemiGroup<T> failUnequal() {
+        return new SemiGroup<T>() {
+            public T apply(Entry<? extends T, ? extends T> t) {
+                if (t.getKey().equals(t.getValue())) {
+                    return t.getKey();
+                } else {
+                    throw new RuntimeException(SemiGroup.class.getName() + ".fail() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
+                }
+            }
+        };
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <T extends Comparable<T>> SemiGroup<T> max() {
         return (SemiGroup<T>) max;
@@ -47,6 +89,10 @@ public abstract class SemiGroups {
     
     public static final <T> SemiGroup<Set<T>> setIntersection() {
         return Monoids.setIntersection();
+    }
+    
+    public static final <T> SemiGroup<List<T>> listConcat() {
+        return Monoids.listConcat();
     }
     
     /**
@@ -146,6 +192,20 @@ public abstract class SemiGroups {
       @Override
       public final Double apply(Double first, Double second) {
           return first + second;
+      }
+  }
+  
+  static final class First<T> extends Function2<T,T,T> implements SemiGroup<T> {
+      @Override
+      public final T apply(T t1, T t2) {
+          return t1;
+      }
+  }
+  
+  static final class Last<T> extends Function2<T,T,T> implements SemiGroup<T> {
+      @Override
+      public final T apply(T t1, T t2) {
+          return t2;
       }
   }
   
@@ -292,4 +352,7 @@ public abstract class SemiGroups {
   
     private static final SemiGroup<?> max = new Max<Integer>();
     private static final SemiGroup<?> min = new Min<Integer>();
+    
+    private static final SemiGroup<?> first = new First<Object>();
+    private static final SemiGroup<?> last = new Last<Object>();
 }

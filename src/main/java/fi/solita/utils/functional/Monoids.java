@@ -1,16 +1,18 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.emptyMap;
+import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Functional.concat;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class Monoids {
-    private Monoids() {
-    }
     
     /**
      * @return a monoid constructed from {@code semigroup} and {@code zeroElement}.
@@ -62,14 +64,26 @@ public abstract class Monoids {
      * Tries all comparators sequentially as long as the comparison results in equality.
      */
     @SuppressWarnings("unchecked")
-    public static final <T> ComparatorConcat<T> comparatorConcat() {
+    public static final <T> Monoid<Comparator<T>> comparatorConcat() {
         return (ComparatorConcat<T>)comparatorConcat;
+    }
+    
+    public static final <T> Monoid<List<T>> listConcat() {
+        return new Monoid<List<T>>() {
+            public List<T> apply(Map.Entry<? extends List<T>, ? extends List<T>> t) {
+                return newList(concat(t.getKey(), t.getValue()));
+            }
+
+            public List<T> zero() {
+                return emptyList();
+            }
+        };
     }
     
     /**
      * Combines values of the same key with the semigroup binary operation.
      */
-    public static final <K,V> MapCombine<K,V> mapCombine(SemiGroup<V> sg) {
+    public static final <K,V> Monoid<Map<K,V>> mapCombine(SemiGroup<V> sg) {
       return new MapCombine<K,V>(sg);
     }
     
