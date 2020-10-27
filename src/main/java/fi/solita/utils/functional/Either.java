@@ -75,6 +75,13 @@ public class Either<L,R> implements Serializable {
     public final <A,B> Either<A,B> bimap(Apply<? super L, ? extends A> fLeft, Apply<? super R, ? extends B> fRight) {
         return BiFunctors.<L,A,R,B>either().bimap(fLeft, fRight, this);
     }
+    
+    /**
+     * @return left side transformed with {@code fLeft} or right side transformed with {@code fRight}.
+     */
+    public <T> T fold(Apply<? super L, ? extends T> ifLeft, Apply<? super R, ? extends T> ifRight){
+        return isLeft() ? ifLeft.apply(left.get()) : ifRight.apply(right.get());
+    }
 
     /**
      * @return left side transformed with {@code f}.
