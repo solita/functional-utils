@@ -32,7 +32,7 @@ public class CollectionsExamples {
         Set<Integer> setFromIterable = newSet(iterable);
         
         List<? extends Map.Entry<String, Integer>> entries = newList(Pair.of("foo", 1), Pair.of("bar", 2));
-        Map<String, Integer> mapFromIterableEntries = newMap(entries);
+        Map<String, Integer> mapFromIterableEntries = newMap(SemiGroups.<Integer>fail(), entries);
         Map<String, Integer> mapFromEntries = newMap(Pair.of("foo", 1), Pair.of("bar", 2));
         
         Character[] arrayFromPrimitives = newArray('a', 'b', 'c');

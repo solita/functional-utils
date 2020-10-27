@@ -56,7 +56,7 @@ final class FunctionalImpl {
     
     static final <T, E> Map<T, E> filter(Apply<Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
         // to preserve iteration order
-        return Collections.newLinkedMap(filter(predicate, map.entrySet()));
+        return Collections.newLinkedMap(SemiGroups.<E>fail(), filter(predicate, map.entrySet()));
     }
     
     static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<S> xs) {
@@ -90,12 +90,14 @@ final class FunctionalImpl {
         });
     }
     
-    static final <K1, V1, K2, V2> Map<K2, V2> map(Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
+    static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<? extends K2, ? extends V2>> f, Map<K1, V1> map) {
         // to preserve iteration order
         Map<K2, V2> ret = newMutableLinkedMap();
         for (Map.Entry<K1, V1> k: map.entrySet()) {
-            Entry<? extends K2, ? extends V2> entry = f.apply(k);
-            ret.put(entry.getKey(), entry.getValue());
+            Entry<? extends K2, ? extends V2> e = f.apply(k);
+            V2 v = ret.get(e.getKey());
+            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            ret.put(e.getKey(), v);
         }
         return ret;
     }

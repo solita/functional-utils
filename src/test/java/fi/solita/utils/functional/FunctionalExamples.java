@@ -181,7 +181,7 @@ public class FunctionalExamples {
         
         // map
         Iterable<Integer> map = map(negateInt, someIterableOrArray);
-        Map<Integer, String> mapOfMap = map(Function.<Map.Entry<Integer, String>>id(), someMap);
+        Map<Integer, String> mapOfMap = map(SemiGroups.<String>fail(), Function.<Map.Entry<Integer, String>>id(), someMap);
         Iterable<Pair<Integer, Integer>> mapMultiple = map(negateInt, negateInt.andThen(negateInt), someIterableOrArray);
         assertEquals(newList(-1,-2,-3), newList(map));
         assertEquals(newMap(Pair.of(42, "foo")), mapOfMap);

@@ -970,13 +970,21 @@ public abstract class Collections {
         }
         return ret.isEmpty() ? Collections.<T>emptySortedSet() : java.util.Collections.unmodifiableSortedSet(ret);
     }
-
+    
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * @return some implementation of a Map containing {@code elements} as keys and values acquired with {@code fValue}.
+     */
+    public static final <T, V> Map<T, V> newMap(Apply<? super T,V> fValue, Set<T> xs) {
+        // cannot be duplicate keys, since xs is a Set
+        return newMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, xs));
+    }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
      * 
      * @return some implementation of a Map containing {@code elements}.
      */
-    public static final <K, V> Map<K, V> newMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+    public static final <K, V> Map<K, V> newMap(SemiGroup<V> valueCombiner, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
         }
@@ -991,17 +999,19 @@ public abstract class Collections {
             ret = newMutableMap();
         }
         for (Map.Entry<? extends K, ? extends V> e: elements) {
-            ret.put(e.getKey(), e.getValue());
+            V v = ret.get(e.getKey());
+            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
     }
-    
+
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
      * 
      * @return some implementation of a LinkedMap containing {@code elements}.
      */
-    public static final <K, V> Map<K, V> newLinkedMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+    public static final <K, V> Map<K, V> newLinkedMap(SemiGroup<V> valueCombiner, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
         }
@@ -1016,17 +1026,35 @@ public abstract class Collections {
             ret = newMutableLinkedMap();
         }
         for (Map.Entry<? extends K, ? extends V> e: elements) {
-            ret.put(e.getKey(), e.getValue());
+            V v = ret.get(e.getKey());
+            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}.
+     */
+    public static final <T extends Comparable<? super T>, V> SortedMap<T, V> newSortedMap(Apply<? super T,V> fValue, Set<T> elements) {
+        // cannot be duplicate keys, since xs is a Set
+        return newSortedMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, elements));
+    }
+    
+    /**
+     * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}, using {@code comparator} for ordering.
+     */
+    public static final <T, V> SortedMap<T, V> newSortedMap(Comparator<? super T> comparator, Apply<? super T,V> fValue, Set<T> elements) {
+        // cannot be duplicate keys, since xs is a Set
+        return newSortedMap(SemiGroups.<V>fail(), comparator, Functional.map(Function.<T>id(), fValue, elements));
+    }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
      * 
      * @return some implementation of a SortedMap containing {@code elements}.
      */
-    public static final <K extends Comparable<? super K>, V> SortedMap<K, V> newSortedMap(Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+    public static final <K extends Comparable<? super K>, V> SortedMap<K, V> newSortedMap(SemiGroup<V> valueCombiner, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
         }
@@ -1035,17 +1063,19 @@ public abstract class Collections {
         }
         SortedMap<K, V> ret = newMutableSortedMap();
         for (Map.Entry<? extends K, ? extends V> e: elements) {
-            ret.put(e.getKey(), e.getValue());
+            V v = ret.get(e.getKey());
+            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptySortedMap() : java.util.Collections.unmodifiableSortedMap(ret);
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys (according to {@code comparator} cause elements to disappear.
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
      * 
      * @return some implementation of a SortedMap containing {@code elements}, using {@code comparator} for ordering.
      */
-    public static final <K, V> SortedMap<K, V> newSortedMap(Comparator<? super K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
+    public static final <K, V> SortedMap<K, V> newSortedMap(SemiGroup<V> valueCombiner, Comparator<? super K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
         if (elements == null) {
             return null;
         }
@@ -1054,7 +1084,9 @@ public abstract class Collections {
         }
         SortedMap<K, V> ret = newMutableSortedMap(comparator);
         for (Map.Entry<? extends K, ? extends V> e: elements) {
-            ret.put(e.getKey(), e.getValue());
+            V v = ret.get(e.getKey());
+            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptySortedMap() : java.util.Collections.unmodifiableSortedMap(ret);
     }
@@ -1064,317 +1096,317 @@ public abstract class Collections {
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1) {
-        return newMap(Arrays.asList(e1));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1));
     }
 
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1} and {@code e2}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2) {
-        return newMap(Arrays.asList(e1, e2));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2} and {@code e3}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3) {
-        return newMap(Arrays.asList(e1, e2, e3));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3} and {@code e4}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4) {
-        return newMap(Arrays.asList(e1, e2, e3, e4));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and {@code e7}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7} and {@code e8}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8} and {@code e9}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9} and {@code e10}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10} and {@code e11}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11} and {@code e12}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12} and {@code e13}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13} and {@code e14}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14} and {@code e15}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15} and {@code e16}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16} and {@code e17}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17} and {@code e18}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18} and {@code e19}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19} and {@code e20}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20} and {@code e21}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21} and {@code e22}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22} and {@code e23}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23} and {@code e24}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24} and {@code e25}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25} and {@code e26}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26} and {@code e27}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27} and {@code e28}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28} and {@code e29}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29} and {@code e30}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30} and {@code e31}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31) {
-        return newMap(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
     
     /**
-     * <i>Unsafe!</i> Duplicate keys cause elements to disappear.
+     * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32} and {@code elements}.
      */
     @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V>... elements) {
-        return newMap(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32), elements));
+        return newMap(SemiGroups.<V>fail(), concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32), elements));
     }
     
     /**

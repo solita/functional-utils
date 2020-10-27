@@ -19,6 +19,7 @@ import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.FunctionalM;
 import fi.solita.utils.functional.Option;
+import fi.solita.utils.functional.SemiGroups;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple._1;
 import fi.solita.utils.functional.Tuple._10;
@@ -175,7 +176,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         }, new Function2<Map<K,V>, Apply<V,V>, Map<K,V>>() {
             @Override
             public Map<K, V> apply(Map<K, V> m, Apply<V, V> f) {
-                return m.containsKey(key) ? FunctionalM.with(key, f.apply(m.get(key)), m) : m;
+                return m.containsKey(key) ? FunctionalM.with(SemiGroups.<V>last(), key, f.apply(m.get(key)), m) : m;
             }
         });
     }
