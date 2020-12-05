@@ -954,7 +954,7 @@ public abstract class Collections {
         if (elements == null) {
             return null;
         }
-        if (unmodifiableSortedSetClass.isInstance(elements) && ((SortedSet<?>) elements).comparator().equals(comparator)) {
+        if (unmodifiableSortedSetClass.isInstance(elements) && comparator.equals(((SortedSet<?>) elements).comparator())) {
             return (SortedSet<T>)elements;
         }
         if (elements instanceof ForceableIterable) {
