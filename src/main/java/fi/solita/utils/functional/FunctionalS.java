@@ -1,11 +1,15 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Collections.emptySet;
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Transformers.int2long;
 import static fi.solita.utils.functional.Transformers.short2long;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import fi.solita.utils.functional.Iterables.RangeIterable;
@@ -208,5 +212,36 @@ public abstract class FunctionalS extends FunctionalA {
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
         return FunctionalImpl.reduce(Monoids.<T>setIntersection(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
+    }
+    
+    
+    /**
+     * @return Intersecting groups of {@code sets}
+     */
+    @SuppressWarnings("unchecked")
+    public static final <T> Iterable<Set<T>> groupIntersecting(Iterable<Set<T>> sets) {
+        if (sets == null) {
+            return null;
+        }
+        if (Functional.isEmpty(sets)) {
+            return emptySet();
+        }
+        final Set<T> first = Functional.head(sets);
+        Pair<Iterable<Set<T>>,Iterable<Set<T>>> intersectsAndNot = Functional.partition(new Transformer<Set<T>, Either<Set<T>,Set<T>>>() {
+            public Either<Set<T>,Set<T>> transform(Set<T> source) {
+                return intersection(source, first).isEmpty() ? Either.<Set<T>,Set<T>>right(source) : Either.<Set<T>,Set<T>>left(source);
+            };
+        }, sets);
+        Set<T> intersectingHead = newSet(Functional.flatten(intersectsAndNot.left()));
+        List<Set<T>> notIntersectingHead = newList(intersectsAndNot.right());
+        if (notIntersectingHead.isEmpty()) {
+            // all intersect
+            return Arrays.asList(intersectingHead);
+        }
+        if (intersectingHead.equals(first)) {
+            // head doesn't expand anymore -> continue with the rest
+            return Functional.cons(intersectingHead, groupIntersecting(notIntersectingHead));
+        }
+        return groupIntersecting(Functional.cons(intersectingHead, notIntersectingHead));
     }
 }
