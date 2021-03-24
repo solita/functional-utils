@@ -489,6 +489,23 @@ public abstract class Functional extends FunctionalC {
     public static final <A> Iterable<Pair<Integer, A>> zipWithIndex(Iterable<A> xs) {
         return FunctionalImpl.zipWithIndex(xs);
     }
+    
+    public static <A,B> Iterable<Pair<A,B>> zipTo(Iterable<A> as, B b) {
+        return zip(as, repeat(b));
+    }
+    
+    public static <A,B,C> Iterable<Tuple3<A,B,C>> zipToPair(Iterable<? extends Map.Entry<A,B>> as, C c) {
+        return map(Transformers.<A,B,C>appendPair(c), as);
+    }
+    
+    
+    public static final <A, B> Pair<Iterable<A>, Iterable<B>> unzip(Iterable<Pair<A,B>> xs) {
+        return FunctionalImpl.unzip(xs);
+    }
+    
+    public static final <A, B, C> Tuple3<Iterable<A>, Iterable<B>, Iterable<C>> unzip3(Iterable<Tuple3<A,B,C>> xs) {
+        return FunctionalImpl.unzip3(xs);
+    }
 
     /**
      * @return all elements in bounded {@code enumeration}.

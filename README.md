@@ -19,14 +19,14 @@ Add the following types/functions to *Eclipse Preferences -> Java -> Editor -> C
 Just a few examples of using these utils.
 
 * [Builders and Lenses](#user-content-fisolitautilsfunctionallensbuilder-and-fisolitautilsfunctionallenslens)
-* [Collections] (#user-content-fisolitautilsfunctionalcollections)
-* [Option] (#user-content-fisolitautilsfunctionaloption)
-* [Comparisons] (#user-content-fisolitautilsfunctionalcompare)
-* [Tuples] (#user-content-fisolitautilsfunctionaltuple)
-* [Functions] (#user-content-fisolitautilsfunctionalfunction)
-* [Monoids] (#user-content-fisolita.utilsfunctionalmonoid)
-* [Pattern matching] (#user-content-fisolitautilsfunctionalmatch)
-* [Common functional stuff] (#user-content-fisolitautilsfunctionalfunctional)
+* [Collections](#user-content-fisolitautilsfunctionalcollections)
+* [Option](#user-content-fisolitautilsfunctionaloption)
+* [Comparisons](#user-content-fisolitautilsfunctionalcompare)
+* [Tuples](#user-content-fisolitautilsfunctionaltuple)
+* [Functions](#user-content-fisolitautilsfunctionalfunction)
+* [Monoids](#user-content-fisolita.utilsfunctionalmonoid)
+* [Pattern matching](#user-content-fisolitautilsfunctionalmatch)
+* [Common functional stuff](#user-content-fisolitautilsfunctionalfunctional)
 
 ### fi.solita.utils.functional.lens.Builder and fi.solita.utils.functional.lens.Lens
 	class Department {

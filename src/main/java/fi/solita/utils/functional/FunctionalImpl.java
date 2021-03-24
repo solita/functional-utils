@@ -568,6 +568,22 @@ final class FunctionalImpl {
         }
     };
     
+    static final <A, B> Pair<Iterable<A>, Iterable<B>> unzip(Iterable<Pair<A,B>> xs) {
+        if (xs == null) {
+            return null;
+        }
+        // TODO: a more efficient implementation
+        return Pair.of(map(Transformers.<A>left(), xs), map(Transformers.<B>right(), xs));
+    }
+    
+    static final <A, B, C> Tuple3<Iterable<A>, Iterable<B>, Iterable<C>> unzip3(Iterable<Tuple3<A,B,C>> xs) {
+        if (xs == null) {
+            return null;
+        }
+        // TODO: a more efficient implementation
+        return Tuple.of(map(Transformers.<A>_1(), xs), map(Transformers.<B>_2(), xs), map(Transformers.<C>_3(), xs));
+    }
+    
     static final <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
         return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Option.<T>None());
     }

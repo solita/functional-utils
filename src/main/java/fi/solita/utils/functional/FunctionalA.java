@@ -754,6 +754,22 @@ public abstract class FunctionalA extends FunctionalM {
     }
     
     /**
+     * @see Functional#unzip
+     */
+    public static final <A, B> Pair<Iterable<A>, Iterable<B>> unzip(Pair<A,B>[] xs) {
+        return FunctionalImpl.unzip(newList(xs));
+    }
+    
+    /**
+     * @see Functional#unzip3
+     */
+    public static final <A, B, C> Tuple3<Iterable<A>, Iterable<B>, Iterable<C>> unzip3(Tuple3<A,B,C>[] xs) {
+        return FunctionalImpl.unzip3(newList(xs));
+    }
+    
+    
+    
+    /**
      * @see Functional#rangify
      */
     public static final <T> Iterable<List<T>> rangify(Enumerable<T> enumeration, T[] xs) {

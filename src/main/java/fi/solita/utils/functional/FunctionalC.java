@@ -589,6 +589,28 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.zipWithIndex(it(a));
     }
     
+    /**
+     * @see Functional#unzip
+     */
+    public static final <A, B> Pair<CharSequence, CharSequence> unzipC(Iterable<Pair<Character,Character>> xs) {
+        if (xs == null) {
+            return null;
+        }
+        Pair<Iterable<Character>, Iterable<Character>> ret = FunctionalImpl.unzip(newList(xs));
+        return Pair.of(it(ret.left()), it(ret.right()));
+    }
+    
+    /**
+     * @see Functional#unzip3
+     */
+    public static final <A, B, C> Tuple3<CharSequence, CharSequence, CharSequence> unzip3C(Iterable<Tuple3<Character,Character,Character>> xs) {
+        if (xs == null) {
+            return null;
+        }
+        Tuple3<Iterable<Character>,Iterable<Character>,Iterable<Character>> ret = FunctionalImpl.unzip3(newList(xs));
+        return Tuple.of(it(ret._1), it(ret._2), it(ret._3));
+    }
+    
     
     
     /**

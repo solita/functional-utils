@@ -7,6 +7,7 @@ import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -21,11 +22,47 @@ public abstract class Transformers {
         };
     }
     
+    public static final <A,B> Transformer<A, Pair<A,B>> append(final B suffix) { 
+        return new Transformer<A, Pair<A,B>>() {
+            @Override
+            public final Pair<A,B> transform(A source) {
+                return source == null ? null : Pair.of(source, suffix);
+            }
+        };
+    }
+    
+    public static final <A,B,C> Transformer<Map.Entry<A,B>, Tuple3<A,B,C>> appendPair(final C suffix) { 
+        return new Transformer<Map.Entry<A,B>, Tuple3<A,B,C>>() {
+            @Override
+            public final Tuple3<A,B,C> transform(Map.Entry<A,B> source) {
+                return source == null ? null : Tuple.of(source.getKey(), source.getValue(), suffix);
+            }
+        };
+    }
+    
     public static final Transformer<CharSequence, String> prepend(final CharSequence prefix) { 
         return new Transformer<CharSequence, String>() {
             @Override
             public final String transform(CharSequence source) {
                 return prefix + source.toString();
+            }
+        };
+    }
+    
+    public static final <A,B> Transformer<B, Pair<A,B>> prepend(final A prefix) { 
+        return new Transformer<B, Pair<A,B>>() {
+            @Override
+            public final Pair<A,B> transform(B source) {
+                return source == null ? null : Pair.of(prefix, source);
+            }
+        };
+    }
+    
+    public static final <A,B,C> Transformer<Map.Entry<B,C>, Tuple3<A,B,C>> prependPair(final A prefix) { 
+        return new Transformer<Map.Entry<B,C>, Tuple3<A,B,C>>() {
+            @Override
+            public final Tuple3<A,B,C> transform(Map.Entry<B,C> source) {
+                return source == null ? null : Tuple.of(prefix, source.getKey(), source.getValue());
             }
         };
     }
@@ -363,6 +400,24 @@ public abstract class Transformers {
             @Override
             public Tuple3<A, B, C> transform(T source) {
                 return Tuple.of(source.get_1(), source.get_2(), source.get_3());
+            }
+        };
+    }
+    
+    public static <A,B> Function2<Iterable<A>,B,Iterable<Pair<A,B>>> zipTo() {
+        return new Function2<Iterable<A>, B, Iterable<Pair<A,B>>>() {
+            @Override
+            public Iterable<Pair<A, B>> apply(Iterable<A> t1, B t2) {
+                return Functional.zipTo(t1, t2);
+            }
+        };
+    }
+    
+    public static <A,B,C> Function2<Iterable<? extends Map.Entry<A, B>>, C, Iterable<Tuple3<A, B, C>>> zipToPair() {
+        return new Function2<Iterable<? extends Map.Entry<A,B>>, C, Iterable<Tuple3<A,B,C>>>() {
+            @Override
+            public Iterable<Tuple3<A, B, C>> apply(Iterable<? extends Entry<A, B>> t1, C t2) {
+                return Functional.zipToPair(t1, t2);
             }
         };
     }
