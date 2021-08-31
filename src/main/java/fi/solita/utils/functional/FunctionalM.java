@@ -52,42 +52,42 @@ public abstract class FunctionalM {
      * @return elements in {@code map} transformed with {@code f}.
      */
     public static <T,V,R> SortedMap<T, Iterable<R>> map(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> map) {
-        return (SortedMap<T, Iterable<R>>) newSortedMap(SemiGroups.<Iterable<R>>fail(), map.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
+        return map == null ? null : (SortedMap<T, Iterable<R>>) newSortedMap(SemiGroups.<Iterable<R>>fail(), map.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, Iterable<R>> mapValues(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return newLinkedMap(SemiGroups.<Iterable<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<Iterable<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, List<R>> mapValueList(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return newLinkedMap(SemiGroups.<List<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperList(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<List<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperList(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, Set<R>> mapValueSet(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return newLinkedMap(SemiGroups.<Set<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperSet(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<Set<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperSet(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with keys transformed with {@code f}.
      */
     public static <K,V,R> Map<R, V> mapKey(SemiGroup<V> valueCombiner, Apply<K,R> f, Map<K,V> map) {
-        return newLinkedMap(valueCombiner, FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), map.entrySet()));
+        return map == null ? null : newLinkedMap(valueCombiner, FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), map.entrySet()));
     }
     
     /**
      * @return {@code map} with values transformed with {@code f}.
      */
     public static <K,V,R> Map<K, R> mapValue(Apply<V,R> f, Map<K,V> map) {
-        return newLinkedMap(SemiGroups.<R>fail(), FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<R>fail(), FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), map.entrySet()));
     }
     
     private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<V,R> f) {
