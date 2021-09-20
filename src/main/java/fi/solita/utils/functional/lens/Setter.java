@@ -19,14 +19,14 @@ public class Setter<T,F> {
      * @return a copy of {@code object} with the member of this setter set to {@code newValue}.
      */
     public final T set(T object, F newValue) {
-        return f2.apply(object, Function.<F,F>constant(newValue));
+        return object == null ? null : f2.apply(object, Function.<F,F>constant(newValue));
     }
     
     /**
      * @return a copy of {@code object} with the member of this setter modified by {@code f}.
      */
     public final T modify(T object, Apply<F,F> f) {
-        return f2.apply(object, f);
+        return object == null ? null : f2.apply(object, f);
     }
     
     /**

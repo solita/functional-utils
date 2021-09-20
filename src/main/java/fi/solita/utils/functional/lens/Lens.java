@@ -192,7 +192,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
      * @return the value this lens is targetting in {@code t}.
      */
     public final F get(T t) {
-        return getter.apply(t);
+        return t == null ? null : getter.apply(t);
     }
     
     @Override
