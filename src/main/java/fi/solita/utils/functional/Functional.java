@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Option.*;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -601,5 +602,54 @@ public abstract class Functional extends FunctionalC {
      */
     public static final <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> xs) {
         return FunctionalImpl.transpose(xs);
+    }
+    
+    
+    /**
+     * Applicative for optionals.
+     * 
+     * @return {@code Some(f(a,b))} if {@code a} and {@code b} are defined. {@code None()} otherwise.
+     */
+    public static final <A,B,T> Option<T> map2(Option<A> a, Option<B> b, ApplyBi<A,B,T> f) {
+        for (A aa: a) {
+            for (B bb: b) {
+                return Some(f.apply(aa, bb));
+            }
+        }
+        return None();
+    }
+    
+    /**
+     * Applicative for optionals.
+     * 
+     * @return {@code Some(f(a,b,c))} if {@code a} and {@code b} and {@code c} are defined. {@code None()} otherwise.
+     */
+    public static final <A,B,C,T> Option<T> map3(Option<A> a, Option<B> b, Option<C> c, Function3<A,B,C,T> f) {
+        for (A aa: a) {
+            for (B bb: b) {
+                for (C cc: c) {
+                    return Some(f.apply(aa, bb, cc));
+                }
+            }
+        }
+        return None();
+    }
+    
+    /**
+     * Applicative for optionals.
+     * 
+     * @return {@code Some(f(a,b,c,d))} if {@code a} and {@code b} and {@code c} and {@code d} are defined. {@code None()} otherwise.
+     */
+    public static final <A,B,C,D,T> Option<T> map4(Option<A> a, Option<B> b, Option<C> c, Option<D> d, Function4<A,B,C,D,T> f) {
+        for (A aa: a) {
+            for (B bb: b) {
+                for (C cc: c) {
+                    for (D dd: d) {
+                        return Some(f.apply(aa, bb, cc, dd));
+                    }
+                }
+            }
+        }
+        return None();
     }
 }
