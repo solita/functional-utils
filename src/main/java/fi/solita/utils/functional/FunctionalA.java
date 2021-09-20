@@ -430,6 +430,34 @@ public abstract class FunctionalA extends FunctionalM {
     public static final <T> Iterable<T> concat(T[] a, T[] b) {
         return FunctionalImpl.concat(newList(a), newList(b));
     }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(T[] a, T[] b, T[] c) {
+        return concat(newList(a), newList(b), newList(c));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(T[] a, T[] b, T[] c, T[] d) {
+        return concat(newList(a), newList(b), newList(c), newList(d));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(T[] a, T[] b, T[] c, T[] d, T[] e) {
+        return concat(newList(a), newList(b), newList(c), newList(d), newList(e));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(T[] a, T[] b, T[] c, T[] d, T[] e, T[] f) {
+        return concat(newList(a), newList(b), newList(c), newList(d), newList(e), newList(f));
+    }
 
     /**
      * @see Functional#concat
