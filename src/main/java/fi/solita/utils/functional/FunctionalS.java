@@ -170,6 +170,13 @@ public abstract class FunctionalS extends FunctionalA {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
     }
     
+    /**
+     * @return Set union of Sets in {@code es}.
+     */
+    public static final <T> Set<T> union(Iterable<Set<T>> es) {
+        return FunctionalImpl.reduce(Monoids.<T>setUnion(), es);
+    }
+    
     
     
     /**
@@ -212,6 +219,13 @@ public abstract class FunctionalS extends FunctionalA {
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
         return FunctionalImpl.reduce(Monoids.<T>setIntersection(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
+    }
+    
+    /**
+     * @return Set intersection of Sets in {@code es}.
+     */
+    public static final <T> Set<T> intersection(Iterable<Set<T>> es) {
+        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), es);
     }
     
     
