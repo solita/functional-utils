@@ -643,7 +643,7 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> distinct(Iterable<T> xs) {
-        return new Iterables.DistinctIterable<T>(xs);
+        return xs == null ? null : new Iterables.DistinctIterable<T>(xs);
     }
     
     static final <T,R> Iterable<R> sequence(final T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
