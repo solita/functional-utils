@@ -68,6 +68,18 @@ public abstract class Monoids {
         return (ComparatorConcat<T>)comparatorConcat;
     }
     
+    public static final <T> Monoid<Iterable<T>> iterableConcat() {
+        return new Monoid<Iterable<T>>() {
+            public Iterable<T> apply(Map.Entry<? extends Iterable<T>, ? extends Iterable<T>> t) {
+                return concat(t.getKey(), t.getValue());
+            }
+
+            public Iterable<T> zero() {
+                return emptyList();
+            }
+        };
+    }
+    
     public static final <T> Monoid<List<T>> listConcat() {
         return new Monoid<List<T>>() {
             public List<T> apply(Map.Entry<? extends List<T>, ? extends List<T>> t) {

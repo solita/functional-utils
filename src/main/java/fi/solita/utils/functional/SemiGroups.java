@@ -95,6 +95,10 @@ public abstract class SemiGroups {
         return Monoids.listConcat();
     }
     
+    public static final <T> SemiGroup<Iterable<T>> iterableConcat() {
+        return Monoids.iterableConcat();
+    }
+    
     /**
      * Tries all comparators sequentially as long as the comparison results in equality.
      */
