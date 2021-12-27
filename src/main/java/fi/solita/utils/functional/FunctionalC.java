@@ -300,6 +300,36 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     /**
+     * @return at most {@code amount} last elements in {@code xs}.
+     */
+    public static final CharSequence takeLast(long amount, CharSequence xs) {
+        return reverse(take(4, reverse(xs)));
+    }
+    
+    /**
+     * @return at most {@code amount} last elements in {@code xs}.
+     */
+    public static final String takeLast(long amount, String xs) {
+        return reverse(take(4, reverse(xs)));
+    }
+    
+    /**
+     * @return elements in {@code xs} except the last {@code amount}.
+     */
+    public static final CharSequence dropLast(long amount, CharSequence xs) {
+        return reverse(drop(4, reverse(xs)));
+    }
+    
+    /**
+     * @return elements in {@code xs} except the last {@code amount}.
+     */
+    public static final String dropLast(long amount, String xs) {
+        return reverse(drop(4, reverse(xs)));
+    }
+    
+    
+    
+    /**
      * @see Functional#takeWhile
      */
     public static final CharSequence takeWhile(Apply<Character, Boolean> predicate, CharSequence xs) {
@@ -628,6 +658,20 @@ public abstract class FunctionalC extends FunctionalS {
             return "";
         }
         return it(new RepeatingIterable<Character>(value, amount));
+    }
+    
+    /**
+     * @return {@code xs} padded from left with {@code value} up to length {@toLength}
+     */
+    public static final CharSequence padLeft(int toLength, char value, CharSequence xs) {
+        return xs == null ? null : concat(repeat(value, size(xs)-toLength), xs);
+    }
+    
+    /**
+     * @return {@code xs} padded from right with {@code value} up to length {@toLength}
+     */
+    public static final CharSequence padRight(int toLength, char value, CharSequence xs) {
+        return xs == null ? null : concat(xs, repeat(value, size(xs)-toLength));
     }
     
     /**

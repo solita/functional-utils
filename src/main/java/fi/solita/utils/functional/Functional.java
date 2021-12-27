@@ -241,6 +241,20 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Iterable<T> drop(long amount, Iterable<T> xs) {
         return FunctionalImpl.drop(amount, xs);
     }
+    
+    /**
+     * @return at most {@code amount} last elements in {@code xs}.
+     */
+    public static final <T> Iterable<T> takeLast(long amount, Iterable<T> xs) {
+        return reverse(take(4, reverse(xs)));
+    }
+    
+    /**
+     * @return elements in {@code xs} except the last {@code amount}.
+     */
+    public static final <T> Iterable<T> dropLast(long amount, Iterable<T> xs) {
+        return reverse(drop(4, reverse(xs)));
+    }
 
     /**
      * For example: <code>takeWhile(even, [2,4,6,7,8]) == [2,4,6]</code>.
@@ -553,6 +567,20 @@ public abstract class Functional extends FunctionalC {
             return emptyList();
         }
         return value == null ? null : new RepeatingIterable<T>(value, amount);
+    }
+    
+    /**
+     * @return {@code xs} padded from left with {@code value} up to length {@toLength}
+     */
+    public static final <T> Iterable<T> padLeft(int toLength, T value, Iterable<T> xs) {
+        return xs == null ? null : concat(repeat(value, size(xs)-toLength), xs);
+    }
+    
+    /**
+     * @return {@code xs} padded from right with {@code value} up to length {@toLength}
+     */
+    public static final <T> Iterable<T> padRight(int toLength, T value, Iterable<T> xs) {
+        return xs == null ? null : concat(xs, repeat(value, size(xs)-toLength));
     }
 
     /**
