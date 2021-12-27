@@ -16,22 +16,22 @@ public abstract class Compare {
     /**
      * @return ordering for iterables containing elements with natural ordering.
      */
-    public static final <T extends Comparable<T>> Ordering<Iterable<T>> byIterable() {
+    public static final <T extends Comparable<? super T>> Ordering<Iterable<T>> byIterable() {
         return byIterable(Ordering.<T>Natural());
     }
     
     /**
      * @return ordering for an optional element with natural ordering.
      */
-    public static final <T extends Comparable<T>> Ordering<Option<T>> byOption() {
+    public static final <T extends Comparable<? super T>> Ordering<Option<T>> byOption() {
         return byOption(Ordering.<T>Natural());
     }
     
-    public static final <K extends Comparable<K>, V extends Comparable<V>> Ordering<Map<K,V>> byMap() {
+    public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Ordering<Map<K,V>> byMap() {
         return byMap(Ordering.<K>Natural(), Ordering.<V>Natural());
     }
     
-    public static final <K, V> Ordering<Map<K,V>> byMap(final Comparator<K> keyComparator, final Comparator<V> valueComparator) {
+    public static final <K, V> Ordering<Map<K,V>> byMap(final Comparator<? super K> keyComparator, final Comparator<? super V> valueComparator) {
         return by(Transformers.<K,V>mapEntrySet(), byIterable(by(Transformers.<K,V>key(), keyComparator).then(by(Transformers.<K,V>value(), valueComparator))));
     }
     
@@ -90,7 +90,7 @@ public abstract class Compare {
     /**
      * @return ordering for elements by transforming to an optional element with natural ordering. 
      */
-    public static final <S, T extends Comparable<T>> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f) {
+    public static final <S, T extends Comparable<? super T>> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f) {
         return byOption(f, Ordering.Natural());
     }
     
@@ -123,11 +123,11 @@ public abstract class Compare {
         };
     }
     
-    public static final <K extends Comparable<K>,V> Ordering<Map.Entry<K,V>> byKey() {
+    public static final <K extends Comparable<? super K>,V> Ordering<Map.Entry<K,V>> byKey() {
         return by(Transformers.<K,V>key());
     }
     
-    public static final <K,V extends Comparable<K>> Ordering<Map.Entry<K,V>> byValue() {
+    public static final <K,V extends Comparable<? super K>> Ordering<Map.Entry<K,V>> byValue() {
         return by(Transformers.<K,V>value());
     }
     

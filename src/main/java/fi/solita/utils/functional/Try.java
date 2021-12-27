@@ -45,7 +45,7 @@ public class Try<FAILURE,SUCCESS> extends Either<FAILURE,SUCCESS> implements Ite
     }
     
     @SuppressWarnings("unchecked")
-    public <R> Try<FAILURE,R> map(Apply<? super SUCCESS, R> f) {
+    public <R> Try<FAILURE,R> map(Apply<? super SUCCESS, ? extends R> f) {
         return isLeft() ? (Try<FAILURE, R>)this : Try.<FAILURE,R>success(f.apply(success.get()));
     }
 
