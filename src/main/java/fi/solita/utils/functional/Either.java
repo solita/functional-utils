@@ -101,7 +101,7 @@ public class Either<L,R> implements Serializable {
     }
 
     /**
-     * @return rigth side transformed with {@code f}.
+     * @return right side transformed with {@code f}.
      */
     public final <B> Either<L,B> second(Apply<? super R, ? extends B> f) {
         return BiFunctors.<L,L,R,B>either().second(f, this);

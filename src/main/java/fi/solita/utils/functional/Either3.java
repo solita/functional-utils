@@ -91,10 +91,43 @@ public class Either3<L,M,R> implements Serializable {
     /**
      * @return left transformed with {@code fLeft}, middle transformed with {@code fMiddle} or right transformed with {@code fRight}.
      */
+    public final <A,B,C> Either3<A,B,C> trimap(Apply<? super L, ? extends A> fLeft, Apply<? super M, ? extends B> fMiddle, Apply<? super R, ? extends C> fRight) {
+        return isLeft()   ? Either3.<A,B,C>left(fLeft.apply(left.get())) :
+               isMiddle() ? Either3.<A,B,C>middle(fMiddle.apply(middle.get())) :
+                            Either3.<A,B,C>right(fRight.apply(right.get()));
+    }
+    
+    /**
+     * @return left transformed with {@code fLeft}, middle transformed with {@code fMiddle} or right transformed with {@code fRight}.
+     */
     public <T> T fold(Apply<? super L, ? extends T> ifLeft, Apply<? super M, ? extends T> ifMiddle, Apply<? super R, ? extends T> ifRight){
         return isLeft()   ? ifLeft.apply(left.get()) :
                isMiddle() ? ifMiddle.apply(middle.get()) :
                             ifRight.apply(right.get());
+    }
+    
+    /**
+     * @return left transformed with {@code f}.
+     */
+    @SuppressWarnings("unchecked")
+    public final <A> Either3<A,M,R> first(Apply<? super L, ? extends A> f) {
+        return isLeft() ? Either3.<A,M,R>left(f.apply(left.get())) : (Either3<A,M,R>)this;
+    }
+
+    /**
+     * @return middle transformed with {@code f}.
+     */
+    @SuppressWarnings("unchecked")
+    public final <B> Either3<L,B,R> second(Apply<? super M, ? extends B> f) {
+        return isMiddle() ? Either3.<L,B,R>middle(f.apply(middle.get())) : (Either3<L,B,R>)this;
+    }
+    
+    /**
+     * @return right transformed with {@code f}.
+     */
+    @SuppressWarnings("unchecked")
+    public final <C> Either3<L,M,C> third(Apply<? super R, ? extends C> f) {
+        return isRight() ? Either3.<L,M,C>right(f.apply(right.get())) : (Either3<L,M,C>)this;
     }
     
     @Override

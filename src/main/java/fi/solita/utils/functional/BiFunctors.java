@@ -32,12 +32,14 @@ public abstract class BiFunctors {
                 return e.isLeft() ? Either.<B,D>left(f1.apply(e.left.get())) : Either.<B,D>right(f2.apply(e.right.get()));
             }
 
+            @SuppressWarnings("unchecked")
             public Either<B, C> first(Apply<? super A, ? extends B> f, Either<A, C> e) {
-                return e.isLeft() ? Either.<B,C>left(f.apply(e.left.get())) : Either.<B,C>right(e.right.get());
+                return e.isLeft() ? Either.<B,C>left(f.apply(e.left.get())) : (Either<B, C>)e;
             }
 
+            @SuppressWarnings("unchecked")
             public Either<A, D> second(Apply<? super C, ? extends D> f, Either<A, C> e) {
-                return e.isLeft() ? Either.<A,D>left(e.left.get()) : Either.<A,D>right(f.apply(e.right.get()));
+                return e.isLeft() ? (Either<A,D>)e : Either.<A,D>right(f.apply(e.right.get()));
             }
         };
     }
