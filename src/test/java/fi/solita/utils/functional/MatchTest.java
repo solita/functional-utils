@@ -3,9 +3,7 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -62,9 +60,9 @@ public class MatchTest {
         assertEquals(Try.success(Pair.of("", "bar")),    Match.startsWith("", "bar"));
         assertEquals(Try.success(Pair.of("foo", "")),    Match.startsWith("foo", "foo"));
         
-        assertTrue(Match.startsWith("foo", "bar").failure.isDefined());
-        assertTrue(Match.startsWith("foo", "").failure.isDefined());
-        assertTrue(Match.startsWith("foobar", "foo").failure.isDefined());
+        assertTrue(Match.startsWith("foo", "bar").isFailure());
+        assertTrue(Match.startsWith("foo", "").isFailure());
+        assertTrue(Match.startsWith("foobar", "foo").isFailure());
     }
     
     @Test
@@ -74,9 +72,9 @@ public class MatchTest {
         assertEquals(Try.success(Pair.of("bar", "")),    Match.endsWith("", "bar"));
         assertEquals(Try.success(Pair.of("", "foo")),    Match.endsWith("foo", "foo"));
         
-        assertTrue(Match.endsWith("foo", "bar").failure.isDefined());
-        assertTrue(Match.endsWith("foo", "").failure.isDefined());
-        assertTrue(Match.endsWith("foobar", "foo").failure.isDefined());
+        assertTrue(Match.endsWith("foo", "bar").isFailure());
+        assertTrue(Match.endsWith("foo", "").isFailure());
+        assertTrue(Match.endsWith("foobar", "foo").isFailure());
     }
     
     @Test
@@ -86,8 +84,8 @@ public class MatchTest {
         assertEquals(Try.success(Pair.of("a","")),  Match.pair('_', "a_"));
         assertEquals(Try.success(Pair.of("","")), Match.pair('_', "_"));
         
-        assertTrue(Match.pair('_', "foo").failure.isDefined());
-        assertTrue(Match.pair('_', "").failure.isDefined());
+        assertTrue(Match.pair('_', "foo").isFailure());
+        assertTrue(Match.pair('_', "").isFailure());
     }
     
     @Test
@@ -96,6 +94,29 @@ public class MatchTest {
         assertEquals(Try.success(newList("foo")), Match.groups(Pattern.compile("(.*)"), "foo"));
         
         assertEquals(Try.success(emptyList()), Match.groups(Pattern.compile(".*"), "foo"));
-        assertTrue(Match.groups(Pattern.compile("f(oo)"), "bar").failure.isDefined());
+        assertTrue(Match.groups(Pattern.compile("f(oo)"), "bar").isFailure());
+    }
+    
+    @Test
+    public void section_failure() {
+        assertTrue(Match.section('{', '}', "").isFailure());
+        assertTrue(Match.section('{', '}', "a").isFailure());
+        assertTrue(Match.section('{', '}', "{").isFailure());
+        assertTrue(Match.section('{', '}', "}").isFailure());
+        assertTrue(Match.section('{', '}', "a{").isFailure());
+        assertTrue(Match.section('{', '}', "{a").isFailure());
+        assertTrue(Match.section('{', '}', "b}").isFailure());
+        assertTrue(Match.section('{', '}', "}b").isFailure());
+    }
+    
+    @Test
+    public void section_success() {
+        assertEquals(Try.success(Tuple.of("", "", "")), Match.section('{', '}', "{}"));
+        assertEquals(Try.success(Tuple.of("", " ", "")), Match.section('{', '}', "{ }"));
+        assertEquals(Try.success(Tuple.of(" ", "", " ")), Match.section('{', '}', " {} "));
+        
+        assertEquals(Try.success(Tuple.of(" ", "{", " ")), Match.section('{', '}', " {{} "));
+        assertEquals(Try.success(Tuple.of(" ", "", "} ")), Match.section('{', '}', " {}} "));
+        assertEquals(Try.success(Tuple.of(" ", "a", " {b}")), Match.section('{', '}', " {a} {b}"));
     }
 }

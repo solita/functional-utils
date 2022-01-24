@@ -4,6 +4,7 @@ import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Collections.newMutableListOfSize;
+import static fi.solita.utils.functional.Functional.tail;
 import static fi.solita.utils.functional.Functional.zipWithIndex;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.zip;
@@ -65,6 +66,23 @@ public abstract class Match {
             return Try.success(Pair.of(take(prefixLength, xs).toString(), suffix));
         }
         return Try.failure(suffix + " is not a suffix of " + xs);
+    }
+    
+    /**
+     * Match a section, lazily.
+     * 
+     * For example:
+     * <br><code>Match.section('{', '}', " {a} {b}") == ( ,a, {b})</code>.
+     */
+    public static final Try<String,Tuple3<String,String,String>> section(char start, char end, CharSequence xs) {
+        Pair<CharSequence,CharSequence> parts1 = span(not(equalTo(start)), xs);
+        if (!isEmpty(parts1.right())) {
+            Pair<CharSequence,CharSequence> parts2 = span(not(equalTo(end)), tail(parts1.right()));
+            if (!isEmpty(parts2.right())) {
+                return Try.success(Tuple.of(parts1.left().toString(), parts2.left().toString(), tail(parts2.right()).toString()));
+            }
+        }
+        return Try.failure("Section between '" + start + "' and '" + end + "' not found in " + xs);
     }
     
     public static final Try<String,Tuple2<String,String>> tuple2(char separator, CharSequence xs) {
