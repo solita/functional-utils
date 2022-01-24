@@ -47,6 +47,9 @@ import fi.solita.utils.functional.Tuple._3;
 import fi.solita.utils.functional.Tuple._30;
 import fi.solita.utils.functional.Tuple._31;
 import fi.solita.utils.functional.Tuple._32;
+import fi.solita.utils.functional.Tuple._33;
+import fi.solita.utils.functional.Tuple._34;
+import fi.solita.utils.functional.Tuple._35;
 import fi.solita.utils.functional.Tuple._4;
 import fi.solita.utils.functional.Tuple._5;
 import fi.solita.utils.functional.Tuple._6;
@@ -874,6 +877,63 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 Object[] vs = ((Tuple)t).toArray();
                 vs[31] = f.apply(t.get_32());
                 return (_32<T>) Tuple.of(vs);
+            }
+        });
+    }
+    
+    /**
+     * @return lens targetting field 33 of a tuple.
+     */
+    public static final <T> Lens<_33<T>,T> _33() {
+        return new Lens<_33<T>, T>(new Apply<_33<T>, T>() {
+            public T apply(_33<T> t) {
+                return t.get_33();
+            }
+        }, new Function2<_33<T>, Apply<T,T>, _33<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _33<T> apply(_33<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[32] = f.apply(t.get_33());
+                return (_33<T>) Tuple.of(vs);
+            }
+        });
+    }
+    
+    /**
+     * @return lens targetting field 34 of a tuple.
+     */
+    public static final <T> Lens<_34<T>,T> _34() {
+        return new Lens<_34<T>, T>(new Apply<_34<T>, T>() {
+            public T apply(_34<T> t) {
+                return t.get_34();
+            }
+        }, new Function2<_34<T>, Apply<T,T>, _34<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _34<T> apply(_34<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[33] = f.apply(t.get_34());
+                return (_34<T>) Tuple.of(vs);
+            }
+        });
+    }
+    
+    /**
+     * @return lens targetting field 35 of a tuple.
+     */
+    public static final <T> Lens<_35<T>,T> _35() {
+        return new Lens<_35<T>, T>(new Apply<_35<T>, T>() {
+            public T apply(_35<T> t) {
+                return t.get_35();
+            }
+        }, new Function2<_35<T>, Apply<T,T>, _35<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _35<T> apply(_35<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[34] = f.apply(t.get_35());
+                return (_35<T>) Tuple.of(vs);
             }
         });
     }

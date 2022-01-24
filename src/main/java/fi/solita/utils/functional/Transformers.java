@@ -614,6 +614,24 @@ public abstract class Transformers {
             return source.get_32();
         }
     };
+    private static final Transformer<Tuple._33<?>,?> _33 = new Transformer<Tuple._33<?>,Object>() {
+        @Override
+        public final Object transform(fi.solita.utils.functional.Tuple._33<?> source) {
+            return source.get_33();
+        }
+    };
+    private static final Transformer<Tuple._34<?>,?> _34 = new Transformer<Tuple._34<?>,Object>() {
+        @Override
+        public final Object transform(fi.solita.utils.functional.Tuple._34<?> source) {
+            return source.get_34();
+        }
+    };
+    private static final Transformer<Tuple._35<?>,?> _35 = new Transformer<Tuple._35<?>,Object>() {
+        @Override
+        public final Object transform(fi.solita.utils.functional.Tuple._35<?> source) {
+            return source.get_35();
+        }
+    };
     
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._1<T>,T> _1() {
@@ -742,5 +760,17 @@ public abstract class Transformers {
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._32<T>,T> _32() {
         return (Transformer<Tuple._32<T>,T>)(Object)_32;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Tuple._33<T>,T> _33() {
+        return (Transformer<Tuple._33<T>,T>)(Object)_33;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Tuple._34<T>,T> _34() {
+        return (Transformer<Tuple._34<T>,T>)(Object)_34;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Tuple._35<T>,T> _35() {
+        return (Transformer<Tuple._35<T>,T>)(Object)_35;
     }
 }

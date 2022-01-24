@@ -322,4 +322,22 @@ public abstract class Compare {
      */
     @SuppressWarnings("unchecked")
     public static final Ordering<Tuple._32<? extends Comparable<?>>> by_32 = (Ordering<Tuple._32<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_32());
+    
+    /**
+     * Ordering for 33. element of a tuple.
+     */
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._33<? extends Comparable<?>>> by_33 = (Ordering<Tuple._33<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_33());
+    
+    /**
+     * Ordering for 34. element of a tuple.
+     */
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._34<? extends Comparable<?>>> by_34 = (Ordering<Tuple._34<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_34());
+    
+    /**
+     * Ordering for 35. element of a tuple.
+     */
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._35<? extends Comparable<?>>> by_35 = (Ordering<Tuple._35<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_35());
 }
