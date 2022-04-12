@@ -67,7 +67,7 @@ public abstract class SemiGroups {
                 if (t.getKey().equals(t.getValue())) {
                     return t.getKey();
                 } else {
-                    throw new RuntimeException(SemiGroup.class.getName() + ".fail() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
+                    throw new RuntimeException(SemiGroup.class.getName() + ".failUnequal() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
                 }
             }
         };
