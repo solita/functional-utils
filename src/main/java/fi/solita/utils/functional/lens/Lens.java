@@ -94,6 +94,27 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
+    public static final <D,E,S> Lens<D,Option<S>> each(final Lens<D,Option<E>> lens, final Lens<E,Option<S>> lens2) {
+        return new Lens<D,Option<S>>(
+            new Apply<D, Option<S>>() {
+                @Override
+                public Option<S> apply(D t) {
+                    return t == null ? null : lens.apply(t).flatMap(lens2);
+                }
+            },
+            new Function2<D, Apply<Option<S>,Option<S>>, D>() {
+                @Override
+                public D apply(D d, final Apply<Option<S>, Option<S>> f) {
+                    return lens.modify(d, new Apply<Option<E>,Option<E>>() {
+                        public Option<E> apply(Option<E> c) {
+                            return c == null ? null : !c.isDefined() ? c : Some(lens2.modify(c.get(), f));
+                        };
+                    });
+                }
+            }
+        );
+    }
+    
     /**
      * @return a setter targetting each member of the collection behind {@code setter}.
      */
