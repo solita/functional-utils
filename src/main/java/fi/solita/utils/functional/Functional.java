@@ -461,6 +461,14 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Option<T> maxBy(Comparator<? super T> comparator, Iterable<T> xs) {
         return FunctionalImpl.maxBy(comparator, xs);
     }
+    
+    
+    /**
+     * @return {@code value} restricted between inclusive of {@code minBound} and {@code maxBound}.
+     */
+    public static final <T extends Comparable<T>> T clamp(T minBound, T maxBound, T value) {
+        return min(maxBound, max(value, minBound));
+    }
 
     /**
      * Forgets remaining elements in longer list, if the inputs are of different size, that is:<br>
