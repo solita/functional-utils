@@ -39,6 +39,20 @@ public class Either<L,R> implements Serializable {
     public static final <T> List<T> asList(Either<? extends T, ? extends T> either) {
         return newList(concat(either.left, either.right));
     }
+    
+    /**
+     * @return all left values
+     */
+    public static final <T> Iterable<T> lefts(Iterable<? extends Either<T, ?>> xs) {
+        return Functional.flatMap(Transformers.<T>eitherLeft(), xs);
+    }
+    
+    /**
+     * @return all right values
+     */
+    public static final <T> Iterable<T> rights(Iterable<? extends Either<?, T>> xs) {
+        return Functional.flatMap(Transformers.<T>eitherRight(), xs);
+    }
 
     protected Either(Option<L> left, Option<R> right) {
         this.left = left;

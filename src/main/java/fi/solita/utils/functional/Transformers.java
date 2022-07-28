@@ -225,20 +225,55 @@ public abstract class Transformers {
             return source.left;
         }
     };
-    @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Either<T,?>,Option<T>> eitherLeft() {
-        return (Transformer<Either<T,?>,Option<T>>)(Object)eitherLeft;
-    }
-    
     private static final Transformer<Either<?,?>,Option<?>> eitherRight = new Transformer<Either<?,?>,Option<?>>() {
         @Override
         public final Option<?> transform(Either<?,?> source) {
             return source.right;
         }
     };
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Either<T,?>,Option<T>> eitherLeft() {
+        return (Transformer<Either<T,?>,Option<T>>)(Object)eitherLeft;
+    }
+    
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Either<?,T>,Option<T>> eitherRight() {
         return (Transformer<Either<?,T>,Option<T>>)(Object)eitherRight;
+    }
+    
+    private static final Transformer<Either3<?,?,?>,Option<?>> either3Left = new Transformer<Either3<?,?,?>,Option<?>>() {
+        @Override
+        public final Option<?> transform(Either3<?,?,?> source) {
+            return source.left;
+        }
+    };
+    private static final Transformer<Either3<?,?,?>,Option<?>> either3Middle = new Transformer<Either3<?,?,?>,Option<?>>() {
+        @Override
+        public final Option<?> transform(Either3<?,?,?> source) {
+            return source.middle;
+        }
+    };
+    private static final Transformer<Either3<?,?,?>,Option<?>> either3Right = new Transformer<Either3<?,?,?>,Option<?>>() {
+        @Override
+        public final Option<?> transform(Either3<?,?,?> source) {
+            return source.right;
+        }
+    };
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Either3<T,?,?>,Option<T>> either3Left() {
+        return (Transformer<Either3<T,?,?>,Option<T>>)(Object)either3Left;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Either3<?,T,?>,Option<T>> either3Middle() {
+        return (Transformer<Either3<?,T,?>,Option<T>>)(Object)either3Middle;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Either3<?,?,T>,Option<T>> either3Right() {
+        return (Transformer<Either3<?,?,T>,Option<T>>)(Object)either3Right;
     }
     
     private static final Transformer<Map<Object,Object>,Set<Map.Entry<Object,Object>>> mapEntrySet = new Transformer<Map<Object,Object>,Set<Map.Entry<Object,Object>>>() {

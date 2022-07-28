@@ -123,11 +123,24 @@ public abstract class Compare {
         };
     }
     
+    @SuppressWarnings("unchecked")
+    public static final <L extends Comparable<? super L>,R extends Comparable<? super R>> Ordering<Either<L,R>> byEither() {
+        return byOption((Apply<Either<L,R>, Option<L>>)(Object)Transformers.eitherLeft()).then(
+               byOption((Apply<Either<L,R>, Option<R>>)(Object)Transformers.eitherRight()));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <L extends Comparable<? super L>,M extends Comparable<? super M>,R extends Comparable<? super R>> Ordering<Either3<L,M,R>> byEither3() {
+        return byOption((Apply<Either3<L,M,R>, Option<L>>)(Object)Transformers.either3Left()).then(
+               byOption((Apply<Either3<L,M,R>, Option<M>>)(Object)Transformers.either3Middle())).then(
+               byOption((Apply<Either3<L,M,R>, Option<R>>)(Object)Transformers.either3Right()));
+    }
+    
     public static final <K extends Comparable<? super K>,V> Ordering<Map.Entry<K,V>> byKey() {
         return by(Transformers.<K,V>key());
     }
     
-    public static final <K,V extends Comparable<? super K>> Ordering<Map.Entry<K,V>> byValue() {
+    public static final <K,V extends Comparable<? super V>> Ordering<Map.Entry<K,V>> byValue() {
         return by(Transformers.<K,V>value());
     }
     
