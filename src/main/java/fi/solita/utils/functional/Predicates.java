@@ -3,6 +3,7 @@ package fi.solita.utils.functional;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public abstract class Predicates {
@@ -19,6 +20,13 @@ public abstract class Predicates {
             @Override
             public final boolean accept(Iterable<?> candidate) {
                 return !candidate.iterator().hasNext();
+            }
+        };
+        
+        private static final Predicate<Map<?,?>> mapEmpty = new Predicate<Map<?,?>>() {
+            @Override
+            public final boolean accept(Map<?,?> candidate) {
+                return candidate.isEmpty();
             }
         };
     }
@@ -102,6 +110,11 @@ public abstract class Predicates {
     @SuppressWarnings("unchecked")
     public static final <E, T extends Iterable<E>> Predicate<T> empty() {
         return (Predicate<T>) Impl.empty;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <K, V, M extends Map<K,V>> Predicate<M> mapEmpty() {
+        return (Predicate<M>) Impl.mapEmpty;
     }
     
     public static final <T extends Comparable<T>> Predicate<T> greaterThan(final T value) {
