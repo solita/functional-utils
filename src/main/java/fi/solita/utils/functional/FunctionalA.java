@@ -491,7 +491,9 @@ public abstract class FunctionalA extends FunctionalM {
      * @see Functional#concat
      */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T>... xs) {
-        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && xs == null ? null : new ConcatenatingIterable<T>(concat(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6)), xs));
+        Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6));
+        Iterable<Iterable<? extends T>> b = filter(Predicates.not(Predicates.isNull()), xs);
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && xs == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.concat(a, b));
     }
     
     
