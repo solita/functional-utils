@@ -183,56 +183,55 @@ public abstract class FunctionalS extends FunctionalA {
      * @return Set intersection of {@code e1} and {@code e2}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), newList(e1, e2));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), newList(e1, e2)).get();
     }
     
     /**
      * @return Set intersection of {@code e1}, {@code e2} and {@code e3}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), newList(e1, e2, e3));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), newList(e1, e2, e3)).get();
     }
     
     /**
      * @return Set intersection of {@code e1}, {@code e2}, {@code e3} and {@code e4}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), newList(e1, e2, e3, e4));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), newList(e1, e2, e3, e4)).get();
     }
     
     /**
      * @return Set intersection of {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), newList(e1, e2, e3, e4, e5));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), newList(e1, e2, e3, e4, e5)).get();
     }
     
     /**
      * @return Set intersection of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), newList(e1, e2, e3, e4, e5, e6));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), newList(e1, e2, e3, e4, e5, e6)).get();
     }
     
     /**
      * @return Set intersection of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and all in {@code es}.
      */
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es))).get();
     }
     
     /**
      * @return Set intersection of Sets in {@code es}.
      */
     public static final <T> Set<T> intersection(Iterable<Set<T>> es) {
-        return FunctionalImpl.reduce(Monoids.<T>setIntersection(), es);
+        return FunctionalImpl.fold(Collections.<T>emptySet(), SemiGroups.<T>setIntersection(), es);
     }
     
     
     /**
      * @return Intersecting groups of {@code sets}
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Iterable<Set<T>> groupIntersecting(Iterable<Set<T>> sets) {
         if (sets == null) {
             return null;

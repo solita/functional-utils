@@ -31,6 +31,8 @@ public abstract class SemiGroups {
 
     public static final SemiGroup<Boolean> booleanDisjunction = Monoids.booleanDisjunction;
     
+    public static final SemiGroup<?> setIntersection = new SemiGroups.SetIntersection<Object>();
+    
     /**
      * @return SemiGroup that always keeps the first element and discards the second.
      */
@@ -87,8 +89,9 @@ public abstract class SemiGroups {
         return Monoids.setUnion();
     }
     
+    @SuppressWarnings("unchecked")
     public static final <T> SemiGroup<Set<T>> setIntersection() {
-        return Monoids.setIntersection();
+        return (SemiGroup<Set<T>>)setIntersection;
     }
     
     public static final <T> SemiGroup<List<T>> listConcat() {
@@ -237,10 +240,10 @@ public abstract class SemiGroups {
   static class SetUnion<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, Set<T> second) {
-          if (first instanceof Monoids.SetIntersection.AllContainingSet) {
+          if (first.isEmpty()) {
               return second;
           }
-          if (second instanceof Monoids.SetIntersection.AllContainingSet) {
+          if (second.isEmpty()) {
               return first;
           }
           return newSet(concat(first, second));
@@ -250,11 +253,12 @@ public abstract class SemiGroups {
   static class SetIntersection<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, final Set<T> second) {
-          if (first instanceof Monoids.SetIntersection.AllContainingSet) {
+          if (first.isEmpty()) {
+              return first;
+          }
+          if (second.isEmpty()) {
               return second;
           }
-          if (second instanceof Monoids.SetIntersection.AllContainingSet) {
-              return first;
           }
           return newSet(filter(new Predicate<T>() {
               @Override

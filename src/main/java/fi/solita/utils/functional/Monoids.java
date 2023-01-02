@@ -5,9 +5,7 @@ import static fi.solita.utils.functional.Collections.emptyMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,11 +51,6 @@ public abstract class Monoids {
     @SuppressWarnings("unchecked")
     public static final <T> Monoid<Set<T>> setUnion() {
         return (Monoid<Set<T>>)(Object)setUnion;
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static final <T> Monoid<Set<T>> setIntersection() {
-        return (Monoid<Set<T>>)(Object)setIntersection;
     }
     
     /**
@@ -190,68 +183,6 @@ public abstract class Monoids {
       }
   }
   
-  static final class SetIntersection<T> extends SemiGroups.SetIntersection<T> implements Monoid<Set<T>> {
-      private static final Set<?> AllContainingSet = new AllContainingSet<Object>();
-      static final class AllContainingSet<T> implements Set<T> {
-          public int size() {
-              return Integer.MAX_VALUE;
-          }
-
-          public boolean isEmpty() {
-              return false;
-          }
-
-          public boolean contains(Object o) {
-              return true;
-          }
-
-          public boolean containsAll(Collection<?> c) {
-              return true;
-          }
-
-          public Iterator<T> iterator() {
-              throw new UnsupportedOperationException();
-          }
-
-          public Object[] toArray() {
-              throw new UnsupportedOperationException();
-          }
-
-          public <S> S[] toArray(S[] a) {
-              throw new UnsupportedOperationException();
-          }
-
-          public boolean add(T e) {
-              throw new UnsupportedOperationException();
-          }
-
-          public boolean remove(Object o) {
-              throw new UnsupportedOperationException();
-          }
-
-          public boolean addAll(Collection<? extends T> c) {
-              throw new UnsupportedOperationException();
-          }
-
-          public boolean retainAll(Collection<?> c) {
-              throw new UnsupportedOperationException();
-          }
-
-          public boolean removeAll(Collection<?> c) {
-              throw new UnsupportedOperationException();
-          }
-
-          public void clear() {
-              throw new UnsupportedOperationException();
-          }
-      }
-
-      @SuppressWarnings("unchecked")
-      public Set<T> zero() {
-          return (Set<T>) AllContainingSet;
-      }
-  }
-  
   static final class ComparatorConcat<T> extends SemiGroups.ComparatorConcat<T> implements Monoid<Comparator<T>> {
       public Comparator<T> zero() {
           return new Comparator<T>() {
@@ -273,6 +204,5 @@ public abstract class Monoids {
   }
   
   private static final Monoid<Set<Object>> setUnion = new SetUnion<Object>();
-  private static final Monoid<Set<Object>> setIntersection = new SetIntersection<Object>();
   private static final ComparatorConcat<Object> comparatorConcat = new ComparatorConcat<Object>();
 }
