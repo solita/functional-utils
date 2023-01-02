@@ -76,6 +76,11 @@ public abstract class Monoids {
     public static final <T> Monoid<List<T>> listConcat() {
         return new Monoid<List<T>>() {
             public List<T> apply(Map.Entry<? extends List<T>, ? extends List<T>> t) {
+                if (t.getKey() == null || t.getKey().isEmpty()) {
+                    return t.getValue();
+                } else if (t.getValue() == null || t.getValue().isEmpty()) {
+                    return t.getKey();
+                }
                 return newList(concat(t.getKey(), t.getValue()));
             }
 

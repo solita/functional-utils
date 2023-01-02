@@ -155,9 +155,11 @@ public abstract class Predicates {
     
     public static final <T extends Comparable<T>> Predicate<T> between(final T beginInclusive, final T endInclusive) {
         return new Predicate<T>() {
+            Predicate<T> pred = greaterThanOrEqualTo(beginInclusive).and(lessThanOrEqualTo(endInclusive));
+            
             @Override
             public final boolean accept(T candidate) {
-                return greaterThanOrEqualTo(beginInclusive).and(lessThanOrEqualTo(endInclusive)).accept(candidate);
+                return pred.accept(candidate);
             }
         };
     }

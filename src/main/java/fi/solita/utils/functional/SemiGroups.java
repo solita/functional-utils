@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -240,10 +241,10 @@ public abstract class SemiGroups {
   static class SetUnion<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, Set<T> second) {
-          if (first.isEmpty()) {
+          if (first == null || first.isEmpty()) {
               return second;
           }
-          if (second.isEmpty()) {
+          if (second == null || second.isEmpty()) {
               return first;
           }
           return newSet(concat(first, second));
@@ -253,19 +254,29 @@ public abstract class SemiGroups {
   static class SetIntersection<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, final Set<T> second) {
-          if (first.isEmpty()) {
+          if (first == null || first.isEmpty()) {
               return first;
           }
-          if (second.isEmpty()) {
+          if (second == null || second.isEmpty()) {
               return second;
           }
+          
+          final Set<T> smaller;
+          final Set<T> larger;
+          if (first.size() <= second.size()) {
+              smaller = first;
+              larger = second;
+          } else {
+              smaller = second;
+              larger = first;
           }
+          
           return newSet(filter(new Predicate<T>() {
               @Override
               public boolean accept(T candidate) {
-                  return second.contains(candidate);
+                  return larger.contains(candidate);
               }
-          }, first));
+          }, smaller));
       }
   }
   
@@ -285,20 +296,41 @@ public abstract class SemiGroups {
   }
   
   static class MapCombine<K, V> extends Function2<Map<K,V>,Map<K,V>,Map<K,V>> implements SemiGroup<Map<K,V>> {
-      private final SemiGroup<V> sg;
+      private final Function2<V,V,V> sg;
 
-      public MapCombine(SemiGroup<V> sg) {
-          this.sg = sg;
+      @SuppressWarnings("unchecked")
+      public MapCombine(final SemiGroup<V> sg) {
+          this.sg = sg instanceof Function2 ? (Function2<V,V,V>)sg : new Function2<V,V,V>() {
+            @Override
+            public V apply(V t1, V t2) {
+                return sg.apply(Pair.of(t1, t2));
+            }
+        };
       }
- 
+
       @Override
       public final Map<K, V> apply(Map<K, V> t1, Map<K, V> t2) {
-          Map<K, V> ret = newMutableMapOfSize(t1.size() + t2.size());
-          ret.putAll(t1);
-          for (Map.Entry<K, V> entry: t2.entrySet()) {
-          	  V valOrNull = ret.get(entry.getKey());
+          if (t1 == null || t1.isEmpty()) {
+              return t2;
+          } else if (t2 == null || t2.isEmpty()) {
+              return t1;
+          }
+          
+          Map<K,V> smaller;
+          Map<K,V> larger;
+          if (t1.size() <= t2.size()) {
+              smaller = t1;
+              larger = t2;
+          } else {
+              smaller = t2;
+              larger = t1;
+          }
+          
+          Map<K, V> ret = new HashMap<K, V>(larger);
+          for (Map.Entry<K, V> entry: smaller.entrySet()) {
+              V valOrNull = ret.get(entry.getKey());
               if (valOrNull != null) {
-                  ret.put(entry.getKey(), sg.apply(Tuple.of(valOrNull, entry.getValue())));
+                  ret.put(entry.getKey(), sg.apply(valOrNull, entry.getValue()));
               } else {
                   ret.put(entry.getKey(), entry.getValue());
               }
