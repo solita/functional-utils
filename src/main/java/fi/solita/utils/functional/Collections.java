@@ -1507,7 +1507,7 @@ public abstract class Collections {
         for (Map.Entry<? extends K, ? extends V> e: elements) {
             List<V> values = ret.get(e.getKey());
             if (values == null) {
-                values = newMutableList();
+                values = newMutableListOfSize(5);
                 ret.put(e.getKey(), values);
             }
             values.add(e.getValue());
