@@ -581,14 +581,14 @@ public abstract class Functional extends FunctionalC {
      * @return {@code xs} padded from left with {@code value} up to length {@toLength}
      */
     public static final <T> Iterable<T> padLeft(int toLength, T value, Iterable<T> xs) {
-        return xs == null ? null : concat(repeat(value, size(xs)-toLength), xs);
+        return xs == null ? null : concat(repeat(value, toLength-size(xs)), xs);
     }
     
     /**
      * @return {@code xs} padded from right with {@code value} up to length {@toLength}
      */
     public static final <T> Iterable<T> padRight(int toLength, T value, Iterable<T> xs) {
-        return xs == null ? null : concat(xs, repeat(value, size(xs)-toLength));
+        return xs == null ? null : concat(xs, repeat(value, toLength-size(xs)));
     }
 
     /**

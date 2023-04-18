@@ -398,4 +398,20 @@ public class FunctionalTest {
         
         assertEquals(Character.valueOf('c'), clamp('c', 'z', 'a'));
     }
+    
+    @Test
+    public void padLeft() {
+        assertEquals("00", Functional.padLeft(2, '0', "").toString());
+        assertEquals("0x", Functional.padLeft(2, '0', "x").toString());
+        assertEquals("xx", Functional.padLeft(2, '0', "xx").toString());
+        assertEquals("xxx", Functional.padLeft(2, '0', "xxx").toString());
+    }
+    
+    @Test
+    public void padRight() {
+        assertEquals("00", Functional.padRight(2, '0', "").toString());
+        assertEquals("x0", Functional.padRight(2, '0', "x").toString());
+        assertEquals("xx", Functional.padRight(2, '0', "xx").toString());
+        assertEquals("xxx", Functional.padRight(2, '0', "xxx").toString());
+    }
 }
