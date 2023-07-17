@@ -39,6 +39,16 @@ public abstract class Function {
         };
     }
     
+    public static final <T, R> Function1<T, Void> consumer(final ApplyVoid<T> apply) {
+        return new Function1<T, Void>() {
+            @Override
+            public final Void apply(T t) {
+                apply.accept(t);
+                return null;
+            }
+        };
+    }
+    
     /**
      * @return a concrete version of {@code apply}.
      */
@@ -47,6 +57,16 @@ public abstract class Function {
             @Override
             public final R apply(T1 t1, T2 t2) {
                 return apply.apply(t1, t2);
+            }
+        };
+    }
+    
+    public static final <T1, T2> Function2<T1, T2, Void> consumer(final ApplyBiVoid<T1, T2> apply) {
+        return new Function2<T1, T2, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2) {
+                apply.accept(t1, t2);
+                return null;
             }
         };
     }
