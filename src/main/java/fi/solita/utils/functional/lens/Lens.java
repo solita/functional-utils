@@ -19,6 +19,7 @@ import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.FunctionalM;
 import fi.solita.utils.functional.Option;
+import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.SemiGroups;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple._1;
@@ -290,6 +291,32 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                         return f.apply(Some(t)).get();
                     }
                 });
+            }
+        });
+    }
+    
+    public static final <T,O> Lens<Pair<T,O>,T> pairLeft() {
+        return new Lens<Pair<T,O>, T>(new Apply<Pair<T,O>, T>() {
+            public T apply(Pair<T,O> t) {
+                return t.left();
+            }
+        }, new Function2<Pair<T,O>, Apply<T,T>, Pair<T,O>>() {
+            @Override
+            public Pair<T,O> apply(Pair<T,O> t, Apply<T, T> f) {
+                return t.first(f);
+            }
+        });
+    }
+    
+    public static final <T,O> Lens<Pair<O,T>,T> pairRight() {
+        return new Lens<Pair<O,T>, T>(new Apply<Pair<O,T>, T>() {
+            public T apply(Pair<O,T> t) {
+                return t.right();
+            }
+        }, new Function2<Pair<O,T>, Apply<T,T>, Pair<O,T>>() {
+            @Override
+            public Pair<O,T> apply(Pair<O,T> t, Apply<T, T> f) {
+                return t.second(f);
             }
         });
     }
