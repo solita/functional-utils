@@ -1,6 +1,5 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.newMutableMapOfSize;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
@@ -74,6 +73,11 @@ public abstract class SemiGroups {
                 }
             }
         };
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> SemiGroup<Apply<T,T>> endo() {
+        return (SemiGroup<Apply<T,T>>)(Object)endo;
     }
     
     @SuppressWarnings("unchecked")
@@ -395,4 +399,6 @@ public abstract class SemiGroups {
     
     private static final SemiGroup<?> first = new First<Object>();
     private static final SemiGroup<?> last = new Last<Object>();
+    
+    private static final SemiGroup<Apply<Object,Object>> endo = new Endo<Object>();
 }

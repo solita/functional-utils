@@ -49,6 +49,11 @@ public abstract class Monoids {
     public static final Monoid<Boolean> booleanDisjunction = new BooleanDisjunction();
     
     @SuppressWarnings("unchecked")
+    public static final <T> Monoid<Apply<T,T>> endo() {
+        return (Monoid<Apply<T,T>>)(Object)endo;
+    }
+    
+    @SuppressWarnings("unchecked")
     public static final <T> Monoid<Set<T>> setUnion() {
         return (Monoid<Set<T>>)(Object)setUnion;
     }
@@ -210,4 +215,6 @@ public abstract class Monoids {
   
   private static final Monoid<Set<Object>> setUnion = new SetUnion<Object>();
   private static final ComparatorConcat<Object> comparatorConcat = new ComparatorConcat<Object>();
+  private static final Monoid<Apply<Object,Object>> endo = new Endo<Object>();
+  
 }
