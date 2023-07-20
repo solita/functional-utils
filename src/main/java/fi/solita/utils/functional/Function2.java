@@ -71,6 +71,15 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
+    public final Function1<T1,R> ap2(final T2 arg1) {
+        return new Function1<T1,R>() {
+            @Override
+            public final R apply(T1 arg2) {
+                return Function2.this.apply(arg2, arg1);
+            }
+        };
+    }
+    
     /**
      * partially apply first argument {@code arg1}.
      */
