@@ -852,6 +852,36 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1) {
+        return FunctionalImpl.combineEndo(newList(f1));
+    }
+    
+    /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2) {
+        return FunctionalImpl.combineEndo(newList(f1, f2));
+    }
+    
+    /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3) {
+        return FunctionalImpl.combineEndo(newList(f1, f2, f3));
+    }
+    
+    /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>>... fs) {
+        return FunctionalImpl.combineEndo(concat(newList(f1, f2, f3, f4), fs));
+    }
+    
+    
+    
+    /**
      * @see Functional#transpose
      */
     public static final <T> Iterable<Iterable<T>> transpose(Iterable<T>[] xs) {

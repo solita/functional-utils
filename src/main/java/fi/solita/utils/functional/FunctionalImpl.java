@@ -655,6 +655,15 @@ final class FunctionalImpl {
         }, fs);
     }
     
+    static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Iterable<? extends Apply<P,? extends Apply<T,T>>> fs) {
+        return new Function2<P, T, T>() {
+            @Override
+            public T apply(P p, T t) {
+                return FunctionalImpl.reduce(Monoids.<T>endo(), FunctionalImpl.sequence(p, fs)).apply(t);
+            }
+        };
+    }
+    
     static final <T> Iterable<Iterable<T>> transpose(Iterable<? extends Iterable<T>> xs) {
         return xs == null ? null : new TransposingIterable<T>(xs);
     }

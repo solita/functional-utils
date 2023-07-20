@@ -625,6 +625,13 @@ public abstract class Functional extends FunctionalC {
     public static final <T, R> Iterable<R> sequence(T value, Iterable<? extends Apply<? super T, ? extends R>> fs) {
         return FunctionalImpl.sequence(value, fs);
     }
+    
+    /**
+     * @return propagate an argument to all given endofunctions and combining them
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Iterable<? extends Apply<P,? extends Apply<T,T>>> fs) {
+        return FunctionalImpl.combineEndo(fs);
+    }
 
     /**
      * Matrix transposition.
