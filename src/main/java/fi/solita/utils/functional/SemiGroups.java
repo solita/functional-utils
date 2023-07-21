@@ -90,6 +90,14 @@ public abstract class SemiGroups {
         return (SemiGroup<T>) min;
     }
     
+    public static final <T> SemiGroup<T> maxBy(Comparator<? super T> comparator) {
+        return new MaxBy<T>(comparator);
+    }
+    
+    public static final <T> SemiGroup<T> minBy(Comparator<? super T> comparator) {
+        return new MinBy<T>(comparator);
+    }
+    
     public static final <T> SemiGroup<Set<T>> setUnion() {
         return Monoids.setUnion();
     }
@@ -233,7 +241,31 @@ public abstract class SemiGroups {
       public final T apply(T t1, T t2) {
           return t1.compareTo(t2) > 0 ? t2 : t1;
       }
-    }
+  }
+  
+  static final class MaxBy<T> extends Function2<T,T,T> implements SemiGroup<T> {
+      private final Comparator<? super T> comparator;
+      public MaxBy(Comparator<? super T> comparator) {
+          this.comparator = comparator;
+      }
+      
+      @Override
+      public final T apply(T t1, T t2) {
+          return comparator.compare(t1, t2) < 0 ? t2 : t1;
+      }
+  }
+  
+  static final class MinBy<T> extends Function2<T,T,T> implements SemiGroup<T> {
+      private final Comparator<? super T> comparator;
+      public MinBy(Comparator<? super T> comparator) {
+          this.comparator = comparator;
+      }
+      
+      @Override
+      public final T apply(T t1, T t2) {
+          return comparator.compare(t1, t2) > 0 ? t2 : t1;
+      }
+  }
   
   static class Endo<T> extends Function2<Apply<T,T>,Apply<T,T>,Apply<T,T>> implements SemiGroup<Apply<T, T>> {
       @Override
