@@ -1,7 +1,7 @@
 package fi.solita.utils.functional;
 
 
-public class Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> extends Tuple implements Tuple.Tailable<Tuple34<T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31,T32,T33,T34,T35>>, Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4>, Tuple._5<T5>, Tuple._6<T6>, Tuple._7<T7>, Tuple._8<T8>, Tuple._9<T9>, Tuple._10<T10>, Tuple._11<T11>, Tuple._12<T12>, Tuple._13<T13>, Tuple._14<T14>, Tuple._15<T15>, Tuple._16<T16>, Tuple._17<T17>, Tuple._18<T18>, Tuple._19<T19>, Tuple._20<T20>, Tuple._21<T21>, Tuple._22<T22>, Tuple._23<T23>, Tuple._24<T24>, Tuple._25<T25>, Tuple._26<T26>, Tuple._27<T27>, Tuple._28<T28>, Tuple._29<T29>, Tuple._30<T30>, Tuple._31<T31>, Tuple._32<T32>, Tuple._33<T33>, Tuple._34<T34>, Tuple._35<T35> {
+public class Tuple36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> extends Tuple implements Tuple.Tailable<Tuple35<T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31,T32,T33,T34,T35,T36>>, Tuple._1<T1>, Tuple._2<T2>, Tuple._3<T3>, Tuple._4<T4>, Tuple._5<T5>, Tuple._6<T6>, Tuple._7<T7>, Tuple._8<T8>, Tuple._9<T9>, Tuple._10<T10>, Tuple._11<T11>, Tuple._12<T12>, Tuple._13<T13>, Tuple._14<T14>, Tuple._15<T15>, Tuple._16<T16>, Tuple._17<T17>, Tuple._18<T18>, Tuple._19<T19>, Tuple._20<T20>, Tuple._21<T21>, Tuple._22<T22>, Tuple._23<T23>, Tuple._24<T24>, Tuple._25<T25>, Tuple._26<T26>, Tuple._27<T27>, Tuple._28<T28>, Tuple._29<T29>, Tuple._30<T30>, Tuple._31<T31>, Tuple._32<T32>, Tuple._33<T33>, Tuple._34<T34>, Tuple._35<T35>, Tuple._36<T36> {
 
     public final T1 _1;
     public final T2 _2;
@@ -38,8 +38,9 @@ public class Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
     public final T33 _33;
     public final T34 _34;
     public final T35 _35;
+    public final T36 _36;
     
-    public Tuple35(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31, T32 _32, T33 _33, T34 _34, T35 _35) {
+    public Tuple36(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31, T32 _32, T33 _33, T34 _34, T35 _35, T36 _36) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;
@@ -75,27 +76,7 @@ public class Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         this._33 = _33;
         this._34 = _34;
         this._35 = _35;
-    }
-    
-    /**
-     * @return this tuple with {@code t} prepended to the left.
-     */
-    public <T> Tuple36<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> prepend(T t) {
-        return Tuple.of(t, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return this tuple with {@code t} appended to the right.
-     */
-    public <T> Tuple36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T> append(T t) {
-        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, t);
-    }
-    
-    /**
-     * @return this tuple with {@code t} joined to the right.
-     */
-    public <A1> Tuple36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, A1> join(Tuple1<A1> t) {
-        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, t._1);
+        this._36 = _36;
     }
     
     /**
@@ -335,243 +316,257 @@ public class Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
     public Tuple34<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> take34() {
         return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25 ,_26, _27, _28, _29, _30, _31, _32, _33, _34);
     }
-
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple34<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop1() {
-        return Tuple.of(_2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
     
     /**
-     * @return a suffix of this tuple.
+     * @return a prefix of this tuple.
      */
-    public Tuple33<T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop2() {
-        return Tuple.of(_3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple32<T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop3() {
-        return Tuple.of(_4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple31<T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop4() {
-        return Tuple.of(_5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple30<T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop5() {
-        return Tuple.of(_6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple29<T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop6() {
-        return Tuple.of(_7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple28<T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop7() {
-        return Tuple.of(_8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple27<T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop8() {
-        return Tuple.of(_9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple26<T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop9() {
-        return Tuple.of(_10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple25<T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop10() {
-        return Tuple.of(_11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple24<T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop11() {
-        return Tuple.of(_12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple23<T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop12() {
-        return Tuple.of(_13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> take35() {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25 ,_26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
     }
 
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple22<T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop13() {
-        return Tuple.of(_14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple35<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop1() {
+        return Tuple.of(_2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple34<T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop2() {
+        return Tuple.of(_3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple33<T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop3() {
+        return Tuple.of(_4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple32<T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop4() {
+        return Tuple.of(_5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple31<T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop5() {
+        return Tuple.of(_6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple30<T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop6() {
+        return Tuple.of(_7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple29<T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop7() {
+        return Tuple.of(_8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple28<T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop8() {
+        return Tuple.of(_9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple27<T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop9() {
+        return Tuple.of(_10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple26<T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop10() {
+        return Tuple.of(_11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple25<T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop11() {
+        return Tuple.of(_12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple24<T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop12() {
+        return Tuple.of(_13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
 
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple21<T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop14() {
-        return Tuple.of(_15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple20<T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop15() {
-        return Tuple.of(_16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
-    }
-    
-    /**
-     * @return a suffix of this tuple.
-     */
-    public Tuple19<T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop16() {
-        return Tuple.of(_17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple23<T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop13() {
+        return Tuple.of(_14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
 
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple18<T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop17() {
-        return Tuple.of(_18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple22<T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop14() {
+        return Tuple.of(_15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple17<T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop18() {
-        return Tuple.of(_19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple21<T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop15() {
+        return Tuple.of(_16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple16<T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop19() {
-        return Tuple.of(_20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple20<T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop16() {
+        return Tuple.of(_17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple19<T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop17() {
+        return Tuple.of(_18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple15<T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop20() {
-        return Tuple.of(_21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple18<T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop18() {
+        return Tuple.of(_19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple14<T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop21() {
-        return Tuple.of(_22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple17<T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop19() {
+        return Tuple.of(_20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple13<T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop22() {
-        return Tuple.of(_23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple16<T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop20() {
+        return Tuple.of(_21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple12<T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop23() {
-        return Tuple.of(_24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple15<T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop21() {
+        return Tuple.of(_22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple11<T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop24() {
-        return Tuple.of(_25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple14<T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop22() {
+        return Tuple.of(_23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple10<T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> drop25() {
-        return Tuple.of(_26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple13<T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop23() {
+        return Tuple.of(_24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple9<T27, T28, T29, T30, T31, T32, T33, T34, T35> drop26() {
-        return Tuple.of(_27, _28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple12<T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop24() {
+        return Tuple.of(_25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple8<T28, T29, T30, T31, T32, T33, T34, T35> drop27() {
-        return Tuple.of(_28, _29, _30, _31, _32, _33, _34, _35);
+    public Tuple11<T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop25() {
+        return Tuple.of(_26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple7<T29, T30, T31, T32, T33, T34, T35> drop28() {
-        return Tuple.of(_29, _30, _31, _32, _33, _34, _35);
+    public Tuple10<T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> drop26() {
+        return Tuple.of(_27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple6<T30, T31, T32, T33, T34, T35> drop29() {
-        return Tuple.of(_30, _31, _32, _33, _34, _35);
+    public Tuple9<T28, T29, T30, T31, T32, T33, T34, T35, T36> drop27() {
+        return Tuple.of(_28, _29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple5<T31, T32, T33, T34, T35> drop30() {
-        return Pair.of(_31, _32, _33, _34, _35);
+    public Tuple8<T29, T30, T31, T32, T33, T34, T35, T36> drop28() {
+        return Tuple.of(_29, _30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple4<T32, T33, T34, T35> drop31() {
-        return Pair.of(_32, _33, _34, _35);
+    public Tuple7<T30, T31, T32, T33, T34, T35, T36> drop29() {
+        return Tuple.of(_30, _31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple3<T33, T34, T35> drop32() {
-        return Pair.of(_33, _34, _35);
+    public Tuple6<T31, T32, T33, T34, T35, T36> drop30() {
+        return Pair.of(_31, _32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Pair<T34, T35> drop33() {
-        return Pair.of(_34, _35);
+    public Tuple5<T32, T33, T34, T35, T36> drop31() {
+        return Pair.of(_32, _33, _34, _35, _36);
     }
     
     /**
      * @return a suffix of this tuple.
      */
-    public Tuple1<T35> drop34() {
-        return Tuple.of(_35);
+    public Tuple4<T33, T34, T35, T36> drop32() {
+        return Pair.of(_33, _34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple3<T34, T35, T36> drop33() {
+        return Tuple.of(_34, _35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Pair<T35, T36> drop34() {
+        return Pair.of(_35, _36);
+    }
+    
+    /**
+     * @return a suffix of this tuple.
+     */
+    public Tuple1<T36> drop35() {
+        return Tuple.of(_36);
     }
     
     public T1 get_1() {
@@ -735,7 +730,11 @@ public class Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
         return _35;
     }
     
+    public T36 get_36() {
+        return _36;
+    }
+    
     public Object[] toArray() {
-        return new Object[]{_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35};
+        return new Object[]{_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36};
     }
 }

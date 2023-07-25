@@ -277,7 +277,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing element {@code e1}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1));
     }
@@ -285,7 +284,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1} and {@code e2}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2));
     }
@@ -293,7 +291,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2} and {@code e3}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3));
     }
@@ -301,7 +298,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3} and {@code e4}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4));
     }
@@ -309,7 +305,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5));
     }
@@ -317,7 +312,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
@@ -325,7 +319,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and {@code e7}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
     }
@@ -333,7 +326,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7} and {@code e8}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
     }
@@ -341,7 +333,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8} and {@code e9}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
     }
@@ -349,7 +340,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9} and {@code e10}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
     }
@@ -357,7 +347,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10} and {@code e11}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
     }
@@ -365,7 +354,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11} and {@code e12}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
     }
@@ -373,7 +361,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12} and {@code e13}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
     }
@@ -381,7 +368,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13} and {@code e14}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
     }
@@ -389,7 +375,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14} and {@code e15}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
     }
@@ -397,7 +382,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15} and {@code e16}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
     }
@@ -405,7 +389,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16} and {@code e17}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
     }
@@ -413,7 +396,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17} and {@code e18}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
     }
@@ -421,7 +403,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18} and {@code e19}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
     }
@@ -429,7 +410,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19} and {@code e20}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
     }
@@ -437,7 +417,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20} and {@code e21}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
     }
@@ -445,7 +424,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21} and {@code e22}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
     }
@@ -453,7 +431,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22} and {@code e23}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
     }
@@ -461,7 +438,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23} and {@code e24}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
     }
@@ -469,7 +445,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24} and {@code e25}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25));
     }
@@ -477,7 +452,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25} and {@code e26}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26));
     }
@@ -485,7 +459,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26} and {@code e27}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27));
     }
@@ -493,7 +466,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27} and {@code e28}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28));
     }
@@ -501,7 +473,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28} and {@code e29}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
     }
@@ -509,7 +480,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29} and {@code e30}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
@@ -517,7 +487,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30} and {@code e31}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31));
     }
@@ -525,7 +494,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31} and {@code e32}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32));
     }
@@ -533,7 +501,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32} and {@code e33}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33));
     }
@@ -541,17 +508,22 @@ public abstract class Collections {
     /**
      * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33} and {@code e34}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34) {
         return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34));
     }
     
     /**
-     * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34}, {@code e35} and {@code elements}.
+     * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34} and {@code e35}.
      */
-    @SuppressWarnings("unchecked")
-    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35, T... elements) {
-        return newList(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35), elements));
+    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35) {
+        return java.util.Collections.unmodifiableList(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35));
+    }
+    
+    /**
+     * @return some implementation of a list containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34}, {@code e35}, {@code e36} and {@code elements}.
+     */
+    public static final <T> List<T> newList(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35, T e36, T... elements) {
+        return newList(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35, e36), elements));
     }
     
     /**
@@ -634,7 +606,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1} and {@code e2}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2) {
         return newSet(Arrays.asList(e1, e2));
     }
@@ -642,7 +613,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2} and {@code e3}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3) {
         return newSet(Arrays.asList(e1, e2, e3));
     }
@@ -650,7 +620,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3} and {@code e4}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4) {
         return newSet(Arrays.asList(e1, e2, e3, e4));
     }
@@ -658,7 +627,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5));
     }
@@ -666,7 +634,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
@@ -674,7 +641,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and {@code e7}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
     }
@@ -682,7 +648,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7} and {@code e8}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
     }
@@ -690,7 +655,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8} and {@code e9}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
     }
@@ -698,7 +662,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9} and {@code e10}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
     }
@@ -706,7 +669,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10} and {@code e11}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
     }
@@ -714,7 +676,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11} and {@code e12}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
     }
@@ -722,7 +683,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12} and {@code e13}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
     }
@@ -730,7 +690,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13} and {@code e14}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
     }
@@ -738,7 +697,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14} and {@code e15}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
     }
@@ -746,7 +704,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15} and {@code e16}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
     }
@@ -754,7 +711,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16} and {@code e17}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
     }
@@ -762,7 +718,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17} and {@code e18}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
     }
@@ -770,7 +725,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18} and {@code e19}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
     }
@@ -778,7 +732,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19} and {@code e20}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
     }
@@ -786,7 +739,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20} and {@code e21}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
     }
@@ -794,7 +746,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21} and {@code e22}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
     }
@@ -802,7 +753,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22} and {@code e23}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
     }
@@ -810,7 +760,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23} and {@code e24}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
     }
@@ -818,7 +767,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24} and {@code e25}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25));
     }
@@ -826,7 +774,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25} and {@code e26}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26));
     }
@@ -834,7 +781,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26} and {@code e27}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27));
     }
@@ -842,7 +788,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27} and {@code e28}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28));
     }
@@ -850,7 +795,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28} and {@code e29}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
     }
@@ -858,7 +802,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29} and {@code e30}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
@@ -866,7 +809,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30} and {@code e31}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31));
     }
@@ -874,7 +816,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31} and {@code e32}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32));
     }
@@ -882,7 +823,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32} and {@code e33}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33));
     }
@@ -890,17 +830,22 @@ public abstract class Collections {
     /**
      * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33} and {@code e34}.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34) {
         return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34));
     }
     
     /**
-     * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34}, {@code e35} and {@code elements}.
+     * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34} and {@code e35}.
      */
-    @SuppressWarnings("unchecked")
-    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35, T... elements) {
-        return newSet(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35), elements));
+    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35) {
+        return newSet(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35));
+    }
+    
+    /**
+     * @return some implementation of a set containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34}, {@code e35}, {@code e36} and {@code elements}.
+     */
+    public static final <T> Set<T> newSet(T e1, T e2, T e3, T e4, T e5, T e6, T e7, T e8, T e9, T e10, T e11, T e12, T e13, T e14, T e15, T e16, T e17, T e18, T e19, T e20, T e21, T e22, T e23, T e24, T e25, T e26, T e27, T e28, T e29, T e30, T e31, T e32, T e33, T e34, T e35, T e36, T... elements) {
+        return newSet(concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35, e36), elements));
     }
     
     private static final Class<?> unmodifiableListClass = java.util.Collections.unmodifiableList(emptyList()).getClass();
@@ -1142,7 +1087,6 @@ public abstract class Collections {
     /**
      * @return some implementation of a Map containing {@code e1}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1));
     }
@@ -1152,7 +1096,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1} and {@code e2}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2));
     }
@@ -1162,7 +1105,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2} and {@code e3}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3));
     }
@@ -1172,7 +1114,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3} and {@code e4}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4));
     }
@@ -1182,7 +1123,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5));
     }
@@ -1192,7 +1132,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6));
     }
@@ -1202,7 +1141,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and {@code e7}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7));
     }
@@ -1212,7 +1150,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7} and {@code e8}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8));
     }
@@ -1222,7 +1159,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8} and {@code e9}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9));
     }
@@ -1232,7 +1168,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9} and {@code e10}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10));
     }
@@ -1242,7 +1177,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10} and {@code e11}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11));
     }
@@ -1252,7 +1186,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11} and {@code e12}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12));
     }
@@ -1262,7 +1195,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12} and {@code e13}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13));
     }
@@ -1272,7 +1204,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13} and {@code e14}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14));
     }
@@ -1282,7 +1213,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14} and {@code e15}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15));
     }
@@ -1292,7 +1222,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15} and {@code e16}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16));
     }
@@ -1302,7 +1231,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16} and {@code e17}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17));
     }
@@ -1312,7 +1240,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17} and {@code e18}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18));
     }
@@ -1322,7 +1249,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18} and {@code e19}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19));
     }
@@ -1332,7 +1258,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19} and {@code e20}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20));
     }
@@ -1342,7 +1267,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20} and {@code e21}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21));
     }
@@ -1352,7 +1276,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21} and {@code e22}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22));
     }
@@ -1362,7 +1285,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22} and {@code e23}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23));
     }
@@ -1372,7 +1294,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23} and {@code e24}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24));
     }
@@ -1382,7 +1303,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24} and {@code e25}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25));
     }
@@ -1392,7 +1312,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25} and {@code e26}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26));
     }
@@ -1402,7 +1321,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26} and {@code e27}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27));
     }
@@ -1412,7 +1330,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27} and {@code e28}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28));
     }
@@ -1422,7 +1339,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28} and {@code e29}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29));
     }
@@ -1432,7 +1348,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29} and {@code e30}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
@@ -1442,7 +1357,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30} and {@code e31}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30));
     }
@@ -1452,7 +1366,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31} and {@code e32}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32));
     }
@@ -1462,7 +1375,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32} and {@code e33}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V> e33) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33));
     }
@@ -1472,7 +1384,6 @@ public abstract class Collections {
      * 
      * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33} and {@code e34}.
      */
-    @SuppressWarnings("unchecked")
     public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V> e33, Map.Entry<? extends K, ? extends V> e34) {
         return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34));
     }
@@ -1480,11 +1391,19 @@ public abstract class Collections {
     /**
      * <i>Unsafe!</i> Fails if given duplicate keys.
      * 
-     * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34} {@code e35} and {@code elements}.
+     * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34} and {@code e35}.
      */
-    @SuppressWarnings("unchecked")
-    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V> e33, Map.Entry<? extends K, ? extends V> e34, Map.Entry<? extends K, ? extends V> e35, Map.Entry<? extends K, ? extends V>... elements) {
-        return newMap(SemiGroups.<V>fail(), concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35), elements));
+    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V> e33, Map.Entry<? extends K, ? extends V> e34, Map.Entry<? extends K, ? extends V> e35) {
+        return newMap(SemiGroups.<V>fail(), Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35));
+    }
+    
+    /**
+     * <i>Unsafe!</i> Fails if given duplicate keys.
+     * 
+     * @return some implementation of a Map containing elements {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6}, {@code e7}, {@code e8}, {@code e9}, {@code e10}, {@code e11}, {@code e12}, {@code e13}, {@code e14}, {@code e15}, {@code e16}, {@code e17}, {@code e18}, {@code e19}, {@code e20}, {@code e21}, {@code e22}, {@code e23}, {@code e24}, {@code e25}, {@code e26}, {@code e27}, {@code e28}, {@code e29}, {@code e30}, {@code e31}, {@code e32}, {@code e33}, {@code e34}, {@code e35}, {@code e36} and {@code elements}.
+     */
+    public static final <K, V> Map<K, V> newMap(Map.Entry<? extends K, ? extends V> e1, Map.Entry<? extends K, ? extends V> e2, Map.Entry<? extends K, ? extends V> e3, Map.Entry<? extends K, ? extends V> e4, Map.Entry<? extends K, ? extends V> e5, Map.Entry<? extends K, ? extends V> e6, Map.Entry<? extends K, ? extends V> e7, Map.Entry<? extends K, ? extends V> e8, Map.Entry<? extends K, ? extends V> e9, Map.Entry<? extends K, ? extends V> e10, Map.Entry<? extends K, ? extends V> e11, Map.Entry<? extends K, ? extends V> e12, Map.Entry<? extends K, ? extends V> e13, Map.Entry<? extends K, ? extends V> e14, Map.Entry<? extends K, ? extends V> e15, Map.Entry<? extends K, ? extends V> e16, Map.Entry<? extends K, ? extends V> e17, Map.Entry<? extends K, ? extends V> e18, Map.Entry<? extends K, ? extends V> e19, Map.Entry<? extends K, ? extends V> e20, Map.Entry<? extends K, ? extends V> e21, Map.Entry<? extends K, ? extends V> e22, Map.Entry<? extends K, ? extends V> e23, Map.Entry<? extends K, ? extends V> e24, Map.Entry<? extends K, ? extends V> e25, Map.Entry<? extends K, ? extends V> e26, Map.Entry<? extends K, ? extends V> e27, Map.Entry<? extends K, ? extends V> e28, Map.Entry<? extends K, ? extends V> e29, Map.Entry<? extends K, ? extends V> e30, Map.Entry<? extends K, ? extends V> e31, Map.Entry<? extends K, ? extends V> e32, Map.Entry<? extends K, ? extends V> e33, Map.Entry<? extends K, ? extends V> e34, Map.Entry<? extends K, ? extends V> e35, Map.Entry<? extends K, ? extends V> e36, Map.Entry<? extends K, ? extends V>... elements) {
+        return newMap(SemiGroups.<V>fail(), concat(Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, e26, e27, e28, e29, e30, e31, e32, e33, e34, e35, e36), elements));
     }
     
     /**

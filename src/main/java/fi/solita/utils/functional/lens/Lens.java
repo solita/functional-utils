@@ -51,6 +51,7 @@ import fi.solita.utils.functional.Tuple._32;
 import fi.solita.utils.functional.Tuple._33;
 import fi.solita.utils.functional.Tuple._34;
 import fi.solita.utils.functional.Tuple._35;
+import fi.solita.utils.functional.Tuple._36;
 import fi.solita.utils.functional.Tuple._4;
 import fi.solita.utils.functional.Tuple._5;
 import fi.solita.utils.functional.Tuple._6;
@@ -982,6 +983,25 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 Object[] vs = ((Tuple)t).toArray();
                 vs[34] = f.apply(t.get_35());
                 return (_35<T>) Tuple.of(vs);
+            }
+        });
+    }
+    
+    /**
+     * @return lens targetting field 35 of a tuple.
+     */
+    public static final <T> Lens<_36<T>,T> _36() {
+        return new Lens<_36<T>, T>(new Apply<_36<T>, T>() {
+            public T apply(_36<T> t) {
+                return t.get_36();
+            }
+        }, new Function2<_36<T>, Apply<T,T>, _36<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _36<T> apply(_36<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[35] = f.apply(t.get_36());
+                return (_36<T>) Tuple.of(vs);
             }
         });
     }

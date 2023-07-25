@@ -25,7 +25,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple1<T> tuple) {
         return Arrays.asList(tuple._1);
     }
@@ -33,7 +32,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple2<? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2);
     }
@@ -41,7 +39,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple3<? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3);
     }
@@ -49,7 +46,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple4<? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4);
     }
@@ -57,7 +53,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple5<? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5);
     }
@@ -65,7 +60,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Tuple6<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6);
     }
@@ -73,7 +67,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple7<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7);
     }
@@ -81,7 +74,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple8<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8);
     }
@@ -89,7 +81,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple9<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9);
     }
@@ -97,7 +88,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple10<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10);
     }
@@ -105,7 +95,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple11<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11);
     }
@@ -113,7 +102,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple12<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12);
     }
@@ -121,7 +109,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple13<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13);
     }
@@ -129,7 +116,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple14<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14);
     }
@@ -137,7 +123,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple15<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15);
     }
@@ -145,7 +130,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple16<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16);
     }
@@ -153,7 +137,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple17<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17);
     }
@@ -161,7 +144,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple18<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18);
     }
@@ -169,7 +151,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple19<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19);
     }
@@ -177,7 +158,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple20<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20);
     }
@@ -185,7 +165,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple21<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21);
     }
@@ -193,7 +172,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple22<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22);
     }
@@ -201,7 +179,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple23<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23);
     }
@@ -209,7 +186,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple24<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24);
     }
@@ -217,7 +193,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple25<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25);
     }
@@ -225,7 +200,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple26<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26);
     }
@@ -233,7 +207,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple27<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27);
     }
@@ -241,7 +214,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple28<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28);
     }
@@ -249,7 +221,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple29<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29);
     }
@@ -257,7 +228,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple30<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30);
     }
@@ -265,7 +235,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple31<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31);
     }
@@ -273,7 +242,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple32<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32);
     }
@@ -281,7 +249,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple33<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32, tuple._33);
     }
@@ -289,7 +256,6 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple34<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32, tuple._33, tuple._34);
     }
@@ -297,9 +263,15 @@ public abstract class Tuple implements Serializable {
     /**
      * @return {@code tuple} as a list of common super type.
      */
-    @SuppressWarnings({ "unchecked" })
     public static <T> List<T> asList(Tuple35<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
         return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32, tuple._33, tuple._34, tuple._35);
+    }
+    
+    /**
+     * @return {@code tuple} as a list of common super type.
+     */
+    public static <T> List<T> asList(Tuple36<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
+        return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32, tuple._33, tuple._34, tuple._35, tuple._36);
     }
     
     /**
@@ -345,8 +317,9 @@ public abstract class Tuple implements Serializable {
             case 33: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32]);
             case 34: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33]);
             case 35: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34]);
+            case 36: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34], ts[35]);
         }
-        throw new UnsupportedOperationException("Tuple29 not implemented");
+        throw new UnsupportedOperationException("Tuple37 not implemented");
     }
     
     /**
@@ -601,6 +574,13 @@ public abstract class Tuple implements Serializable {
         return new Tuple35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> Tuple36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31, T32 _32, T33 _33, T34 _34, T35 _35, T36 _36) {
+        return new Tuple36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36);
+    }
+    
     public static interface _1<T> {
         /**
          * @return value in position 1. Normally you should use field {@code _1} instead.
@@ -844,6 +824,13 @@ public abstract class Tuple implements Serializable {
          * @return value in position 35. Normally you should use field {@code _35} instead.
          */
         T get_35();
+    }
+    
+    public static interface _36<T> {
+        /**
+         * @return value in position 35. Normally you should use field {@code _36} instead.
+         */
+        T get_36();
     }
     
     public static interface Tailable<T> {

@@ -24,7 +24,6 @@ import static fi.solita.utils.functional.Functional.split;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.Functional.transpose;
-import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -150,7 +149,6 @@ public class FunctionalTest {
     
     @Test
     public void testName() {
-        @SuppressWarnings("unchecked")
         Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
         Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
             @Override
