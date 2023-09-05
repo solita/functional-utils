@@ -74,6 +74,8 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
      * @return collapsed value whether this was defined or not.
      */
     public abstract <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone);
+
+    public abstract T orElse(ApplyZero<? extends T> ifNone);
     
     /**
      * @return whether this {@code Option} contains a value or not.
@@ -117,6 +119,11 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     @Override
     public final <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifNone;
+    }
+
+    @Override
+    public T orElse(ApplyZero<? extends T> ifNone) {
+        return ifNone.get();
     }
     
     @Override
@@ -175,6 +182,11 @@ final class SomeImpl<T> extends Option<T> {
     @Override
     public final <R> R fold(Apply<? super T, ? extends R> ifSome, R ifNone) {
         return ifSome.apply(t);
+    }
+
+    @Override
+    public T orElse(ApplyZero<? extends T> ifNone) {
+        return t;
     }
 
     @Override
