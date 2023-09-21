@@ -1,63 +1,13 @@
 package fi.solita.utils.functional.lens;
 
-import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Collections.newSortedSet;
+import fi.solita.utils.functional.*;
+import fi.solita.utils.functional.Tuple.*;
+
+import java.util.*;
+
+import static fi.solita.utils.functional.Collections.*;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Option.Some;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-
-import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.ApplyBi;
-import fi.solita.utils.functional.Either;
-import fi.solita.utils.functional.Function;
-import fi.solita.utils.functional.Function2;
-import fi.solita.utils.functional.FunctionalM;
-import fi.solita.utils.functional.Option;
-import fi.solita.utils.functional.Pair;
-import fi.solita.utils.functional.SemiGroups;
-import fi.solita.utils.functional.Tuple;
-import fi.solita.utils.functional.Tuple._1;
-import fi.solita.utils.functional.Tuple._10;
-import fi.solita.utils.functional.Tuple._11;
-import fi.solita.utils.functional.Tuple._12;
-import fi.solita.utils.functional.Tuple._13;
-import fi.solita.utils.functional.Tuple._14;
-import fi.solita.utils.functional.Tuple._15;
-import fi.solita.utils.functional.Tuple._16;
-import fi.solita.utils.functional.Tuple._17;
-import fi.solita.utils.functional.Tuple._18;
-import fi.solita.utils.functional.Tuple._19;
-import fi.solita.utils.functional.Tuple._2;
-import fi.solita.utils.functional.Tuple._20;
-import fi.solita.utils.functional.Tuple._21;
-import fi.solita.utils.functional.Tuple._22;
-import fi.solita.utils.functional.Tuple._23;
-import fi.solita.utils.functional.Tuple._24;
-import fi.solita.utils.functional.Tuple._25;
-import fi.solita.utils.functional.Tuple._26;
-import fi.solita.utils.functional.Tuple._27;
-import fi.solita.utils.functional.Tuple._28;
-import fi.solita.utils.functional.Tuple._29;
-import fi.solita.utils.functional.Tuple._3;
-import fi.solita.utils.functional.Tuple._30;
-import fi.solita.utils.functional.Tuple._31;
-import fi.solita.utils.functional.Tuple._32;
-import fi.solita.utils.functional.Tuple._33;
-import fi.solita.utils.functional.Tuple._34;
-import fi.solita.utils.functional.Tuple._35;
-import fi.solita.utils.functional.Tuple._36;
-import fi.solita.utils.functional.Tuple._4;
-import fi.solita.utils.functional.Tuple._5;
-import fi.solita.utils.functional.Tuple._6;
-import fi.solita.utils.functional.Tuple._7;
-import fi.solita.utils.functional.Tuple._8;
-import fi.solita.utils.functional.Tuple._9;
 
 /**
  * Purely functional getter and setter. 
@@ -988,7 +938,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return lens targetting field 35 of a tuple.
+     * @return lens targetting field 36 of a tuple.
      */
     public static final <T> Lens<_36<T>,T> _36() {
         return new Lens<_36<T>, T>(new Apply<_36<T>, T>() {
@@ -1002,6 +952,25 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 Object[] vs = ((Tuple)t).toArray();
                 vs[35] = f.apply(t.get_36());
                 return (_36<T>) Tuple.of(vs);
+            }
+        });
+    }
+
+    /**
+     * @return lens targetting field 37 of a tuple.
+     */
+    public static final <T> Lens<_37<T>,T> _37() {
+        return new Lens<_37<T>, T>(new Apply<_37<T>, T>() {
+            public T apply(_37<T> t) {
+                return t.get_37();
+            }
+        }, new Function2<_37<T>, Apply<T,T>, _37<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _37<T> apply(_37<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[36] = f.apply(t.get_37());
+                return (_37<T>) Tuple.of(vs);
             }
         });
     }
