@@ -52,7 +52,10 @@ public abstract class Monoids {
     public static final <T> Monoid<Apply<T,T>> endo() {
         return (Monoid<Apply<T,T>>)(Object)endo;
     }
-    
+
+    /**
+     * Preserves iteration order
+     */
     @SuppressWarnings("unchecked")
     public static final <T> Monoid<Set<T>> setUnion() {
         return (Monoid<Set<T>>)(Object)setUnion;

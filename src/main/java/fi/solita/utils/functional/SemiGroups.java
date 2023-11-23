@@ -1,15 +1,12 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public abstract class SemiGroups {
     
@@ -97,7 +94,10 @@ public abstract class SemiGroups {
     public static final <T> SemiGroup<T> minBy(Comparator<? super T> comparator) {
         return new MinBy<T>(comparator);
     }
-    
+
+    /**
+     * Preserves iteration order
+     */
     public static final <T> SemiGroup<Set<T>> setUnion() {
         return Monoids.setUnion();
     }
@@ -283,7 +283,7 @@ public abstract class SemiGroups {
           if (second == null || second.isEmpty()) {
               return first;
           }
-          return newSet(concat(first, second));
+          return new LinkedHashSet<T>(newList(concat(first, second)));
       }
   }
   

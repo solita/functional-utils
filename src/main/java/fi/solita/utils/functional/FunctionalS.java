@@ -129,51 +129,51 @@ public abstract class FunctionalS extends FunctionalA {
     
     
     /**
-     * @return Set union of {@code e1} and {@code e2}.
+     * @return Set union of {@code e1} and {@code e2}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), newList(e1, e2));
     }
     
     /**
-     * @return Set union of {@code e1}, {@code e2} and {@code e3}.
+     * @return Set union of {@code e1}, {@code e2} and {@code e3}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), newList(e1, e2, e3));
     }
     
     /**
-     * @return Set union of {@code e1}, {@code e2}, {@code e3} and {@code e4}.
+     * @return Set union of {@code e1}, {@code e2}, {@code e3} and {@code e4}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), newList(e1, e2, e3, e4));
     }
     
     /**
-     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}.
+     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4} and {@code e5}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), newList(e1, e2, e3, e4, e5));
     }
     
     /**
-     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}.
+     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5} and {@code e6}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), newList(e1, e2, e3, e4, e5, e6));
     }
     
     /**
-     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and all in {@code es}.
+     * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and all in {@code es}. Preserves iteration order.
      */
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
     }
     
     /**
-     * @return Set union of Sets in {@code es}.
+     * @return Set union of Sets in {@code es}. Preserves iteration order.
      */
-    public static final <T> Set<T> union(Iterable<Set<T>> es) {
+    public static final <T> Set<T> union(Iterable<? extends Set<T>> es) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), es);
     }
     
@@ -224,7 +224,7 @@ public abstract class FunctionalS extends FunctionalA {
     /**
      * @return Set intersection of Sets in {@code es}.
      */
-    public static final <T> Set<T> intersection(Iterable<Set<T>> es) {
+    public static final <T> Set<T> intersection(Iterable<? extends Set<T>> es) {
         return FunctionalImpl.fold(Collections.<T>emptySet(), SemiGroups.<T>setIntersection(), es);
     }
     
