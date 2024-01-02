@@ -1,7 +1,7 @@
 package fi.solita.utils.functional.lens;
 
 import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.ApplyBi;
+import fi.solita.utils.functional.Apply2;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 
@@ -9,9 +9,9 @@ import fi.solita.utils.functional.Function2;
  * A setter of a specific member.
  */
 public class Setter<T,F> {
-    private final ApplyBi<T,Apply<F,F>,T> f2;
+    private final Apply2<T,Apply<F,F>,T> f2;
     
-    public Setter(ApplyBi<T, Apply<F, F>, T> f2) {
+    public Setter(Apply2<T, Apply<F, F>, T> f2) {
         this.f2 = f2;
     }
 

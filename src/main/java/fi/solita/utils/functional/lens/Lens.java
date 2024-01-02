@@ -15,7 +15,7 @@ import static fi.solita.utils.functional.Option.Some;
 public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     public final Apply<? super T, F> getter;
     
-    private Lens(Apply<? super T, F> getter, Function2<T,Apply<F,F>,T> setter) {
+    private Lens(Apply<? super T, F> getter, Apply2<T,Apply<F,F>,T> setter) {
         super(setter);
         this.getter = getter;
     }

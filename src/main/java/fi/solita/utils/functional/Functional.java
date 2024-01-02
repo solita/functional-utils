@@ -53,6 +53,13 @@ public abstract class Functional extends FunctionalC {
     public static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<S> xs) {
         return FunctionalImpl.map(f, xs);
     }
+    
+    /**
+     * @return all elements in {@code xs} transformed with {@code f}.
+     */
+    public static final <S1, S2, T> Iterable<T> map(ApplyBi<? super S1, ? super S2, ? extends T> f, Iterable<? extends Map.Entry<S1, S2>> xs) {
+        return FunctionalImpl.map(Function.of(f), xs);
+    }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1} and {@code f2} respectively.
@@ -667,7 +674,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return {@code Some(f(a,b,c))} if {@code a} and {@code b} and {@code c} are defined. {@code None()} otherwise.
      */
-    public static final <A,B,C,T> Option<T> map3(Option<A> a, Option<B> b, Option<C> c, Function3<A,B,C,T> f) {
+    public static final <A,B,C,T> Option<T> map3(Option<A> a, Option<B> b, Option<C> c, Apply3<A,B,C,T> f) {
         for (A aa: a) {
             for (B bb: b) {
                 for (C cc: c) {
@@ -683,7 +690,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return {@code Some(f(a,b,c,d))} if {@code a} and {@code b} and {@code c} and {@code d} are defined. {@code None()} otherwise.
      */
-    public static final <A,B,C,D,T> Option<T> map4(Option<A> a, Option<B> b, Option<C> c, Option<D> d, Function4<A,B,C,D,T> f) {
+    public static final <A,B,C,D,T> Option<T> map4(Option<A> a, Option<B> b, Option<C> c, Option<D> d, Apply4<A,B,C,D,T> f) {
         for (A aa: a) {
             for (B bb: b) {
                 for (C cc: c) {

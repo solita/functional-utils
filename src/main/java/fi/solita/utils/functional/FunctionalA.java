@@ -74,6 +74,13 @@ public abstract class FunctionalA extends FunctionalM {
     }
     
     /**
+     * @see Functional#map(ApplyBi, Iterable)
+     */
+    public static final <S1, S2, T> Iterable<T> map(ApplyBi<? super S1, ? super S2, ? extends T> f, Map.Entry<S1, S2>[] xs) {
+        return FunctionalImpl.map(Function.of(f), newList(xs));
+    }
+    
+    /**
      * @see Functional#map(Apply, Apply, Iterable)
      */
     public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, S[] elements) {
