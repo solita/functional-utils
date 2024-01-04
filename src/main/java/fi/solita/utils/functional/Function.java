@@ -493,6 +493,186 @@ public abstract class Function {
             }
         };
     }
+    
+    /**
+     * Partially apply {@code arg1} to {@code f}
+     */
+    public static final <T1,T2,R> Function1<T2,R> ap(final Apply2<T1,T2,R> f, final T1 arg1) {
+        return new Function1<T2,R>() {
+            @Override
+            public final R apply(T2 arg2) {
+                return f.apply(arg1, arg2);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} to {@code f}
+     */
+    public static final <T1,T2,T3,R> Function2<T2,T3,R> ap(final Apply3<T1,T2,T3,R> f, final T1 arg1) {
+        return new Function2<T2,T3,R>() {
+            @Override
+            public final R apply(T2 arg2, T3 arg3) {
+                return f.apply(arg1, arg2, arg3);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} and {@code arg2} to {@code f}
+     */
+    public static final <T1,T2,T3,R> Function1<T3,R> ap(final Apply3<T1,T2,T3,R> f, final T1 arg1, final T2 arg2) {
+        return new Function1<T3,R>() {
+            @Override
+            public final R apply(T3 arg3) {
+                return f.apply(arg1, arg2, arg3);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,R> Function3<T2,T3,T4,R> ap(final Apply4<T1,T2,T3,T4,R> f, final T1 arg1) {
+        return new Function3<T2,T3,T4,R>() {
+            @Override
+            public final R apply(T2 arg2, T3 arg3, T4 arg4) {
+                return f.apply(arg1, arg2, arg3, arg4);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} and {@code arg2} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,R> Function2<T3,T4,R> ap(final Apply4<T1,T2,T3,T4,R> f, final T1 arg1, final T2 arg2) {
+        return new Function2<T3,T4,R>() {
+            @Override
+            public final R apply(T3 arg3, T4 arg4) {
+                return f.apply(arg1, arg2, arg3, arg4);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2} and {@code arg3} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,R> Function1<T4,R> ap(final Apply4<T1,T2,T3,T4,R> f, final T1 arg1, final T2 arg2, final T3 arg3) {
+        return new Function1<T4,R>() {
+            @Override
+            public final R apply(T4 arg4) {
+                return f.apply(arg1, arg2, arg3, arg4);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,R> Function4<T2,T3,T4,T5,R> ap(final Apply5<T1,T2,T3,T4,T5,R> f, final T1 arg1) {
+        return new Function4<T2,T3,T4,T5,R>() {
+            @Override
+            public final R apply(T2 arg2, T3 arg3, T4 arg4, T5 arg5) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} and {@code arg2} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,R> Function3<T3,T4,T5,R> ap(final Apply5<T1,T2,T3,T4,T5,R> f, final T1 arg1, final T2 arg2) {
+        return new Function3<T3,T4,T5,R>() {
+            @Override
+            public final R apply(T3 arg3, T4 arg4, T5 arg5) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2} and {@code arg3} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,R> Function2<T4,T5,R> ap(final Apply5<T1,T2,T3,T4,T5,R> f, final T1 arg1, final T2 arg2, final T3 arg3) {
+        return new Function2<T4,T5,R>() {
+            @Override
+            public final R apply(T4 arg4, T5 arg5) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2}, {@code arg3} and {@code arg4} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,R> Function1<T5,R> ap(final Apply5<T1,T2,T3,T4,T5,R> f, final T1 arg1, final T2 arg2, final T3 arg3, final T4 arg4) {
+        return new Function1<T5,R>() {
+            @Override
+            public final R apply(T5 arg5) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,T6,R> Function5<T2,T3,T4,T5,T6,R> ap(final Apply6<T1,T2,T3,T4,T5,T6,R> f, final T1 arg1) {
+        return new Function5<T2,T3,T4,T5,T6,R>() {
+            @Override
+            public final R apply(T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1} and {@code arg2} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,T6,R> Function4<T3,T4,T5,T6,R> ap(final Apply6<T1,T2,T3,T4,T5,T6,R> f, final T1 arg1, final T2 arg2) {
+        return new Function4<T3,T4,T5,T6,R>() {
+            @Override
+            public final R apply(T3 arg3, T4 arg4, T5 arg5, T6 arg6) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2} and {@code arg3} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,T6,R> Function3<T4,T5,T6,R> ap(final Apply6<T1,T2,T3,T4,T5,T6,R> f, final T1 arg1, final T2 arg2, final T3 arg3) {
+        return new Function3<T4,T5,T6,R>() {
+            @Override
+            public final R apply(T4 arg4, T5 arg5, T6 arg6) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2}, {@code arg3} and {@code arg4} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,T6,R> Function2<T5,T6,R> ap(final Apply6<T1,T2,T3,T4,T5,T6,R> f, final T1 arg1, final T2 arg2, final T3 arg3, final T4 arg4) {
+        return new Function2<T5,T6,R>() {
+            @Override
+            public final R apply(T5 arg5, T6 arg6) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+            }
+        };
+    }
+    
+    /**
+     * Partially apply {@code arg1}, {@code arg2}, {@code arg3}, {@code arg4} and {@code arg5} to {@code f}
+     */
+    public static final <T1,T2,T3,T4,T5,T6,R> Function1<T6,R> ap(final Apply6<T1,T2,T3,T4,T5,T6,R> f, final T1 arg1, final T2 arg2, final T3 arg3, final T4 arg4, final T5 arg5) {
+        return new Function1<T6,R>() {
+            @Override
+            public final R apply(T6 arg6) {
+                return f.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+            }
+        };
+    }
 }
 
 class PartialApplicationHelper {
