@@ -3,7 +3,7 @@ package fi.solita.utils.functional;
 /**
  * Specialization of {@code Function1<T, Boolean>}.
  */
-public abstract class Predicate<T> extends Function1<T, Boolean> {
+public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred<T> {
     
     /**
      * @return concrete {@code Predicate} for abstract function {@code apply}.
