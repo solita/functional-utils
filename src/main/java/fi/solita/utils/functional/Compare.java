@@ -32,7 +32,24 @@ public abstract class Compare {
     }
     
     public static final <K, V> Ordering<Map<K,V>> byMap(final Comparator<? super K> keyComparator, final Comparator<? super V> valueComparator) {
-        return by(Transformers.<K,V>mapEntrySet(), byIterable(by(Transformers.<K,V>key(), keyComparator).then(by(Transformers.<K,V>value(), valueComparator))));
+        return by(Transformers.<K,V>mapEntrySet(), byIterable(byEntry(keyComparator, valueComparator)));
+    }
+    
+    public static final <L, R> Ordering<Map.Entry<L,R>> byEntry(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
+        return by(Transformers.<L,R>key(), leftComparator).then(by(Transformers.<L,R>value(), rightComparator));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <L, R> Ordering<Pair<L,R>> byPair(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
+        return (Ordering<Pair<L,R>>)(Object)byEntry(leftComparator, rightComparator);
+    }
+    
+    public static final <T1, T2, T3> Ordering<Tuple3<T1, T2, T3>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3) {
+        return Compare.<T1,Tuple3<T1, T2, T3>>by(Transformers.<T1>_1(), comparator1).thenBy(Transformers.<T2>_2(), comparator2).then(by(Transformers.<T3>_3(), comparator3));
+    }
+    
+    public static final <T1, T2, T3, T4> Ordering<Tuple4<T1, T2, T3, T4>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3, final Comparator<? super T4> comparator4) {
+        return Compare.<T1,Tuple4<T1, T2, T3, T4>>by(Transformers.<T1>_1(), comparator1).thenBy(Transformers.<T2>_2(), comparator2).then(by(Transformers.<T3>_3(), comparator3)).then(by(Transformers.<T4>_4(), comparator4));
     }
     
     /**

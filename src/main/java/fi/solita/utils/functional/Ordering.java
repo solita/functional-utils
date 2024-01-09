@@ -67,4 +67,32 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     public final Ordering<T> then(Comparator<? super T> next) {
         return apply(Pair.of(this, Ordering.of(next)));
     }
+    
+    /**
+     * @return composition of {@code this} and transformation to an element with natural ordering.
+     */
+    public final Ordering<T> thenBy(final Apply<? super T, ? extends Comparable<?>> next) {
+        return then(Compare.by(next));
+    }
+    
+    /**
+     * @return composition of {@code this} and transformation to an element with natural ordering.
+     */
+    public final <S extends Comparable<? super S>> Ordering<T> thenByOption(final Apply<? super T, ? extends Option<S>> next) {
+        return then(Compare.byOption(next));
+    }
+    
+    /**
+     * @return composition of {@code this} and {@code next} by transforming to a type comparable by {@code targetComparator}.
+     */
+    public final <S> Ordering<T> thenBy(final Apply<? super T, S> next, final Comparator<? super S> targetComparator) {
+        return then(Compare.by(next, targetComparator));
+    }
+    
+    /**
+     * @return composition of {@code this} and {@code next} by transforming to a type comparable by {@code targetComparator}.
+     */
+    public final <S> Ordering<T> thenByOption(final Apply<? super T, ? extends Option<S>> next, final Comparator<? super S> targetComparator) {
+        return then(Compare.byOption(next, targetComparator));
+    }
 }
