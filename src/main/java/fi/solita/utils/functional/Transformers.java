@@ -679,6 +679,12 @@ public abstract class Transformers {
             return source.get_37();
         }
     };
+    private static final Transformer<Tuple._38<?>,?> _38 = new Transformer<Tuple._38<?>,Object>() {
+        @Override
+        public final Object transform(fi.solita.utils.functional.Tuple._38<?> source) {
+            return source.get_38();
+        }
+    };
     
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._1<T>,T> _1() {
@@ -827,5 +833,9 @@ public abstract class Transformers {
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._37<T>,T> _37() {
         return (Transformer<Tuple._37<T>,T>)(Object)_37;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Tuple._38<T>,T> _38() {
+        return (Transformer<Tuple._38<T>,T>)(Object)_38;
     }
 }

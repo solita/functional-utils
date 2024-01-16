@@ -136,6 +136,13 @@ public class Tuple29<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
     }
     
     /**
+     * @return this tuple with {@code t} joined to the right.
+     */
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9> Tuple38<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, A1, A2, A3, A4, A5, A6, A7, A8, A9> join(Tuple9<A1,A2,A3,A4,A5,A6,A7,A8,A9> t) {
+        return Tuple.of(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9);
+    }
+    
+    /**
      * @return a prefix of this tuple.
      */
     public Tuple1<T1> take1() {
