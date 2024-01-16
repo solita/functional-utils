@@ -45,6 +45,7 @@ import fi.solita.utils.functional.Apply35;
 import fi.solita.utils.functional.Apply36;
 import fi.solita.utils.functional.Apply37;
 import fi.solita.utils.functional.Apply38;
+import fi.solita.utils.functional.Apply39;
 import fi.solita.utils.functional.Apply4;
 import fi.solita.utils.functional.Apply5;
 import fi.solita.utils.functional.Apply6;
@@ -92,6 +93,7 @@ import fi.solita.utils.functional.Tuple35;
 import fi.solita.utils.functional.Tuple36;
 import fi.solita.utils.functional.Tuple37;
 import fi.solita.utils.functional.Tuple38;
+import fi.solita.utils.functional.Tuple39;
 import fi.solita.utils.functional.Tuple4;
 import fi.solita.utils.functional.Tuple5;
 import fi.solita.utils.functional.Tuple6;
@@ -1141,6 +1143,49 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F36>,
                     ? extends Apply<? super T,F37>,
                     ? extends Apply<? super T,F38>> members, Apply38<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,T> constructor) {
+        return newBuilder(Tuple.asList(members), Function.of(constructor));
+    }
+    
+    public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39> Builder<T> of(
+            Tuple39<? extends Apply<? super T,F1>,
+                    ? extends Apply<? super T,F2>,
+                    ? extends Apply<? super T,F3>,
+                    ? extends Apply<? super T,F4>,
+                    ? extends Apply<? super T,F5>,
+                    ? extends Apply<? super T,F6>,
+                    ? extends Apply<? super T,F7>,
+                    ? extends Apply<? super T,F8>,
+                    ? extends Apply<? super T,F9>,
+                    ? extends Apply<? super T,F10>,
+                    ? extends Apply<? super T,F11>,
+                    ? extends Apply<? super T,F12>,
+                    ? extends Apply<? super T,F13>,
+                    ? extends Apply<? super T,F14>,
+                    ? extends Apply<? super T,F15>,
+                    ? extends Apply<? super T,F16>,
+                    ? extends Apply<? super T,F17>,
+                    ? extends Apply<? super T,F18>,
+                    ? extends Apply<? super T,F19>,
+                    ? extends Apply<? super T,F20>,
+                    ? extends Apply<? super T,F21>,
+                    ? extends Apply<? super T,F22>,
+                    ? extends Apply<? super T,F23>,
+                    ? extends Apply<? super T,F24>,
+                    ? extends Apply<? super T,F25>,
+                    ? extends Apply<? super T,F26>,
+                    ? extends Apply<? super T,F27>,
+                    ? extends Apply<? super T,F28>,
+                    ? extends Apply<? super T,F29>,
+                    ? extends Apply<? super T,F30>,
+                    ? extends Apply<? super T,F31>,
+                    ? extends Apply<? super T,F32>,
+                    ? extends Apply<? super T,F33>,
+                    ? extends Apply<? super T,F34>,
+                    ? extends Apply<? super T,F35>,
+                    ? extends Apply<? super T,F36>,
+                    ? extends Apply<? super T,F37>,
+                    ? extends Apply<? super T,F38>,
+                    ? extends Apply<? super T,F39>> members, Apply39<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,T> constructor) {
         return newBuilder(Tuple.asList(members), Function.of(constructor));
     }
 }

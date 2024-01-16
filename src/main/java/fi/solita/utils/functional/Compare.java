@@ -388,4 +388,10 @@ public abstract class Compare {
      */
     @SuppressWarnings("unchecked")
     public static final Ordering<Tuple._38<? extends Comparable<?>>> by_38 = (Ordering<Tuple._38<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_38());
+    
+    /**
+     * Ordering for 39. element of a tuple.
+     */
+    @SuppressWarnings("unchecked")
+    public static final Ordering<Tuple._39<? extends Comparable<?>>> by_39 = (Ordering<Tuple._39<? extends Comparable<?>>>)(Object)by(Transformers.<Comparable<?>>_39());
 }

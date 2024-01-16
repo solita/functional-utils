@@ -993,4 +993,23 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
             }
         });
     }
+    
+    /**
+     * @return lens targetting field 38 of a tuple.
+     */
+    public static final <T> Lens<_39<T>,T> _39() {
+        return new Lens<_39<T>, T>(new Apply<_39<T>, T>() {
+            public T apply(_39<T> t) {
+                return t.get_39();
+            }
+        }, new Function2<_39<T>, Apply<T,T>, _39<T>>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public _39<T> apply(_39<T> t, Apply<T, T> f) {
+                Object[] vs = ((Tuple)t).toArray();
+                vs[38] = f.apply(t.get_39());
+                return (_39<T>) Tuple.of(vs);
+            }
+        });
+    }
 }
