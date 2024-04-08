@@ -14,7 +14,7 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
         return new Pair<LEFT, RIGHT>(left, right);
     }
     
-    public static <T, LEFT, RIGHT> Apply<T, Pair<LEFT, RIGHT>> fanout(final Apply<T, LEFT> l, final Apply<T, RIGHT> r) {
+    public static <T, LEFT, RIGHT> Apply<T, Pair<LEFT, RIGHT>> fanout(final Apply<? super T, LEFT> l, final Apply<? super T, RIGHT> r) {
         return new Function1<T, Pair<LEFT,RIGHT>>() {
             @Override
             public Pair<LEFT, RIGHT> apply(T t) {

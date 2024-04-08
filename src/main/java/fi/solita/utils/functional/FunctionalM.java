@@ -6,6 +6,7 @@ import static fi.solita.utils.functional.Collections.newMap;
 import static fi.solita.utils.functional.Collections.newMultimap;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedMap;
+import static fi.solita.utils.functional.Functional.repeat;
 
 import java.util.List;
 import java.util.Map;
@@ -52,28 +53,28 @@ public abstract class FunctionalM {
      * @return elements in {@code map} transformed with {@code f}.
      */
     public static <T,V,R> SortedMap<T, Iterable<R>> map(Apply<V,R> f, SortedMap<T,? extends Iterable<V>> map) {
-        return map == null ? null : (SortedMap<T, Iterable<R>>) newSortedMap(SemiGroups.<Iterable<R>>fail(), map.comparator(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
+        return map == null ? null : (SortedMap<T, Iterable<R>>) newSortedMap(SemiGroups.<Iterable<R>>fail(), map.comparator(), FunctionalImpl.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, Iterable<R>> mapValues(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return map == null ? null : newLinkedMap(SemiGroups.<Iterable<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<Iterable<R>>fail(), FunctionalImpl.map(FunctionalM.<T,V,R>valueMapper(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, List<R>> mapValueList(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return map == null ? null : newLinkedMap(SemiGroups.<List<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperList(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<List<R>>fail(), FunctionalImpl.map(FunctionalM.<T,V,R>valueMapperList(f), map.entrySet()));
     }
     
     /**
      * @return {@code map} with elements of values transformed with {@code f}.
      */
     public static <T,V,R> Map<T, Set<R>> mapValueSet(Apply<V,R> f, Map<T,? extends Iterable<V>> map) {
-        return map == null ? null : newLinkedMap(SemiGroups.<Set<R>>fail(), Functional.map(FunctionalM.<T,V,R>valueMapperSet(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<Set<R>>fail(), FunctionalImpl.map(FunctionalM.<T,V,R>valueMapperSet(f), map.entrySet()));
     }
     
     /**
@@ -88,6 +89,38 @@ public abstract class FunctionalM {
      */
     public static <K,V,R> Map<K, R> mapValue(Apply<V,R> f, Map<K,V> map) {
         return map == null ? null : newLinkedMap(SemiGroups.<R>fail(), FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), map.entrySet()));
+    }
+    
+    public static <K,V,C extends Iterable<V>> Iterable<Pair<K, V>> flatten(Map<K,C> map) {
+        return map == null ? null : FunctionalImpl.flatMap(new Apply<Map.Entry<K,C>,Iterable<Pair<K,V>>>() {
+            @Override
+            public Iterable<Pair<K, V>> apply(final Map.Entry<K, C> t) {
+                return FunctionalImpl.zip(repeat(t.getKey()), t.getValue());
+            }
+        }, map.entrySet());
+    }
+    
+    public static <K,V1,V2,C extends Iterable<? extends Map.Entry<V1,V2>>> Iterable<Tuple3<K,V1,V2>> flatten2(Map<K,C> map) {
+        return map == null ? null : FunctionalImpl.flatMap(new Apply<Map.Entry<K,C>,Iterable<Tuple3<K,V1,V2>>>() {
+            @Override
+            public Iterable<Tuple3<K,V1,V2>> apply(final Map.Entry<K, C> t) {
+                return FunctionalImpl.map(Transformers.<K,V1,V2>prependPair(t.getKey()), (Iterable<? extends Map.Entry<V1,V2>>)t.getValue());
+            }
+        }, map.entrySet());
+    }
+    
+    public static <K,V1,V2,V3,C extends Iterable<Tuple3<V1,V2,V3>>> Iterable<Tuple4<K,V1,V2,V3>> flatten3(Map<K,C> map) {
+        return map == null ? null : FunctionalImpl.flatMap(new Apply<Map.Entry<K,C>,Iterable<Tuple4<K,V1,V2,V3>>>() {
+            @Override
+            public Iterable<Tuple4<K,V1,V2,V3>> apply(final Map.Entry<K, C> t) {
+                return FunctionalImpl.map(new Apply<Tuple3<V1,V2,V3>, Tuple4<K,V1,V2,V3>>() {
+                    @Override
+                    public Tuple4<K, V1, V2, V3> apply(Tuple3<V1, V2, V3> tt) {
+                        return tt.prepend(t.getKey());
+                    }
+                }, t.getValue());
+            }
+        }, map.entrySet());
     }
     
     private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<V,R> f) {
@@ -124,11 +157,15 @@ public abstract class FunctionalM {
         return FunctionalImpl.groupBy(f, xs);
     }
     
+    public static final <G,V,T> Map<G, List<V>> groupBy(Apply<? super T,G> key, Apply<? super T,V> value, Iterable<T> xs) {
+        return newMultimap(FunctionalImpl.map(Pair.fanout(key, value), xs));
+    }
+    
     /**
      * @return tuples in {@code xs} grouped by first value of the tuple.
      */
     public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, List<R>> groupByFirst(Iterable<T> xs) {
-        return newMultimap(Functional.map(new Apply<T, Map.Entry<G,R>>() {
+        return newMultimap(FunctionalImpl.map(new Apply<T, Map.Entry<G,R>>() {
             public Map.Entry<G, R> apply(T t) {
                 return Pair.of(t.get_1(), t.drop1());
             }
@@ -139,7 +176,7 @@ public abstract class FunctionalM {
      * @return tuples in {@code xs} grouped by first value of the tuple, duplicates handled with {@code valueCombiner}.
      */
     public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, R> groupByFirst(SemiGroup<R> valueCombiner, Iterable<T> xs) {
-        return newMap(valueCombiner, Functional.map(new Apply<T, Map.Entry<G,R>>() {
+        return newMap(valueCombiner, FunctionalImpl.map(new Apply<T, Map.Entry<G,R>>() {
             public Map.Entry<G, R> apply(T t) {
                 return Pair.of(t.get_1(), t.drop1());
             }
