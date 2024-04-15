@@ -25,6 +25,13 @@ public abstract class FunctionalM {
     }
     
     /**
+     * @return values in {@code map} whose keys satisfy {@code predicate}.
+     */
+    public static final <K, V> Iterable<V> findBy(Apply<? super K, Boolean> predicate, Map<K, V> map) {
+        return FunctionalImpl.map(Transformers.<V>right(), FunctionalImpl.filter(Transformers.<K>left().andThen(predicate), map.entrySet()));
+    }
+    
+    /**
      * @return elements in {@code map} whose entries satisfy {@code predicate}.
      */
     public static final <T, E> Map<T, E> filter(Apply<Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
