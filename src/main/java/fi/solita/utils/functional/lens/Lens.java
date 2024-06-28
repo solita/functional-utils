@@ -6,6 +6,7 @@ import fi.solita.utils.functional.Tuple.*;
 import java.util.*;
 
 import static fi.solita.utils.functional.Collections.*;
+import static fi.solita.utils.functional.Functional.headOption;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -91,6 +92,17 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 }
             }
         );
+    }
+    
+    /**
+     * @return a setter targetting each member of the set behind {@code setter}.
+     */
+    public static final <D,E,S> Setter<D,S> eachOption(final Setter<D,Option<E>> setter, final Setter<E,S> setter2) {
+        return eachIterable(setter, setter2, new Apply<Iterable<E>, Option<E>>() {
+            public Option<E> apply(Iterable<E> t) {
+                return headOption(t);
+            }
+        });
     }
     
     /**

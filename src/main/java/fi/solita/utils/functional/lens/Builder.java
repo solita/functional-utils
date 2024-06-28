@@ -4,8 +4,13 @@ import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.FunctionalA.filter;
+import static fi.solita.utils.functional.FunctionalA.zip;
 import static fi.solita.utils.functional.Option.None;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,6 +63,7 @@ import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
+import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple0;
@@ -245,6 +251,64 @@ public final class Builder<T> {
             resultTypeCache = (Class<T>) ret.getClass();
         }
         return ret;
+    }
+    
+    public static final List<PropertyDescriptor> readableWritableBeanDescriptors(Class<?> beanClass) {
+        try {
+            return newList(filter(new Predicate<PropertyDescriptor>() {
+                @Override
+                public boolean accept(PropertyDescriptor candidate) {
+                    return candidate.getReadMethod() != null && candidate.getWriteMethod() != null;
+                }
+            }, Introspector.getBeanInfo(beanClass).getPropertyDescriptors()));
+        } catch (IntrospectionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public static <T> Builder<T> of(final Class<T> beanClass, final Apply<PropertyDescriptor,Apply<T, ?>> memberProvider) {
+        final List<PropertyDescriptor> descriptors = readableWritableBeanDescriptors(beanClass);
+        
+        List<? extends Apply<? super T, ?>> members = newList(map(memberProvider, descriptors));
+        
+        return newBuilder(members, new Apply<Tuple, T>() {
+            @Override
+            public T apply(Tuple t) {
+                T ret;
+                try {
+                    ret = beanClass.getConstructor().newInstance();
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalArgumentException e) {
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (SecurityException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Pair<PropertyDescriptor, Object> descriptor: zip(descriptors, t.toArray())) {
+                    try {
+                        descriptor.left().getWriteMethod().invoke(ret, descriptor.right());
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalArgumentException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return ret;
+            }
+        });
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <T,TUP extends Tuple> Builder<T> ofUnsafe(TUP members, Apply<TUP, T> constructor) {
+        return newBuilder((List<? extends Apply<? super T, ?>>)(Object)newList(members.toArray()), constructor);
     }
     
     public static <T> Builder<T> of(Tuple0 members, ApplyZero<T> constructor) {
