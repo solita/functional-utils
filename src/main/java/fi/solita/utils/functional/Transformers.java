@@ -218,6 +218,24 @@ public abstract class Transformers {
     public static final <K,V> Transformer<Map.Entry<K,V>,V> value() {
         return (Transformer<Map.Entry<K,V>,V>)(Object)right;
     }
+
+    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<R,V>> first(final Apply<K,R> f) {
+        return new Transformer<Map.Entry<K,V>,Map.Entry<R,V>>() {
+            @Override
+            public final Map.Entry<R,V> transform(Map.Entry<K,V> source) {
+                return Pair.of(f.apply(source.getKey()), source.getValue());
+            }
+        };
+    }
+    
+    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<K,R>> second(final Apply<V,R> f) {
+        return new Transformer<Map.Entry<K,V>,Map.Entry<K,R>>() {
+            @Override
+            public final Map.Entry<K,R> transform(Map.Entry<K,V> source) {
+                return Pair.of(source.getKey(), f.apply(source.getValue()));
+            }
+        };
+    }
     
     private static final Transformer<Either<?,?>,Option<?>> eitherLeft = new Transformer<Either<?,?>,Option<?>>() {
         @Override
@@ -691,6 +709,12 @@ public abstract class Transformers {
             return source.get_39();
         }
     };
+    private static final Transformer<Tuple._40<?>,?> _40 = new Transformer<Tuple._40<?>,Object>() {
+        @Override
+        public final Object transform(fi.solita.utils.functional.Tuple._40<?> source) {
+            return source.get_40();
+        }
+    };
     
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._1<T>,T> _1() {
@@ -847,5 +871,9 @@ public abstract class Transformers {
     @SuppressWarnings("unchecked")
     public static final <T> Transformer<Tuple._39<T>,T> _39() {
         return (Transformer<Tuple._39<T>,T>)(Object)_39;
+    }
+    @SuppressWarnings("unchecked")
+    public static final <T> Transformer<Tuple._40<T>,T> _40() {
+        return (Transformer<Tuple._40<T>,T>)(Object)_40;
     }
 }

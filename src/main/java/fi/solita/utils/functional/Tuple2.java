@@ -310,6 +310,13 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Ta
     }
     
     /**
+     * @return this tuple with {@code t} joined to the right.
+     */
+    public <A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31,A32,A33,A34,A35,A36,A37,A38> Tuple40<T1, T2, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32, A33, A34, A35, A36, A37, A38> join(Tuple38<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31,A32,A33,A34,A35,A36,A37,A38> t) {
+        return Tuple.of(_1, _2, t._1, t._2, t._3, t._4, t._5, t._6, t._7, t._8, t._9, t._10, t._11, t._12, t._13, t._14, t._15, t._16, t._17, t._18, t._19, t._20, t._21, t._22, t._23, t._24, t._25, t._26, t._27, t._28, t._29, t._30, t._31, t._32, t._33, t._34, t._35, t._36, t._37, t._38);
+    }
+    
+    /**
      * @return a prefix of this tuple.
      */
     public Tuple1<T1> take1() {
