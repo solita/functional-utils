@@ -225,7 +225,7 @@ public abstract class FunctionalS extends FunctionalA {
      * @return Set intersection of Sets in {@code es}.
      */
     public static final <T> Set<T> intersection(Iterable<? extends Set<T>> es) {
-        return FunctionalImpl.fold(Collections.<T>emptySet(), SemiGroups.<T>setIntersection(), es);
+        return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), es).getOrElse(Collections.<T>emptySet());
     }
     
     

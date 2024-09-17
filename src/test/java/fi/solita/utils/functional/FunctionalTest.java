@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.emptyList;
+import static fi.solita.utils.functional.Collections.emptySet;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Collections.newSet;
@@ -411,5 +412,15 @@ public class FunctionalTest {
         assertEquals("x0", Functional.padRight(2, '0', "x").toString());
         assertEquals("xx", Functional.padRight(2, '0', "xx").toString());
         assertEquals("xxx", Functional.padRight(2, '0', "xxx").toString());
+    }
+    
+    @Test
+    public void testIntersection() {
+        assertEquals(emptySet(), Functional.intersection(Collections.<Integer>emptySet(), newSet(2,3)));
+        assertEquals(emptySet(), Functional.intersection(newSet(2,3), Collections.<Integer>emptySet()));
+        assertEquals(emptySet(), Functional.intersection(Arrays.asList(Collections.<Integer>emptySet(), newSet(2,3))));
+        
+        assertEquals(newSet(2), Functional.intersection(newSet(1,2), newSet(2,3)));
+        assertEquals(newSet(2), Functional.intersection(Arrays.asList(newSet(1,2), newSet(2,3))));
     }
 }
