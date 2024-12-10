@@ -423,4 +423,14 @@ public class FunctionalTest {
         assertEquals(newSet(2), Functional.intersection(newSet(1,2), newSet(2,3)));
         assertEquals(newSet(2), Functional.intersection(Arrays.asList(newSet(1,2), newSet(2,3))));
     }
+    
+    @Test
+    public void testEvery() {
+        assertEquals(emptyList(), newList(Functional.every(-1, newList(0,1,2,3,4,5))));
+        assertEquals(newList(0), newList(Functional.every(0, newList(0,1,2,3,4,5))));
+        assertEquals(newList(0,1,2,3,4,5), newList(Functional.every(1, newList(0,1,2,3,4,5))));
+        assertEquals(newList(0,2,4), newList(Functional.every(2, newList(0,1,2,3,4,5))));
+        assertEquals(newList(0,3), newList(Functional.every(3, newList(0,1,2,3,4,5))));
+        assertEquals(newList(0), newList(Functional.every(6, newList(0,1,2,3,4,5))));
+    }
 }

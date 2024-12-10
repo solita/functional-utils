@@ -356,7 +356,7 @@ final class FunctionalImpl {
     
     public static final <T> Iterable<T> every(int nth, Iterable<T> xs) {
         // TODO: optimize...
-        return Functional.map(Transformers.<T>right(), Functional.filter(Transformers.<Integer>_1().andThen(Predicates.divisible(nth)), Functional.zipWithIndex(xs)));
+        return nth < 0 ? Collections.<T>emptyList() : nth == 0 ? headOption(xs) : Functional.map(Transformers.<T>right(), Functional.filter(Transformers.<Integer>_1().andThen(Predicates.divisible(nth)), Functional.zipWithIndex(xs)));
     }
     
     static final boolean isEmpty(Iterable<?> xs) {
