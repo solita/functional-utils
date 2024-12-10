@@ -82,9 +82,11 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                     return lens.modify(d, new Apply<Option<E>,Option<E>>() {
                         public Option<E> apply(Option<E> c) {
                             return c == null ? null : !c.isDefined() ? c : Some(lens2.modify(c.get(), new Apply<S, S>() {
+                                @SuppressWarnings("unchecked")
                                 @Override
                                 public S apply(S t) {
-                                    return f.apply(Some(t)).get();
+                                    Object ret = f.apply(Some(t));
+                                    return ret instanceof Option ? ((Option<S>)ret).get() : (S)ret;
                                 }
                             }));
                         };
