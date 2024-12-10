@@ -412,7 +412,7 @@ final class FunctionalImpl {
     }
     
     static final <T> T reduce(Monoid<T> monoid, Iterable<? extends T> xs) {
-        return xs == null ? null : fold(monoid, cons(monoid.zero(), xs)).get();
+        return fold(monoid, xs).getOrElse(monoid.zero());
     }
     
     static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
