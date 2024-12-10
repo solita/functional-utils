@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Apply10;
@@ -119,25 +118,25 @@ public final class Builder<T> {
         }
     }
 
-    private final Set<? extends Apply<? super T,? extends Object>> members;
-    private final Iterable<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
+    private final LinkedHashSet<? extends Apply<? super T,? extends Object>> members;
+    private final List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
     private final Apply<Tuple, T> constructor;
     private Class<T> resultTypeCache;
 
     @SuppressWarnings("unchecked")
-    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, Collection<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
-        this.members = new LinkedHashSet<Apply<? super T, ? extends Object>>(members);
-        this.values = values;
+    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
+        this.members = members;
+        this.values = newList(values);
         this.constructor = (Apply<Tuple, T>) constructor;
     }
     
     @SuppressWarnings("unchecked")
     private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), members, (Apply<? extends Tuple, T>) constructor);
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(members), (Apply<? extends Tuple, T>) constructor);
     }
     
     private static <T> Builder<T> newBuilder(final ApplyZero<T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), Collections.<Apply<? super T, ? extends Object>>emptyCollection(), new Apply<Tuple0, T>() {
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(), new Apply<Tuple0, T>() {
             public T apply(Tuple0 t) {
                 return constructor.get();
             }
