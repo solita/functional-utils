@@ -67,6 +67,13 @@ public abstract class Functional extends FunctionalC {
     public static final <S1, S2, S3, T> Iterable<T> map(Apply3<? super S1, ? super S2, ? super S3, ? extends T> f, Iterable<Tuple3<S1, S2, S3>> xs) {
         return FunctionalImpl.map(Function.of(f), xs);
     }
+    
+    /**
+     * @return all elements in {@code xs} transformed with {@code f}.
+     */
+    public static final <S1, S2, S3, S4, T> Iterable<T> map(Apply4<? super S1, ? super S2, ? super S3, ? super S4, ? extends T> f, Iterable<Tuple4<S1, S2, S3, S4>> xs) {
+        return FunctionalImpl.map(Function.of(f), xs);
+    }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1} and {@code f2} respectively.
