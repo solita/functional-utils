@@ -1,8 +1,11 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.FunctionalA.concat;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -31,7 +35,83 @@ import fi.solita.utils.functional.Iterables.ForceableIterable;
 public abstract class Collections {
     
     private static final SortedMap<Object, Object> EMPTY_SORTED_MAP = java.util.Collections.unmodifiableSortedMap(new TreeMap<Object, Object>());
-    private static final SortedSet<Object> EMPTY_SORTED_SET = java.util.Collections.unmodifiableSortedSet(new TreeSet<Object>());
+    private static final SortedSet<Object>         EMPTY_SORTED_SET = java.util.Collections.unmodifiableSortedSet(new TreeSet<Object>());
+    
+    private static class SingletonSortedSet<E> extends AbstractSet<E> implements SortedSet<E>, Serializable {
+        private final E element;
+
+        private SingletonSortedSet(E e) {
+            this.element = e;
+        }
+
+        public Iterator<E> iterator() {
+            return new Iterator<E>() {
+                private boolean hasNext = true;
+                public boolean hasNext() {
+                    return hasNext;
+                }
+                public E next() {
+                    if (hasNext) {
+                        hasNext = false;
+                        return element;
+                    }
+                    throw new NoSuchElementException();
+                }
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        public int size() {
+            return 1;
+        }
+
+        @SuppressWarnings("unchecked")
+        public boolean contains(Object o) {
+            return o == null ? element == null : ((Comparator<Object>)comparator()).compare(o, element) == 0;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Comparator<? super E> comparator() {
+            return (Comparator<? super E>) Ordering.Natural();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public SortedSet<E> subSet(E fromElement, E toElement) {
+            Comparator<Object> cmp = ((Comparator<Object>)comparator());
+            return cmp.compare(fromElement, toElement) == 0 ? Collections.<E>emptySortedSet() :
+                   cmp.compare(element, fromElement) < 0    ? Collections.<E>emptySortedSet() :
+                   cmp.compare(element, toElement) >= 0     ? Collections.<E>emptySortedSet() :
+                   this;
+        }
+
+        @Override
+        public SortedSet<E> headSet(E toElement) {
+            @SuppressWarnings("unchecked")
+            int c = ((Comparator<Object>)comparator()).compare(element, toElement);
+            return c < 0 ? this : Collections.<E>emptySortedSet();
+        }
+
+        @Override
+        public SortedSet<E> tailSet(E fromElement) {
+            @SuppressWarnings("unchecked")
+            int c = ((Comparator<Object>)comparator()).compare(element, fromElement);
+            return c >= 0 ? this : Collections.<E>emptySortedSet();
+        }
+
+        @Override
+        public E first() {
+            return element;
+        }
+
+        @Override
+        public E last() {
+            return element;
+        }
+    }
 
     /**
      * @return some implementation of an empty List.
@@ -951,6 +1031,11 @@ public abstract class Collections {
         }
         List<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
+            if (size == 0) {
+                return Collections.<T>emptyList();
+            } else if (size == 1) {
+                return java.util.Collections.singletonList(head(elements));
+            }
             ret = newMutableListOfSize(size);
         }
         if (ret == null) {
@@ -967,7 +1052,9 @@ public abstract class Collections {
         if (ret instanceof ArrayList) {
             ((ArrayList<?>) ret).trimToSize();
         }
-        return ret.isEmpty() ? Collections.<T>emptyList() : java.util.Collections.unmodifiableList(ret);
+        return ret.isEmpty()   ? Collections.<T>emptyList() :
+               ret.size() == 1 ? java.util.Collections.singletonList(head(ret)) :
+                                 java.util.Collections.unmodifiableList(ret);
     }
 
     /**
@@ -985,6 +1072,11 @@ public abstract class Collections {
         }
         Set<T> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
+            if (size == 0) {
+                return Collections.<T>emptySet();
+            } else if (size == 1) {
+                return java.util.Collections.singleton(head(elements));
+            }
             ret = newMutableSetOfSize(size);
         }
         if (ret == null) {
@@ -997,7 +1089,9 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return ret.isEmpty() ? Collections.<T>emptySet() : java.util.Collections.unmodifiableSet(ret);
+        return ret.isEmpty()   ? Collections.<T>emptySet() :
+               ret.size() == 1 ? java.util.Collections.singleton(head(ret)) :
+                                 java.util.Collections.unmodifiableSet(ret);
     }
     
     /**
@@ -1013,7 +1107,27 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedSet<T> ret = newMutableSortedSet();
+        SortedSet<T> ret = null;
+        for (long size: Iterables.resolveSize.apply(elements)) {
+            if (size == 0) {
+                return Collections.<T>emptySortedSet();
+            } else if (size == 1) {
+                if (elements instanceof SortedSet) {
+                    final Comparator<? super T> cmp = ((SortedSet<T>) elements).comparator();
+                    return new SingletonSortedSet<T>(head(elements)) { public Comparator<? super T> comparator() { return cmp; } };
+                } else {
+                    return new SingletonSortedSet<T>(head(elements));
+                }
+            }
+        }
+        if (ret == null) {
+            if (elements instanceof SortedSet) {
+                Comparator<? super T> cmp = ((SortedSet<T>) elements).comparator();
+                ret = newMutableSortedSet(cmp);
+            } else {
+                ret = newMutableSortedSet();
+            }
+        }
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
         } else {
@@ -1021,13 +1135,20 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return ret.isEmpty() ? Collections.<T>emptySortedSet() : java.util.Collections.unmodifiableSortedSet(ret);
+        if (ret.isEmpty()) {
+            return Collections.<T>emptySortedSet();
+        } else if (ret.size() == 1) {
+            final Comparator<? super T> cmp = ret.comparator();
+            return cmp == null ? new SingletonSortedSet<T>(ret.first()) : new SingletonSortedSet<T>(ret.first()) { public Comparator<? super T> comparator() { return cmp; } };
+        } else {
+            return java.util.Collections.unmodifiableSortedSet(ret);
+        }
     }
     
     /**
      * @return some implementation of a SortedSet containing {@code elements}, using {@code comparator} for ordering.
      */
-    public static final <T> SortedSet<T> newSortedSet(Comparator<? super T> comparator, Iterable<T> elements) {
+    public static final <T> SortedSet<T> newSortedSet(final Comparator<? super T> comparator, Iterable<T> elements) {
         if (elements == null) {
             return null;
         }
@@ -1037,7 +1158,17 @@ public abstract class Collections {
         if (elements instanceof ForceableIterable) {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
-        SortedSet<T> ret = newMutableSortedSet(comparator);
+        SortedSet<T> ret = null;
+        for (long size: Iterables.resolveSize.apply(elements)) {
+            if (size == 0) {
+                return Collections.<T>emptySortedSet();
+            } else if (size == 1) {
+                return new SingletonSortedSet<T>(head(elements)) { public Comparator<? super T> comparator() { return comparator; } };
+            }
+        }
+        if (ret == null) {
+            ret = newMutableSortedSet(comparator);
+        }
         if (elements instanceof Collection) {
             ret.addAll((Collection<? extends T>) elements);
         } else {
@@ -1045,7 +1176,9 @@ public abstract class Collections {
                 ret.add(t);
             }
         }
-        return ret.isEmpty() ? Collections.<T>emptySortedSet() : java.util.Collections.unmodifiableSortedSet(ret);
+        return ret.isEmpty()   ? Collections.<T>emptySortedSet() :
+               ret.size() == 1 ? new SingletonSortedSet<T>(ret.first()) { public Comparator<? super T> comparator() { return comparator; }; } :
+                                 java.util.Collections.unmodifiableSortedSet(ret);
     }
     
     /**
@@ -1070,6 +1203,12 @@ public abstract class Collections {
         }
         Map<K, V> ret = null;
         for (long size: Iterables.resolveSize.apply(elements)) {
+            if (size == 0) {
+                return Collections.<K,V>emptyMap();
+            } else if (size == 1) {
+                Map.Entry<? extends K, ? extends V> e = head(elements);
+                return java.util.Collections.singletonMap(e.getKey(), e.getValue());
+            }
             ret = newMutableMapOfSize(size);
         }
         if (ret == null) {
@@ -1080,7 +1219,9 @@ public abstract class Collections {
             v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
             ret.put(e.getKey(), v);
         }
-        return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
+        return ret.isEmpty()   ? Collections.<K,V>emptyMap() :
+               ret.size() == 1 ? java.util.Collections.singletonMap(head(ret.keySet()), head(ret.values())) :
+                                 java.util.Collections.unmodifiableMap(ret);
     }
 
     /**
