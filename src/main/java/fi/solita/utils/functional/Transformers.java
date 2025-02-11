@@ -399,6 +399,15 @@ public abstract class Transformers {
         };
     }
     
+    public static final <R,T extends Iterable<R>> Transformer<Iterable<? extends T>,Iterable<R>> flatten() {
+        return new Transformer<Iterable<? extends T>,Iterable<R>>() {
+            @Override
+            public final Iterable<R> transform(Iterable<? extends T> source) {
+                return Functional.flatten(source);
+            }
+        };
+    }
+    
     private static final Transformer<Object, List<Object>> newList = new Transformer<Object,List<Object>>() {
         @Override
         public final List<Object> transform(Object source) {
