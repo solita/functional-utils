@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
@@ -223,6 +224,8 @@ final class FunctionalImpl {
         
         if (xs instanceof List) {
             return Some(((List<T>) xs).get(((List<T>) xs).size()-1));
+        } else if (xs instanceof NavigableSet) {
+            return Some(((NavigableSet<T>) xs).last());
         } else {
             Iterator<T> it = xs.iterator();
             if (it.hasNext()) {
