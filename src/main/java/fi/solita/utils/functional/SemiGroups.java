@@ -111,6 +111,10 @@ public abstract class SemiGroups {
         return Monoids.listConcat();
     }
     
+    public static final <T> SemiGroup<Collection<T>> collectionConcat() {
+        return Monoids.collectionConcat();
+    }
+    
     public static final <T> SemiGroup<Iterable<T>> iterableConcat() {
         return Monoids.iterableConcat();
     }

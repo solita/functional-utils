@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Collections.emptyMap;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,23 @@ public abstract class Monoids {
             }
 
             public Iterable<T> zero() {
+                return emptyList();
+            }
+        };
+    }
+    
+    public static final <T> Monoid<Collection<T>> collectionConcat() {
+        return new Monoid<Collection<T>>() {
+            public Collection<T> apply(Map.Entry<? extends Collection<T>, ? extends Collection<T>> t) {
+                if (t.getKey() == null || t.getKey().isEmpty()) {
+                    return t.getValue();
+                } else if (t.getValue() == null || t.getValue().isEmpty()) {
+                    return t.getKey();
+                }
+                return newList(concat(t.getKey(), t.getValue()));
+            }
+
+            public Collection<T> zero() {
                 return emptyList();
             }
         };
