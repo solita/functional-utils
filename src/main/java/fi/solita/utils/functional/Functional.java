@@ -183,7 +183,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return equal (by {@code comparator}) consecutive elements in {@code xs} grouped together.
      */
-    public static final <T> Iterable<Iterable<T>> group(Apply<Map.Entry<T, T>, Boolean> comparator, Iterable<T> xs) {
+    public static final <T> Iterable<Iterable<T>> group(ApplyBi<T, T, Boolean> comparator, Iterable<T> xs) {
         return FunctionalImpl.group(comparator, xs);
     }
 

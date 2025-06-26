@@ -215,7 +215,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#group(Apply, Iterable)
      */
-    public static final <T> Iterable<Iterable<T>> group(Apply<Map.Entry<T,T>, Boolean> comparator, T[] xs) {
+    public static final <T> Iterable<Iterable<T>> group(ApplyBi<T,T,Boolean> comparator, T[] xs) {
         return FunctionalImpl.group(comparator, newList(xs));
     }
     

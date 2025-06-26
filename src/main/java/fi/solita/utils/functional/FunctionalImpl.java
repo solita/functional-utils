@@ -153,17 +153,17 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <T> Iterable<Iterable<T>> group(Iterable<T> xs) {
-        return group((Predicate<Map.Entry<T,T>>)(Object)tuple2elementsEqual, xs);
+        return group((ApplyBi<T,T,Boolean>)(Object)tuple2elementsEqual, xs);
     }
     
-    private static final Predicate<Tuple2<Object,Object>> tuple2elementsEqual = new Predicate<Tuple2<Object,Object>>() {
+    private static final ApplyBi<Object,Object,Boolean> tuple2elementsEqual = new ApplyBi<Object,Object,Boolean>() {
         @Override
-        public final boolean accept(Tuple2<Object, Object> candidate) {
-            return candidate._1.equals(candidate._2);
+        public Boolean apply(Object candidate1, Object candidate2) {
+            return candidate1.equals(candidate2);
         }
     };
     
-    static final <T> Iterable<Iterable<T>> group(Apply<Map.Entry<T,T>, Boolean> comparator, Iterable<T> xs) {
+    static final <T> Iterable<Iterable<T>> group(ApplyBi<T,T, Boolean> comparator, Iterable<T> xs) {
         return xs == null ? null : new Iterables.GroupingIterable<T>(xs, comparator);
     }
     
@@ -597,10 +597,10 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <T> Iterable<List<T>> rangify(final Enumerable<T> enumeration, Iterable<T> xs) {
-        Iterable<Iterable<T>> ret = FunctionalImpl.group(new Predicate<Map.Entry<T,T>>() {
-            public boolean accept(Map.Entry<T,T> candidate) {
-                Option<T> succ = enumeration.succ(candidate.getKey());
-                return succ.isDefined() && succ.get().equals(candidate.getValue());
+        Iterable<Iterable<T>> ret = FunctionalImpl.group(new ApplyBi<T,T,Boolean>() {
+            public Boolean apply(T candidate1, T candidate2) {
+                Option<T> succ = enumeration.succ(candidate1);
+                return succ.isDefined() && succ.get().equals(candidate2);
             };
         }, xs);
         return (Iterable<List<T>>)(Object)map(minAndMax, ret);

@@ -176,14 +176,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#group(Apply, Iterable)
      */
-    public static final Iterable<CharSequence> group(Apply<Map.Entry<Character,Character>, Boolean> comparator, CharSequence xs) {
+    public static final Iterable<CharSequence> group(ApplyBi<Character,Character,Boolean> comparator, CharSequence xs) {
         return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(comparator, it(xs)));
     }
     
     /**
      * @see Functional#group(Apply, Iterable)
      */
-    public static final Iterable<String> group(Apply<Map.Entry<Character,Character>, Boolean> comparator, String xs) {
+    public static final Iterable<String> group(ApplyBi<Character,Character,Boolean> comparator, String xs) {
         return FunctionalImpl.map(Transformers.toString, group(comparator, (CharSequence)xs));
     }
     

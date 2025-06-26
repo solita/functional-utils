@@ -23,7 +23,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -948,10 +947,10 @@ public abstract class Iterables {
     
     static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<T> elements;
-        private final Apply<Map.Entry<T,T>, Boolean> comparator;
+        private final ApplyBi<T,T,Boolean> comparator;
         private boolean force = false;
 
-        public GroupingIterable(Iterable<T> elements, Apply<Map.Entry<T,T>, Boolean> comparator) {
+        public GroupingIterable(Iterable<T> elements, ApplyBi<T,T,Boolean> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }
@@ -990,7 +989,7 @@ public abstract class Iterables {
                                 prev[0] = candidate;
                                 return true;
                             }
-                            boolean ret = comparator.apply(Tuple.of((T)prev[0], candidate));
+                            boolean ret = comparator.apply((T)prev[0], candidate);
                             prev[0] = candidate;
                             return ret;
                         }
