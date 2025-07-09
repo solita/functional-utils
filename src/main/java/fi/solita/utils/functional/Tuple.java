@@ -317,6 +317,13 @@ public abstract class Tuple implements Serializable {
     }
     
     /**
+     * @return {@code tuple} as a list of common super type.
+     */
+    public static <T> List<T> asList(Tuple43<? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T, ? extends T> tuple) {
+        return Arrays.asList(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5, tuple._6, tuple._7, tuple._8, tuple._9, tuple._10, tuple._11, tuple._12, tuple._13, tuple._14, tuple._15, tuple._16, tuple._17, tuple._18, tuple._19, tuple._20, tuple._21, tuple._22, tuple._23, tuple._24, tuple._25, tuple._26, tuple._27, tuple._28, tuple._29, tuple._30, tuple._31, tuple._32, tuple._33, tuple._34, tuple._35, tuple._36, tuple._37, tuple._38, tuple._39, tuple._40, tuple._41, tuple._42, tuple._43);
+    }
+    
+    /**
      * <i>Unsafe!</i> Will fail if given more than 32 arguments.
      * 
      * @return tuple of given values {@code ts}.
@@ -366,8 +373,9 @@ public abstract class Tuple implements Serializable {
             case 40: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34], ts[35], ts[36], ts[37], ts[38], ts[39]);
             case 41: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34], ts[35], ts[36], ts[37], ts[38], ts[39], ts[40]);
             case 42: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34], ts[35], ts[36], ts[37], ts[38], ts[39], ts[40], ts[41]);
+            case 43: return Tuple.of(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6], ts[7], ts[8], ts[9], ts[10], ts[11], ts[12], ts[13], ts[14], ts[15], ts[16], ts[17], ts[18], ts[19], ts[20], ts[21], ts[22], ts[23], ts[24], ts[25], ts[26], ts[27], ts[28], ts[29], ts[30], ts[31], ts[32], ts[33], ts[34], ts[35], ts[36], ts[37], ts[38], ts[39], ts[40], ts[41], ts[42]);
         }
-        throw new UnsupportedOperationException("Tuple43 not implemented");
+        throw new UnsupportedOperationException("Tuple44 not implemented");
     }
     
     /**
@@ -671,6 +679,13 @@ public abstract class Tuple implements Serializable {
         return new Tuple42<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42);
     }
     
+    /**
+     * @return tuple of given arguments.
+     */
+    public static <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43> Tuple43<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43> of(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5, T6 _6, T7 _7, T8 _8, T9 _9, T10 _10, T11 _11, T12 _12, T13 _13, T14 _14, T15 _15, T16 _16, T17 _17, T18 _18, T19 _19, T20 _20, T21 _21, T22 _22, T23 _23, T24 _24, T25 _25, T26 _26, T27 _27, T28 _28, T29 _29, T30 _30, T31 _31, T32 _32, T33 _33, T34 _34, T35 _35, T36 _36, T37 _37, T38 _38, T39 _39, T40 _40, T41 _41, T42 _42, T43 _43) {
+        return new Tuple43<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32, _33, _34, _35, _36, _37, _38, _39, _40, _41, _42, _43);
+    }
+    
     public static interface _1<T> {
         /**
          * @return value in position 1. Normally you should use field {@code _1} instead.
@@ -953,16 +968,23 @@ public abstract class Tuple implements Serializable {
     
     public static interface _41<T> {
         /**
-         * @return value in position 40. Normally you should use field {@code _41} instead.
+         * @return value in position 41. Normally you should use field {@code _41} instead.
          */
         T get_41();
     }
     
     public static interface _42<T> {
         /**
-         * @return value in position 40. Normally you should use field {@code _42} instead.
+         * @return value in position 42. Normally you should use field {@code _42} instead.
          */
         T get_42();
+    }
+    
+    public static interface _43<T> {
+        /**
+         * @return value in position 43. Normally you should use field {@code _43} instead.
+         */
+        T get_43();
     }
     
     public static interface Tailable<T> {
