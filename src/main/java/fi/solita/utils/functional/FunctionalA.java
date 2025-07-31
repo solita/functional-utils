@@ -568,10 +568,31 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
-    public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T>... xs) {
-        Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11));
+    public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13, Iterable<? extends T> x14) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13, Iterable<? extends T> x14, Iterable<? extends T>... xs) {
+        Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Predicates.not(Predicates.isNull()), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14));
         Iterable<Iterable<? extends T>> b = filter(Predicates.not(Predicates.isNull()), xs);
-        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && xs == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.concat(a, b));
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null && xs == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.concat(a, b));
     }
     
     
@@ -967,8 +988,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>>... fs) {
-        return FunctionalImpl.combineEndo(concat(newList(f1, f2, f3, f4, f5, f6), fs));
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6) {
+        return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4, f5, f6));
+    }
+    
+    /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>> f7) {
+        return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4, f5, f6, f7));
+    }
+    
+    /**
+     * @see Functional#combineEndo
+     */
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>> f7, final Apply<P,? extends Apply<T,T>>... fs) {
+        return FunctionalImpl.combineEndo(concat(newList(f1, f2, f3, f4, f5, f6, f7), fs));
     }
     
     
