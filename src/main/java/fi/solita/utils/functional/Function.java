@@ -27,6 +27,66 @@ public abstract class Function {
         };
     }
 
+    public static final <T, R> Function1<T, Void> consumer(final ApplyVoid<T> apply) {
+        return new Function1<T, Void>() {
+            @Override
+            public final Void apply(T t) {
+                apply.accept(t);
+                return null;
+            }
+        };
+    }
+    
+    public static final <T1, T2> Function2<T1, T2, Void> consumer(final ApplyVoid2<T1, T2> apply) {
+        return new Function2<T1, T2, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2) {
+                apply.accept(t1, t2);
+                return null;
+            }
+        };
+    }
+    
+    public static final <T1, T2, T3> Function3<T1, T2, T3, Void> consumer(final ApplyVoid3<T1, T2, T3> apply) {
+        return new Function3<T1, T2, T3, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2, T3 t3) {
+                apply.accept(t1, t2, t3);
+                return null;
+            }
+        };
+    }
+    
+    public static final <T1, T2, T3, T4> Function4<T1, T2, T3, T4, Void> consumer(final ApplyVoid4<T1, T2, T3, T4> apply) {
+        return new Function4<T1, T2, T3, T4, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2, T3 t3, T4 t4) {
+                apply.accept(t1, t2, t3, t4);
+                return null;
+            }
+        };
+    }
+    
+    public static final <T1, T2, T3, T4, T5> Function5<T1, T2, T3, T4, T5, Void> consumer(final ApplyVoid5<T1, T2, T3, T4, T5> apply) {
+        return new Function5<T1, T2, T3, T4, T5, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {
+                apply.accept(t1, t2, t3, t4, t5);
+                return null;
+            }
+        };
+    }
+    
+    public static final <T1, T2, T3, T4, T5, T6> Function6<T1, T2, T3, T4, T5, T6, Void> consumer(final ApplyVoid6<T1, T2, T3, T4, T5, T6> apply) {
+        return new Function6<T1, T2, T3, T4, T5, T6, Void>() {
+            @Override
+            public final Void apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) {
+                apply.accept(t1, t2, t3, t4, t5, t6);
+                return null;
+            }
+        };
+    }
+    
     /**
      * @return a concrete version of {@code apply}.
      */
@@ -35,16 +95,6 @@ public abstract class Function {
             @Override
             public final R apply(T t) {
                 return apply.apply(t);
-            }
-        };
-    }
-    
-    public static final <T, R> Function1<T, Void> consumer(final ApplyVoid<T> apply) {
-        return new Function1<T, Void>() {
-            @Override
-            public final Void apply(T t) {
-                apply.accept(t);
-                return null;
             }
         };
     }
@@ -426,16 +476,6 @@ public abstract class Function {
             @Override
             public final R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10, T11 t11, T12 t12, T13 t13, T14 t14, T15 t15, T16 t16, T17 t17, T18 t18, T19 t19, T20 t20, T21 t21, T22 t22, T23 t23, T24 t24, T25 t25, T26 t26, T27 t27, T28 t28, T29 t29, T30 t30, T31 t31, T32 t32, T33 t33, T34 t34, T35 t35, T36 t36, T37 t37, T38 t38, T39 t39, T40 t40, T41 t41, T42 t42, T43 t43) {
                 return apply.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43);
-            }
-        };
-    }
-    
-    public static final <T1, T2> Function2<T1, T2, Void> consumer(final ApplyBiVoid<T1, T2> apply) {
-        return new Function2<T1, T2, Void>() {
-            @Override
-            public final Void apply(T1 t1, T2 t2) {
-                apply.accept(t1, t2);
-                return null;
             }
         };
     }
