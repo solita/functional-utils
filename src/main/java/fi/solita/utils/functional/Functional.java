@@ -585,7 +585,7 @@ public abstract class Functional extends FunctionalC {
      * @return infinite sequence of {@code value}.
      */
     public static final <T> Iterable<T> repeat(T value) {
-        return value == null ? null : new RepeatingIterable<T>(value);
+        return new RepeatingIterable<T>(value);
     }
 
     /**

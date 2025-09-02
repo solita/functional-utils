@@ -155,19 +155,19 @@ public class BuilderAndLensExamples {
         Department department = new Department("Sales", newList(new Employee("John", Some(42), new Department("IT"))));
 
         Lens<Department, List<Employee>> departmentEmployees_ = Lens.of(Department_.employees, Department.builder);
-        Lens<Employee, Option<Integer>> employeeSalary_ = Lens.of(Employee_.salary, Employee.builder);
+        Setter<Employee, Option<Integer>> employeeSalary_ = Lens.of(Employee_.salary, Employee.builder);
 
         assertEquals(newSet(42), newSet(flatMap(Employee_.salary, departmentEmployees_.get(department))));
 
         
-        Setter<Department,Option<Integer>> departmentSalaries_ = Lens.eachList(departmentEmployees_, employeeSalary_);
+        Setter<Department,Option<Integer>> departmentSalaries_ = Setter.eachList(departmentEmployees_, employeeSalary_);
         assertEquals(newSet(69), newSet(flatMap(Employee_.salary, departmentSalaries_.set(department, Some(69)).employees)));
         
         
         Lens<Department, String> departmentName_ = Lens.of(Department_.name, Department.builder);
-        Lens<Employee, Department> employeeDepartment_ = Lens.of(Employee_.department, Employee.builder);
+        Setter<Employee, Department> employeeDepartment_ = Lens.of(Employee_.department, Employee.builder);
         
-        Setter<Department,Department> departmentEmployeeDepartments_ = Lens.eachList(departmentEmployees_, employeeDepartment_);
+        Setter<Department,Department> departmentEmployeeDepartments_ = Setter.eachList(departmentEmployees_, employeeDepartment_);
         Setter<Department,String> departmentEmployeeDepartmentsName_ = departmentEmployeeDepartments_.andThen(departmentName_);
         
         assertEquals(newSet("IT2"), newSet(map(Department_.name, map(Employee_.department, departmentEmployeeDepartmentsName_.set(department, "IT2").employees))));

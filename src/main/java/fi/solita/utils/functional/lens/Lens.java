@@ -6,8 +6,9 @@ import fi.solita.utils.functional.Tuple.*;
 import java.util.*;
 
 import static fi.solita.utils.functional.Collections.*;
-import static fi.solita.utils.functional.Functional.headOption;
+import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Option.Some;
 
 /**
@@ -97,21 +98,10 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return a setter targetting each member of the set behind {@code setter}.
+     * @return a lens targetting each member of the collection behind {@code lens}.
      */
-    public static final <D,E,S> Setter<D,S> eachOption(final Setter<D,Option<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, new Apply<Iterable<E>, Option<E>>() {
-            public Option<E> apply(Iterable<E> t) {
-                return headOption(t);
-            }
-        });
-    }
-    
-    /**
-     * @return a setter targetting each member of the collection behind {@code setter}.
-     */
-    public static final <D,E,S> Setter<D,S> eachCollection(final Setter<D,Collection<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, new Apply<Iterable<E>, Collection<E>>() {
+    public static final <D,E,S> Lens<D,Iterable<S>> eachCollection(final Lens<D,Collection<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
             public Collection<E> apply(Iterable<E> t) {
                 return newList(t);
             }
@@ -119,10 +109,43 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return a setter targetting each member of the list behind {@code setter}.
+     * @return a lens targetting each member of the collection behind {@code lens}.
      */
-    public static final <D,E,S> Setter<D,S> eachList(final Setter<D,List<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, new Apply<Iterable<E>, List<E>>() {
+    public static final <D,E,S> Lens<D,S> eachCollection(final Monoid<S> combiner, final Lens<D,Collection<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(combiner, lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+            public Collection<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the collection behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachCollectionIterable(final Lens<D,Collection<E>> lens, final Lens<E,Iterable<S>> lens2) {
+        return eachIterableIterable(lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+            public Collection<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the collection behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,S> eachCollectionOption(final Monoid<S> combiner, final Lens<D,Collection<E>> lens, final Lens<E,Option<S>> lens2) {
+        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+            public Collection<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the list behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachList(final Lens<D,List<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(lens, lens2, new Apply<Iterable<E>, List<E>>() {
             public List<E> apply(Iterable<E> t) {
                 return newList(t);
             }
@@ -130,10 +153,43 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return a setter targetting each member of the set behind {@code setter}.
+     * @return a lens targetting each member of the list behind {@code lens}.
      */
-    public static final <D,E,S> Setter<D,S> eachSet(final Setter<D,Set<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, new Apply<Iterable<E>, Set<E>>() {
+    public static final <D,E,S> Lens<D,S> eachList(final Monoid<S> combiner, final Lens<D,List<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(combiner, lens, lens2, new Apply<Iterable<E>, List<E>>() {
+            public List<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the list behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachListIterable(final Lens<D,List<E>> lens, final Lens<E,Iterable<S>> lens2) {
+        return eachIterableIterable(lens, lens2, new Apply<Iterable<E>, List<E>>() {
+            public List<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the list behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,S> eachListOption(final Monoid<S> combiner, final Lens<D,List<E>> lens, final Lens<E,Option<S>> lens2) {
+        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, List<E>>() {
+            public List<E> apply(Iterable<E> t) {
+                return newList(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the set behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachSet(final Lens<D,Set<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(lens, lens2, new Apply<Iterable<E>, Set<E>>() {
             public Set<E> apply(Iterable<E> t) {
                 return newSet(t);
             }
@@ -141,17 +197,108 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return a setter targetting each member of the sortedset behind {@code setter}.
+     * @return a lens targetting each member of the set behind {@code lens}.
      */
-    public static final <D,E,S> Setter<D,S> eachSortedSet(final Setter<D,SortedSet<E>> setter, final Setter<E,S> setter2) {
-        return new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+    public static final <D,E,S> Lens<D,S> eachSet(final Monoid<S> combiner, final Lens<D,Set<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(combiner, lens, lens2, new Apply<Iterable<E>, Set<E>>() {
+            public Set<E> apply(Iterable<E> t) {
+                return newSet(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the collection behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachSetIterable(final Lens<D,Set<E>> lens, final Lens<E,Iterable<S>> lens2) {
+        return eachIterableIterable(lens, lens2, new Apply<Iterable<E>, Set<E>>() {
+            public Set<E> apply(Iterable<E> t) {
+                return newSet(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the set behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,S> eachSetOption(final Monoid<S> combiner, final Lens<D,Set<E>> lens, final Lens<E,Option<S>> lens2) {
+        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, Set<E>>() {
+            public Set<E> apply(Iterable<E> t) {
+                return newSet(t);
+            }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the sortedset behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachSortedSet(final Lens<D,SortedSet<E>> lens, final Lens<E,S> lens2) {
+        return new Lens<D,Iterable<S>>(new Apply<D, Iterable<S>>() {
+                @Override
+                public Iterable<S> apply(D t) {
+                    return map(lens2, lens.apply(t));
+                }
+            },
+            new Function2<D, Apply<Iterable<S>,Iterable<S>>, D>() {
+                @Override
+                public D apply(D d, final Apply<Iterable<S>, Iterable<S>> f) {
+                    return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
+                        public SortedSet<E> apply(SortedSet<E> c) {
+                            return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
+                                public E apply(E e) {
+                                    return lens2.modify(e, Transformers.<S>newList().andThen(f).andThen(Transformers.<S>head()));
+                                }
+                            }, c));
+                        };
+                    });
+                }
+        });
+    }
+    
+    /**
+     * @return a lens targetting each member of the sortedset behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,S> eachSortedSet(final Monoid<S> combiner, final Lens<D,SortedSet<E>> lens, final Lens<E,S> lens2) {
+        return new Lens<D,S>(new Apply<D, S>() {
+                @Override
+                public S apply(D t) {
+                    return reduce(combiner, map(lens2, lens.apply(t)));
+                }
+            },
+            new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+                @Override
+                public D apply(D d, final Apply<S, S> f) {
+                    return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
+                        public SortedSet<E> apply(SortedSet<E> c) {
+                            return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
+                                public E apply(E e) {
+                                    return lens2.modify(e, f);
+                                }
+                            }, c));
+                        };
+                    });
+                }
+            }));
+    }
+    
+    /**
+     * @return a lens targetting each member of the collection behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachSortedSetIterable(final Lens<D,SortedSet<E>> lens, final Lens<E,Iterable<S>> lens2) {
+        return new Lens<D,Iterable<S>>(new Apply<D, Iterable<S>>() {
             @Override
-            public D apply(D d, final Apply<S, S> f) {
-                return setter.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
+            public Iterable<S> apply(D t) {
+                return flatMap(lens2, lens.apply(t));
+            }
+        },
+        new Function2<D, Apply<Iterable<S>,Iterable<S>>, D>() {
+            @Override
+            public D apply(D d, final Apply<Iterable<S>, Iterable<S>> f) {
+                return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
                     public SortedSet<E> apply(SortedSet<E> c) {
                         return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
                             public E apply(E e) {
-                                return setter2.modify(e, f);
+                                return lens2.modify(e, f);
                             }
                         }, c));
                     };
@@ -161,16 +308,126 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     }
     
     /**
-     * @return a setter targetting each member of the iterable behind {@code setter}.
+     * @return a lens targetting each member of the sortedset behind {@code lens}.
      */
-    public static final <D,E,S> Setter<D,S> eachIterable(final Setter<D,Iterable<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, Function.<Iterable<E>>id());
+    public static final <D,E,S> Lens<D,S> eachSortedSetOption(final Monoid<S> combiner, final Lens<D,SortedSet<E>> lens, final Lens<E,Option<S>> lens2) {
+        return new Lens<D,S>(new Apply<D, S>() {
+                @Override
+                public S apply(D t) {
+                    return reduce(combiner, flatMap(lens2, lens.apply(t)));
+                }
+            },
+            new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+                @Override
+                public D apply(D d, final Apply<S, S> f) {
+                    return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
+                        public SortedSet<E> apply(SortedSet<E> c) {
+                            return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
+                                @SuppressWarnings("unchecked")
+                                public E apply(E e) {
+                                    return lens2.modify(e, (Apply<Option<S>, Option<S>>)(Object)Transformers.mapOption(f));
+                                }
+                            }, c));
+                        };
+                    });
+                }
+            }));
     }
     
-    private static final <D,E,S,C extends Iterable<E>> Setter<D,S> eachIterable(final Setter<D,C> lens, final Setter<E,S> lens2, final Apply<Iterable<E>,C> wrap) {
-        return new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+    /**
+     * @return a lens targetting each member of the iterable behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,Iterable<S>> eachIterableIterable(final Lens<D,Iterable<E>> lens, final Lens<E,Iterable<S>> lens2) {
+        return eachIterableIterable(lens, lens2, Function.<Iterable<E>>id());
+    }
+    
+    /**
+     * @return a lens targetting each member of the iterable behind {@code lens}.
+     */
+    public static final <D,E,S> Lens<D,S> eachIterable(Monoid<S> combiner, final Lens<D,Iterable<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(combiner, lens, lens2, Function.<Iterable<E>>id());
+    }
+    
+    private static final <D,E,S,C extends Iterable<E>> Lens<D,Iterable<S>> eachIterable(final Lens<D,C> lens, final Lens<E,S> lens2, final Apply<Iterable<E>,C> wrap) {
+        return new Lens<D,Iterable<S>>(new Apply<D, Iterable<S>>() {
+            @Override
+            public Iterable<S> apply(D t) {
+                return map(lens2, lens.apply(t));
+            }
+        },
+        new Function2<D, Apply<Iterable<S>,Iterable<S>>, D>() {
+            @Override
+            public D apply(D d, final Apply<Iterable<S>, Iterable<S>> f) {
+                return lens.modify(d, new Apply<C,C>() {
+                    public C apply(C c) {
+                        return wrap.apply(map(new Apply<E,E>() {
+                            public E apply(E e) {
+                                return lens2.modify(e, Transformers.<S>newList().andThen(f).andThen(Transformers.<S>head()));
+                            }
+                        }, c));
+                    };
+                });
+            }
+        });
+    }
+    
+    private static final <D,E,S,C extends Iterable<E>> Lens<D,S> eachIterable(final Monoid<S> combiner, final Lens<D,C> lens, final Lens<E,S> lens2, final Apply<Iterable<E>,C> wrap) {
+        return new Lens<D,S>(new Apply<D, S>() {
+                @Override
+                public S apply(D t) {
+                    return reduce(combiner, map(lens2, lens.apply(t)));
+                }
+            },
+            new Function2<D, Apply<S,S>, D>() {
+                @Override
+                public D apply(D d, final Apply<S, S> f) {
+                    return lens.modify(d, new Apply<C,C>() {
+                        public C apply(C c) {
+                            return wrap.apply(map(new Apply<E,E>() {
+                                public E apply(E e) {
+                                    return lens2.modify(e, f);
+                                }
+                            }, c));
+                        };
+                    });
+                }
+            });
+    }
+    
+    private static final <D,E,S,C extends Iterable<E>> Lens<D,S> eachIterableOption(final Monoid<S> combiner, final Lens<D,C> lens, final Lens<E,Option<S>> lens2, final Apply<Iterable<E>,C> wrap) {
+        return new Lens<D,S>(new Apply<D, S>() {
+            @Override
+            public S apply(D t) {
+                return reduce(combiner, flatMap(lens2, lens.apply(t)));
+            }
+        },
+        new Function2<D, Apply<S,S>, D>() {
             @Override
             public D apply(D d, final Apply<S, S> f) {
+                return lens.modify(d, new Apply<C,C>() {
+                    public C apply(C c) {
+                        return wrap.apply(map(new Apply<E,E>() {
+                            @SuppressWarnings("unchecked")
+                            public E apply(E e) {
+                                return lens2.modify(e, (Apply<Option<S>, Option<S>>)(Object)Transformers.mapOption(f));
+                            }
+                        }, c));
+                    };
+                });
+            }
+        });
+    }
+    
+    private static final <D,E,S,C extends Iterable<E>> Lens<D,Iterable<S>> eachIterableIterable(final Lens<D,C> lens, final Lens<E,Iterable<S>> lens2, final Apply<Iterable<E>,C> wrap) {
+        return new Lens<D,Iterable<S>>(new Apply<D, Iterable<S>>() {
+            @Override
+            public Iterable<S> apply(D t) {
+                return flatMap(lens2, lens.apply(t));
+            }
+        },
+        new Function2<D, Apply<Iterable<S>,Iterable<S>>, D>() {
+            @Override
+            public D apply(D d, final Apply<Iterable<S>, Iterable<S>> f) {
                 return lens.modify(d, new Apply<C,C>() {
                     public C apply(C c) {
                         return wrap.apply(map(new Apply<E,E>() {
