@@ -377,6 +377,13 @@ public abstract class Functional extends FunctionalC {
     public static final <T> Iterable<T> cons(T x, Iterable<? extends T> xs) {
         return FunctionalImpl.cons(x, xs);
     }
+    
+    /**
+     * @return {@code x} appended to the back of {@code xs}.
+     */
+    public static final <T> Iterable<T> append(T x, Iterable<? extends T> xs) {
+        return FunctionalImpl.append(x, xs);
+    }
 
     /**
      * @return elements in {@code a} and then elements in {@code b}.

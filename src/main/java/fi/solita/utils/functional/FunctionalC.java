@@ -518,6 +518,22 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     /**
+     * @see Functional#append
+     */
+    public static final CharSequence append(char x, CharSequence xs) {
+        return it(FunctionalImpl.append(x, it(xs)));
+    }
+    
+    /**
+     * @see Functional#append
+     */
+    public static final String append(char x, String xs) {
+        return xs == null ? null : xs + x;
+    }
+    
+    
+    
+    /**
      * @see Functional#concat
      */
     public static final CharSequence concat(CharSequence a, CharSequence b) {

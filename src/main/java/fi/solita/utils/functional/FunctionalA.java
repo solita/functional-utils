@@ -418,6 +418,15 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
+     * @see Functional#append
+     */
+    public static final <T> Iterable<T> append(T x, T[] xs) {
+        return FunctionalImpl.append(x, newList(xs));
+    }
+    
+    
+    
+    /**
      * @see Functional#concat
      */
     public static final <T> Iterable<T> concat(T[] a, Iterable<? extends T> b) {
