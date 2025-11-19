@@ -257,4 +257,14 @@ public abstract class FunctionalS extends FunctionalA {
         }
         return groupIntersecting(Functional.cons(intersectingHead, notIntersectingHead));
     }
+    
+    
+    
+    /**
+     * @return (a-b, b-a)
+     */
+    public static final <T> Pair<Set<T>,Set<T>> symmetricDifference(Set<T> a, Set<T> b) {
+        return Pair.of(newSet(Functional.subtract(a, b)),
+                       newSet(Functional.subtract(b, a)));
+    }
 }
