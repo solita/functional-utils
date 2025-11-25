@@ -2011,6 +2011,13 @@ public abstract class Collections {
     }
     
     /**
+     * @return iterable of single value {@code t}.
+     */
+    public static final <T> Iterable<T> it(T t) {
+        return t == null ? null : newList(t);
+    }
+    
+    /**
      * @return a lazy iterable for an iterable produced by {@code producer}.
      */
     public static final <T> Iterable<T> lazily(final ApplyZero<Iterable<T>> producer) {
