@@ -8,6 +8,7 @@ import java.util.*;
 import static fi.solita.utils.functional.Collections.*;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.reduce;
 import static fi.solita.utils.functional.Option.Some;
 
@@ -225,6 +226,21 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, Set<E>>() {
             public Set<E> apply(Iterable<E> t) {
                 return newSet(t);
+            }
+        });
+    }
+    
+    public static final <D,E,S> Lens<D,S> eachOption(final Monoid<S> combiner, final Lens<D,Option<E>> lens, final Lens<E,S> lens2) {
+        return eachIterable(combiner, lens, lens2, new Apply<Iterable<E>, Option<E>>() {
+            public Option<E> apply(Iterable<E> t) {
+                if (t instanceof Option) {
+                    return (Option<E>)t;
+                }
+                List<E> xs = newList(t);
+                if (xs.size() > 1) {
+                    throw new RuntimeException();
+                }
+                return Option.of(head(xs));
             }
         });
     }
