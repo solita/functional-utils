@@ -757,6 +757,22 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
+     * @see Functional#ordered
+     */
+    public static final <T> boolean ordered(Comparator<? super T> comparator, T x, T... xs) {
+        return FunctionalImpl.ordered(comparator, cons(x, xs));
+    }
+    
+    /**
+     * @see Functional#ordered
+     */
+    public static final <T extends Comparable<T>> boolean ordered(T x, T... xs) {
+        return FunctionalImpl.ordered(Compare.byNatural(), cons(x, xs));
+    }
+    
+    
+    
+    /**
      * @see Functional#zip(Iterable, Iterable)
      */
     public static final <A,B> Iterable<Pair<A, B>> zip(A[] a, B[] b) {

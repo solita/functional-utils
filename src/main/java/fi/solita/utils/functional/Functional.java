@@ -492,6 +492,21 @@ public abstract class Functional extends FunctionalC {
     
     
     /**
+     * @return Whether {@code xs} is ordered according to the given comparator.
+     */
+    public static final <T> boolean ordered(Comparator<? super T> comparator, Iterable<T> xs) {
+        return FunctionalImpl.ordered(comparator, xs);
+    }
+    
+    /**
+     * @return Whether {@code xs} is ordered by natural ordering.
+     */
+    public static final <T extends Comparable<T>> boolean ordered(Iterable<T> xs) {
+        return FunctionalImpl.ordered(Compare.byNatural(), xs);
+    }
+    
+    
+    /**
      * @return {@code value} restricted between inclusive of {@code minBound} and {@code maxBound}.
      */
     public static final <T extends Comparable<T>> T clamp(T minBound, T maxBound, T value) {

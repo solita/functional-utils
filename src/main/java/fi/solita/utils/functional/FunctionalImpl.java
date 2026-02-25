@@ -544,6 +544,15 @@ final class FunctionalImpl {
         }, xs);
     }
     
+    static final <T> boolean ordered(final Comparator<? super T> comparator, Iterable<T> xs) {
+        return isEmpty(xs) || fold(headOption(xs), new Apply<Map.Entry<? extends Option<T>, ? extends T>, Option<T>>() {
+            @Override
+            public Option<T> apply(Map.Entry<? extends Option<T>, ? extends T> t) {
+                return t.getKey().isDefined() && comparator.compare(t.getKey().get(), t.getValue()) <= 0 ? Option.<T>Some(t.getValue()) : Option.<T>None();
+            }
+        }, tail(xs)).isDefined();
+    }
+    
     static final <A,B> Iterable<Pair<A, B>> zip(Iterable<A> a, Iterable<B> b) {
         return a == null || b == null ? null : new ZippingIterable<A,B>(a, b);
     }
