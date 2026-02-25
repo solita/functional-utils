@@ -630,7 +630,16 @@ public abstract class Iterables {
                 private int read = 0;
                 
                 public final boolean hasNext() {
-                    return read < chars.length();
+                    if (chars instanceof Iterable<?>) {
+                        try {
+                            chars.charAt(read);
+                            return true;
+                        } catch (IndexOutOfBoundsException e) {
+                            return false;
+                        }
+                    } else {
+                        return read < chars.length();
+                    }
                 }
 
                 
