@@ -303,28 +303,28 @@ public abstract class FunctionalC extends FunctionalS {
      * @return at most {@code amount} last elements in {@code xs}.
      */
     public static final CharSequence takeLast(long amount, CharSequence xs) {
-        return reverse(take(4, reverse(xs)));
+        return reverse(take(amount, reverse(xs)));
     }
     
     /**
      * @return at most {@code amount} last elements in {@code xs}.
      */
     public static final String takeLast(long amount, String xs) {
-        return reverse(take(4, reverse(xs)));
+        return reverse(take(amount, reverse(xs)));
     }
     
     /**
      * @return elements in {@code xs} except the last {@code amount}.
      */
     public static final CharSequence dropLast(long amount, CharSequence xs) {
-        return reverse(drop(4, reverse(xs)));
+        return reverse(drop(amount, reverse(xs)));
     }
     
     /**
      * @return elements in {@code xs} except the last {@code amount}.
      */
     public static final String dropLast(long amount, String xs) {
-        return reverse(drop(4, reverse(xs)));
+        return reverse(drop(amount, reverse(xs)));
     }
     
     

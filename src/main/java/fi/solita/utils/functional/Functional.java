@@ -267,14 +267,14 @@ public abstract class Functional extends FunctionalC {
      * @return at most {@code amount} last elements in {@code xs}.
      */
     public static final <T> Iterable<T> takeLast(long amount, Iterable<T> xs) {
-        return reverse(take(4, reverse(xs)));
+        return reverse(take(amount, reverse(xs)));
     }
     
     /**
      * @return elements in {@code xs} except the last {@code amount}.
      */
     public static final <T> Iterable<T> dropLast(long amount, Iterable<T> xs) {
-        return reverse(drop(4, reverse(xs)));
+        return reverse(drop(amount, reverse(xs)));
     }
 
     /**

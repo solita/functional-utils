@@ -490,7 +490,7 @@ public abstract class Function {
     }
     
     /**
-     * @return a wrapper for {@code supplier}, which memorizes the value thus invoking {@code supplier} only once.
+     * @return a wrapper for {@code supplier}, which memorizes the value thus invoking {@code supplier} only once, except if {@code supplier} returns {@code null}, it will be invoked again.
      */
     public static final <R> Function0<R> memoize(final ApplyZero<R> supplier) {
         return new Function0<R>() {
