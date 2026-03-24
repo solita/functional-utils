@@ -660,6 +660,13 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     /**
+     * @see Functional#cycle(Object)
+     */
+    public static final <T> CharSequence cycle(CharSequence value) {
+        return value == null ? null : isEmpty(value) ? value : it(Functional.flatten(new RepeatingIterable<Iterable<Character>>(it(value))));
+    }
+    
+    /**
      * @see Functional#repeat(Object)
      */
     public static final CharSequence repeat(final char value) {

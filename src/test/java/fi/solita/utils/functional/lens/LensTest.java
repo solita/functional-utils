@@ -496,7 +496,7 @@ public class LensTest {
             }
         });
         
-        Container container = new Container(None());
+        Container container = new Container(Option.<String>None());
         Lens<Container, Option<String>> eachLens = Lens.eachOption(valueLens, Lens.<String>id());
         
         assertEquals(None(), eachLens.get(container));

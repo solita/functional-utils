@@ -1,7 +1,9 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Functional.distinct;
 import static fi.solita.utils.functional.Functional.drop;
 import static fi.solita.utils.functional.Functional.filter;
@@ -588,5 +590,126 @@ public class IterablesTest {
         it.next();
         it.next();
         it.next(); // Should throw
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testConcatenatingIteratorThrowsNoSuchElementExceptionForEmptyOuterIterable() {
+        List<Iterable<Integer>> elements = Collections.<Iterable<Integer>>emptyList();
+        Iterator<Integer> it = new ConcatenatingIterable<Integer>(elements).iterator();
+
+        assertTrue(!it.hasNext());
+        it.next();
+    }
+
+    @Test
+    public void testConcatenatingIterableWithEmptyOuterIterable() {
+        List<Iterable<Integer>> elements = Collections.<Iterable<Integer>>emptyList();
+        Iterable<Integer> concatenated = new ConcatenatingIterable<Integer>(elements);
+        Iterator<Integer> it = concatenated.iterator();
+
+        assertTrue(!it.hasNext());
+        assertEquals(Collections.<Integer>emptyList(), newList(concatenated));
+    }
+
+    @Test
+    public void testConcatenatingIterableWithOnlyEmptyInnerIterables() {
+        List<Iterable<Integer>> elements = newMutableList();
+        elements.add(Collections.<Integer>emptyList());
+        elements.add(Collections.<Integer>emptyList());
+        elements.add(Collections.<Integer>emptyList());
+
+        Iterable<Integer> concatenated = new ConcatenatingIterable<Integer>(elements);
+        Iterator<Integer> it = concatenated.iterator();
+
+        assertTrue(!it.hasNext());
+        assertEquals(Collections.<Integer>emptyList(), newList(concatenated));
+    }
+
+    @Test
+    public void testConcatenatingIterableSkipsLeadingEmptyInnerIterables() {
+        List<Iterable<Integer>> elements = newMutableList();
+        elements.add(Collections.<Integer>emptyList());
+        elements.add(Collections.<Integer>emptyList());
+        elements.add(newList(1, 2));
+        elements.add(Collections.<Integer>emptyList());
+        elements.add(newList(3));
+
+        Iterable<Integer> concatenated = new ConcatenatingIterable<Integer>(elements);
+        assertEquals(newList(1, 2, 3), newList(concatenated));
+    }
+
+    @Test
+    public void testConcatenatingIterableConsumesManyEmptyInnerIterablesAndTerminates() {
+        Iterable<Iterable<Integer>> manyEmptyInners = new Iterable<Iterable<Integer>>() {
+            @Override
+            public Iterator<Iterable<Integer>> iterator() {
+                return new Iterator<Iterable<Integer>>() {
+                    private int remaining = 10000;
+
+                    @Override
+                    public boolean hasNext() {
+                        return remaining > 0;
+                    }
+
+                    @Override
+                    public Iterable<Integer> next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        remaining--;
+                        return Collections.<Integer>emptyList();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+
+        Iterator<Integer> it = new ConcatenatingIterable<Integer>(manyEmptyInners).iterator();
+        assertTrue(!it.hasNext());
+    }
+
+    @Test(timeout = 200)
+    public void testConcatenatingIterableHasNextDoesNotTerminateForInfiniteEmptyOuterIterable() throws Exception {
+        Iterable<Iterable<Integer>> infiniteEmptyInners = new Iterable<Iterable<Integer>>() {
+            @Override
+            public Iterator<Iterable<Integer>> iterator() {
+                return new Iterator<Iterable<Integer>>() {
+                    @Override
+                    public boolean hasNext() {
+                        return true;
+                    }
+
+                    @Override
+                    public Iterable<Integer> next() {
+                        return Collections.<Integer>emptyList();
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+
+        final Iterator<Integer> it = new ConcatenatingIterable<Integer>(infiniteEmptyInners).iterator();
+        final boolean[] completed = new boolean[] { false };
+
+        Thread probe = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                it.hasNext();
+                completed[0] = true;
+            }
+        });
+        probe.setDaemon(true);
+        probe.start();
+        probe.join(100);
+
+        assertTrue(!completed[0]);
     }
 }

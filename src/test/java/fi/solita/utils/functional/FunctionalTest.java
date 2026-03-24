@@ -151,6 +151,21 @@ public class FunctionalTest {
     }
     
     @Test
+    public void testCycle() {
+        assertEquals(newList(1,2,3,1,2,3), newList(take(6, Functional.cycle(newList(1,2,3)))));
+    }
+    
+    @Test
+    public void testCycleEmpty() {
+        assertEquals(emptyList(), newList(take(3, Functional.cycle(emptyList()))));
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testCycleSingleUseIterableFailsOnSecondPass() {
+        newList(take(2, Functional.cycle(onceIterable)));
+    }
+    
+    @Test
     public void testName() {
         Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
         Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
