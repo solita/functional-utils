@@ -16,6 +16,13 @@ public abstract class Predicates {
             }
         };
         
+        private static final Predicate<?> isNotNull = new Predicate<Object>() {
+            @Override
+            public final boolean accept(Object candidate) {
+                return candidate != null;
+            }
+        };
+        
         private static final Predicate<Iterable<?>> empty = new Predicate<Iterable<?>>() {
             @Override
             public final boolean accept(Iterable<?> candidate) {
@@ -63,6 +70,11 @@ public abstract class Predicates {
     @SuppressWarnings("unchecked")
     public static final <T> Predicate<T> isNull() {
         return (Predicate<T>) Impl.isNull;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static final <T> Predicate<T> isNotNull() {
+        return (Predicate<T>) Impl.isNotNull;
     }
     
     public static final Predicate<Option<?>> isDefined = new Predicate<Option<?>>() {

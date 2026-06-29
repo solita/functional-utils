@@ -15,6 +15,7 @@ import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Predicates.isNotNull;
 import static fi.solita.utils.functional.Predicates.isNull;
 import static fi.solita.utils.functional.Predicates.not;
 
@@ -375,7 +376,7 @@ public abstract class Iterables {
     
     static final class FlatteningIterable<T> extends ConcatenatingIterable<T> {
         public FlatteningIterable(Iterable<? extends Iterable<? extends T>> elements) {
-            super(filter(not(isNull()), elements));
+            super(filter(isNotNull(), elements));
         }
         
         
