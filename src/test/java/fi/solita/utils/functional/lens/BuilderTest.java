@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -256,7 +257,7 @@ public class BuilderTest {
     public void testBuilder_ResultType() {
         Builder<Employee> builder = Builder.of(Employee_.$Fields(), Employee_.$);
         
-        Class<Employee> resultType = builder.resultType();
+        Type resultType = builder.resultType();
         
         assertEquals(Employee.class, resultType);
     }

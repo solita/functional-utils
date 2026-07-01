@@ -2,8 +2,10 @@ package fi.solita.utils.functional.lens;
 
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
+import static fi.solita.utils.functional.Collections.newMutableLinkedMap;
 import static fi.solita.utils.functional.Functional.cons;
 import static fi.solita.utils.functional.Functional.map;
+import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.FunctionalA.filter;
 import static fi.solita.utils.functional.FunctionalA.zip;
 import static fi.solita.utils.functional.Option.None;
@@ -14,9 +16,12 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Apply10;
@@ -69,6 +74,7 @@ import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Transformer;
+import fi.solita.utils.functional.Transformers;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple0;
 import fi.solita.utils.functional.Tuple1;
@@ -120,6 +126,29 @@ import fi.solita.utils.functional.Tuple9;
  * A thing able to build an object given a constructor and a correspondingly ordered list of members.
  */
 public final class Builder<T> {
+    public static final class MapType<K> implements Type {
+        private final Set<K> keys;
+
+        public MapType(Set<K> keys) {
+            this.keys = keys;
+        }
+
+        @Override
+        public String getTypeName() {
+            return "Map<'" + mkString("'|'", map(Transformers.toString, keys)) + "',?>";
+        }
+        
+        @Override
+        public String toString() {
+            return getTypeName();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof MapType && this.keys.equals(((MapType<?>)obj).keys);
+        }
+    }
+
     public static final class IncompleteException extends RuntimeException {
         public IncompleteException(Apply<?, ?> member) {
             super("Missing value for member " + member);
@@ -129,7 +158,7 @@ public final class Builder<T> {
     private final LinkedHashSet<? extends Apply<? super T,? extends Object>> members;
     private final List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
     private final Apply<Tuple, T> constructor;
-    private Class<T> resultTypeCache;
+    private Type resultTypeCache;
 
     @SuppressWarnings("unchecked")
     private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
@@ -158,14 +187,13 @@ public final class Builder<T> {
     /**
      * @return type this builder can build.
      */
-    @SuppressWarnings("unchecked")
-    public final Class<T> resultType() {
+    public final Type resultType() {
         if (resultTypeCache == null) {
-            resultTypeCache = (Class<T>) buildAllowIncomplete().getClass();
+            resultTypeCache = buildAllowIncomplete().getClass();
         }
         return resultTypeCache;
     }
-
+    
     /**
      * @return a copy of this builder initialized with data from given object.
      */
@@ -313,6 +341,25 @@ public final class Builder<T> {
                 return ret;
             }
         });
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static <K,V> Builder<Map<K,V>> ofMap(final Set<K> keys, List<? extends Apply<Map<K,V>, ? extends Object>> members) {
+        Apply<?, Map<K,V>> constructor = new Apply<Tuple, Map<K,V>>() {
+            @Override
+            public Map<K, V> apply(Tuple t) {
+                Map<K, V> ret = newMutableLinkedMap();
+                for (Pair<K,Object> p: zip(keys, t.toArray())) {
+                    ret.put(p.getKey(), (V)p.getValue());
+                }
+                return ret;
+            }
+        };
+        Builder<Map<K, V>> ret = new Builder<Map<K,V>>(Collections.<Pair<? extends Apply<? super Map<K,V>, ?>,? extends Object>>emptyList(),
+                                     new LinkedHashSet<Apply<? super Map<K,V>, ?>>(members),
+                                     (Apply<? extends Tuple, Map<K,V>>) constructor);
+        ret.resultTypeCache = new MapType<K>(keys);
+        return ret;
     }
     
     @SuppressWarnings("unchecked")
