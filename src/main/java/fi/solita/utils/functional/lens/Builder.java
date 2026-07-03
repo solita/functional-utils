@@ -69,7 +69,6 @@ import fi.solita.utils.functional.Apply9;
 import fi.solita.utils.functional.ApplyBi;
 import fi.solita.utils.functional.ApplyZero;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
@@ -157,24 +156,24 @@ public final class Builder<T> {
 
     private final LinkedHashSet<? extends Apply<? super T,? extends Object>> members;
     private final List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
-    private final Apply<Tuple, T> constructor;
+    private final Apply<Object[], T> constructor;
     private Type resultTypeCache;
 
     @SuppressWarnings("unchecked")
-    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Tuple, T> constructor) {
+    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Object[], T> constructor) {
         this.members = members;
         this.values = newList(values);
-        this.constructor = (Apply<Tuple, T>) constructor;
+        this.constructor = (Apply<Object[], T>) constructor;
     }
     
     @SuppressWarnings("unchecked")
     private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(members), (Apply<? extends Tuple, T>) constructor);
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(members), (Apply<? extends Object[], T>) constructor);
     }
     
     private static <T> Builder<T> newBuilder(final ApplyZero<T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(), new Apply<Tuple0, T>() {
-            public T apply(Tuple0 t) {
+        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(), new Apply<Object[], T>() {
+            public T apply(Object[] t) {
                 return constructor.get();
             }
         });
@@ -250,7 +249,7 @@ public final class Builder<T> {
     
     @SuppressWarnings("unchecked")
     private final T build(final boolean allowIncomplete) throws IncompleteException {
-        T ret = constructor.apply(Tuple.of(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
+        T ret = constructor.apply(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
             @Override
             public Object transform(Apply<? super T, ? extends Object> member) {
                 for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
@@ -283,7 +282,7 @@ public final class Builder<T> {
                     throw new IncompleteException(member);
                 }
             }
-        }, members))));
+        }, members)));
         if (resultTypeCache == null) {
             resultTypeCache = (Class<T>) ret.getClass();
         }
@@ -308,9 +307,9 @@ public final class Builder<T> {
         
         List<? extends Apply<? super T, ?>> members = newList(map(memberProvider, descriptors));
         
-        return newBuilder(members, new Apply<Tuple, T>() {
+        return newBuilder(members, new Apply<Object[], T>() {
             @Override
-            public T apply(Tuple t) {
+            public T apply(Object[] t) {
                 T ret;
                 try {
                     ret = beanClass.getConstructor().newInstance();
@@ -327,7 +326,7 @@ public final class Builder<T> {
                 } catch (SecurityException e) {
                     throw new RuntimeException(e);
                 }
-                for (Pair<PropertyDescriptor, Object> descriptor: zip(descriptors, t.toArray())) {
+                for (Pair<PropertyDescriptor, Object> descriptor: zip(descriptors, t)) {
                     try {
                         descriptor.left().getWriteMethod().invoke(ret, descriptor.right());
                     } catch (IllegalAccessException e) {
@@ -345,11 +344,11 @@ public final class Builder<T> {
     
     @SuppressWarnings("unchecked")
     public static <K,V> Builder<Map<K,V>> ofMap(final Set<K> keys, List<? extends Apply<Map<K,V>, ? extends Object>> members) {
-        Apply<?, Map<K,V>> constructor = new Apply<Tuple, Map<K,V>>() {
+        Apply<?, Map<K,V>> constructor = new Apply<Object[], Map<K,V>>() {
             @Override
-            public Map<K, V> apply(Tuple t) {
+            public Map<K, V> apply(Object[] t) {
                 Map<K, V> ret = newMutableLinkedMap();
-                for (Pair<K,Object> p: zip(keys, t.toArray())) {
+                for (Pair<K,Object> p: zip(keys, t)) {
                     ret.put(p.getKey(), (V)p.getValue());
                 }
                 return ret;
@@ -357,46 +356,64 @@ public final class Builder<T> {
         };
         Builder<Map<K, V>> ret = new Builder<Map<K,V>>(Collections.<Pair<? extends Apply<? super Map<K,V>, ?>,? extends Object>>emptyList(),
                                      new LinkedHashSet<Apply<? super Map<K,V>, ?>>(members),
-                                     (Apply<? extends Tuple, Map<K,V>>) constructor);
+                                     (Apply<? extends Object[], Map<K,V>>) constructor);
         ret.resultTypeCache = new MapType<K>(keys);
         return ret;
     }
     
     @SuppressWarnings("unchecked")
-    public static <T,TUP extends Tuple> Builder<T> ofUnsafe(TUP members, Apply<TUP, T> constructor) {
-        return newBuilder((List<? extends Apply<? super T, ?>>)(Object)newList(members.toArray()), constructor);
+    public static <T,TUP extends Tuple> Builder<T> ofUnsafe(TUP members, final Apply<TUP, T> constructor) {
+        return newBuilder((List<? extends Apply<? super T, ?>>)(Object)newList(members.toArray()), new Apply<Object[], T>() {
+            @Override
+            public T apply(Object[] t) {
+                return constructor.apply((TUP)Tuple.of(t));
+            }
+        });
     }
     
     public static <T> Builder<T> of(Tuple0 members, ApplyZero<T> constructor) {
         return newBuilder(constructor);
     }
     
-    public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, Apply<? extends F1,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor).tuppled());
+    public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, final Apply<? super F1,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0]);
+            }});
     }
     
     public static <T,F1,F2> Builder<T> of(
             Tuple2<? extends Apply<? super T,F1>,
                    ? extends Apply<? super T,F2>> members, final ApplyBi<? super F1,? super F2,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Tuple2<F1,F2>,T>() {
-            public T apply(Tuple2<F1,F2> t) {
-                return constructor.apply(t._1, t._2);
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1]);
             }});
     }
     
     public static <T,F1,F2,F3> Builder<T> of(
             Tuple3<? extends Apply<? super T,F1>,
                    ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>> members, Apply3<? super F1,? super F2,? super F3,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F3>> members, final Apply3<? super F1,? super F2,? super F3,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4> Builder<T> of(
             Tuple4<? extends Apply<? super T,F1>,
                    ? extends Apply<? super T,F2>,
                    ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>> members, Apply4<? super F1,? super F2,? super F3,? super F4,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F4>> members, final Apply4<? super F1,? super F2,? super F3,? super F4,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5> Builder<T> of(
@@ -404,8 +421,12 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F2>,
                    ? extends Apply<? super T,F3>,
                    ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>> members, Apply5<? super F1,? super F2,? super F3,? super F4,? super F5,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F5>> members, final Apply5<? super F1,? super F2,? super F3,? super F4,? super F5,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6> Builder<T> of(
@@ -414,8 +435,12 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F3>,
                    ? extends Apply<? super T,F4>,
                    ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>> members, Apply6<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F6>> members, final Apply6<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7> Builder<T> of(
@@ -425,8 +450,12 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F4>,
                    ? extends Apply<? super T,F5>,
                    ? extends Apply<? super T,F6>,
-                   ? extends Apply<? super T,F7>> members, Apply7<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F7>> members, final Apply7<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8> Builder<T> of(
@@ -437,8 +466,12 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F5>,
                    ? extends Apply<? super T,F6>,
                    ? extends Apply<? super T,F7>,
-                   ? extends Apply<? super T,F8>> members, Apply8<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F8>> members, final Apply8<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9> Builder<T> of(
@@ -450,8 +483,12 @@ public final class Builder<T> {
                    ? extends Apply<? super T,F6>,
                    ? extends Apply<? super T,F7>,
                    ? extends Apply<? super T,F8>,
-                   ? extends Apply<? super T,F9>> members, Apply9<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                   ? extends Apply<? super T,F9>> members, final Apply9<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10> Builder<T> of(
@@ -464,8 +501,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F7>,
                     ? extends Apply<? super T,F8>,
                     ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>> members, Apply10<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F10>> members, final Apply10<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11> Builder<T> of(
@@ -479,8 +520,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F8>,
                     ? extends Apply<? super T,F9>,
                     ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>> members, Apply11<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F11>> members, final Apply11<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12> Builder<T> of(
@@ -495,8 +540,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F9>,
                     ? extends Apply<? super T,F10>,
                     ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>> members, Apply12<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F12>> members, final Apply12<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13> Builder<T> of(
@@ -512,8 +561,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F10>,
                     ? extends Apply<? super T,F11>,
                     ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>> members, Apply13<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F13>> members, final Apply13<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14> Builder<T> of(
@@ -530,8 +583,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F11>,
                     ? extends Apply<? super T,F12>,
                     ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>> members, Apply14<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F14>> members, final Apply14<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15> Builder<T> of(
@@ -549,8 +606,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F12>,
                     ? extends Apply<? super T,F13>,
                     ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>> members, Apply15<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F15>> members, final Apply15<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16> Builder<T> of(
@@ -569,8 +630,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F13>,
                     ? extends Apply<? super T,F14>,
                     ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>> members, Apply16<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F16>> members, final Apply16<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17> Builder<T> of(
@@ -590,8 +655,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F14>,
                     ? extends Apply<? super T,F15>,
                     ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>> members, Apply17<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F17>> members, final Apply17<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18> Builder<T> of(
@@ -612,8 +681,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F15>,
                     ? extends Apply<? super T,F16>,
                     ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>> members, Apply18<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F18>> members, final Apply18<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19> Builder<T> of(
@@ -635,8 +708,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F16>,
                     ? extends Apply<? super T,F17>,
                     ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>> members, Apply19<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F19>> members, final Apply19<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20> Builder<T> of(
@@ -659,8 +736,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F17>,
                     ? extends Apply<? super T,F18>,
                     ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>> members, Apply20<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F20>> members, final Apply20<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21> Builder<T> of(
@@ -684,8 +765,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F18>,
                     ? extends Apply<? super T,F19>,
                     ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>> members, Apply21<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F21>> members, final Apply21<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22> Builder<T> of(
@@ -710,8 +795,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F19>,
                     ? extends Apply<? super T,F20>,
                     ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>> members, Apply22<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F22>> members, final Apply22<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23> Builder<T> of(
@@ -737,8 +826,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F20>,
                     ? extends Apply<? super T,F21>,
                     ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>> members, Apply23<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F23>> members, final Apply23<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24> Builder<T> of(
@@ -765,8 +858,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F21>,
                     ? extends Apply<? super T,F22>,
                     ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>> members, Apply24<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F24>> members, final Apply24<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25> Builder<T> of(
@@ -794,8 +891,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F22>,
                     ? extends Apply<? super T,F23>,
                     ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>> members, Apply25<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F25>> members, final Apply25<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26> Builder<T> of(
@@ -824,8 +925,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F23>,
                     ? extends Apply<? super T,F24>,
                     ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>> members, Apply26<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F26>> members, final Apply26<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27> Builder<T> of(
@@ -855,8 +960,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F24>,
                     ? extends Apply<? super T,F25>,
                     ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>> members, Apply27<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F27>> members, final Apply27<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28> Builder<T> of(
@@ -887,8 +996,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F25>,
                     ? extends Apply<? super T,F26>,
                     ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>> members, Apply28<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F28>> members, final Apply28<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29> Builder<T> of(
@@ -920,8 +1033,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F26>,
                     ? extends Apply<? super T,F27>,
                     ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>> members, Apply29<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F29>> members, final Apply29<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30> Builder<T> of(
@@ -954,8 +1071,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F27>,
                     ? extends Apply<? super T,F28>,
                     ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>> members, Apply30<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F30>> members, final Apply30<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31> Builder<T> of(
@@ -989,8 +1110,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F28>,
                     ? extends Apply<? super T,F29>,
                     ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>> members, Apply31<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F31>> members, final Apply31<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32> Builder<T> of(
@@ -1025,8 +1150,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F29>,
                     ? extends Apply<? super T,F30>,
                     ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>> members, Apply32<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F32>> members, final Apply32<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33> Builder<T> of(
@@ -1062,8 +1191,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F30>,
                     ? extends Apply<? super T,F31>,
                     ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>> members, Apply33<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F33>> members, final Apply33<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34> Builder<T> of(
@@ -1100,8 +1233,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F31>,
                     ? extends Apply<? super T,F32>,
                     ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>> members, Apply34<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F34>> members, final Apply34<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35> Builder<T> of(
@@ -1139,8 +1276,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F32>,
                     ? extends Apply<? super T,F33>,
                     ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>> members, Apply35<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F35>> members, final Apply35<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36> Builder<T> of(
@@ -1179,8 +1320,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F33>,
                     ? extends Apply<? super T,F34>,
                     ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>> members, Apply36<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F36>> members, final Apply36<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35]);
+            }});
     }
 
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37> Builder<T> of(
@@ -1220,8 +1365,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F34>,
                     ? extends Apply<? super T,F35>,
                     ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>> members, Apply37<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F37>> members, final Apply37<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38> Builder<T> of(
@@ -1262,8 +1411,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F35>,
                     ? extends Apply<? super T,F36>,
                     ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>> members, Apply38<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F38>> members, final Apply38<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39> Builder<T> of(
@@ -1305,8 +1458,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F36>,
                     ? extends Apply<? super T,F37>,
                     ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>> members, Apply39<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F39>> members, final Apply39<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40> Builder<T> of(
@@ -1349,8 +1506,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F37>,
                     ? extends Apply<? super T,F38>,
                     ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>> members, Apply40<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F40>> members, final Apply40<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41> Builder<T> of(
@@ -1394,8 +1555,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F38>,
                     ? extends Apply<? super T,F39>,
                     ? extends Apply<? super T,F40>,
-                    ? extends Apply<? super T,F41>> members, Apply41<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F41>> members, final Apply41<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42> Builder<T> of(
@@ -1440,8 +1605,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F39>,
                     ? extends Apply<? super T,F40>,
                     ? extends Apply<? super T,F41>,
-                    ? extends Apply<? super T,F42>> members, Apply42<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F42>> members, final Apply42<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42,F43> Builder<T> of(
@@ -1487,8 +1656,12 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F40>,
                     ? extends Apply<? super T,F41>,
                     ? extends Apply<? super T,F42>,
-                    ? extends Apply<? super T,F43>> members, Apply43<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F43>> members, final Apply43<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41], (F43)t[42]);
+            }});
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42,F43,F44> Builder<T> of(
@@ -1535,7 +1708,11 @@ public final class Builder<T> {
                     ? extends Apply<? super T,F41>,
                     ? extends Apply<? super T,F42>,
                     ? extends Apply<? super T,F43>,
-                    ? extends Apply<? super T,F44>> members, Apply44<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,? super F44,T> constructor) {
-        return newBuilder(Tuple.asList(members), Function.of(constructor));
+                    ? extends Apply<? super T,F44>> members, final Apply44<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,? super F44,T> constructor) {
+        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            @SuppressWarnings("unchecked")
+            public T apply(Object[] t) {
+                return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41], (F43)t[42], (F44)t[43]);
+            }});
     }
 }
