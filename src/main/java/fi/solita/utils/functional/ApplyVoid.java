@@ -5,6 +5,5 @@ import java.io.Serializable;
 /**
  * One argument function producing no value. Side-effect.
  */
-public interface ApplyVoid<T> extends Serializable {
-    void accept(T t);
+public interface ApplyVoid<T> extends java.util.function.Consumer<T>, Serializable {
 }

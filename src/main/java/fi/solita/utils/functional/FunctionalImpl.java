@@ -97,7 +97,7 @@ final class FunctionalImpl {
         for (Map.Entry<K1, V1> k: map.entrySet()) {
             Entry<? extends K2, ? extends V2> e = f.apply(k);
             V2 v = ret.get(e.getKey());
-            v = v == null ? e.getValue() : valueCombiner.apply(Pair.of(v, e.getValue()));
+            v = v == null ? e.getValue() : valueCombiner.apply(v, e.getValue());
             ret.put(e.getKey(), v);
         }
         return ret;
@@ -432,7 +432,7 @@ final class FunctionalImpl {
     /**
      * @return <i>None</i> if <i>elements</i> is empty
      */
-    static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, Iterable<? extends T> xs) {
+    static final <T> Option<T> fold(Apply2<T,T,T> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -441,7 +441,7 @@ final class FunctionalImpl {
             if (ret == null) {
                 ret = t;
             } else {
-                ret = f.apply(Tuple.of(ret, t));
+                ret = f.apply(ret, t);
             }
         }
         return Option.of(ret);
@@ -497,7 +497,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold((Apply<Map.Entry<? extends T,? extends T>,T>)(Object)smaller, xs);
+        return fold((ApplyBi<T,T,T>)(Object)smaller, xs);
     }
     
     @SuppressWarnings("unchecked")
@@ -509,7 +509,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold((Apply<Map.Entry<? extends T,? extends T>,T>)(Object)bigger, xs);
+        return fold((ApplyBi<T,T,T>)(Object)bigger, xs);
     }
     
     static final <T> Option<T> minBy(final Comparator<? super T> comparator, Iterable<T> xs) {

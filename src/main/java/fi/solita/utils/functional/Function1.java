@@ -6,12 +6,6 @@ import java.io.Serializable;
  * Most basic function from {@code T} to {@code R} 
  */
 public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
-    
-    /**
-     * Apply this function to value {@code t}.
-     */
-    public abstract R apply(T t);
-
     /**
      * @return function composition with {@code next}.
      */
@@ -60,17 +54,17 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
-    static final <T1,R> Function1<T1,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+    static final <T1,R> Function1<T1,R> partial(final MultiParamFunction<? extends Tuple,R,?> f, final Object... paramsAndPlaceholders) {
         return new Function1<T1,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public final R apply(T1 t1) {
-                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1);
+                return PartialApplicationHelper.doApply((MultiParamFunction<Tuple,R,?>)f, paramsAndPlaceholders, t1);
             }
         };
     }
     
-    static final <T1,R,FR extends Apply<?,R>> Function1<T1,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+    static final <T1,R,FR> Function1<T1,FR> split(final MultiParamFunction<? extends Tuple,R,?> f, final Object... placeholders) {
         return new Function1<T1,FR>() {
             @Override
             public final FR apply(T1 t1) {

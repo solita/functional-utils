@@ -76,8 +76,8 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#map(ApplyBi, Iterable)
      */
-    public static final <S1, S2, T> Iterable<T> map(ApplyBi<? super S1, ? super S2, ? extends T> f, Map.Entry<S1, S2>[] xs) {
-        return FunctionalImpl.map(Function.of(f), newList(xs));
+    public static final <S1, S2, T> Iterable<T> map(Apply2<? super S1, ? super S2, ? extends T> f, Map.Entry<S1, S2>[] xs) {
+        return FunctionalImpl.map(Function.of(f).tuppled(), newList(xs));
     }
     
     /**
@@ -690,7 +690,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, T[] xs) {
+    public static final <T> Option<T> fold(Apply2<T,T,T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     

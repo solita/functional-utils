@@ -6,7 +6,6 @@ import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 public abstract class SemiGroups {
     
@@ -51,8 +50,8 @@ public abstract class SemiGroups {
      */
     public static final <T> SemiGroup<T> fail() {
         return new SemiGroup<T>() {
-            public T apply(Entry<? extends T, ? extends T> t) {
-                throw new RuntimeException(SemiGroup.class.getName() + ".fail() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
+            public T apply(T a, T b) {
+                throw new RuntimeException(SemiGroup.class.getName() + ".fail() was applied with values " + a + " and " + b + "! Does a map of yours have duplicate keys, or what?");
             }
         };
     }
@@ -62,11 +61,11 @@ public abstract class SemiGroups {
      */
     public static final <T> SemiGroup<T> failUnequal() {
         return new SemiGroup<T>() {
-            public T apply(Entry<? extends T, ? extends T> t) {
-                if (t.getKey().equals(t.getValue())) {
-                    return t.getKey();
+            public T apply(T a, T b) {
+                if (a.equals(b)) {
+                    return a;
                 } else {
-                    throw new RuntimeException(SemiGroup.class.getName() + ".failUnequal() was applied with values " + t.getKey() + " and " + t.getValue() + "! Does a map of yours have duplicate keys, or what?");
+                    throw new RuntimeException(SemiGroup.class.getName() + ".failUnequal() was applied with values " + a + " and " + b + "! Does a map of yours have duplicate keys, or what?");
                 }
             }
         };
@@ -343,7 +342,7 @@ public abstract class SemiGroups {
           this.sg = sg instanceof Function2 ? (Function2<V,V,V>)sg : new Function2<V,V,V>() {
             @Override
             public V apply(V t1, V t2) {
-                return sg.apply(Pair.of(t1, t2));
+                return sg.apply(t1, t2);
             }
         };
       }
@@ -390,7 +389,7 @@ public abstract class SemiGroups {
 
     @Override
     public final Tuple2<T1, T2> apply(Tuple2<T1, T2> t1, Tuple2<T1, T2> t2) {
-        return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)));
+        return Tuple.of(s1.apply(t1._1, t2._1), s2.apply(t1._2, t2._2));
     }
   }
   
@@ -407,7 +406,7 @@ public abstract class SemiGroups {
 
       @Override
       public final Tuple3<T1, T2, T3> apply(Tuple3<T1, T2, T3> t1, Tuple3<T1, T2, T3> t2) {
-          return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)), s3.apply(Tuple.of(t1._3, t2._3)));
+          return Tuple.of(s1.apply(t1._1, t2._1), s2.apply(t1._2, t2._2), s3.apply(t1._3, t2._3));
       }
     }
   
@@ -426,7 +425,7 @@ public abstract class SemiGroups {
 
       @Override
       public final Tuple4<T1, T2, T3, T4> apply(Tuple4<T1, T2, T3, T4> t1, Tuple4<T1, T2, T3, T4> t2) {
-          return Tuple.of(s1.apply(Tuple.of(t1._1, t2._1)), s2.apply(Tuple.of(t1._2, t2._2)), s3.apply(Tuple.of(t1._3, t2._3)), s4.apply(Tuple.of(t1._4, t2._4)));
+          return Tuple.of(s1.apply(t1._1, t2._1), s2.apply(t1._2, t2._2), s3.apply(t1._3, t2._3), s4.apply(t1._4, t2._4));
       }
     }
   

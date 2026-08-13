@@ -1,7 +1,6 @@
 package fi.solita.utils.functional;
 
 import java.util.Comparator;
-import java.util.Map;
 
 /**
  * Extension to Comparator.
@@ -53,8 +52,8 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
         return of(java.util.Collections.reverseOrder(this));
     }
     
-    public final Ordering<T> apply(Map.Entry<? extends Ordering<T>,? extends Ordering<T>> t) {
-        return of(Monoids.<T>comparatorConcat().apply(t));
+    public final Ordering<T> apply(Ordering<T> a, Ordering<T> b) {
+        return of(Monoids.<T>comparatorConcat().apply(a, b));
     }
 
     public final Ordering<T> zero() {
@@ -65,7 +64,7 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
      * @return composition of {@code this} and {@code next}.
      */
     public final Ordering<T> then(Comparator<? super T> next) {
-        return apply(Pair.of(this, Ordering.of(next)));
+        return apply(this, Ordering.of(next));
     }
     
     /**

@@ -18,8 +18,8 @@ public abstract class Monoids {
      */
     public static final <T> Monoid<T> of(final SemiGroup<T> semigroup, final ApplyZero<T> zeroElement) {
         return new Monoid<T>() {
-            public T apply(Map.Entry<? extends T, ? extends T> t) {
-                return semigroup.apply(t);
+            public T apply(T a, T b) {
+                return semigroup.apply(a, b);
             }
 
             public T zero() {
@@ -72,8 +72,8 @@ public abstract class Monoids {
     
     public static final <T> Monoid<Iterable<T>> iterableConcat() {
         return new Monoid<Iterable<T>>() {
-            public Iterable<T> apply(Map.Entry<? extends Iterable<T>, ? extends Iterable<T>> t) {
-                return concat(t.getKey(), t.getValue());
+            public Iterable<T> apply(Iterable<T> a, Iterable<T> b) {
+                return concat(a, b);
             }
 
             public Iterable<T> zero() {
@@ -84,13 +84,13 @@ public abstract class Monoids {
     
     public static final <T> Monoid<Collection<T>> collectionConcat() {
         return new Monoid<Collection<T>>() {
-            public Collection<T> apply(Map.Entry<? extends Collection<T>, ? extends Collection<T>> t) {
-                if (t.getKey() == null || t.getKey().isEmpty()) {
-                    return t.getValue();
-                } else if (t.getValue() == null || t.getValue().isEmpty()) {
-                    return t.getKey();
+            public Collection<T> apply(Collection<T> a, Collection<T> b) {
+                if (a == null || a.isEmpty()) {
+                    return b;
+                } else if (b == null || b.isEmpty()) {
+                    return a;
                 }
-                return newList(concat(t.getKey(), t.getValue()));
+                return newList(concat(a, b));
             }
 
             public Collection<T> zero() {
@@ -101,13 +101,13 @@ public abstract class Monoids {
     
     public static final <T> Monoid<List<T>> listConcat() {
         return new Monoid<List<T>>() {
-            public List<T> apply(Map.Entry<? extends List<T>, ? extends List<T>> t) {
-                if (t.getKey() == null || t.getKey().isEmpty()) {
-                    return t.getValue();
-                } else if (t.getValue() == null || t.getValue().isEmpty()) {
-                    return t.getKey();
+            public List<T> apply(List<T> a, List<T> b) {
+                if (a == null || a.isEmpty()) {
+                    return b;
+                } else if (b == null || b.isEmpty()) {
+                    return a;
                 }
-                return newList(concat(t.getKey(), t.getValue()));
+                return newList(concat(a, b));
             }
 
             public List<T> zero() {

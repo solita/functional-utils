@@ -589,7 +589,7 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final Option<Character> fold(Apply<Map.Entry<? extends Character,? extends Character>, Character> f, CharSequence xs) {
+    public static final Option<Character> fold(Apply2<Character,Character,Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     
