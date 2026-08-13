@@ -100,21 +100,21 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#map(Apply, Apply, Iterable)
      */
-    public static final <T1, T2> Iterable<Pair<T1,T2>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, CharSequence xs) {
+    public static final <T1, T2> Iterable<Pair<T1,T2>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, it(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Iterable)
      */
-    public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, Apply<Character, T3> f3, CharSequence xs) {
+    public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, Apply<Character, ? extends T3> f3, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, it(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
      */
-    public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<Character, T1> f1, Apply<Character, T2> f2, Apply<Character, T3> f3, Apply<Character, T4> f4, CharSequence xs) {
+    public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, Apply<Character, ? extends T3> f3, Apply<Character, ? extends T4> f4, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, it(xs));
     }
     
@@ -582,28 +582,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <Z> Z fold(Z zero, Apply<Map.Entry<Z,Character>, Z> f, CharSequence xs) {
-        return FunctionalImpl.fold(zero, (a,b) -> f.apply(Pair.of(a,b)), it(xs));
-    }
-    
-    /**
-     * @see Functional#fold(Object, Apply, Iterable)
-     */
-    public static final <Z> Z fold(Z zero, ApplyBi<Z, Character, Z> f, CharSequence xs) {
+    public static final <Z> Z fold(Z zero, Apply<? super Map.Entry<Z,Character>, Z> f, CharSequence xs) {
         return FunctionalImpl.fold(zero, f, it(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final Option<Character> fold(Apply<Map.Entry<Character,Character>, Character> f, CharSequence xs) {
-        return FunctionalImpl.fold((a,b) -> f.apply(Pair.of(a,b)), it(xs));
-    }
-    
-    /**
-     * @see Functional#fold(Apply, Iterable)
-     */
-    public static final Option<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
+    public static final Option<Character> fold(Apply<? super Map.Entry<Character,Character>, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     
@@ -652,7 +638,7 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#unzip
      */
-    public static final <A, B> Pair<CharSequence, CharSequence> unzipC(Iterable<Pair<Character,Character>> xs) {
+    public static final <A, B> Pair<CharSequence, CharSequence> unzipC(Iterable<? extends Pair<Character, Character>> xs) {
         if (xs == null) {
             return null;
         }
@@ -663,7 +649,7 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#unzip3
      */
-    public static final <A, B, C> Tuple3<CharSequence, CharSequence, CharSequence> unzip3C(Iterable<Tuple3<Character,Character,Character>> xs) {
+    public static final <A, B, C> Tuple3<CharSequence, CharSequence, CharSequence> unzip3C(Iterable<? extends Tuple3<Character,Character,Character>> xs) {
         if (xs == null) {
             return null;
         }

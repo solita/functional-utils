@@ -196,8 +196,8 @@ public abstract class Transformers {
         }
     };
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Map.Entry<T,?>,T> left() {
-        return (Transformer<Map.Entry<T,?>,T>)(Object)left;
+    public static final <T> Transformer<Map.Entry<? extends T,?>,T> left() {
+        return (Transformer<Map.Entry<? extends T,?>,T>)(Object)left;
     }
     @SuppressWarnings("unchecked")
     public static final <K,V> Transformer<Map.Entry<K,V>,K> key() {
@@ -211,15 +211,15 @@ public abstract class Transformers {
         }
     };
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Map.Entry<?,T>,T> right() {
-        return (Transformer<Map.Entry<?,T>,T>)(Object)right;
+    public static final <T> Transformer<Map.Entry<?,? extends T>,T> right() {
+        return (Transformer<Map.Entry<?,? extends T>,T>)(Object)right;
     }
     @SuppressWarnings("unchecked")
     public static final <K,V> Transformer<Map.Entry<K,V>,V> value() {
         return (Transformer<Map.Entry<K,V>,V>)(Object)right;
     }
 
-    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<R,V>> first(final Apply<K,R> f) {
+    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<R,V>> first(final Apply<? super K,? extends R> f) {
         return new Transformer<Map.Entry<K,V>,Map.Entry<R,V>>() {
             @Override
             public final Map.Entry<R,V> transform(Map.Entry<K,V> source) {
@@ -228,7 +228,7 @@ public abstract class Transformers {
         };
     }
     
-    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<K,R>> second(final Apply<V,R> f) {
+    public static final <K,V,R> Transformer<Map.Entry<K,V>,Map.Entry<K,R>> second(final Apply<? super V,? extends R> f) {
         return new Transformer<Map.Entry<K,V>,Map.Entry<K,R>>() {
             @Override
             public final Map.Entry<K,R> transform(Map.Entry<K,V> source) {
@@ -372,7 +372,7 @@ public abstract class Transformers {
         }
     };
     
-    public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> map(final Apply<? super T, R> f) {
+    public static final <T,R> Transformer<Iterable<? extends T>,Iterable<R>> map(final Apply<? super T, ? extends R> f) {
         return new Transformer<Iterable<? extends T>,Iterable<R>>() {
             @Override
             public final Iterable<R> transform(Iterable<? extends T> source) {
@@ -381,7 +381,7 @@ public abstract class Transformers {
         };
     }
     
-    public static final <T,R> Transformer<Option<? extends T>,Option<R>> mapOption(final Apply<? super T, R> f) {
+    public static final <T,R> Transformer<Option<? extends T>,Option<R>> mapOption(final Apply<? super T, ? extends R> f) {
         return new Transformer<Option<? extends T>,Option<R>>() {
             @Override
             public final Option<R> transform(Option<? extends T> source) {
@@ -750,179 +750,179 @@ public abstract class Transformers {
     };
     
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._1<T>,T> _1() {
-        return (Transformer<Tuple._1<T>,T>)(Object)_1;
+    public static final <T> Transformer<Tuple._1<? extends T>,T> _1() {
+        return (Transformer<Tuple._1<? extends T>,T>)(Object)_1;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._2<T>,T> _2() {
-        return (Transformer<Tuple._2<T>,T>)(Object)_2;
+    public static final <T> Transformer<Tuple._2<? extends T>,T> _2() {
+        return (Transformer<Tuple._2<? extends T>,T>)(Object)_2;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._3<T>,T> _3() {
-        return (Transformer<Tuple._3<T>,T>)(Object)_3;
+    public static final <T> Transformer<Tuple._3<? extends T>,T> _3() {
+        return (Transformer<Tuple._3<? extends T>,T>)(Object)_3;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._4<T>,T> _4() {
-        return (Transformer<Tuple._4<T>,T>)(Object)_4;
+    public static final <T> Transformer<Tuple._4<? extends T>,T> _4() {
+        return (Transformer<Tuple._4<? extends T>,T>)(Object)_4;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._5<T>,T> _5() {
-        return (Transformer<Tuple._5<T>,T>)(Object)_5;
+    public static final <T> Transformer<Tuple._5<? extends T>,T> _5() {
+        return (Transformer<Tuple._5<? extends T>,T>)(Object)_5;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._6<T>,T> _6() {
-        return (Transformer<Tuple._6<T>,T>)(Object)_6;
+    public static final <T> Transformer<Tuple._6<? extends T>,T> _6() {
+        return (Transformer<Tuple._6<? extends T>,T>)(Object)_6;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._7<T>,T> _7() {
-        return (Transformer<Tuple._7<T>,T>)(Object)_7;
+    public static final <T> Transformer<Tuple._7<? extends T>,T> _7() {
+        return (Transformer<Tuple._7<? extends T>,T>)(Object)_7;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._8<T>,T> _8() {
-        return (Transformer<Tuple._8<T>,T>)(Object)_8;
+    public static final <T> Transformer<Tuple._8<? extends T>,T> _8() {
+        return (Transformer<Tuple._8<? extends T>,T>)(Object)_8;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._9<T>,T> _9() {
-        return (Transformer<Tuple._9<T>,T>)(Object)_9;
+    public static final <T> Transformer<Tuple._9<? extends T>,T> _9() {
+        return (Transformer<Tuple._9<? extends T>,T>)(Object)_9;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._10<T>,T> _10() {
-        return (Transformer<Tuple._10<T>,T>)(Object)_10;
+    public static final <T> Transformer<Tuple._10<? extends T>,T> _10() {
+        return (Transformer<Tuple._10<? extends T>,T>)(Object)_10;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._11<T>,T> _11() {
-        return (Transformer<Tuple._11<T>,T>)(Object)_11;
+    public static final <T> Transformer<Tuple._11<? extends T>,T> _11() {
+        return (Transformer<Tuple._11<? extends T>,T>)(Object)_11;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._12<T>,T> _12() {
-        return (Transformer<Tuple._12<T>,T>)(Object)_12;
+    public static final <T> Transformer<Tuple._12<? extends T>,T> _12() {
+        return (Transformer<Tuple._12<? extends T>,T>)(Object)_12;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._13<T>,T> _13() {
-        return (Transformer<Tuple._13<T>,T>)(Object)_13;
+    public static final <T> Transformer<Tuple._13<? extends T>,T> _13() {
+        return (Transformer<Tuple._13<? extends T>,T>)(Object)_13;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._14<T>,T> _14() {
-        return (Transformer<Tuple._14<T>,T>)(Object)_14;
+    public static final <T> Transformer<Tuple._14<? extends T>,T> _14() {
+        return (Transformer<Tuple._14<? extends T>,T>)(Object)_14;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._15<T>,T> _15() {
-        return (Transformer<Tuple._15<T>,T>)(Object)_15;
+    public static final <T> Transformer<Tuple._15<? extends T>,T> _15() {
+        return (Transformer<Tuple._15<? extends T>,T>)(Object)_15;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._16<T>,T> _16() {
-        return (Transformer<Tuple._16<T>,T>)(Object)_16;
+    public static final <T> Transformer<Tuple._16<? extends T>,T> _16() {
+        return (Transformer<Tuple._16<? extends T>,T>)(Object)_16;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._17<T>,T> _17() {
-        return (Transformer<Tuple._17<T>,T>)(Object)_17;
+    public static final <T> Transformer<Tuple._17<? extends T>,T> _17() {
+        return (Transformer<Tuple._17<? extends T>,T>)(Object)_17;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._18<T>,T> _18() {
-        return (Transformer<Tuple._18<T>,T>)(Object)_18;
+    public static final <T> Transformer<Tuple._18<? extends T>,T> _18() {
+        return (Transformer<Tuple._18<? extends T>,T>)(Object)_18;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._19<T>,T> _19() {
-        return (Transformer<Tuple._19<T>,T>)(Object)_19;
+    public static final <T> Transformer<Tuple._19<? extends T>,T> _19() {
+        return (Transformer<Tuple._19<? extends T>,T>)(Object)_19;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._20<T>,T> _20() {
-        return (Transformer<Tuple._20<T>,T>)(Object)_20;
+    public static final <T> Transformer<Tuple._20<? extends T>,T> _20() {
+        return (Transformer<Tuple._20<? extends T>,T>)(Object)_20;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._21<T>,T> _21() {
-        return (Transformer<Tuple._21<T>,T>)(Object)_21;
+    public static final <T> Transformer<Tuple._21<? extends T>,T> _21() {
+        return (Transformer<Tuple._21<? extends T>,T>)(Object)_21;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._22<T>,T> _22() {
-        return (Transformer<Tuple._22<T>,T>)(Object)_22;
+    public static final <T> Transformer<Tuple._22<? extends T>,T> _22() {
+        return (Transformer<Tuple._22<? extends T>,T>)(Object)_22;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._23<T>,T> _23() {
-        return (Transformer<Tuple._23<T>,T>)(Object)_23;
+    public static final <T> Transformer<Tuple._23<? extends T>,T> _23() {
+        return (Transformer<Tuple._23<? extends T>,T>)(Object)_23;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._24<T>,T> _24() {
-        return (Transformer<Tuple._24<T>,T>)(Object)_24;
+    public static final <T> Transformer<Tuple._24<? extends T>,T> _24() {
+        return (Transformer<Tuple._24<? extends T>,T>)(Object)_24;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._25<T>,T> _25() {
-        return (Transformer<Tuple._25<T>,T>)(Object)_25;
+    public static final <T> Transformer<Tuple._25<? extends T>,T> _25() {
+        return (Transformer<Tuple._25<? extends T>,T>)(Object)_25;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._26<T>,T> _26() {
-        return (Transformer<Tuple._26<T>,T>)(Object)_26;
+    public static final <T> Transformer<Tuple._26<? extends T>,T> _26() {
+        return (Transformer<Tuple._26<? extends T>,T>)(Object)_26;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._27<T>,T> _27() {
-        return (Transformer<Tuple._27<T>,T>)(Object)_27;
+    public static final <T> Transformer<Tuple._27<? extends T>,T> _27() {
+        return (Transformer<Tuple._27<? extends T>,T>)(Object)_27;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._28<T>,T> _28() {
-        return (Transformer<Tuple._28<T>,T>)(Object)_28;
+    public static final <T> Transformer<Tuple._28<? extends T>,T> _28() {
+        return (Transformer<Tuple._28<? extends T>,T>)(Object)_28;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._29<T>,T> _29() {
-        return (Transformer<Tuple._29<T>,T>)(Object)_29;
+    public static final <T> Transformer<Tuple._29<? extends T>,T> _29() {
+        return (Transformer<Tuple._29<? extends T>,T>)(Object)_29;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._30<T>,T> _30() {
-        return (Transformer<Tuple._30<T>,T>)(Object)_30;
+    public static final <T> Transformer<Tuple._30<? extends T>,T> _30() {
+        return (Transformer<Tuple._30<? extends T>,T>)(Object)_30;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._31<T>,T> _31() {
-        return (Transformer<Tuple._31<T>,T>)(Object)_31;
+    public static final <T> Transformer<Tuple._31<? extends T>,T> _31() {
+        return (Transformer<Tuple._31<? extends T>,T>)(Object)_31;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._32<T>,T> _32() {
-        return (Transformer<Tuple._32<T>,T>)(Object)_32;
+    public static final <T> Transformer<Tuple._32<? extends T>,T> _32() {
+        return (Transformer<Tuple._32<? extends T>,T>)(Object)_32;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._33<T>,T> _33() {
-        return (Transformer<Tuple._33<T>,T>)(Object)_33;
+    public static final <T> Transformer<Tuple._33<? extends T>,T> _33() {
+        return (Transformer<Tuple._33<? extends T>,T>)(Object)_33;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._34<T>,T> _34() {
-        return (Transformer<Tuple._34<T>,T>)(Object)_34;
+    public static final <T> Transformer<Tuple._34<? extends T>,T> _34() {
+        return (Transformer<Tuple._34<? extends T>,T>)(Object)_34;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._35<T>,T> _35() {
-        return (Transformer<Tuple._35<T>,T>)(Object)_35;
+    public static final <T> Transformer<Tuple._35<? extends T>,T> _35() {
+        return (Transformer<Tuple._35<? extends T>,T>)(Object)_35;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._36<T>,T> _36() {
-        return (Transformer<Tuple._36<T>,T>)(Object)_36;
+    public static final <T> Transformer<Tuple._36<? extends T>,T> _36() {
+        return (Transformer<Tuple._36<? extends T>,T>)(Object)_36;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._37<T>,T> _37() {
-        return (Transformer<Tuple._37<T>,T>)(Object)_37;
+    public static final <T> Transformer<Tuple._37<? extends T>,T> _37() {
+        return (Transformer<Tuple._37<? extends T>,T>)(Object)_37;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._38<T>,T> _38() {
-        return (Transformer<Tuple._38<T>,T>)(Object)_38;
+    public static final <T> Transformer<Tuple._38<? extends T>,T> _38() {
+        return (Transformer<Tuple._38<? extends T>,T>)(Object)_38;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._39<T>,T> _39() {
-        return (Transformer<Tuple._39<T>,T>)(Object)_39;
+    public static final <T> Transformer<Tuple._39<? extends T>,T> _39() {
+        return (Transformer<Tuple._39<? extends T>,T>)(Object)_39;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._40<T>,T> _40() {
-        return (Transformer<Tuple._40<T>,T>)(Object)_40;
+    public static final <T> Transformer<Tuple._40<? extends T>,T> _40() {
+        return (Transformer<Tuple._40<? extends T>,T>)(Object)_40;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._41<T>,T> _41() {
-        return (Transformer<Tuple._41<T>,T>)(Object)_41;
+    public static final <T> Transformer<Tuple._41<? extends T>,T> _41() {
+        return (Transformer<Tuple._41<? extends T>,T>)(Object)_41;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._42<T>,T> _42() {
-        return (Transformer<Tuple._42<T>,T>)(Object)_42;
+    public static final <T> Transformer<Tuple._42<? extends T>,T> _42() {
+        return (Transformer<Tuple._42<? extends T>,T>)(Object)_42;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._43<T>,T> _43() {
-        return (Transformer<Tuple._43<T>,T>)(Object)_43;
+    public static final <T> Transformer<Tuple._43<? extends T>,T> _43() {
+        return (Transformer<Tuple._43<? extends T>,T>)(Object)_43;
     }
     @SuppressWarnings("unchecked")
-    public static final <T> Transformer<Tuple._44<T>,T> _44() {
-        return (Transformer<Tuple._44<T>,T>)(Object)_44;
+    public static final <T> Transformer<Tuple._44<? extends T>,T> _44() {
+        return (Transformer<Tuple._44<? extends T>,T>)(Object)_44;
     }
 }

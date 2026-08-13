@@ -57,7 +57,7 @@ public abstract class Predicates {
     }
 
     
-    public static final <T> Predicate<T> not(final Apply<T, Boolean> filter) {
+    public static final <T> Predicate<T> not(final Apply<? super T, Boolean> filter) {
         return new Predicate<T>() {
             @Override
             public final boolean accept(T candidate) {

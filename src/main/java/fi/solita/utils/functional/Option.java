@@ -53,7 +53,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     /**
      * @return {@code Option} where the value, if any, is transformed with {@code f}.
      */
-    public abstract <R> Option<R> map(Apply<? super T, R> f);
+    public abstract <R> Option<R> map(Apply<? super T, ? extends R> f);
     
     /**
      * @return same {@code Option} if the value satisfies {@code predicate}, otherwise a None.
@@ -63,7 +63,7 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
     /**
      * @return {@code Option} where the value, if any, is transformed with {@code f} and a layer of Option removed.
      */
-    public abstract <R> Option<R> flatMap(Apply<? super T, Option<R>> f);
+    public abstract <R> Option<R> flatMap(Apply<? super T, ? extends Option<R>> f);
 
     /**
      * @return collapsed value whether this was defined or not.
@@ -97,7 +97,7 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     }
     
     @Override
-    public final <R> Option<R> map(Apply<? super T, R> f) {
+    public final <R> Option<R> map(Apply<? super T, ? extends R> f) {
         return None();
     }
     
@@ -107,7 +107,7 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     }
     
     @Override
-    public <R> Option<R> flatMap(Apply<? super T, Option<R>> f) {
+    public <R> Option<R> flatMap(Apply<? super T, ? extends Option<R>> f) {
         return None();
     }
     
@@ -160,7 +160,7 @@ final class SomeImpl<T> extends Option<T> {
     }
     
     @Override
-    public final <R> Option<R> map(Apply<? super T, R> f) {
+    public final <R> Option<R> map(Apply<? super T, ? extends R> f) {
         return Option.of(f.apply(t));
     }
     
@@ -170,7 +170,7 @@ final class SomeImpl<T> extends Option<T> {
     }
     
     @Override
-    public <R> Option<R> flatMap(Apply<? super T, Option<R>> f) {
+    public <R> Option<R> flatMap(Apply<? super T, ? extends Option<R>> f) {
         return f.apply(t);
     }
     

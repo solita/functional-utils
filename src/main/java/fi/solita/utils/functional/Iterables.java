@@ -16,8 +16,6 @@ import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.isNotNull;
-import static fi.solita.utils.functional.Predicates.isNull;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -247,11 +245,11 @@ public abstract class Iterables {
     }
 
     static final class ZippingIterable<A,B> extends MyIterable<Pair<A, B>> implements ForceableIterable {
-        private final Iterable<A> elements1;
-        private final Iterable<B> elements2;
+        private final Iterable<? extends A> elements1;
+        private final Iterable<? extends B> elements2;
         private boolean force = false;
 
-        public ZippingIterable(Iterable<A> elements1, Iterable<B> elements2) {
+        public ZippingIterable(Iterable<? extends A> elements1, Iterable<? extends B> elements2) {
             this.elements1 = elements1;
             this.elements2 = elements2;
         }
@@ -270,8 +268,8 @@ public abstract class Iterables {
                 }
             }
             return new Iterator<Pair<A, B>>() {
-                private final Iterator<A> it1 = elements1.iterator();
-                private final Iterator<B> it2 = elements2.iterator();
+                private final Iterator<? extends A> it1 = elements1.iterator();
+                private final Iterator<? extends B> it2 = elements2.iterator();
                 
                 
                 public final boolean hasNext() {
@@ -386,10 +384,10 @@ public abstract class Iterables {
     }
     
     static class DistinctIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<T> iterable;
+        private final Iterable<? extends T> iterable;
         private boolean force = false;
 
-        public DistinctIterable(Iterable<T> iterable) {
+        public DistinctIterable(Iterable<? extends T> iterable) {
             this.iterable = iterable;
         }
         
@@ -409,7 +407,7 @@ public abstract class Iterables {
             return new Iterator<T>() {
                 private boolean hasNext;
                 private T next;
-                private final Iterator<T> source = iterable.iterator();
+                private final Iterator<? extends T> source = iterable.iterator();
                 {
                     readNext();
                 }
@@ -449,11 +447,11 @@ public abstract class Iterables {
     }
 
     static final class FilteringIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<T> iterable;
+        private final Iterable<? extends T> iterable;
         private final Apply<? super T, Boolean> filter;
         private boolean force = false;
 
-        public FilteringIterable(Iterable<T> iterable, Apply<? super T, Boolean> filter) {
+        public FilteringIterable(Iterable<? extends T> iterable, Apply<? super T, Boolean> filter) {
             this.iterable = iterable;
             this.filter = filter;
         }
@@ -474,7 +472,7 @@ public abstract class Iterables {
             return new Iterator<T>() {
                 private boolean hasNext;
                 private T next;
-                private final Iterator<T> source = iterable.iterator();
+                private final Iterator<? extends T> source = iterable.iterator();
                 {
                     readNext();
                 }
@@ -514,11 +512,11 @@ public abstract class Iterables {
     }
 
     static final class TransformingIterable<S,T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<S> iterable;
+        private final Iterable<? extends S> iterable;
         private final Apply<? super S, ? extends T> transformer;
         private boolean force = false;
 
-        public TransformingIterable(Iterable<S> iterable, Apply<? super S, ? extends T> transformer) {
+        public TransformingIterable(Iterable<? extends S> iterable, Apply<? super S, ? extends T> transformer) {
             if (iterable == null || transformer == null) {
                 throw new IllegalArgumentException();
             }
@@ -540,7 +538,7 @@ public abstract class Iterables {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
             return new Iterator<T>() {
-                private final Iterator<S> source = iterable.iterator();
+                private final Iterator<? extends S> source = iterable.iterator();
 
                 
                 public final boolean hasNext() {
@@ -561,10 +559,10 @@ public abstract class Iterables {
     }
     
     static final class ReversingIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<T> iterable;
+        private final Iterable<? extends T> iterable;
         private boolean force = false;
 
-        public ReversingIterable(Iterable<T> iterable) {
+        public ReversingIterable(Iterable<? extends T> iterable) {
             this.iterable = iterable;
         }
 
@@ -582,8 +580,8 @@ public abstract class Iterables {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
             return new Iterator<T>() {
-                private final List<T> list = iterable instanceof List ? (List<T>)iterable : newList(iterable);
-                private final ListIterator<T> underlying = list.listIterator(list.size());
+                private final List<? extends T> list = iterable instanceof List ? (List<? extends T>)iterable : newList(iterable);
+                private final ListIterator<? extends T> underlying = list.listIterator(list.size());
                 
                 
                 public final boolean hasNext() {
@@ -783,11 +781,11 @@ public abstract class Iterables {
     }
     
     static final class SortingIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private Iterable<T> iterable;
+        private Iterable<? extends T> iterable;
         private final Comparator<? super T> comparator;
         private boolean force = false;
 
-        public SortingIterable(Iterable<T> iterable, Comparator<? super T> comparator) {
+        public SortingIterable(Iterable<? extends T> iterable, Comparator<? super T> comparator) {
             this.iterable = iterable;
             this.comparator = comparator;
         }
@@ -827,7 +825,7 @@ public abstract class Iterables {
             
             final PriorityQueue<T> queue = new PriorityQueue<T>((int)initialSize, comparator);
             if (iterable instanceof Collection) {
-                queue.addAll((Collection<T>)iterable);
+                queue.addAll((Collection<? extends T>)iterable);
             } else {
                 for (T t: iterable) {
                     queue.add(t);
@@ -858,11 +856,11 @@ public abstract class Iterables {
     }
     
     static final class TakingIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<T> elements;
+        private final Iterable<? extends T> elements;
         private final long amount;
         private boolean force = false;
 
-        public TakingIterable(Iterable<T> elements, long amount) {
+        public TakingIterable(Iterable<? extends T> elements, long amount) {
             if (amount < 0) {
                 amount = 0;
             }
@@ -880,7 +878,7 @@ public abstract class Iterables {
             }
             return new Iterator<T>() {
                 private long left = amount;
-                private final Iterator<T> it = elements.iterator();
+                private final Iterator<? extends T> it = elements.iterator();
 
                 
                 public final boolean hasNext() {
@@ -915,11 +913,11 @@ public abstract class Iterables {
     }
     
     static final class DroppingIterable<T> extends MyIterable<T> implements ForceableIterable {
-        private final Iterable<T> elements;
+        private final Iterable<? extends T> elements;
         private final long amount;
         private boolean force = false;
 
-        public DroppingIterable(Iterable<T> elements, long amount) {
+        public DroppingIterable(Iterable<? extends T> elements, long amount) {
             if (amount < 0) {
                 amount = 0;
             }
@@ -931,17 +929,18 @@ public abstract class Iterables {
             this.force = true;
         }
         
+        @SuppressWarnings("unchecked")
         public final Iterator<T> iterator() {
             if (force && elements instanceof ForceableIterable) {
                 ((ForceableIterable)elements).completeIterationNeeded();
             }
-            Iterator<T> it = elements.iterator();
+            Iterator<? extends T> it = elements.iterator();
             long left = amount;
             while (left > 0 && it.hasNext()) {
                 it.next();
                 left--;
             }
-            return it;
+            return (Iterator<T>) it;
         }
 
         
@@ -956,11 +955,11 @@ public abstract class Iterables {
     }
     
     static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
-        private final Iterable<T> elements;
-        private final ApplyBi<T,T,Boolean> comparator;
+        private final Iterable<? extends T> elements;
+        private final ApplyBi<? super T,? super T,Boolean> comparator;
         private boolean force = false;
 
-        public GroupingIterable(Iterable<T> elements, ApplyBi<T,T,Boolean> comparator) {
+        public GroupingIterable(Iterable<? extends T> elements, ApplyBi<? super T,? super T,Boolean> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }
@@ -979,7 +978,7 @@ public abstract class Iterables {
                 ((ForceableIterable)elements).completeIterationNeeded();
             }
             return new Iterator<Iterable<T>>() {
-                private Iterable<T> remaining = elements;
+                private Iterable<? extends T> remaining = elements;
                 
                 
                 public final boolean hasNext() {
