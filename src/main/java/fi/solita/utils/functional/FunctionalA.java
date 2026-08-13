@@ -83,21 +83,21 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#map(Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, S[] elements) {
+    public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, S[] elements) {
         return FunctionalImpl.map(f1, f2, newList(elements));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, S[] xs) {
+    public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, newList(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Apply<? super S, T4> f4, S[] xs) {
+    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Apply<? super S, ? extends T4> f4, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, newList(xs));
     }
 
@@ -215,7 +215,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#group(Apply, Iterable)
      */
-    public static final <T> Iterable<Iterable<T>> group(ApplyBi<T,T,Boolean> comparator, T[] xs) {
+    public static final <T> Iterable<Iterable<T>> group(ApplyBi<? super T,? super T,Boolean> comparator, T[] xs) {
         return FunctionalImpl.group(comparator, newList(xs));
     }
     
@@ -224,7 +224,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#groupBy
      */
-    public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,G> f, T[] xs) {
+    public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,? extends G> f, T[] xs) {
         return FunctionalImpl.groupBy(f, newList(xs));
     }
     
@@ -393,7 +393,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#exists
      */
-    public static final <T> boolean exists(Apply<T, Boolean> predicate, T[] xs) {
+    public static final <T> boolean exists(Apply<? super T, Boolean> predicate, T[] xs) {
         return FunctionalImpl.exists(predicate, newList(xs));
     }
     
@@ -683,14 +683,14 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, T[] xs) {
+    public static final <T,Z> Z fold(Z zero, Apply<? super Map.Entry<Z,T>, ? extends Z> f, T[] xs) {
         return FunctionalImpl.fold(zero, f, newList(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final <T> Option<T> fold(Apply<Map.Entry<? extends T,? extends T>, T> f, T[] xs) {
+    public static final <T> Option<T> fold(Apply<? super Map.Entry<T,T>, ? extends T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     
@@ -978,7 +978,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1) {
+    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<? super P,? extends Apply<T,T>> f1) {
         return FunctionalImpl.combineEndo(newList(f1));
     }
     

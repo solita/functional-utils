@@ -16,8 +16,6 @@ import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.isNotNull;
-import static fi.solita.utils.functional.Predicates.isNull;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -957,10 +955,10 @@ public abstract class Iterables {
     
     static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<T> elements;
-        private final ApplyBi<T,T,Boolean> comparator;
+        private final ApplyBi<? super T,? super T,Boolean> comparator;
         private boolean force = false;
 
-        public GroupingIterable(Iterable<T> elements, ApplyBi<T,T,Boolean> comparator) {
+        public GroupingIterable(Iterable<T> elements, ApplyBi<? super T,? super T,Boolean> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }

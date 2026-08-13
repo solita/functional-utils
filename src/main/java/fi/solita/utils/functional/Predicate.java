@@ -8,7 +8,7 @@ public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred
     /**
      * @return concrete {@code Predicate} for abstract function {@code apply}.
      */
-    public static final <T> Predicate<T> of(final Apply<T,Boolean> apply) {
+    public static final <T> Predicate<T> of(final Apply<? super T,Boolean> apply) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T t) {

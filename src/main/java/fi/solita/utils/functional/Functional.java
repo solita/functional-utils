@@ -78,21 +78,21 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return all elements in {@code xs} transformed with {@code f1} and {@code f2} respectively.
      */
-    public static final <S, T1, T2> Iterable<Pair<T1, T2>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Iterable<S> xs) {
+    public static final <S, T1, T2> Iterable<Pair<T1, T2>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Iterable<S> xs) {
         return FunctionalImpl.map(f1, f2, xs);
     }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1}, {@code f2} and {@code f3} respectively.
      */
-    public static final <S, T1, T2, T3> Iterable<Tuple3<T1, T2, T3>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Iterable<S> xs) {
+    public static final <S, T1, T2, T3> Iterable<Tuple3<T1, T2, T3>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Iterable<S> xs) {
         return FunctionalImpl.map(f1, f2, f3, xs);
     }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1}, {@code f2}, {@code f3} and {@code f4} respectively.
      */
-    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1, T2, T3, T4>> map(Apply<? super S, T1> f1, Apply<? super S, T2> f2, Apply<? super S, T3> f3, Apply<? super S, T4> f4, Iterable<S> xs) {
+    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1, T2, T3, T4>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Apply<? super S, ? extends T4> f4, Iterable<S> xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, xs);
     }
 
@@ -183,7 +183,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return equal (by {@code comparator}) consecutive elements in {@code xs} grouped together.
      */
-    public static final <T> Iterable<Iterable<T>> group(ApplyBi<T, T, Boolean> comparator, Iterable<T> xs) {
+    public static final <T> Iterable<Iterable<T>> group(ApplyBi<? super T, ? super T, Boolean> comparator, Iterable<T> xs) {
         return FunctionalImpl.group(comparator, xs);
     }
 
@@ -423,14 +423,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return elements in {@code xs}, if any, folded together by bifunction {@code f}.
      */
-    public static final <T> Option<T> fold(Apply<Map.Entry<? extends T, ? extends T>, T> f, Iterable<? extends T> xs) {
+    public static final <T> Option<T> fold(Apply<? super Map.Entry<T,T>, ? extends T> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(f, xs);
     }
 
     /**
      * @return elements in {@code xs} folded together by bifunction {@code f}. {@code zero} for an empty {@code xs}.
      */
-    public static final <T, Z> Z fold(Z zero, Apply<Map.Entry<? extends Z, ? extends T>, Z> f, Iterable<? extends T> xs) {
+    public static final <T, Z> Z fold(Z zero, Apply<? super Map.Entry<Z,T>, ? extends Z> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(zero, f, xs);
     }
 
@@ -565,11 +565,11 @@ public abstract class Functional extends FunctionalC {
     }
     
     
-    public static final <A, B> Pair<Iterable<A>, Iterable<B>> unzip(Iterable<Pair<A,B>> xs) {
+    public static final <A, B> Pair<Iterable<A>, Iterable<B>> unzip(Iterable<? extends Pair<A,B>> xs) {
         return FunctionalImpl.unzip(xs);
     }
     
-    public static final <A, B, C> Tuple3<Iterable<A>, Iterable<B>, Iterable<C>> unzip3(Iterable<Tuple3<A,B,C>> xs) {
+    public static final <A, B, C> Tuple3<Iterable<A>, Iterable<B>, Iterable<C>> unzip3(Iterable<? extends Tuple3<A,B,C>> xs) {
         return FunctionalImpl.unzip3(xs);
     }
 

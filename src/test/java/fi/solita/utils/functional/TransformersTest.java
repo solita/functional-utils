@@ -172,7 +172,7 @@ public class TransformersTest {
     @Test
     public void testLeftAndKey() {
         Map.Entry<String, Integer> entry = Pair.of("key", 42);
-        Transformer<Map.Entry<String, ?>, String> leftTransformer = left();
+        Transformer<Map.Entry<? extends String, ?>, String> leftTransformer = left();
         assertEquals("key", leftTransformer.transform(entry));
         
         Transformer<Map.Entry<String, Integer>, String> keyTransformer = key();
@@ -182,7 +182,7 @@ public class TransformersTest {
     @Test
     public void testRightAndValue() {
         Map.Entry<String, Integer> entry = Pair.of("key", 42);
-        Transformer<Map.Entry<?, Integer>, Integer> rightTransformer = right();
+        Transformer<Map.Entry<?, ? extends Integer>, Integer> rightTransformer = right();
         assertEquals(Integer.valueOf(42), rightTransformer.transform(entry));
         
         Transformer<Map.Entry<String, Integer>, Integer> valueTransformer = value();
@@ -451,13 +451,13 @@ public class TransformersTest {
     public void testTupleAccessors() {
         Tuple3<String, Integer, Boolean> tuple = Tuple.of("a", 42, true);
         
-        Transformer<Tuple._1<String>, String> t1 = _1();
+        Transformer<Tuple._1<? extends String>, String> t1 = _1();
         assertEquals("a", t1.transform(tuple));
         
-        Transformer<Tuple._2<Integer>, Integer> t2 = _2();
+        Transformer<Tuple._2<? extends Integer>, Integer> t2 = _2();
         assertEquals(Integer.valueOf(42), t2.transform(tuple));
         
-        Transformer<Tuple._3<Boolean>, Boolean> t3 = _3();
+        Transformer<Tuple._3<? extends Boolean>, Boolean> t3 = _3();
         assertEquals(Boolean.TRUE, t3.transform(tuple));
     }
 
@@ -466,13 +466,13 @@ public class TransformersTest {
         Tuple10<String, Integer, Boolean, Double, Long, Short, Byte, Float, Character, String> tuple = 
             Tuple.of("a", 42, true, 3.14, 100L, (short)5, (byte)1, 2.5f, 'x', "end");
         
-        Transformer<Tuple._4<Double>, Double> t4 = _4();
+        Transformer<Tuple._4<? extends Double>, Double> t4 = _4();
         assertEquals(Double.valueOf(3.14), t4.transform(tuple));
         
-        Transformer<Tuple._5<Long>, Long> t5 = _5();
+        Transformer<Tuple._5<? extends Long>, Long> t5 = _5();
         assertEquals(Long.valueOf(100L), t5.transform(tuple));
         
-        Transformer<Tuple._10<String>, String> t10 = _10();
+        Transformer<Tuple._10<? extends String>, String> t10 = _10();
         assertEquals("end", t10.transform(tuple));
     }
 
@@ -482,13 +482,13 @@ public class TransformersTest {
                 Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> tuple = 
             Tuple.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
         
-        Transformer<Tuple._11<Integer>, Integer> t11 = _11();
+        Transformer<Tuple._11<? extends Integer>, Integer> t11 = _11();
         assertEquals(Integer.valueOf(11), t11.transform(tuple));
         
-        Transformer<Tuple._15<Integer>, Integer> t15 = _15();
+        Transformer<Tuple._15<? extends Integer>, Integer> t15 = _15();
         assertEquals(Integer.valueOf(15), t15.transform(tuple));
         
-        Transformer<Tuple._20<Integer>, Integer> t20 = _20();
+        Transformer<Tuple._20<? extends Integer>, Integer> t20 = _20();
         assertEquals(Integer.valueOf(20), t20.transform(tuple));
     }
 
@@ -500,13 +500,13 @@ public class TransformersTest {
             Tuple.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
         
-        Transformer<Tuple._21<Integer>, Integer> t21 = _21();
+        Transformer<Tuple._21<? extends Integer>, Integer> t21 = _21();
         assertEquals(Integer.valueOf(21), t21.transform(tuple));
         
-        Transformer<Tuple._25<Integer>, Integer> t25 = _25();
+        Transformer<Tuple._25<? extends Integer>, Integer> t25 = _25();
         assertEquals(Integer.valueOf(25), t25.transform(tuple));
         
-        Transformer<Tuple._30<Integer>, Integer> t30 = _30();
+        Transformer<Tuple._30<? extends Integer>, Integer> t30 = _30();
         assertEquals(Integer.valueOf(30), t30.transform(tuple));
     }
 
@@ -521,16 +521,16 @@ public class TransformersTest {
                      21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
                      41, 42, 43, 44);
         
-        Transformer<Tuple._31<Integer>, Integer> t31 = _31();
+        Transformer<Tuple._31<? extends Integer>, Integer> t31 = _31();
         assertEquals(Integer.valueOf(31), t31.transform(tuple));
         
-        Transformer<Tuple._35<Integer>, Integer> t35 = _35();
+        Transformer<Tuple._35<? extends Integer>, Integer> t35 = _35();
         assertEquals(Integer.valueOf(35), t35.transform(tuple));
         
-        Transformer<Tuple._40<Integer>, Integer> t40 = _40();
+        Transformer<Tuple._40<? extends Integer>, Integer> t40 = _40();
         assertEquals(Integer.valueOf(40), t40.transform(tuple));
         
-        Transformer<Tuple._44<Integer>, Integer> t44 = _44();
+        Transformer<Tuple._44<? extends Integer>, Integer> t44 = _44();
         assertEquals(Integer.valueOf(44), t44.transform(tuple));
     }
 
