@@ -22,6 +22,11 @@ public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred
         return accept(t);
     }
     
+    @Override
+    public boolean test(T t) {
+        return accept(t);
+    }
+    
     /**
      * @return whether this predicate accepts {@code candidate}.
      */
@@ -30,12 +35,13 @@ public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred
     /**
      * @return conjunction of {@code this} and {@code other}.
      */
-    public final Predicate<T> and(final Apply<? super T, Boolean> other) {
+    @Override
+    public final Predicate<T> and(final java.util.function.Predicate<? super T> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return self.accept(candidate) && other.apply(candidate); 
+                return self.accept(candidate) && other.test(candidate); 
             }
         };
     }
@@ -43,12 +49,12 @@ public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred
     /**
      * @return disjunction of {@code this} and {@code other}.
      */
-    public final Predicate<T> or(final Apply<? super T, Boolean> other) {
+    public final Predicate<T> or(final java.util.function.Predicate<? super T> other) {
         final Predicate<T> self = this;
         return new Predicate<T>() {
             @Override
             public boolean accept(T candidate) {
-                return self.accept(candidate) || other.apply(candidate); 
+                return self.accept(candidate) || other.test(candidate); 
             }
         };
     }

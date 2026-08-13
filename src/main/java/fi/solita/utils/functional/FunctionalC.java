@@ -8,7 +8,6 @@ import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 
@@ -582,14 +581,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <Z> Z fold(Z zero, Apply<? super Map.Entry<Z,Character>, Z> f, CharSequence xs) {
+    public static final <Z> Z fold(Z zero, ApplyBi<? super Z, Character, Z> f, CharSequence xs) {
         return FunctionalImpl.fold(zero, f, it(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final Option<Character> fold(Apply<? super Map.Entry<Character,Character>, Character> f, CharSequence xs) {
+    public static final Option<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     

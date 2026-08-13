@@ -107,12 +107,7 @@ public class FunctionalMTest {
             Pair.of("d", 4)
         );
         
-        Map<String, Integer> result = filter(new Apply<Map.Entry<String, Integer>, Boolean>() {
-            @Override
-            public Boolean apply(Map.Entry<String, Integer> entry) {
-                return entry.getValue() % 2 == 0;
-            }
-        }, map);
+        Map<String, Integer> result = filter((a,b) -> b % 2 == 0, map);
         
         assertThat(result.size(), equalTo(2));
         assertThat(result.get("b"), equalTo(2));
@@ -123,12 +118,7 @@ public class FunctionalMTest {
     public void testMap_transformEntries() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Map<String, Integer> result = map(SemiGroups.<Integer>fail(), new Apply<Map.Entry<String, Integer>, Map.Entry<String, Integer>>() {
-            @Override
-            public Map.Entry<String, Integer> apply(Map.Entry<String, Integer> entry) {
-                return Pair.of(entry.getKey().toUpperCase(), entry.getValue() * 10);
-            }
-        }, map);
+        Map<String, Integer> result = map(SemiGroups.<Integer>fail(), (a,b) -> Pair.of(a.toUpperCase(), b * 10), map);
         
         assertThat(result.get("A"), equalTo(10));
         assertThat(result.get("B"), equalTo(20));

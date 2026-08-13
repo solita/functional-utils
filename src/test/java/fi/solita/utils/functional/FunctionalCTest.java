@@ -861,24 +861,14 @@ public class FunctionalCTest {
     
     @Test
     public void testFold_withZero() {
-        Integer result = fold(0, new Apply<Map.Entry<Integer, Character>, Integer>() {
-            @Override
-            public Integer apply(Map.Entry<Integer, Character> entry) {
-                return entry.getKey() + 1;
-            }
-        }, "hello");
+        Integer result = fold(0, (a,b) -> a + 1, "hello");
         
         assertThat(result, equalTo(5));
     }
     
     @Test
     public void testFold_withoutZero() {
-        Option<Character> result = fold(new Apply<Map.Entry<Character, Character>, Character>() {
-            @Override
-            public Character apply(Map.Entry<Character, Character> entry) {
-                return entry.getValue();
-            }
-        }, "hello");
+        Option<Character> result = fold((a,b) -> b, "hello");
         
         assertTrue(result.isDefined());
     }

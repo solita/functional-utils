@@ -46,7 +46,6 @@ import static fi.solita.utils.functional.Transformers.negateInt;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -61,12 +60,7 @@ public class FunctionalExamples {
     static Iterable<Integer> someIterableOrArray = newList(1, 2, 3);
     static Map<Integer,String> someMap = newMap(Pair.of(42, "foo"));
     
-    Apply<Map.Entry<Integer,String>,Boolean> evenKey = new Transformer<Map.Entry<Integer,String>,Boolean>() {
-        @Override
-        public Boolean transform(Entry<Integer, String> source) {
-            return source.getKey() % 2 == 0;
-        }
-    };
+    ApplyBi<Integer,String,Boolean> evenKey = (a,b) -> a % 2 == 0;
     
     Apply<Integer,Void> someProcedure = new Transformer<Integer,Void>() {
         @Override
@@ -177,7 +171,7 @@ public class FunctionalExamples {
         
         // map
         Iterable<Integer> map = map(negateInt, someIterableOrArray);
-        Map<Integer, String> mapOfMap = map(SemiGroups.<String>fail(), Function.<Map.Entry<Integer, String>>id(), someMap);
+        Map<Integer, String> mapOfMap = map(SemiGroups.<String>fail(), Pair::of, someMap);
         Iterable<Pair<Integer, Integer>> mapMultiple = map(negateInt, negateInt.andThen(negateInt), someIterableOrArray);
         assertEquals(newList(-1,-2,-3), newList(map));
         assertEquals(newMap(Pair.of(42, "foo")), mapOfMap);

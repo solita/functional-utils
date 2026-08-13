@@ -166,6 +166,7 @@ public abstract class FunctionalS extends FunctionalA {
     /**
      * @return Set union of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and all in {@code es}. Preserves iteration order.
      */
+    @SafeVarargs
     public static final <T> Set<T> union(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
         return FunctionalImpl.reduce(Monoids.<T>setUnion(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es)));
     }
@@ -217,6 +218,7 @@ public abstract class FunctionalS extends FunctionalA {
     /**
      * @return Set intersection of {@code e1}, {@code e2}, {@code e3}, {@code e4}, {@code e5}, {@code e6} and all in {@code es}.
      */
+    @SafeVarargs
     public static final <T> Set<T> intersection(Set<T> e1, Set<T> e2, Set<T> e3, Set<T> e4, Set<T> e5, Set<T> e6, Set<T>... es) {
         return FunctionalImpl.fold(SemiGroups.<T>setIntersection(), FunctionalImpl.concat(newList(e1, e2, e3, e4, e5, e6), newList(es))).get();
     }

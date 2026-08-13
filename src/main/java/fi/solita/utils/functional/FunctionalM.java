@@ -34,14 +34,14 @@ public abstract class FunctionalM {
     /**
      * @return elements in {@code map} whose entries satisfy {@code predicate}.
      */
-    public static final <T, E> Map<T, E> filter(Apply<? super Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
+    public static final <T, E> Map<T, E> filter(ApplyBi<? super T, ? super E, Boolean> predicate, Map<T, E> map) {
         return FunctionalImpl.filter(predicate, map);
     }
     
     /**
      * @return elements in {@code map} transformed with {@code f}.
      */
-    public static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
+    public static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, ApplyBi<? super K1, ? super V1, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
         return FunctionalImpl.map(valueCombiner, f, map);
     }
     
@@ -49,11 +49,7 @@ public abstract class FunctionalM {
      * @return elements in {@code map} with keys transformed with {@code f1} and values transformed with {@code f2}.
      */
     public static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, final Apply<K1, K2> f1, final Apply<V1, V2> f2, Map<K1, V1> map) {
-        return FunctionalImpl.map(valueCombiner, new Apply<Map.Entry<K1,V1>,Map.Entry<K2,V2>>() {
-            public Map.Entry<K2, V2> apply(Map.Entry<K1, V1> t) {
-                return Pair.of(f1.apply(t.getKey()), f2.apply(t.getValue()));
-            }
-        }, map);
+        return FunctionalImpl.map(valueCombiner, (a,b) -> Pair.of(f1.apply(a), f2.apply(b)), map);
     }
     
     /**

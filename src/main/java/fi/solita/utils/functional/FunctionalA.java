@@ -127,6 +127,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#flatten
      */
+    @SafeVarargs
     public static final <T> Iterable<T> flatten(T[] x, T[]... xs) {
         return FunctionalImpl.flatten(FunctionalImpl.map(new Transformer<T[], Iterable<T>>() {
             @Override
@@ -174,6 +175,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#flatten
      */
+    @SafeVarargs
     public static final <T> Iterable<T> flatten(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T>... xs) {
         return FunctionalImpl.flatten(concat(newList(x1, x2, x3, x4, x5, x6), xs));
     }
@@ -598,6 +600,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    @SafeVarargs
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13, Iterable<? extends T> x14, Iterable<? extends T>... xs) {
         Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Predicates.isNotNull(), newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14));
         Iterable<Iterable<? extends T>> b = filter(Predicates.isNotNull(), xs);
@@ -660,6 +663,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#reduce(Iterable)
      */
+    @SafeVarargs
     public static final <T extends SemiGroup<T>> T reduce(T x1, T x2, T x3, T x4, T x5, T x6, T... xs) {
         return FunctionalImpl.reduce(concat(newList(x1, x2, x3, x4, x5, x6), xs)).get();
     }
@@ -683,14 +687,14 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <T,Z> Z fold(Z zero, Apply<? super Map.Entry<Z,T>, ? extends Z> f, T[] xs) {
+    public static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, T[] xs) {
         return FunctionalImpl.fold(zero, f, newList(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final <T> Option<T> fold(Apply<? super Map.Entry<T,T>, ? extends T> f, T[] xs) {
+    public static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     
@@ -706,6 +710,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#min
      */
+    @SafeVarargs
     public static final <T extends Comparable<T>> T min(T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.min(cons(x, xs)).get();
     }
@@ -720,6 +725,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#minBy
      */
+    @SafeVarargs
     public static final <T> T minBy(Comparator<? super T> comparator, T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.minBy(comparator, cons(x, xs)).get();
     }
@@ -736,6 +742,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#max
      */
+    @SafeVarargs
     public static final <T extends Comparable<T>> T max(T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.max(cons(x, xs)).get();
     }
@@ -750,6 +757,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#maxBy
      */
+    @SafeVarargs
     public static final <T> T maxBy(Comparator<? super T> comparator, T x, T... xs) {
         return x == null || xs == null ? null : FunctionalImpl.maxBy(comparator, cons(x, xs)).get();
     }
@@ -759,6 +767,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#ordered
      */
+    @SafeVarargs
     public static final <T> boolean ordered(Comparator<? super T> comparator, T x, T... xs) {
         return FunctionalImpl.ordered(comparator, cons(x, xs));
     }
@@ -766,6 +775,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#ordered
      */
+    @SafeVarargs
     public static final <T extends Comparable<T>> boolean ordered(T x, T... xs) {
         return FunctionalImpl.ordered(Compare.byNatural(), cons(x, xs));
     }
@@ -1027,6 +1037,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#combineEndo
      */
+    @SafeVarargs
     public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>> f7, final Apply<P,? extends Apply<T,T>>... fs) {
         return FunctionalImpl.combineEndo(concat(newList(f1, f2, f3, f4, f5, f6, f7), fs));
     }

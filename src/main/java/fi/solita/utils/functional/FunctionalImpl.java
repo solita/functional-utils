@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 
@@ -55,9 +54,9 @@ final class FunctionalImpl {
         return xs == null ? null : new FilteringIterable<T>(xs, predicate);
     }
     
-    static final <T, E> Map<T, E> filter(Apply<? super Map.Entry<T, E>, Boolean> predicate, Map<T, E> map) {
+    static final <T, E> Map<T, E> filter(ApplyBi<? super T, ? super E, Boolean> predicate, Map<T, E> map) {
         // to preserve iteration order
-        return Collections.newLinkedMap(SemiGroups.<E>fail(), filter(predicate, map.entrySet()));
+        return Collections.newLinkedMap(SemiGroups.<E>fail(), filter(e -> predicate.apply(e.getKey(), e.getValue()), map.entrySet()));
     }
     
     static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<? extends S> xs) {
@@ -91,11 +90,11 @@ final class FunctionalImpl {
         });
     }
     
-    static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, Apply<? super Map.Entry<K1, V1>, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
+    static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, ApplyBi<? super K1, ? super V1, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
         // to preserve iteration order
         Map<K2, V2> ret = newMutableLinkedMap();
         for (Map.Entry<K1, V1> k: map.entrySet()) {
-            Entry<? extends K2, ? extends V2> e = f.apply(k);
+            Map.Entry<? extends K2, ? extends V2> e = f.apply(k.getKey(), k.getValue());
             V2 v = ret.get(e.getKey());
             v = v == null ? e.getValue() : valueCombiner.apply(v, e.getValue());
             ret.put(e.getKey(), v);
@@ -419,7 +418,7 @@ final class FunctionalImpl {
         return fold(monoid, xs).getOrElse(monoid.zero());
     }
     
-    static final <T,Z> Z fold(Z zero, Apply<? super Map.Entry<Z,T>, ? extends Z> f, Iterable<? extends T> xs) {
+    static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -433,7 +432,7 @@ final class FunctionalImpl {
     /**
      * @return <i>None</i> if <i>elements</i> is empty
      */
-    static final <T> Option<T> fold(Apply<? super Map.Entry<T,T>, ? extends T> f, Iterable<? extends T> xs) {
+    static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -488,8 +487,7 @@ final class FunctionalImpl {
             return t1.compareTo(t2) < 0 ? t2 : t1;
         }
     };
-    
-    @SuppressWarnings("unchecked")
+
     static final <T extends Comparable<? super T>> Option<T> min(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
@@ -498,10 +496,9 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold((Apply<Map.Entry<? super T,? super T>,T>)(Object)smaller, xs);
+        return fold(smaller, xs);
     }
     
-    @SuppressWarnings("unchecked")
     static final <T extends Comparable<? super T>> Option<T> max(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
@@ -510,7 +507,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold((Apply<Map.Entry<? super T,? super T>,T>)(Object)bigger, xs);
+        return fold(bigger, xs);
     }
     
     static final <T> Option<T> minBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
@@ -546,12 +543,9 @@ final class FunctionalImpl {
     }
     
     static final <T> boolean ordered(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
-        return isEmpty(xs) || fold(headOption(xs), new Apply<Map.Entry<? extends Option<T>, ? extends T>, Option<T>>() {
-            @Override
-            public Option<T> apply(Map.Entry<? extends Option<T>, ? extends T> t) {
-                return t.getKey().isDefined() && comparator.compare(t.getKey().get(), t.getValue()) <= 0 ? Option.<T>Some(t.getValue()) : Option.<T>None();
-            }
-        }, tail(xs)).isDefined();
+        return isEmpty(xs) || fold(headOption(xs),
+                                   (Option<T> a, T b) -> a.isDefined() && comparator.compare(a.get(), b) <= 0 ? Option.<T>Some(b) : Option.<T>None(),
+                                   tail(xs)).isDefined();
     }
     
     static final <A,B> Iterable<Pair<A, B>> zip(Iterable<? extends A> a, Iterable<? extends B> b) {

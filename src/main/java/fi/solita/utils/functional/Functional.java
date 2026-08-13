@@ -65,14 +65,14 @@ public abstract class Functional extends FunctionalC {
      * @return all elements in {@code xs} transformed with {@code f}.
      */
     public static final <S1, S2, S3, T> Iterable<T> map(Apply3<? super S1, ? super S2, ? super S3, ? extends T> f, Iterable<? extends Tuple3<S1, S2, S3>> xs) {
-        return FunctionalImpl.map(Function.of(f), xs);
+        return FunctionalImpl.map(t -> f.apply(t._1, t._2, t._3), xs);
     }
     
     /**
      * @return all elements in {@code xs} transformed with {@code f}.
      */
     public static final <S1, S2, S3, S4, T> Iterable<T> map(Apply4<? super S1, ? super S2, ? super S3, ? super S4, ? extends T> f, Iterable<? extends Tuple4<S1, S2, S3, S4>> xs) {
-        return FunctionalImpl.map(Function.of(f), xs);
+        return FunctionalImpl.map(t -> f.apply(t._1, t._2, t._3, t._4), xs);
     }
 
     /**
@@ -423,14 +423,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return elements in {@code xs}, if any, folded together by bifunction {@code f}.
      */
-    public static final <T> Option<T> fold(Apply<? super Map.Entry<T,T>, ? extends T> f, Iterable<? extends T> xs) {
+    public static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(f, xs);
     }
 
     /**
      * @return elements in {@code xs} folded together by bifunction {@code f}. {@code zero} for an empty {@code xs}.
      */
-    public static final <T, Z> Z fold(Z zero, Apply<? super Map.Entry<Z,T>, ? extends Z> f, Iterable<? extends T> xs) {
+    public static final <T, Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(zero, f, xs);
     }
 
