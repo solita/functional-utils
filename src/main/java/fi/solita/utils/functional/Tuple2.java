@@ -12,6 +12,10 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Ta
         this._2 = _2;
     }
     
+    public Tuple2<T2, T1> flip() {
+        return Tuple.of(_2, _1);
+    }
+    
     /**
      * @return pair of left value transformed with {@code first} and right value transformed with {@code second}.
      */
