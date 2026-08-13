@@ -19,14 +19,14 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#subtract
      */
-    public static final <T> Iterable<T> subtract(T[] xs, Collection<T> toSubtract) {
+    public static final <T> Iterable<T> subtract(T[] xs, Collection<? extends T> toSubtract) {
         return FunctionalImpl.subtract(newList(xs), toSubtract);
     }
     
     /**
      * @see Functional#subtract
      */
-    public static final <T> Iterable<T> subtract(Iterable<T> xs, T[] toSubtract) {
+    public static final <T> Iterable<T> subtract(Iterable<? extends T> xs, T[] toSubtract) {
         return FunctionalImpl.subtract(xs, newSet(toSubtract));
     }
     
@@ -782,14 +782,14 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#zip(Iterable, Iterable)
      */
-    public static final <A,B> Iterable<Pair<A, B>> zip(A[] a, Iterable<B> b) {
+    public static final <A,B> Iterable<Pair<A, B>> zip(A[] a, Iterable<? extends B> b) {
         return FunctionalImpl.zip(newList(a), b);
     }
 
     /**
      * @see Functional#zip(Iterable, Iterable)
      */
-    public static final <A,B> Iterable<Pair<A, B>> zip(Iterable<A> a, B[] b) {
+    public static final <A,B> Iterable<Pair<A, B>> zip(Iterable<? extends A> a, B[] b) {
         return FunctionalImpl.zip(a, newList(b));
     }
     
@@ -803,42 +803,42 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<B> b, Iterable<C> c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<? extends B> b, Iterable<? extends C> c) {
         return FunctionalImpl.zip(newList(a), b, c);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, B[] b, Iterable<C> c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<? extends A> a, B[] b, Iterable<? extends C> c) {
         return FunctionalImpl.zip(a, newList(b), c);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, Iterable<B> b, C[] c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<? extends A> a, Iterable<? extends B> b, C[] c) {
         return FunctionalImpl.zip(a, b, newList(c));
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, B[] b, Iterable<C> c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, B[] b, Iterable<? extends C> c) {
         return FunctionalImpl.zip(newList(a), newList(b), c);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<A> a, B[] b, C[] c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<? extends A> a, B[] b, C[] c) {
         return FunctionalImpl.zip(a, newList(b), newList(c));
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<B> b, C[] c) {
+    public static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(A[] a, Iterable<? extends B> b, C[] c) {
         return FunctionalImpl.zip(newList(a), b, newList(c));
     }
     
@@ -852,49 +852,49 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(A[] a, Iterable<B> b, Iterable<C> c, Iterable<D> d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(A[] a, Iterable<? extends B> b, Iterable<? extends C> c, Iterable<? extends D> d) {
         return FunctionalImpl.zip(newList(a), b, c, d);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, B[] b, Iterable<C> c, Iterable<D> d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, B[] b, Iterable<? extends C> c, Iterable<? extends D> d) {
         return FunctionalImpl.zip(a, newList(b), c, d);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, C[] c, Iterable<D> d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, Iterable<? extends B> b, C[] c, Iterable<? extends D> d) {
         return FunctionalImpl.zip(a, b, newList(c), d);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, Iterable<C> c, D[] d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, Iterable<? extends B> b, Iterable<? extends C> c, D[] d) {
         return FunctionalImpl.zip(a, b, c, newList(d));
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(A[] a, B[] b, Iterable<C> c, Iterable<D> d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(A[] a, B[] b, Iterable<? extends C> c, Iterable<? extends D> d) {
         return FunctionalImpl.zip(newList(a), newList(b), c, d);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, B[] b, C[] c, Iterable<D> d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, B[] b, C[] c, Iterable<? extends D> d) {
         return FunctionalImpl.zip(a, newList(b), newList(c), d);
     }
     
     /**
      * @see Functional#zip(Iterable, Iterable, Iterable, Iterable)
      */
-    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<A> a, Iterable<B> b, C[] c, D[] d) {
+    public static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, Iterable<? extends B> b, C[] c, D[] d) {
         return FunctionalImpl.zip(a, b, newList(c), newList(d));
     }
     

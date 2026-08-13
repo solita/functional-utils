@@ -1212,7 +1212,7 @@ public abstract class Collections {
     /**
      * @return some implementation of a Map containing {@code elements} as keys and values acquired with {@code fValue}.
      */
-    public static final <T, V> Map<T, V> newMap(Apply<? super T,V> fValue, Set<T> xs) {
+    public static final <T, V> Map<T, V> newMap(Apply<? super T,? extends V> fValue, Set<T> xs) {
         // cannot be duplicate keys, since xs is a Set
         return newMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, xs));
     }
@@ -1282,7 +1282,7 @@ public abstract class Collections {
     /**
      * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}.
      */
-    public static final <T extends Comparable<? super T>, V> SortedMap<T, V> newSortedMap(Apply<? super T,V> fValue, Set<T> elements) {
+    public static final <T extends Comparable<? super T>, V> SortedMap<T, V> newSortedMap(Apply<? super T,? extends V> fValue, Set<T> elements) {
         // cannot be duplicate keys, since xs is a Set
         return newSortedMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, elements));
     }
@@ -1290,7 +1290,7 @@ public abstract class Collections {
     /**
      * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}, using {@code comparator} for ordering.
      */
-    public static final <T, V> SortedMap<T, V> newSortedMap(Comparator<? super T> comparator, Apply<? super T,V> fValue, Set<T> elements) {
+    public static final <T, V> SortedMap<T, V> newSortedMap(Comparator<? super T> comparator, Apply<? super T,? extends V> fValue, Set<T> elements) {
         // cannot be duplicate keys, since xs is a Set
         return newSortedMap(SemiGroups.<V>fail(), comparator, Functional.map(Function.<T>id(), fValue, elements));
     }

@@ -27,7 +27,7 @@ public abstract class FunctionalM {
     /**
      * @return values in {@code map} whose keys satisfy {@code predicate}.
      */
-    public static final <K, V> Iterable<V> findBy(Apply<? super K, Boolean> predicate, Map<K, V> map) {
+    public static final <K, V> Iterable<V> findBy(Apply<? super K, Boolean> predicate, Map<K, ? extends V> map) {
         return FunctionalImpl.map(Transformers.<V>right(), FunctionalImpl.filter(Transformers.<K>left().andThen(predicate), map.entrySet()));
     }
     
@@ -160,18 +160,18 @@ public abstract class FunctionalM {
     /**
      * @return elements in {@code xs} grouped by {@code f}.
      */
-    public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,? extends G> f, Iterable<T> xs) {
+    public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,? extends G> f, Iterable<? extends T> xs) {
         return FunctionalImpl.groupBy(f, xs);
     }
     
-    public static final <G,V,T> Map<G, List<V>> groupBy(Apply<? super T,? extends G> key, Apply<? super T,? extends V> value, Iterable<T> xs) {
+    public static final <G,V,T> Map<G, List<V>> groupBy(Apply<? super T,? extends G> key, Apply<? super T,? extends V> value, Iterable<? extends T> xs) {
         return newMultimap(FunctionalImpl.map(Pair.fanout(key, value), xs));
     }
     
     /**
      * @return tuples in {@code xs} grouped by first value of the tuple.
      */
-    public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, List<R>> groupByFirst(Iterable<T> xs) {
+    public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, List<R>> groupByFirst(Iterable<? extends T> xs) {
         return newMultimap(FunctionalImpl.map(new Apply<T, Map.Entry<G,R>>() {
             public Map.Entry<G, R> apply(T t) {
                 return Pair.of(t.get_1(), t.drop1());
@@ -182,7 +182,7 @@ public abstract class FunctionalM {
     /**
      * @return tuples in {@code xs} grouped by first value of the tuple, duplicates handled with {@code valueCombiner}.
      */
-    public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, R> groupByFirst(SemiGroup<R> valueCombiner, Iterable<T> xs) {
+    public static final <G, R, T extends Tuple._1<G> & Tuple.Tailable<R>> Map<G, R> groupByFirst(SemiGroup<R> valueCombiner, Iterable<? extends T> xs) {
         return newMap(valueCombiner, FunctionalImpl.map(new Apply<T, Map.Entry<G,R>>() {
             public Map.Entry<G, R> apply(T t) {
                 return Pair.of(t.get_1(), t.drop1());
