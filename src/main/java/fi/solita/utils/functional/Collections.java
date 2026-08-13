@@ -34,9 +34,6 @@ import fi.solita.utils.functional.Iterables.ForceableIterable;
  */
 public abstract class Collections {
     
-    private static final SortedMap<Object, Object> EMPTY_SORTED_MAP = java.util.Collections.unmodifiableSortedMap(new TreeMap<Object, Object>());
-    private static final SortedSet<Object>         EMPTY_SORTED_SET = java.util.Collections.unmodifiableSortedSet(new TreeSet<Object>());
-    
     private static class SingletonSortedSet<E> extends AbstractSet<E> implements SortedSet<E>, Serializable {
         private final E element;
 
@@ -130,9 +127,8 @@ public abstract class Collections {
     /**
      * @return some implementation of an empty SortedSet.
      */
-    @SuppressWarnings("unchecked")
     public static final <T> SortedSet<T> emptySortedSet() {
-        return (SortedSet<T>) EMPTY_SORTED_SET;
+        return java.util.Collections.emptySortedSet();
     }
     
     /**
@@ -145,9 +141,8 @@ public abstract class Collections {
     /**
      * @return some implementation of an empty SortedMap.
      */
-    @SuppressWarnings("unchecked")
     public static final <K,V> SortedMap<K,V> emptySortedMap() {
-        return (SortedMap<K, V>) EMPTY_SORTED_MAP;
+        return java.util.Collections.emptySortedMap();
     }
     
     /**

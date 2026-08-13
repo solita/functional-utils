@@ -471,7 +471,7 @@ final class FunctionalImpl {
     }
     
     @SuppressWarnings("rawtypes")
-    private static final Function2<Comparable,Comparable,Comparable> smaller = new Function2<Comparable, Comparable, Comparable>() {
+    private static final ApplyBi<Comparable,Comparable,Comparable> smaller = new Function2<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public Comparable apply(Comparable t1, Comparable t2) {
@@ -480,7 +480,7 @@ final class FunctionalImpl {
     };
     
     @SuppressWarnings("rawtypes")
-    private static final Function2<Comparable,Comparable,Comparable> bigger = new Function2<Comparable, Comparable, Comparable>() {
+    private static final ApplyBi<Comparable,Comparable,Comparable> bigger = new Function2<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public Comparable apply(Comparable t1, Comparable t2) {
@@ -488,6 +488,7 @@ final class FunctionalImpl {
         }
     };
 
+    @SuppressWarnings("unchecked")
     static final <T extends Comparable<? super T>> Option<T> min(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
@@ -496,9 +497,10 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold(smaller, xs);
+        return fold((ApplyBi<? super T,? super T,? extends T>)(Object)smaller, xs);
     }
     
+    @SuppressWarnings("unchecked")
     static final <T extends Comparable<? super T>> Option<T> max(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
@@ -507,7 +509,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return None();
         }
-        return fold(bigger, xs);
+        return fold((ApplyBi<? super T,? super T,? extends T>)(Object)bigger, xs);
     }
     
     static final <T> Option<T> minBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
