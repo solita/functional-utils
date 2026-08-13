@@ -1020,7 +1020,7 @@ public abstract class Tuple implements Serializable {
     
     @Override
     public String toString() {
-        return "(" + mkString(",", map(Transformers.toString, toArray())) + ")";
+        return "(" + mkString(",", map(x -> x == null ? null : x.toString(), toArray())) + ")";
     }
     
     @Override

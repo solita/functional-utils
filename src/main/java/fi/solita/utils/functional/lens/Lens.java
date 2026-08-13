@@ -262,7 +262,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                         public SortedSet<E> apply(SortedSet<E> c) {
                             return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
                                 public E apply(E e) {
-                                    return lens2.modify(e, Transformers.<S>newList().andThen(f).andThen(Transformers.<S>head()));
+                                    return lens2.modify(e, s -> head(f.apply(newList(s))));
                                 }
                             }, c));
                         };
@@ -339,9 +339,8 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                     return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
                         public SortedSet<E> apply(SortedSet<E> c) {
                             return c == null ? null : newSortedSet(c.comparator(), map(new Apply<E,E>() {
-                                @SuppressWarnings("unchecked")
                                 public E apply(E e) {
-                                    return lens2.modify(e, (Apply<Option<S>, Option<S>>)(Object)Transformers.mapOption(f));
+                                    return lens2.modify(e, x -> x.map(f));
                                 }
                             }, c));
                         };
@@ -378,7 +377,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                     public C apply(C c) {
                         return wrap.apply(map(new Apply<E,E>() {
                             public E apply(E e) {
-                                return lens2.modify(e, Transformers.<S>newList().andThen(f).andThen(Transformers.<S>head()));
+                                return lens2.modify(e, s -> head(f.apply(newList(s))));
                             }
                         }, c));
                     };
@@ -423,9 +422,8 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                 return lens.modify(d, new Apply<C,C>() {
                     public C apply(C c) {
                         return wrap.apply(map(new Apply<E,E>() {
-                            @SuppressWarnings("unchecked")
                             public E apply(E e) {
-                                return lens2.modify(e, (Apply<Option<S>, Option<S>>)(Object)Transformers.mapOption(f));
+                                return lens2.modify(e, x -> x.map(f));
                             }
                         }, c));
                     };

@@ -44,14 +44,14 @@ public class Either<L,R> implements Serializable {
      * @return all left values
      */
     public static final <T> Iterable<T> lefts(Iterable<? extends Either<T, ?>> xs) {
-        return Functional.flatMap(Transformers.<T>eitherLeft(), xs);
+        return Functional.flatMap(x -> x.left, xs);
     }
     
     /**
      * @return all right values
      */
     public static final <T> Iterable<T> rights(Iterable<? extends Either<?, T>> xs) {
-        return Functional.flatMap(Transformers.<T>eitherRight(), xs);
+        return Functional.flatMap(x -> x.right, xs);
     }
 
     protected Either(Option<L> left, Option<R> right) {

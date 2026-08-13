@@ -28,7 +28,7 @@ public abstract class FunctionalM {
      * @return values in {@code map} whose keys satisfy {@code predicate}.
      */
     public static final <K, V> Iterable<V> findBy(Apply<? super K, Boolean> predicate, Map<K, ? extends V> map) {
-        return FunctionalImpl.map(Transformers.<V>right(), FunctionalImpl.filter(Transformers.<K>left().andThen(predicate), map.entrySet()));
+        return FunctionalImpl.map(Map.Entry::getValue, FunctionalImpl.filter(x -> predicate.apply(x.getKey()), map.entrySet()));
     }
     
     /**
@@ -84,14 +84,14 @@ public abstract class FunctionalM {
      * @return {@code map} with keys transformed with {@code f}.
      */
     public static <K,V,R> Map<R, V> mapKey(SemiGroup<V> valueCombiner, Apply<? super K,? extends R> f, Map<K,V> map) {
-        return map == null ? null : newLinkedMap(valueCombiner, FunctionalImpl.map(Transformers.<K,V>key().andThen(f), Transformers.<K,V>value(), map.entrySet()));
+        return map == null ? null : newLinkedMap(valueCombiner, FunctionalImpl.map(x -> f.apply(x.getKey()), x -> x.getValue(), map.entrySet()));
     }
     
     /**
      * @return {@code map} with values transformed with {@code f}.
      */
     public static <K,V,R> Map<K, R> mapValue(Apply<? super V,? extends R> f, Map<K,V> map) {
-        return map == null ? null : newLinkedMap(SemiGroups.<R>fail(), FunctionalImpl.map(Transformers.<K,V>key(), Transformers.<K,V>value().andThen(f), map.entrySet()));
+        return map == null ? null : newLinkedMap(SemiGroups.<R>fail(), FunctionalImpl.map(Map.Entry::getKey, x -> f.apply(x.getValue()), map.entrySet()));
     }
     
     public static <K,V,C extends Iterable<V>> Iterable<Pair<K, V>> flatten(Map<K,C> map) {
@@ -107,7 +107,7 @@ public abstract class FunctionalM {
         return map == null ? null : FunctionalImpl.flatMap(new Apply<Map.Entry<K,C>,Iterable<Tuple3<K,V1,V2>>>() {
             @Override
             public Iterable<Tuple3<K,V1,V2>> apply(final Map.Entry<K, C> t) {
-                return FunctionalImpl.map(Transformers.<K,V1,V2>prependPair(t.getKey()), (Iterable<? extends Map.Entry<V1,V2>>)t.getValue());
+                return FunctionalImpl.map(e -> Tuple.of(t.getKey(), e.getKey(), e.getValue()), (Iterable<? extends Map.Entry<V1,V2>>)t.getValue());
             }
         }, map.entrySet());
     }
@@ -126,28 +126,28 @@ public abstract class FunctionalM {
         }, map.entrySet());
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
             @Override
-            public Map.Entry<T, Iterable<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, Iterable<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), FunctionalImpl.map(f, e.getValue()));
             }
         };
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, List<R>>> valueMapperList(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, List<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, List<R>>> valueMapperList(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, List<R>>>() {
             @Override
-            public Map.Entry<T, List<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, List<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), newList(FunctionalImpl.map(f, e.getValue())));
             }
         };
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Set<R>>> valueMapperSet(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Set<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Set<R>>> valueMapperSet(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Set<R>>>() {
             @Override
-            public Map.Entry<T, Set<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, Set<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), newSet(FunctionalImpl.map(f, e.getValue())));
             }
         };

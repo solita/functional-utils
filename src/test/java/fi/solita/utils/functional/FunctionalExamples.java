@@ -42,7 +42,6 @@ import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
 import static fi.solita.utils.functional.Predicates.even;
 import static fi.solita.utils.functional.Predicates.odd;
-import static fi.solita.utils.functional.Transformers.negateInt;
 
 import java.util.List;
 import java.util.Map;
@@ -62,16 +61,16 @@ public class FunctionalExamples {
     
     ApplyBi<Integer,String,Boolean> evenKey = (a,b) -> a % 2 == 0;
     
-    Apply<Integer,Void> someProcedure = new Transformer<Integer,Void>() {
+    Apply<Integer,Void> someProcedure = new Apply<Integer,Void>() {
         @Override
-        public Void transform(Integer source) {
+        public Void apply(Integer source) {
             return null;
         }
     };
     
-    Apply<Integer,List<Integer>> repeatTwice = new Transformer<Integer,List<Integer>>() {
+    Apply<Integer,List<Integer>> repeatTwice = new Apply<Integer,List<Integer>>() {
         @Override
-        public List<Integer> transform(Integer source) {
+        public List<Integer> apply(Integer source) {
             return newList(source, source);
         }
     };
@@ -170,9 +169,9 @@ public class FunctionalExamples {
         foreach(someProcedure, someIterableOrArray);
         
         // map
-        Iterable<Integer> map = map(negateInt, someIterableOrArray);
+        Iterable<Integer> map = map(x -> -1*x, someIterableOrArray);
         Map<Integer, String> mapOfMap = map(SemiGroups.<String>fail(), Pair::of, someMap);
-        Iterable<Pair<Integer, Integer>> mapMultiple = map(negateInt, negateInt.andThen(negateInt), someIterableOrArray);
+        Iterable<Pair<Integer, Integer>> mapMultiple = map(x -> -1*x, x -> -1*x*-1, someIterableOrArray);
         assertEquals(newList(-1,-2,-3), newList(map));
         assertEquals(newMap(Pair.of(42, "foo")), mapOfMap);
         assertEquals(newList(Pair.of(-1,1), Pair.of(-2,2), Pair.of(-3,3)), newList(mapMultiple));
@@ -189,12 +188,12 @@ public class FunctionalExamples {
         
         // fold
         Option<Integer> fold = fold(SemiGroups.intSum, someIterableOrArray);
-        String foldFromZero = fold("->", SemiGroups.stringConcat, map(Transformers.toString, someIterableOrArray));
+        String foldFromZero = fold("->", SemiGroups.stringConcat, map(Object::toString, someIterableOrArray));
         assertEquals(Some(6), fold);
         assertEquals("->123", foldFromZero);
         
         // reduce
-        long reduce = reduce(Monoids.longSum, map(Transformers.int2long, someIterableOrArray));
+        long reduce = reduce(Monoids.longSum, map(x -> (long)x, someIterableOrArray));
         assertEquals(6l, reduce);
         
         // union

@@ -5,8 +5,6 @@ import static fi.solita.utils.functional.Collections.emptySet;
 import static fi.solita.utils.functional.Collections.newArray;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Transformers.int2long;
-import static fi.solita.utils.functional.Transformers.short2long;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,14 +34,14 @@ public abstract class FunctionalS extends FunctionalA {
      * {@link Functional#reduce(Monoid, Iterable)} specialized to sum of Integers.
      */
     public static final long sum(int... xs) {
-        return sum(map(int2long, newArray(xs)));
+        return sum(map(x -> (long)x, newArray(xs)));
     }
 
     /**
      * {@link Functional#reduce(Monoid, Iterable)} specialized to sum of Shorts.
      */
     public static final long sum(short... xs) {
-        return sum(map(short2long, newArray(xs)));
+        return sum(map(x -> (long)x, newArray(xs)));
     }
     
     
@@ -66,14 +64,14 @@ public abstract class FunctionalS extends FunctionalA {
      * {@link Functional#reduce(Monoid, Iterable)} specialized to product of Integers.
      */
     public static final long product(int... xs) {
-        return product(map(Transformers.int2long, newArray(xs)));
+        return product(map(x -> (long)x, newArray(xs)));
     }
     
     /**
      * {@link Functional#reduce(Monoid, Iterable)} specialized to product of Shorts.
      */
     public static final long product(short... xs) {
-        return product(map(Transformers.short2long, newArray(xs)));
+        return product(map(x -> (long)x, newArray(xs)));
     }
     
     
@@ -242,11 +240,7 @@ public abstract class FunctionalS extends FunctionalA {
             return emptySet();
         }
         final Set<T> first = Functional.head(sets);
-        Pair<Iterable<Set<T>>,Iterable<Set<T>>> intersectsAndNot = Functional.partition(new Transformer<Set<T>, Either<Set<T>,Set<T>>>() {
-            public Either<Set<T>,Set<T>> transform(Set<T> source) {
-                return intersection(source, first).isEmpty() ? Either.<Set<T>,Set<T>>right(source) : Either.<Set<T>,Set<T>>left(source);
-            };
-        }, sets);
+        Pair<Iterable<Set<T>>,Iterable<Set<T>>> intersectsAndNot = Functional.partition(source -> intersection(source, first).isEmpty() ? Either.<Set<T>,Set<T>>right(source) : Either.<Set<T>,Set<T>>left(source), sets);
         Set<T> intersectingHead = newSet(Functional.flatten(intersectsAndNot.left()));
         List<Set<T>> notIntersectingHead = newList(intersectsAndNot.right());
         if (notIntersectingHead.isEmpty()) {

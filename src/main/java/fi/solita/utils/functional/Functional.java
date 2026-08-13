@@ -561,7 +561,7 @@ public abstract class Functional extends FunctionalC {
     }
     
     public static <A,B,C> Iterable<Tuple3<A,B,C>> zipToPair(Iterable<? extends Map.Entry<A,B>> as, C c) {
-        return map(Transformers.<A,B,C>appendPair(c), as);
+        return map(e -> Tuple.of(e.getKey(), e.getValue(), c), as);
     }
     
     

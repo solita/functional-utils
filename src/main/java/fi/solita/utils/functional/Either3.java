@@ -50,21 +50,21 @@ public class Either3<L,M,R> implements Serializable {
      * @return all left values
      */
     public static final <T> Iterable<T> lefts(Iterable<? extends Either3<T, ?, ?>> xs) {
-        return Functional.flatMap(Transformers.<T>either3Left(), xs);
+        return Functional.flatMap(x -> x.left, xs);
     }
     
     /**
      * @return all middle values
      */
     public static final <T> Iterable<T> middles(Iterable<? extends Either3<?, T, ?>> xs) {
-        return Functional.flatMap(Transformers.<T>either3Middle(), xs);
+        return Functional.flatMap(x -> x.middle, xs);
     }
     
     /**
      * @return all right values
      */
     public static final <T> Iterable<T> rights(Iterable<? extends Either3<?, ?, T>> xs) {
-        return Functional.flatMap(Transformers.<T>either3Right(), xs);
+        return Functional.flatMap(x -> x.right, xs);
     }
 
     protected Either3(Option<L> left, Option<M> middle, Option<R> right) {

@@ -39,6 +39,6 @@ public class TupleExamples {
         Tuple3<Integer, String, Boolean> prefix3 = bigtuple.take3();
         
         List<Pair<String,Integer>> listOfTuples = newMutableList();
-        Iterable<Integer> projection = map(Transformers.<Integer>_2(), listOfTuples);
+        Iterable<Integer> projection = map(t -> t._2, listOfTuples);
     }
 }

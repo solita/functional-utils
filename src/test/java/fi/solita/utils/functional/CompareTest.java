@@ -370,7 +370,7 @@ public class CompareTest {
         Tuple2<Integer, String> tuple1 = Tuple.of(1, "z");
         Tuple2<Integer, String> tuple2 = Tuple.of(2, "a");
         
-        assertTrue(Compare.by_1.compare(tuple1, tuple2) < 0);
+        assertTrue(Compare.<Tuple2<Integer,String>>by(t -> t._1).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -378,7 +378,7 @@ public class CompareTest {
         Tuple2<Integer, String> tuple1 = Tuple.of(5, "a");
         Tuple2<Integer, String> tuple2 = Tuple.of(1, "z");
         
-        assertTrue(Compare.by_2.compare(tuple1, tuple2) < 0);
+        assertTrue(Compare.<Tuple2<Integer,String>>by(t -> t._2).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -386,7 +386,7 @@ public class CompareTest {
         Tuple3<Integer, String, Double> tuple1 = Tuple.of(5, "z", 1.0);
         Tuple3<Integer, String, Double> tuple2 = Tuple.of(1, "a", 2.0);
         
-        assertTrue(Compare.by_3.compare(tuple1, tuple2) < 0);
+        assertTrue(Compare.<Tuple3<Integer,String,Double>>by(t -> t._3).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -394,7 +394,7 @@ public class CompareTest {
         Tuple4<Integer, String, Double, Boolean> tuple1 = Tuple.of(5, "z", 2.0, false);
         Tuple4<Integer, String, Double, Boolean> tuple2 = Tuple.of(1, "a", 1.0, true);
         
-        assertTrue(Compare.by_4.compare(tuple1, tuple2) < 0);
+        assertTrue(Compare.<Tuple4<Integer,String,Double,Boolean>>by(t -> t._4).compare(tuple1, tuple2) < 0);
     }
     
     @Test

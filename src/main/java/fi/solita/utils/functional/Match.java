@@ -209,7 +209,7 @@ public abstract class Match {
     
     @SuppressWarnings("unchecked")
     public static final <T> Try<String,T> iterable(T _1, Iterable<? extends T> ts) {
-        return ((Try<String,Tuple1<T>>)(Object)iterable(ts, _1)).map(Transformers.<T>_1());
+        return ((Try<String,Tuple1<T>>)(Object)iterable(ts, _1)).map(t -> t._1);
     }
     
     public static final <T> Try<String,Pair<T,T>> iterable(T _1, T _2, Iterable<? extends T> ts) {

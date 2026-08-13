@@ -10,12 +10,12 @@ import org.junit.Test;
 
 public class FunctionExamples {
     
-    static Transformer<String,Integer> length = new Transformer<String,Integer>() {
+    static Function1<String,Integer> length = Function.of(new Apply<String,Integer>() {
         @Override
-        public Integer transform(String source) {
+        public Integer apply(String source) {
             return source.length();
         }
-    };
+    });
     
     static Function2<Integer,Integer,Integer> mod = new Function2<Integer,Integer,Integer>() {
         @Override

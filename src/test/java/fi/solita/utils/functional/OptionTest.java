@@ -26,8 +26,8 @@ public class OptionTest {
          Option<String> foo = Some("foo");
          Option<Integer> bar = Some(42);
          
-         int slen = foo.fold(strlen, 42);
-         int slen2 = (foo.isDefined() ? strlen.apply(foo.get()) : 42);
+         int slen = foo.fold(String::length, 42);
+         int slen2 = (foo.isDefined() ? foo.get().length() : 42);
          
          int i = bar.fold(Function.<Integer>id(), 42);
          int i2 = bar.getOrElse(42);
@@ -81,14 +81,14 @@ public class OptionTest {
     
     @Test
     public void map_onSome_transformsValue() {
-        Option<Integer> option = Some("foo").map(strlen);
+        Option<Integer> option = Some("foo").map(String::length);
         assertTrue(option.isDefined());
         assertEquals(Integer.valueOf(3), option.get());
     }
     
     @Test
     public void map_onNone_returnsNone() {
-        Option<Integer> option = Option.<String>None().map(strlen);
+        Option<Integer> option = Option.<String>None().map(String::length);
         assertFalse(option.isDefined());
     }
     
@@ -211,13 +211,13 @@ public class OptionTest {
     
     @Test
     public void fold_onSome_returnsTransformedValue() {
-        Integer result = Some("foo").fold(strlen, 0);
+        Integer result = Some("foo").fold(String::length, 0);
         assertEquals(Integer.valueOf(3), result);
     }
     
     @Test
     public void fold_onNone_returnsDefaultValue() {
-        Integer result = Option.<String>None().fold(strlen, 0);
+        Integer result = Option.<String>None().fold(String::length, 0);
         assertEquals(Integer.valueOf(0), result);
     }
     
@@ -352,11 +352,4 @@ public class OptionTest {
         assertThat(deserializedOption, instanceOf(Serializable.class));
         assertFalse(deserializedOption.isDefined());
     }
-    
-    static Apply<String,Integer> strlen = new Transformer<String,Integer>() {
-        @Override
-        public Integer transform(String source) {
-            return source.length();
-        }
-    };
 }

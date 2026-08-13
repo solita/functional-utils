@@ -39,12 +39,7 @@ public class SortTest {
     
     public void runSortOnce(int size, int firstToTake) {
         System.out.println("Testing for " + size + " elements");
-        List<TestClass> data = newList(map(new Transformer<Integer, TestClass>() {
-            @Override
-            public TestClass transform(Integer source) {
-                return new TestClass();
-            }
-        }, range(1, size)));
+        List<TestClass> data = newList(map(x -> new TestClass(), range(1, size)));
         
         long start = System.nanoTime();
         List<TestClass> regular = new ArrayList<TestClass>(data);

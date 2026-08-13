@@ -25,10 +25,14 @@ import static fi.solita.utils.functional.Functional.split;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.Functional.transpose;
+import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,8 +89,8 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3, 4]"));
-         assertThat(mkString("", map(toString, t)), equalTo("[1, 3][2, 4]"));
+         assertThat(mkString("", map(Object::toString, m)), equalTo("[1, 2][3, 4]"));
+         assertThat(mkString("", map(Object::toString, t)), equalTo("[1, 3][2, 4]"));
     }
     
     @Test
@@ -97,8 +101,8 @@ public class FunctionalTest {
         
         Iterable<Iterable<String>> t = transpose(m);
         
-        assertThat(mkString("", map(toString, m)), equalTo("[1, 2]"));
-        assertThat(mkString("", map(toString, t)), equalTo("[1][2]"));
+        assertThat(mkString("", map(Object::toString, m)), equalTo("[1, 2]"));
+        assertThat(mkString("", map(Object::toString, t)), equalTo("[1][2]"));
     }
     
     @Test
@@ -109,8 +113,8 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3]"));
-         assertThat(mkString("", map(toString, t)), equalTo("[1, 3]"));
+         assertThat(mkString("", map(Object::toString, m)), equalTo("[1, 2][3]"));
+         assertThat(mkString("", map(Object::toString, t)), equalTo("[1, 3]"));
     }
     
     @Test
@@ -121,8 +125,8 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(toString, m)), equalTo("[1][2, 3]"));
-         assertThat(mkString("", map(toString, t)), equalTo("[1, 2]"));
+         assertThat(mkString("", map(Object::toString, m)), equalTo("[1][2, 3]"));
+         assertThat(mkString("", map(Object::toString, t)), equalTo("[1, 2]"));
     }
     
     
@@ -134,16 +138,9 @@ public class FunctionalTest {
          
          Iterable<Iterable<String>> t = transpose(m);
          
-         assertThat(mkString("", map(toString, m)), equalTo("[1, 2][3, 4, 5]"));
-         assertThat(mkString("", map(toString, t)), equalTo("[1, 3][2, 4]"));
+         assertThat(mkString("", map(Object::toString, m)), equalTo("[1, 2][3, 4, 5]"));
+         assertThat(mkString("", map(Object::toString, t)), equalTo("[1, 3][2, 4]"));
     }
-    
-    private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
-        @Override
-        public String transform(Object source) {
-            return source.toString();
-        }
-    };
     
     @Test
     public void testRange() {
@@ -168,12 +165,7 @@ public class FunctionalTest {
     @Test
     public void testName() {
         Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
-        Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
-            @Override
-            public Iterable<String> transform(Tuple2<Integer,String> source) {
-                return newList(source._2);
-            }
-        }, a);
+        Iterable<Iterable<String>> b = map(source -> newList(source._2), a);
         Iterable<String> c = flatten(b);
         newList(c);
     }
@@ -188,10 +180,10 @@ public class FunctionalTest {
     @Test
     public void testGrouped() {
         assertEquals(emptyList(), newList(group(emptyList())));
-        assertEquals(newList("a"), newList(map(Transformers.toString, group("a"))));
-        assertEquals(newList("aaa"), newList(map(Transformers.toString, group("aaa"))));
+        assertEquals(newList("a"), newList(map(Object::toString, group("a"))));
+        assertEquals(newList("aaa"), newList(map(Object::toString, group("aaa"))));
         assertEquals(newList("M", "i", "ss", "i", "ss", "i", "pp", "i"),
-                     newList(map(Transformers.toString, group("Mississippi"))));
+                     newList(map(Object::toString, group("Mississippi"))));
     }
     
     private static final Iterable<String> onceIterable = new Iterable<String>() {

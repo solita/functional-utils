@@ -480,23 +480,23 @@ public class Either3Test {
     }
 
     // Helper functions for tests
-    static Apply<String, Integer> strlen = new Transformer<String, Integer>() {
+    static Apply<String, Integer> strlen = new Apply<String, Integer>() {
         @Override
-        public Integer transform(String source) {
+        public Integer apply(String source) {
             return source.length();
         }
     };
 
-    static Apply<Integer, String> intToString = new Transformer<Integer, String>() {
+    static Apply<Integer, String> intToString = new Apply<Integer, String>() {
         @Override
-        public String transform(Integer source) {
+        public String apply(Integer source) {
             return source.toString();
         }
     };
 
-    static Apply<Boolean, String> boolToString = new Transformer<Boolean, String>() {
+    static Apply<Boolean, String> boolToString = new Apply<Boolean, String>() {
         @Override
-        public String transform(Boolean source) {
+        public String apply(Boolean source) {
             return source.toString();
         }
     };

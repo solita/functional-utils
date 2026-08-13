@@ -16,15 +16,15 @@ public class CompareExamples {
         public Option<String> name;
     }
     
-    static Apply<Employee,Integer> salary = new Transformer<Employee,Integer>() {
+    static Apply<Employee,Integer> salary = new Apply<Employee,Integer>() {
         @Override
-        public Integer transform(Employee source) {
+        public Integer apply(Employee source) {
             return source.salary;
         }
     };
-    static Apply<Employee,Option<String>> name = new Transformer<Employee,Option<String>>() {
+    static Apply<Employee,Option<String>> name = new Apply<Employee,Option<String>>() {
         @Override
-        public Option<String> transform(Employee source) {
+        public Option<String> apply(Employee source) {
             return source.name;
         }
     };
@@ -35,12 +35,12 @@ public class CompareExamples {
         Ordering<Employee> byComparable = Compare.by(salary);
         Ordering<Employee> byExplicitComparator = Compare.by(salary, Ordering.Natural());
         
-        Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by_1;
+        Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by(Tuple._1::get_1);
 
         List<Tuple2<String, Employee>> listOfTuples = newMutableList();
         sort(by_1, listOfTuples);
         // Employee does not implement comparable, but we can first map to _2 and then to salary
-        sort(Compare.by(Transformers.<Employee>_2().andThen(salary)), listOfTuples);
+        sort(Compare.by(t -> salary.apply(t._2)), listOfTuples);
         
         // sorted by the contents of an iterable
         sort(Compare.<String>byIterable(), Collections.<List<String>>newMutableList());

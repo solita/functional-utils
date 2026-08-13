@@ -116,12 +116,7 @@ public abstract class FunctionalA extends FunctionalM {
      * @see Functional#flatten
      */
     public static final <T> Iterable<T> flatten(T[][] xs) {
-        return FunctionalImpl.flatten(map(new Transformer<T[], Iterable<T>>() {
-            @Override
-            public final Iterable<T> transform(T[] source) {
-                return newList(source);
-            }
-        }, xs));
+        return FunctionalImpl.flatten(map(Collections::newList, xs));
     }
     
     /**
@@ -129,12 +124,7 @@ public abstract class FunctionalA extends FunctionalM {
      */
     @SafeVarargs
     public static final <T> Iterable<T> flatten(T[] x, T[]... xs) {
-        return FunctionalImpl.flatten(FunctionalImpl.map(new Transformer<T[], Iterable<T>>() {
-            @Override
-            public final Iterable<T> transform(T[] source) {
-                return newList(source);
-            }
-        }, cons(x, xs)));
+        return FunctionalImpl.flatten(FunctionalImpl.map(Collections::newList, cons(x, xs)));
     }
     
     /**

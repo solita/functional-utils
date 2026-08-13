@@ -256,12 +256,7 @@ public class FunctionalATest {
         
         Iterable<Iterable<Integer>> result = group(xs);
         
-        List<List<Integer>> resultList = newList(Functional.map(new Transformer<Iterable<Integer>, List<Integer>>() {
-            @Override
-            public List<Integer> transform(Iterable<Integer> source) {
-                return newList(source);
-            }
-        }, result));
+        List<List<Integer>> resultList = newList(Functional.map(Collections::newList, result));
         
         assertThat(resultList.get(0), equalTo(newList(1, 1)));
         assertThat(resultList.get(1), equalTo(newList(2, 2, 2)));
@@ -905,12 +900,7 @@ public class FunctionalATest {
         
         Iterable<Iterable<Integer>> result = transpose(xs);
         
-        List<List<Integer>> resultList = newList(Functional.map(new Transformer<Iterable<Integer>, List<Integer>>() {
-            @Override
-            public List<Integer> transform(Iterable<Integer> source) {
-                return newList(source);
-            }
-        }, result));
+        List<List<Integer>> resultList = newList(Functional.map(Collections::newList, result));
         
         assertThat(resultList.get(0), equalTo(newList(1, 4)));
         assertThat(resultList.get(1), equalTo(newList(2, 5)));

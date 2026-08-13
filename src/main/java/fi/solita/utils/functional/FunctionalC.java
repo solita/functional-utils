@@ -16,16 +16,16 @@ import fi.solita.utils.functional.Iterables.RepeatingIterable;
  */
 public abstract class FunctionalC extends FunctionalS {
 
-    static final Transformer<CharSequence, Iterable<Character>> charSeq2iterable = new Transformer<CharSequence, Iterable<Character>>() {
+    static final Apply<CharSequence, Iterable<Character>> charSeq2iterable = new Apply<CharSequence, Iterable<Character>>() {
         @Override
-        public final Iterable<Character> transform(CharSequence source) {
+        public final Iterable<Character> apply(CharSequence source) {
             return it(source);
         }
     };
     
-    private static final Transformer<Iterable<Character>, CharSequence> iterable2charSeq = new Transformer<Iterable<Character>, CharSequence>() {
+    private static final Apply<Iterable<Character>, CharSequence> iterable2charSeq = new Apply<Iterable<Character>, CharSequence>() {
         @Override
-        public final CharSequence transform(Iterable<Character> source) {
+        public final CharSequence apply(Iterable<Character> source) {
             return it(source);
         }
     };
@@ -153,7 +153,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#grouped
      */
     public static final Iterable<String> grouped(long groupSize, String xs) {
-        return FunctionalImpl.map(Transformers.toString, grouped(groupSize, (CharSequence)xs));
+        return FunctionalImpl.map(Object::toString, grouped(groupSize, (CharSequence)xs));
     }
 
     
@@ -169,7 +169,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#group(Iterable)
      */
     public static final Iterable<String> group(String xs) {
-        return FunctionalImpl.map(Transformers.toString, group((CharSequence)xs));
+        return FunctionalImpl.map(Object::toString, group((CharSequence)xs));
     }
     
     /**
@@ -183,7 +183,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#group(Apply, Iterable)
      */
     public static final Iterable<String> group(ApplyBi<Character,Character,Boolean> comparator, String xs) {
-        return FunctionalImpl.map(Transformers.toString, group(comparator, (CharSequence)xs));
+        return FunctionalImpl.map(Object::toString, group(comparator, (CharSequence)xs));
     }
     
     
@@ -393,7 +393,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#partition
      */
     public static final Pair<String, String> partition(Apply<Character, Boolean> predicate, String xs) {
-        return partition(predicate, (CharSequence)xs).bimap(Transformers.toString, Transformers.toString);
+        return partition(predicate, (CharSequence)xs).bimap(Object::toString, Object::toString);
     }
     
     
@@ -715,7 +715,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#mkString(CharSequence, Iterable)
      */
     public static final String mkString(CharSequence delimiter, CharSequence xs) {
-        return FunctionalImpl.mkString(delimiter, FunctionalImpl.map(Transformers.toString, it(xs)));
+        return FunctionalImpl.mkString(delimiter, FunctionalImpl.map(Object::toString, it(xs)));
     }
     
     
