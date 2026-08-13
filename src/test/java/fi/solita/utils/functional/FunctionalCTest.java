@@ -861,9 +861,9 @@ public class FunctionalCTest {
     
     @Test
     public void testFold_withZero() {
-        Integer result = fold(0, new Apply<Map.Entry<? extends Integer, ? extends Character>, Integer>() {
+        Integer result = fold(0, new Apply<Map.Entry<Integer, Character>, Integer>() {
             @Override
-            public Integer apply(Map.Entry<? extends Integer, ? extends Character> entry) {
+            public Integer apply(Map.Entry<Integer, Character> entry) {
                 return entry.getKey() + 1;
             }
         }, "hello");
@@ -873,9 +873,9 @@ public class FunctionalCTest {
     
     @Test
     public void testFold_withoutZero() {
-        Option<Character> result = fold(new Apply<Map.Entry<? extends Character, ? extends Character>, Character>() {
+        Option<Character> result = fold(new Apply<Map.Entry<Character, Character>, Character>() {
             @Override
-            public Character apply(Map.Entry<? extends Character, ? extends Character> entry) {
+            public Character apply(Map.Entry<Character, Character> entry) {
                 return entry.getValue();
             }
         }, "hello");

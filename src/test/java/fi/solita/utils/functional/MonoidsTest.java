@@ -14,141 +14,141 @@ public class MonoidsTest {
     public void testOf() {
         Monoid<String> customMonoid = Monoids.of(SemiGroups.stringConcat, Function.of("zero"));
         assertEquals("zero", customMonoid.zero());
-        assertEquals("hello world", customMonoid.apply(Pair.of("hello ", "world")));
+        assertEquals("hello world", customMonoid.apply("hello ", "world"));
     }
 
     @Test
     public void testIntSum() {
         assertEquals(Integer.valueOf(0), intSum.zero());
-        assertEquals(Integer.valueOf(5), intSum.apply(Pair.of(2, 3)));
-        assertEquals(Integer.valueOf(0), intSum.apply(Pair.of(-5, 5)));
-        assertEquals(Integer.valueOf(100), intSum.apply(Pair.of(50, 50)));
+        assertEquals(Integer.valueOf(5), intSum.apply(2, 3));
+        assertEquals(Integer.valueOf(0), intSum.apply(-5, 5));
+        assertEquals(Integer.valueOf(100), intSum.apply(50, 50));
     }
 
     @Test
     public void testIntSum_identityLaw() {
         Integer value = 42;
-        assertEquals(value, intSum.apply(Pair.of(value, intSum.zero())));
-        assertEquals(value, intSum.apply(Pair.of(intSum.zero(), value)));
+        assertEquals(value, intSum.apply(value, intSum.zero()));
+        assertEquals(value, intSum.apply(intSum.zero(), value));
     }
 
     @Test
     public void testIntProduct() {
         assertEquals(Integer.valueOf(1), intProduct.zero());
-        assertEquals(Integer.valueOf(6), intProduct.apply(Pair.of(2, 3)));
-        assertEquals(Integer.valueOf(0), intProduct.apply(Pair.of(0, 5)));
-        assertEquals(Integer.valueOf(100), intProduct.apply(Pair.of(10, 10)));
+        assertEquals(Integer.valueOf(6), intProduct.apply(2, 3));
+        assertEquals(Integer.valueOf(0), intProduct.apply(0, 5));
+        assertEquals(Integer.valueOf(100), intProduct.apply(10, 10));
     }
 
     @Test
     public void testIntProduct_identityLaw() {
         Integer value = 42;
-        assertEquals(value, intProduct.apply(Pair.of(value, intProduct.zero())));
-        assertEquals(value, intProduct.apply(Pair.of(intProduct.zero(), value)));
+        assertEquals(value, intProduct.apply(value, intProduct.zero()));
+        assertEquals(value, intProduct.apply(intProduct.zero(), value));
     }
 
     @Test
     public void testLongSum() {
         assertEquals(Long.valueOf(0L), longSum.zero());
-        assertEquals(Long.valueOf(5L), longSum.apply(Pair.of(2L, 3L)));
-        assertEquals(Long.valueOf(0L), longSum.apply(Pair.of(-5L, 5L)));
-        assertEquals(Long.valueOf(1000000000000L), longSum.apply(Pair.of(500000000000L, 500000000000L)));
+        assertEquals(Long.valueOf(5L), longSum.apply(2L, 3L));
+        assertEquals(Long.valueOf(0L), longSum.apply(-5L, 5L));
+        assertEquals(Long.valueOf(1000000000000L), longSum.apply(500000000000L, 500000000000L));
     }
 
     @Test
     public void testLongSum_identityLaw() {
         Long value = 42L;
-        assertEquals(value, longSum.apply(Pair.of(value, longSum.zero())));
-        assertEquals(value, longSum.apply(Pair.of(longSum.zero(), value)));
+        assertEquals(value, longSum.apply(value, longSum.zero()));
+        assertEquals(value, longSum.apply(longSum.zero(), value));
     }
 
     @Test
     public void testLongProduct() {
         assertEquals(Long.valueOf(1L), longProduct.zero());
-        assertEquals(Long.valueOf(6L), longProduct.apply(Pair.of(2L, 3L)));
-        assertEquals(Long.valueOf(0L), longProduct.apply(Pair.of(0L, 5L)));
-        assertEquals(Long.valueOf(100L), longProduct.apply(Pair.of(10L, 10L)));
+        assertEquals(Long.valueOf(6L), longProduct.apply(2L, 3L));
+        assertEquals(Long.valueOf(0L), longProduct.apply(0L, 5L));
+        assertEquals(Long.valueOf(100L), longProduct.apply(10L, 10L));
     }
 
     @Test
     public void testLongProduct_identityLaw() {
         Long value = 42L;
-        assertEquals(value, longProduct.apply(Pair.of(value, longProduct.zero())));
-        assertEquals(value, longProduct.apply(Pair.of(longProduct.zero(), value)));
+        assertEquals(value, longProduct.apply(value, longProduct.zero()));
+        assertEquals(value, longProduct.apply(longProduct.zero(), value));
     }
 
     @Test
     public void testDoubleSum() {
         assertEquals(Double.valueOf(0.0), doubleSum.zero(), 0.001);
-        assertEquals(Double.valueOf(5.5), doubleSum.apply(Pair.of(2.2, 3.3)), 0.001);
-        assertEquals(Double.valueOf(0.0), doubleSum.apply(Pair.of(-5.5, 5.5)), 0.001);
+        assertEquals(Double.valueOf(5.5), doubleSum.apply(2.2, 3.3), 0.001);
+        assertEquals(Double.valueOf(0.0), doubleSum.apply(-5.5, 5.5), 0.001);
     }
 
     @Test
     public void testDoubleSum_identityLaw() {
         Double value = 42.5;
-        assertEquals(value, doubleSum.apply(Pair.of(value, doubleSum.zero())), 0.001);
-        assertEquals(value, doubleSum.apply(Pair.of(doubleSum.zero(), value)), 0.001);
+        assertEquals(value, doubleSum.apply(value, doubleSum.zero()), 0.001);
+        assertEquals(value, doubleSum.apply(doubleSum.zero(), value), 0.001);
     }
 
     @Test
     public void testDoubleProduct() {
         assertEquals(Double.valueOf(1.0), doubleProduct.zero(), 0.001);
-        assertEquals(Double.valueOf(6.0), doubleProduct.apply(Pair.of(2.0, 3.0)), 0.001);
-        assertEquals(Double.valueOf(0.0), doubleProduct.apply(Pair.of(0.0, 5.0)), 0.001);
+        assertEquals(Double.valueOf(6.0), doubleProduct.apply(2.0, 3.0), 0.001);
+        assertEquals(Double.valueOf(0.0), doubleProduct.apply(0.0, 5.0), 0.001);
     }
 
     @Test
     public void testDoubleProduct_identityLaw() {
         Double value = 42.5;
-        assertEquals(value, doubleProduct.apply(Pair.of(value, doubleProduct.zero())), 0.001);
-        assertEquals(value, doubleProduct.apply(Pair.of(doubleProduct.zero(), value)), 0.001);
+        assertEquals(value, doubleProduct.apply(value, doubleProduct.zero()), 0.001);
+        assertEquals(value, doubleProduct.apply(doubleProduct.zero(), value), 0.001);
     }
 
     @Test
     public void testStringConcat() {
         assertEquals("", stringConcat.zero());
-        assertEquals("hello world", stringConcat.apply(Pair.of("hello ", "world")));
-        assertEquals("foobar", stringConcat.apply(Pair.of("foo", "bar")));
-        assertEquals("test", stringConcat.apply(Pair.of("", "test")));
-        assertEquals("test", stringConcat.apply(Pair.of("test", "")));
+        assertEquals("hello world", stringConcat.apply("hello ", "world"));
+        assertEquals("foobar", stringConcat.apply("foo", "bar"));
+        assertEquals("test", stringConcat.apply("", "test"));
+        assertEquals("test", stringConcat.apply("test", ""));
     }
 
     @Test
     public void testStringConcat_identityLaw() {
         String value = "test";
-        assertEquals(value, stringConcat.apply(Pair.of(value, stringConcat.zero())));
-        assertEquals(value, stringConcat.apply(Pair.of(stringConcat.zero(), value)));
+        assertEquals(value, stringConcat.apply(value, stringConcat.zero()));
+        assertEquals(value, stringConcat.apply(stringConcat.zero(), value));
     }
 
     @Test
     public void testBooleanConjunction() {
         assertEquals(Boolean.TRUE, booleanConjunction.zero());
-        assertEquals(Boolean.TRUE, booleanConjunction.apply(Pair.of(true, true)));
-        assertEquals(Boolean.FALSE, booleanConjunction.apply(Pair.of(true, false)));
-        assertEquals(Boolean.FALSE, booleanConjunction.apply(Pair.of(false, true)));
-        assertEquals(Boolean.FALSE, booleanConjunction.apply(Pair.of(false, false)));
+        assertEquals(Boolean.TRUE, booleanConjunction.apply(true, true));
+        assertEquals(Boolean.FALSE, booleanConjunction.apply(true, false));
+        assertEquals(Boolean.FALSE, booleanConjunction.apply(false, true));
+        assertEquals(Boolean.FALSE, booleanConjunction.apply(false, false));
     }
 
     @Test
     public void testBooleanConjunction_identityLaw() {
-        assertEquals(Boolean.TRUE, booleanConjunction.apply(Pair.of(true, booleanConjunction.zero())));
-        assertEquals(Boolean.FALSE, booleanConjunction.apply(Pair.of(false, booleanConjunction.zero())));
+        assertEquals(Boolean.TRUE, booleanConjunction.apply(true, booleanConjunction.zero()));
+        assertEquals(Boolean.FALSE, booleanConjunction.apply(false, booleanConjunction.zero()));
     }
 
     @Test
     public void testBooleanDisjunction() {
         assertEquals(Boolean.FALSE, booleanDisjunction.zero());
-        assertEquals(Boolean.TRUE, booleanDisjunction.apply(Pair.of(true, true)));
-        assertEquals(Boolean.TRUE, booleanDisjunction.apply(Pair.of(true, false)));
-        assertEquals(Boolean.TRUE, booleanDisjunction.apply(Pair.of(false, true)));
-        assertEquals(Boolean.FALSE, booleanDisjunction.apply(Pair.of(false, false)));
+        assertEquals(Boolean.TRUE, booleanDisjunction.apply(true, true));
+        assertEquals(Boolean.TRUE, booleanDisjunction.apply(true, false));
+        assertEquals(Boolean.TRUE, booleanDisjunction.apply(false, true));
+        assertEquals(Boolean.FALSE, booleanDisjunction.apply(false, false));
     }
 
     @Test
     public void testBooleanDisjunction_identityLaw() {
-        assertEquals(Boolean.TRUE, booleanDisjunction.apply(Pair.of(true, booleanDisjunction.zero())));
-        assertEquals(Boolean.FALSE, booleanDisjunction.apply(Pair.of(false, booleanDisjunction.zero())));
+        assertEquals(Boolean.TRUE, booleanDisjunction.apply(true, booleanDisjunction.zero()));
+        assertEquals(Boolean.FALSE, booleanDisjunction.apply(false, booleanDisjunction.zero()));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class MonoidsTest {
             }
         };
         
-        Apply<String, String> composed = endoMonoid.apply(Pair.of(toUpper, addSuffix));
+        Apply<String, String> composed = endoMonoid.apply(toUpper, addSuffix);
         assertEquals("HELLO!", composed.apply("hello"));
     }
 
@@ -185,8 +185,8 @@ public class MonoidsTest {
             }
         };
         
-        Apply<Integer, Integer> leftIdentity = endoMonoid.apply(Pair.of(addOne, endoMonoid.zero()));
-        Apply<Integer, Integer> rightIdentity = endoMonoid.apply(Pair.of(endoMonoid.zero(), addOne));
+        Apply<Integer, Integer> leftIdentity = endoMonoid.apply(addOne, endoMonoid.zero());
+        Apply<Integer, Integer> rightIdentity = endoMonoid.apply(endoMonoid.zero(), addOne);
         
         assertEquals(Integer.valueOf(43), leftIdentity.apply(42));
         assertEquals(Integer.valueOf(43), rightIdentity.apply(42));
@@ -202,7 +202,7 @@ public class MonoidsTest {
         // Union of sets - newSet creates a LinkedHashSet which preserves insertion order
         Set<String> set1 = newSet(newList("a", "b"));
         Set<String> set2 = newSet(newList("b", "c"));
-        Set<String> result = setMonoid.apply(Pair.of(set1, set2));
+        Set<String> result = setMonoid.apply(set1, set2);
         
         assertEquals(3, result.size());
         assertTrue(result.contains("a"));
@@ -221,8 +221,8 @@ public class MonoidsTest {
         Monoid<Set<String>> setMonoid = Monoids.<String>setUnion();
         Set<String> set = newSet(newList("a", "b"));
         
-        Set<String> leftIdentity = setMonoid.apply(Pair.of(set, setMonoid.zero()));
-        Set<String> rightIdentity = setMonoid.apply(Pair.of(setMonoid.zero(), set));
+        Set<String> leftIdentity = setMonoid.apply(set, setMonoid.zero());
+        Set<String> rightIdentity = setMonoid.apply(setMonoid.zero(), set);
         
         assertEquals(set, leftIdentity);
         assertEquals(set, rightIdentity);
@@ -249,7 +249,7 @@ public class MonoidsTest {
         };
         
         // First by name, then by age if names are equal
-        Comparator<Person> combined = compMonoid.apply(Pair.of(byName, byAge));
+        Comparator<Person> combined = compMonoid.apply(byName, byAge);
         
         assertTrue(combined.compare(new Person("Alice", 30), new Person("Bob", 25)) < 0);
         assertTrue(combined.compare(new Person("Alice", 25), new Person("Alice", 30)) < 0);
@@ -266,7 +266,7 @@ public class MonoidsTest {
         // Concatenate iterables
         Iterable<String> iter1 = newList("a", "b");
         Iterable<String> iter2 = newList("c", "d");
-        Iterable<String> result = iterMonoid.apply(Pair.of(iter1, iter2));
+        Iterable<String> result = iterMonoid.apply(iter1, iter2);
         
         assertEquals(newList("a", "b", "c", "d"), newList(result));
     }
@@ -276,8 +276,8 @@ public class MonoidsTest {
         Monoid<Iterable<String>> iterMonoid = Monoids.<String>iterableConcat();
         Iterable<String> iter = newList("a", "b");
         
-        assertEquals(newList(iter), newList(iterMonoid.apply(Pair.of(iter, iterMonoid.zero()))));
-        assertEquals(newList(iter), newList(iterMonoid.apply(Pair.of(iterMonoid.zero(), iter))));
+        assertEquals(newList(iter), newList(iterMonoid.apply(iter, iterMonoid.zero())));
+        assertEquals(newList(iter), newList(iterMonoid.apply(iterMonoid.zero(), iter)));
     }
 
     @Test
@@ -290,7 +290,7 @@ public class MonoidsTest {
         // Concatenate collections
         Collection<String> coll1 = newList("a", "b");
         Collection<String> coll2 = newList("c", "d");
-        Collection<String> result = collMonoid.apply(Pair.of(coll1, coll2));
+        Collection<String> result = collMonoid.apply(coll1, coll2);
         
         assertEquals(4, result.size());
         assertEquals(newList("a", "b", "c", "d"), newList(result));
@@ -304,15 +304,15 @@ public class MonoidsTest {
         Collection<String> empty = emptyList();
         
         // Empty on right
-        Collection<String> result1 = collMonoid.apply(Pair.of(coll1, empty));
+        Collection<String> result1 = collMonoid.apply(coll1, empty);
         assertEquals(coll1, result1);
         
         // Empty on left
-        Collection<String> result2 = collMonoid.apply(Pair.of(empty, coll1));
+        Collection<String> result2 = collMonoid.apply(empty, coll1);
         assertEquals(coll1, result2);
         
         // Both empty
-        Collection<String> result3 = collMonoid.apply(Pair.of(empty, empty));
+        Collection<String> result3 = collMonoid.apply(empty, empty);
         assertTrue(result3.isEmpty());
     }
 
@@ -326,7 +326,7 @@ public class MonoidsTest {
         // Concatenate lists
         List<String> list1 = newList("a", "b");
         List<String> list2 = newList("c", "d");
-        List<String> result = listMonoid.apply(Pair.of(list1, list2));
+        List<String> result = listMonoid.apply(list1, list2);
         
         assertEquals(4, result.size());
         assertEquals(newList("a", "b", "c", "d"), result);
@@ -340,15 +340,15 @@ public class MonoidsTest {
         List<String> empty = emptyList();
         
         // Empty on right
-        List<String> result1 = listMonoid.apply(Pair.of(list1, empty));
+        List<String> result1 = listMonoid.apply(list1, empty);
         assertEquals(list1, result1);
         
         // Empty on left
-        List<String> result2 = listMonoid.apply(Pair.of(empty, list1));
+        List<String> result2 = listMonoid.apply(empty, list1);
         assertEquals(list1, result2);
         
         // Both empty
-        List<String> result3 = listMonoid.apply(Pair.of(empty, empty));
+        List<String> result3 = listMonoid.apply(empty, empty);
         assertTrue(result3.isEmpty());
     }
 
@@ -362,7 +362,7 @@ public class MonoidsTest {
         // Combine maps with overlapping keys
         Map<String, Integer> map1 = newMap(Pair.of("a", 1), Pair.of("b", 2));
         Map<String, Integer> map2 = newMap(Pair.of("b", 3), Pair.of("c", 4));
-        Map<String, Integer> result = mapMonoid.apply(Pair.of(map1, map2));
+        Map<String, Integer> result = mapMonoid.apply(map1, map2);
         
         assertEquals(3, result.size());
         assertEquals(Integer.valueOf(1), result.get("a"));
@@ -375,8 +375,8 @@ public class MonoidsTest {
         Monoid<Map<String, Integer>> mapMonoid = Monoids.mapCombine(SemiGroups.intSum);
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Map<String, Integer> leftIdentity = mapMonoid.apply(Pair.of(map, mapMonoid.zero()));
-        Map<String, Integer> rightIdentity = mapMonoid.apply(Pair.of(mapMonoid.zero(), map));
+        Map<String, Integer> leftIdentity = mapMonoid.apply(map, mapMonoid.zero());
+        Map<String, Integer> rightIdentity = mapMonoid.apply(mapMonoid.zero(), map);
         
         assertEquals(map, leftIdentity);
         assertEquals(map, rightIdentity);
@@ -394,7 +394,7 @@ public class MonoidsTest {
         // Combine
         Tuple2<Integer, String> t1 = Tuple.of(1, "hello");
         Tuple2<Integer, String> t2 = Tuple.of(2, " world");
-        Tuple2<Integer, String> result = productMonoid.apply(Pair.of(t1, t2));
+        Tuple2<Integer, String> result = productMonoid.apply(t1, t2);
         
         assertEquals(Integer.valueOf(3), result._1);
         assertEquals("hello world", result._2);
@@ -414,7 +414,7 @@ public class MonoidsTest {
         // Combine
         Tuple3<Integer, String, Boolean> t1 = Tuple.of(1, "hello", true);
         Tuple3<Integer, String, Boolean> t2 = Tuple.of(2, " world", true);
-        Tuple3<Integer, String, Boolean> result = productMonoid.apply(Pair.of(t1, t2));
+        Tuple3<Integer, String, Boolean> result = productMonoid.apply(t1, t2);
         
         assertEquals(Integer.valueOf(3), result._1);
         assertEquals("hello world", result._2);
@@ -436,7 +436,7 @@ public class MonoidsTest {
         // Combine
         Tuple4<Integer, String, Boolean, Long> t1 = Tuple.of(1, "hello", true, 2L);
         Tuple4<Integer, String, Boolean, Long> t2 = Tuple.of(2, " world", true, 3L);
-        Tuple4<Integer, String, Boolean, Long> result = productMonoid.apply(Pair.of(t1, t2));
+        Tuple4<Integer, String, Boolean, Long> result = productMonoid.apply(t1, t2);
         
         assertEquals(Integer.valueOf(3), result._1);
         assertEquals("hello world", result._2);

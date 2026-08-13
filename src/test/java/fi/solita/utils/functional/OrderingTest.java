@@ -244,7 +244,7 @@ public class OrderingTest {
         Ordering<Integer> natural = Ordering.Natural();
         Ordering<Integer> zero = natural.zero();
         
-        Ordering<Integer> combined = natural.apply(Pair.of(zero, natural));
+        Ordering<Integer> combined = natural.apply(zero, natural);
         
         assertTrue(combined.compare(1, 2) < 0);
         assertTrue(combined.compare(2, 1) > 0);

@@ -281,7 +281,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                     return reduce(combiner, map(lens2, lens.apply(t)));
                 }
             },
-            new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+            new Function2<D, Apply<S,S>, D>() {
                 @Override
                 public D apply(D d, final Apply<S, S> f) {
                     return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
@@ -294,7 +294,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                         };
                     });
                 }
-            }));
+            });
     }
     
     /**
@@ -333,7 +333,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                     return reduce(combiner, flatMap(lens2, lens.apply(t)));
                 }
             },
-            new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+            new Function2<D, Apply<S,S>, D>() {
                 @Override
                 public D apply(D d, final Apply<S, S> f) {
                     return lens.modify(d, new Apply<SortedSet<E>,SortedSet<E>>() {
@@ -347,7 +347,7 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
                         };
                     });
                 }
-            }));
+            });
     }
     
     /**

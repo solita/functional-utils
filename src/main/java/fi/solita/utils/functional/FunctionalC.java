@@ -582,14 +582,28 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends Character>, Z> f, CharSequence xs) {
+    public static final <Z> Z fold(Z zero, Apply<Map.Entry<Z,Character>, Z> f, CharSequence xs) {
+        return FunctionalImpl.fold(zero, (a,b) -> f.apply(Pair.of(a,b)), it(xs));
+    }
+    
+    /**
+     * @see Functional#fold(Object, Apply, Iterable)
+     */
+    public static final <Z> Z fold(Z zero, ApplyBi<Z, Character, Z> f, CharSequence xs) {
         return FunctionalImpl.fold(zero, f, it(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final Option<Character> fold(Apply2<Character,Character,Character> f, CharSequence xs) {
+    public static final Option<Character> fold(Apply<Map.Entry<Character,Character>, Character> f, CharSequence xs) {
+        return FunctionalImpl.fold((a,b) -> f.apply(Pair.of(a,b)), it(xs));
+    }
+    
+    /**
+     * @see Functional#fold(Apply, Iterable)
+     */
+    public static final Option<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     

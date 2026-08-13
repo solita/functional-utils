@@ -40,8 +40,8 @@ public class MonoidExamples {
             this.meters = meters;
         }
 
-        public Distance apply(final Map.Entry<? extends Distance, ? extends Distance> t) {
-            return new Distance(t.getKey().meters + t.getValue().meters);
+        public Distance apply(Distance a, Distance b) {
+            return new Distance(a.meters + b.meters);
         }
     }
 }

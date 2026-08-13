@@ -641,8 +641,8 @@ public class FunctionalATest {
         }
         
         @Override
-        public SemiGroupInteger apply(Map.Entry<? extends SemiGroupInteger, ? extends SemiGroupInteger> t) {
-            return new SemiGroupInteger(t.getKey().value + t.getValue().value);
+        public SemiGroupInteger apply(SemiGroupInteger a, SemiGroupInteger b) {
+            return new SemiGroupInteger(a.value + b.value);
         }
     }
     

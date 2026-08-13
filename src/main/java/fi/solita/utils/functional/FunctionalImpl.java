@@ -418,13 +418,13 @@ final class FunctionalImpl {
         return fold(monoid, xs).getOrElse(monoid.zero());
     }
     
-    static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, Iterable<? extends T> xs) {
+    static final <T,Z> Z fold(Z zero, ApplyBi<? super Z,? super T, Z> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         Z ret = zero;
         for (T t : xs) {
-            ret = f.apply(Tuple.of(ret, t));
+            ret = f.apply(ret, t);
         }
         return ret;
     }
@@ -432,7 +432,7 @@ final class FunctionalImpl {
     /**
      * @return <i>None</i> if <i>elements</i> is empty
      */
-    static final <T> Option<T> fold(Apply2<T,T,T> f, Iterable<? extends T> xs) {
+    static final <T> Option<T> fold(ApplyBi<? super T, ? super T, T> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -545,12 +545,9 @@ final class FunctionalImpl {
     }
     
     static final <T> boolean ordered(final Comparator<? super T> comparator, Iterable<T> xs) {
-        return isEmpty(xs) || fold(headOption(xs), new Apply<Map.Entry<? extends Option<T>, ? extends T>, Option<T>>() {
-            @Override
-            public Option<T> apply(Map.Entry<? extends Option<T>, ? extends T> t) {
-                return t.getKey().isDefined() && comparator.compare(t.getKey().get(), t.getValue()) <= 0 ? Option.<T>Some(t.getValue()) : Option.<T>None();
-            }
-        }, tail(xs)).isDefined();
+        return isEmpty(xs) || fold(headOption(xs),
+                                   (a,b) -> a.isDefined() && comparator.compare(a.get(), b) <= 0 ? Option.<T>Some(b) : Option.<T>None(),
+                                   tail(xs)).isDefined();
     }
     
     static final <A,B> Iterable<Pair<A, B>> zip(Iterable<A> a, Iterable<B> b) {

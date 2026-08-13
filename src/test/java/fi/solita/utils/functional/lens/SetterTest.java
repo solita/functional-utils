@@ -285,7 +285,7 @@ public class SetterTest {
     
     @Test
     public void testOf_CreateSetterFromApplyBi() {
-        Setter<Person, String> setter = Setter.of(nameSetter);
+        Setter<Person, String> setter = nameSetter;
         
         Person person = new Person("Alice", 30);
         Person modified = setter.set(person, "Bob");
@@ -494,7 +494,7 @@ public class SetterTest {
     public void testApply_DelegateToF2() {
         Person person = new Person("Alice", 30);
         
-        Person modified = nameSetter.apply(person, Function.<String, String>constant("Bob"));
+        Person modified = nameSetter.modify(person, Function.<String, String>constant("Bob"));
         
         assertEquals("Bob", modified.name);
         assertEquals(30, modified.age);

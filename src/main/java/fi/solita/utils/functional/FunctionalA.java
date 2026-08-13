@@ -683,14 +683,21 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#fold(Object, Apply, Iterable)
      */
-    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? extends Z,? extends T>, Z> f, T[] xs) {
+    public static final <T,Z> Z fold(Z zero, Apply<Map.Entry<? super Z,? super T>, Z> f, T[] xs) {
+        return FunctionalImpl.fold(zero, (a,b) -> f.apply(Pair.of(a,b)), newList(xs));
+    }
+    
+    /**
+     * @see Functional#fold(Object, Apply, Iterable)
+     */
+    public static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, Z> f, T[] xs) {
         return FunctionalImpl.fold(zero, f, newList(xs));
     }
     
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final <T> Option<T> fold(Apply2<T,T,T> f, T[] xs) {
+    public static final <T> Option<T> fold(ApplyBi<? super T, ? super T, T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     

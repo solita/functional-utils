@@ -673,8 +673,8 @@ public class FunctionalTest {
         class Sum implements SemiGroup<Sum> {
             final int value;
             Sum(int value) { this.value = value; }
-            public Sum apply(Map.Entry<? extends Sum, ? extends Sum> t) {
-                return new Sum(t.getKey().value + t.getValue().value);
+            public Sum apply(Sum a, Sum b) {
+                return new Sum(a.value + b.value);
             }
             @Override
             public boolean equals(Object obj) {

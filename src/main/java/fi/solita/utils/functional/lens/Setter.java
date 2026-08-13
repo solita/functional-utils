@@ -21,7 +21,7 @@ import fi.solita.utils.functional.Option;
 /**
  * A setter of a specific member.
  */
-public class Setter<T,F> implements ApplyBi<T, Apply<F,F>, T> {
+public class Setter<T,F> {
     private final Apply2<T,Apply<F,F>,T> f2;
     
     public Setter(Apply2<T, Apply<F, F>, T> f2) {
@@ -151,11 +151,6 @@ public class Setter<T,F> implements ApplyBi<T, Apply<F,F>, T> {
         return f2.toString();
     }
 
-    @Override
-    public T apply(T t1, Apply<F, F> t2) {
-        return f2.apply(t1, t2);
-    }
-    
     private static final <D,E,S,C extends Iterable<E>> Setter<D,S> eachIterable(final Setter<D,C> lens, final Setter<E,S> lens2, final Apply<Iterable<E>,C> wrap) {
         return new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
             @Override

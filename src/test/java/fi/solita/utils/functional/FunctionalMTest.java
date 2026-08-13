@@ -440,8 +440,8 @@ public class FunctionalMTest {
         // Create a SemiGroup for Tuple1<Integer> that sums the wrapped values
         SemiGroup<Tuple1<Integer>> tuple1Sum = new SemiGroup<Tuple1<Integer>>() {
             @Override
-            public Tuple1<Integer> apply(Map.Entry<? extends Tuple1<Integer>, ? extends Tuple1<Integer>> t) {
-                return Tuple.of(t.getKey()._1 + t.getValue()._1);
+            public Tuple1<Integer> apply(Tuple1<Integer> a, Tuple1<Integer> b) {
+                return Tuple.of(a._1 + b._1);
             }
         };
         
