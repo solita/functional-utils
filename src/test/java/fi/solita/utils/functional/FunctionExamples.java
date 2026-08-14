@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class FunctionExamples {
     
-    static Function1<String,Integer> length = Function.of(new Apply<String,Integer>() {
+    static Function1<String,Integer> length = new Function1<String,Integer>() {
         @Override
         public Integer apply(String source) {
             return source.length();
