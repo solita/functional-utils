@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
@@ -9,6 +10,16 @@ import fi.solita.utils.functional.Function.GivenLater;
  * Two argument function from {@code T1} and {@code T2} to {@code R}
  */
 public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<? extends T1,? extends T2>, R, T1> implements ApplyBi<T1, T2, R> {
+    
+    @Override
+    public <V> Function2<T1, T2, V> andThen(Function<? super R, ? extends V> after) {
+        return new Function2<T1, T2, V>() {
+            @Override
+            public V apply(T1 t1, T2 t2) {
+                return after.apply(Function2.this.apply(t1, t2));
+            }
+        };
+    }
 
     @Override
     public final Function1<Map.Entry<? extends T1, ? extends T2>, R> tuppled() {

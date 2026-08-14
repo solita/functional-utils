@@ -2,7 +2,7 @@ package fi.solita.utils.functional;
 
 import java.io.Serializable;
 
-public abstract class MultiParamFunction<T, R, T1> implements Serializable {
+public abstract class MultiParamFunction<T, R, T1> implements Apply<T, R>, Serializable {
     /**
      * @return this function taking its arguments as a tupple.
      */
