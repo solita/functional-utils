@@ -4,7 +4,7 @@ package fi.solita.utils.functional;
  * Specialization of {@code Function1<T, Boolean>}.
  */
 public interface Pred<T> extends Apply<T, Boolean>, java.util.function.Predicate<T> {
-    default boolean test(T t) {
+    default Boolean apply(T t) {
         return test(t);
     }
 }
