@@ -794,7 +794,7 @@ class PartialApplicationHelper {
         return ret;
     }
     
-    static final <R> R doApply(MultiParamFunction<Tuple,R,?> f, Object[] paramsAndPlaceholders, Object... params) {
+    static final <R> R doApply(Apply<Tuple,R> f, Object[] paramsAndPlaceholders, Object... params) {
         return f.apply(Tuple.of(replacePlaceholdersWithParams(paramsAndPlaceholders, params)));
     }
     
@@ -815,8 +815,8 @@ class PartialApplicationHelper {
     }
     
     @SuppressWarnings("unchecked")
-    static final <R,FR> FR makeSecondFunc(final MultiParamFunction<? extends Tuple,R,?> f, final Object[] args, final Object... t) {
-        final MultiParamFunction<Tuple,R,?> ff = ((MultiParamFunction<Tuple,R,?>)f);
+    static final <R,FR extends Apply<?,R>> FR makeSecondFunc(final Apply<? extends Tuple,R> f, final Object[] args, final Object... t) {
+        final Apply<Tuple,R> ff = ((Apply<Tuple,R>)f);
         switch (args.length - t.length) {
             case 1: return (FR) new Function1<Object,R>() {
                 @Override
