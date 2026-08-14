@@ -354,7 +354,7 @@ public abstract class Functional extends FunctionalC {
      * @return whether {@code xs} contains {@code candidate}, by object equality.
      */
     public static final <T> boolean contains(T candidate, Iterable<? extends T> xs) {
-        return FunctionalImpl.exists(Predicates.equalTo(candidate), xs);
+        return FunctionalImpl.exists(x -> candidate.equals(x), xs);
     }
 
     /**

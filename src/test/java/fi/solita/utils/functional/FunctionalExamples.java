@@ -40,8 +40,6 @@ import static fi.solita.utils.functional.FunctionalS.sum;
 import static fi.solita.utils.functional.FunctionalS.union;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.even;
-import static fi.solita.utils.functional.Predicates.odd;
 
 import java.util.List;
 import java.util.Map;
@@ -108,7 +106,7 @@ public class FunctionalExamples {
         assertEquals(newList(1,2), newList(take));
         
         // takeWhile
-        Iterable<Integer> takeWhile = takeWhile(odd, someIterableOrArray);
+        Iterable<Integer> takeWhile = takeWhile(x -> x % 2 != 0, someIterableOrArray);
         assertEquals(newList(1), newList(takeWhile));
         
         // drop
@@ -116,11 +114,11 @@ public class FunctionalExamples {
         assertEquals(newList(2,3), newList(drop));
         
         // dropWhile
-        Iterable<Integer> dropWhile = dropWhile(odd, someIterableOrArray);
+        Iterable<Integer> dropWhile = dropWhile(x -> x % 2 != 0, someIterableOrArray);
         assertEquals(newList(2,3), newList(dropWhile));
         
         // span
-        Pair<Iterable<Integer>, Iterable<Integer>> span = span(odd, someIterableOrArray);
+        Pair<Iterable<Integer>, Iterable<Integer>> span = span(x -> x % 2 != 0, someIterableOrArray);
         assertEquals(Pair.of(newList(1),         newList(2,3)),
                      Pair.of(newList(span.left()), newList(span.right())));
         
@@ -145,24 +143,24 @@ public class FunctionalExamples {
         assertEquals(newList(1,2,3,1,2,3), newList(concat));
         
         // find
-        Option<Integer> find = find(even, someIterableOrArray);
+        Option<Integer> find = find(x -> x % 2 == 0, someIterableOrArray);
         Option<String> findFromMap = find(42, someMap);
         assertEquals(Some(2), find);
         assertEquals(Some("foo"), findFromMap);
-        assertEquals(None(), find(even, Collections.<Integer>emptyList()));
+        assertEquals(None(), find(x -> x % 2 == 0, Collections.<Integer>emptyList()));
         
         // filter
-        Iterable<Integer> filter = filter(odd, someIterableOrArray);
+        Iterable<Integer> filter = filter(x -> x % 2 != 0, someIterableOrArray);
         Map<Integer, String> filterFromMap = filter(evenKey, someMap);
         assertEquals(newList(1,3), newList(filter));
         assertEquals(newMap(Pair.of(42, "foo")), filterFromMap);
         
         // exists
-        boolean exists = exists(even, someIterableOrArray);
+        boolean exists = exists(x -> x % 2 == 0, someIterableOrArray);
         assertEquals(true, exists);
         
         // forall
-        boolean forall = forall(even, someIterableOrArray);
+        boolean forall = forall(x -> x % 2 == 0, someIterableOrArray);
         assertEquals(false, forall);
         
         // foreach

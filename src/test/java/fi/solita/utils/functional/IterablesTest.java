@@ -1,6 +1,5 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Collections.emptyList;
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableList;
@@ -541,7 +540,7 @@ public class IterablesTest {
     @Test(expected = NoSuchElementException.class)
     public void testFilteringIteratorThrowsNoSuchElementException() {
         Iterable<Integer> list = newList(1, 2, 3);
-        Iterable<Integer> filtered = filter(Predicates.equalTo(1), list);
+        Iterable<Integer> filtered = filter(x -> x == 1, list);
         Iterator<Integer> it = filtered.iterator();
         it.next();
         it.next(); // Should throw

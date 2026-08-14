@@ -12,8 +12,6 @@ import static fi.solita.utils.functional.FunctionalC.drop;
 import static fi.solita.utils.functional.FunctionalC.isEmpty;
 import static fi.solita.utils.functional.FunctionalC.span;
 import static fi.solita.utils.functional.FunctionalC.take;
-import static fi.solita.utils.functional.Predicates.equalTo;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -75,9 +73,9 @@ public abstract class Match {
      * <br><code>Match.section('{', '}', " {a} {b}") == ( ,a, {b})</code>.
      */
     public static final Try<String,Tuple3<String,String,String>> section(char start, char end, CharSequence xs) {
-        Pair<CharSequence,CharSequence> parts1 = span(not(equalTo(start)), xs);
+        Pair<CharSequence,CharSequence> parts1 = span(x -> !x.equals(start), xs);
         if (!isEmpty(parts1.right())) {
-            Pair<CharSequence,CharSequence> parts2 = span(not(equalTo(end)), tail(parts1.right()));
+            Pair<CharSequence,CharSequence> parts2 = span(x -> !x.equals(end), tail(parts1.right()));
             if (!isEmpty(parts2.right())) {
                 return Try.success(Tuple.of(parts1.left().toString(), parts2.left().toString(), tail(parts2.right()).toString()));
             }
@@ -130,12 +128,11 @@ public abstract class Match {
     }
 
     private static final List<String> split(char separator, CharSequence xs) {
-        Predicate<Character> predicate = not(equalTo(separator));
         List<String> parts = newMutableList();
         
         boolean cont = !isEmpty(xs);
         while (cont) {
-            Pair<CharSequence,CharSequence> p = span(predicate, xs);
+            Pair<CharSequence,CharSequence> p = span(x -> !x.equals(separator), xs);
             parts.add(p.left().toString());
             xs = drop(1, p.right());
             cont = !isEmpty(xs) || !isEmpty(p.right());

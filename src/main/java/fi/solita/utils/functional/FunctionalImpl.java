@@ -7,8 +7,6 @@ import static fi.solita.utils.functional.Collections.newMutableLinkedMap;
 import static fi.solita.utils.functional.Collections.newMutableMap;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.equalTo;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,7 +37,7 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> remove(T toRemove, Iterable<? extends T> xs) {
-        return filter(not(equalTo(toRemove)), xs);
+        return filter(x -> !toRemove.equals(x), xs);
     }
     
     static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
@@ -329,7 +327,7 @@ final class FunctionalImpl {
     static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, Iterable<? extends T> xs) {
         // TODO: a more efficient implementation
         Iterable<Either<L, R>> ys = map(f, xs);
-        return xs == null ? null : Pair.of(map(x -> x.left.get(), filter(Predicates.isLeft, ys)), map(x -> x.right.get(), filter(Predicates.isRight, ys)));
+        return xs == null ? null : Pair.of(map(x -> x.left.get(), filter(Either::isLeft, ys)), map(x -> x.right.get(), filter(Either::isRight, ys)));
     }
     
     public static <T> Pair<Iterable<T>, Iterable<T>> split(int amount, Iterable<? extends T> xs) {
@@ -344,7 +342,7 @@ final class FunctionalImpl {
     
     public static final <T> Iterable<T> every(int nth, Iterable<? extends T> xs) {
         // TODO: optimize...
-        return nth < 0 ? Collections.<T>emptyList() : nth == 0 ? headOption(xs) : Functional.map(Pair::right, Functional.filter(t -> Predicates.divisible(nth).apply(t._1), Functional.zipWithIndex(xs)));
+        return nth < 0 ? Collections.<T>emptyList() : nth == 0 ? headOption(xs) : Functional.map(Pair::right, Functional.filter(t -> t._1 % nth == 0, Functional.zipWithIndex(xs)));
     }
     
     static final boolean isEmpty(Iterable<?> xs) {
@@ -371,7 +369,7 @@ final class FunctionalImpl {
     }
     
     static final <T> boolean forall(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
-        return !exists(Predicates.not(predicate), xs);
+        return !exists(x -> !predicate.apply(x), xs);
     }
     
     static final <T extends Comparable<? super T>> Iterable<T> sort(Iterable<? extends T> xs) {

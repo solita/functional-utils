@@ -322,10 +322,10 @@ public class FunctionalTest {
     
     @Test
     public void testSpan() {
-        assertEquals(newList(1,2,3), newList(takeWhile(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5))));
-        assertEquals(newList(5), newList(dropWhile(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5))));
+        assertEquals(newList(1,2,3), newList(takeWhile(x -> x != 5, newList(1,2,3,5))));
+        assertEquals(newList(5), newList(dropWhile(x -> x != 5, newList(1,2,3,5))));
         
-        Pair<Iterable<Integer>,Iterable<Integer>> pair = span(Predicates.not(Predicates.equalTo(5)), newList(1,2,3,5));
+        Pair<Iterable<Integer>,Iterable<Integer>> pair = span(x -> x != 5, newList(1,2,3,5));
         assertEquals(newList(1,2,3), newList(pair.left()));
         assertEquals(newList(5), newList(pair.right()));
     }
@@ -480,20 +480,20 @@ public class FunctionalTest {
     
     @Test
     public void testFind() {
-        assertEquals(Option.None(), Functional.<Integer>find(Predicates.equalTo(1), Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.<Integer>find(Predicates.equalTo(1), newList(1,2,3)));
-        assertEquals(Option.Some(2), Functional.<Integer>find(Predicates.equalTo(2), newList(1,2,3)));
-        assertEquals(Option.Some(3), Functional.<Integer>find(Predicates.equalTo(3), newList(1,2,3)));
-        assertEquals(Option.None(), Functional.<Integer>find(Predicates.equalTo(4), newList(1,2,3)));
+        assertEquals(Option.None(), Functional.<Integer>find(x -> x == 1, Collections.<Integer>emptyList()));
+        assertEquals(Option.Some(1), Functional.<Integer>find(x -> x == 1, newList(1,2,3)));
+        assertEquals(Option.Some(2), Functional.<Integer>find(x -> x == 2, newList(1,2,3)));
+        assertEquals(Option.Some(3), Functional.<Integer>find(x -> x == 3, newList(1,2,3)));
+        assertEquals(Option.None(), Functional.<Integer>find(x -> x == 4, newList(1,2,3)));
     }
     
     @Test
     public void testFilter() {
-        assertEquals(emptyList(), newList(Functional.<Integer>filter(Predicates.equalTo(1), Collections.<Integer>emptyList())));
-        assertEquals(newList(1), newList(Functional.<Integer>filter(Predicates.equalTo(1), newList(1,2,3))));
-        assertEquals(newList(2), newList(Functional.<Integer>filter(Predicates.equalTo(2), newList(1,2,3))));
-        assertEquals(newList(2,2), newList(Functional.<Integer>filter(Predicates.equalTo(2), newList(1,2,2,3))));
-        assertEquals(emptyList(), newList(Functional.<Integer>filter(Predicates.equalTo(4), newList(1,2,3))));
+        assertEquals(emptyList(), newList(Functional.<Integer>filter(x -> x == 1, Collections.<Integer>emptyList())));
+        assertEquals(newList(1), newList(Functional.<Integer>filter(x -> x == 1, newList(1,2,3))));
+        assertEquals(newList(2), newList(Functional.<Integer>filter(x -> x == 2, newList(1,2,3))));
+        assertEquals(newList(2,2), newList(Functional.<Integer>filter(x -> x == 2, newList(1,2,2,3))));
+        assertEquals(emptyList(), newList(Functional.<Integer>filter(x -> x == 4, newList(1,2,3))));
     }
     
     @Test
@@ -612,19 +612,19 @@ public class FunctionalTest {
     
     @Test
     public void testExists() {
-        assertFalse(Functional.<Integer>exists(Predicates.equalTo(1), Collections.<Integer>emptyList()));
-        assertTrue(Functional.<Integer>exists(Predicates.equalTo(1), newList(1,2,3)));
-        assertTrue(Functional.<Integer>exists(Predicates.equalTo(2), newList(1,2,3)));
-        assertFalse(Functional.<Integer>exists(Predicates.equalTo(4), newList(1,2,3)));
+        assertFalse(Functional.<Integer>exists(x -> x == 1, Collections.<Integer>emptyList()));
+        assertTrue(Functional.<Integer>exists(x -> x == 1, newList(1,2,3)));
+        assertTrue(Functional.<Integer>exists(x -> x == 2, newList(1,2,3)));
+        assertFalse(Functional.<Integer>exists(x -> x == 4, newList(1,2,3)));
     }
     
     @Test
     public void testForall() {
-        assertTrue(Functional.<Integer>forall(Predicates.equalTo(1), Collections.<Integer>emptyList()));
-        assertTrue(Functional.<Integer>forall(Predicates.equalTo(1), newList(1)));
-        assertTrue(Functional.<Integer>forall(Predicates.equalTo(1), newList(1,1,1)));
-        assertFalse(Functional.<Integer>forall(Predicates.equalTo(1), newList(1,2,3)));
-        assertFalse(Functional.<Integer>forall(Predicates.equalTo(2), newList(1,2,3)));
+        assertTrue(Functional.<Integer>forall(x -> x == 1, Collections.<Integer>emptyList()));
+        assertTrue(Functional.<Integer>forall(x -> x == 1, newList(1)));
+        assertTrue(Functional.<Integer>forall(x -> x == 1, newList(1,1,1)));
+        assertFalse(Functional.<Integer>forall(x -> x == 1, newList(1,2,3)));
+        assertFalse(Functional.<Integer>forall(x -> x == 2, newList(1,2,3)));
     }
     
     @Test

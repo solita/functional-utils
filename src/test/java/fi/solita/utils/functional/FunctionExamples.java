@@ -15,7 +15,7 @@ public class FunctionExamples {
         public Integer apply(String source) {
             return source.length();
         }
-    });
+    };
     
     static Function2<Integer,Integer,Integer> mod = new Function2<Integer,Integer,Integer>() {
         @Override

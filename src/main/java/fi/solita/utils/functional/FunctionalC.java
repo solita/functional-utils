@@ -4,7 +4,6 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.not;
 
 import java.util.Comparator;
 import java.util.List;
@@ -386,7 +385,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#partition
      */
     public static final Pair<CharSequence, CharSequence> partition(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return Pair.of(filter(predicate, xs), filter(not(predicate), xs));
+        return Pair.of(filter(predicate, xs), filter(x -> !predicate.apply(x), xs));
     }
     
     /**
@@ -474,7 +473,7 @@ public abstract class FunctionalC extends FunctionalS {
      * @see Functional#contains
      */
     public static final boolean contains(char candidate, CharSequence xs) {
-        return FunctionalImpl.exists(Predicates.equalTo(candidate), it(xs));
+        return FunctionalImpl.exists(x -> x.equals(candidate), it(xs));
     }
     
     /**

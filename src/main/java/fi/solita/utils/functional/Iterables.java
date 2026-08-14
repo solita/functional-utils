@@ -15,7 +15,6 @@ import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
 import static fi.solita.utils.functional.Option.None;
 import static fi.solita.utils.functional.Option.Some;
-import static fi.solita.utils.functional.Predicates.isNotNull;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -23,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -374,7 +374,7 @@ public abstract class Iterables {
     
     static final class FlatteningIterable<T> extends ConcatenatingIterable<T> {
         public FlatteningIterable(Iterable<? extends Iterable<? extends T>> elements) {
-            super(filter(isNotNull(), elements));
+            super(filter(Objects::nonNull, elements));
         }
         
         
