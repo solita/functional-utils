@@ -39,9 +39,9 @@ public class SortTest {
     
     public void runSortOnce(int size, int firstToTake) {
         System.out.println("Testing for " + size + " elements");
-        List<TestClass> data = newList(map(new Transformer<Integer, TestClass>() {
+        List<TestClass> data = newList(map(new Apply<Integer, TestClass>() {
             @Override
-            public TestClass transform(Integer source) {
+            public TestClass apply(Integer source) {
                 return new TestClass();
             }
         }, range(1, size)));

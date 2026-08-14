@@ -65,27 +65,27 @@ final class FunctionalImpl {
     }
     
     static final <S, T1, T2> Iterable<Pair<T1,T2>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, Iterable<? extends S> xs) {
-        return xs == null ? null : new TransformingIterable<S,Pair<T1,T2>>(xs, new Transformer<S, Pair<T1,T2>>() {
+        return xs == null ? null : new TransformingIterable<S,Pair<T1,T2>>(xs, new Apply<S, Pair<T1,T2>>() {
             @Override
-            public final Pair<T1,T2> transform(S source) {
+            public final Pair<T1,T2> apply(S source) {
                 return Pair.of(f1.apply(source), f2.apply(source));
             }
         });
     }
     
     static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, final Apply<? super S, ? extends T3> f3, Iterable<? extends S> xs) {
-        return xs == null ? null : new TransformingIterable<S,Tuple3<T1,T2,T3>>(xs, new Transformer<S, Tuple3<T1,T2,T3>>() {
+        return xs == null ? null : new TransformingIterable<S,Tuple3<T1,T2,T3>>(xs, new Apply<S, Tuple3<T1,T2,T3>>() {
             @Override
-            public final Tuple3<T1,T2,T3> transform(S source) {
+            public final Tuple3<T1,T2,T3> apply(S source) {
                 return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source));
             }
         });
     }
     
     static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, final Apply<? super S, ? extends T3> f3, final Apply<? super S, ? extends T4> f4, Iterable<? extends S> xs) {
-        return xs == null ? null : new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(xs, new Transformer<S, Tuple4<T1,T2,T3,T4>>() {
+        return xs == null ? null : new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(xs, new Apply<S, Tuple4<T1,T2,T3,T4>>() {
             @Override
-            public final Tuple4<T1,T2,T3,T4> transform(S source) {
+            public final Tuple4<T1,T2,T3,T4> apply(S source) {
                 return Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source), f4.apply(source));
             }
         });
@@ -560,28 +560,28 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<? extends A> a, Iterable<? extends B> b, Iterable<? extends C> c) {
-        return map((Transformer<Pair<Pair<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer, zip(zip(a, b), c));
+        return map((Apply<Pair<Pair<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer, zip(zip(a, b), c));
     }
     
     @SuppressWarnings("unchecked")
     static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, Iterable<? extends B> b, Iterable<? extends C> c, Iterable<? extends D> d) {
-        return map((Transformer<Pair<Pair<A, B>, Pair<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
+        return map((Apply<Pair<Pair<A, B>, Pair<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
     }
     
     static final <A> Iterable<Pair<Integer, A>> zipWithIndex(Iterable<? extends A> xs) {
         return new ZippingIterable<Integer, A>(range(Enumerables.ints, 0), xs);
     }
     
-    private static final Transformer<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
+    private static final Apply<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Apply<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
         @Override
-        public final Tuple3<Object, Object, Object> transform(Tuple2<Tuple2<Object, Object>, Object> source) {
+        public final Tuple3<Object, Object, Object> apply(Tuple2<Tuple2<Object, Object>, Object> source) {
             return source._1.append(source._2);
         }
     };
     
-    private static final Transformer<Tuple2<Tuple2<Object,Object>,Tuple2<Object,Object>>,Tuple4<Object,Object,Object,Object>> zip4Transformer = new Transformer<Tuple2<Tuple2<Object, Object>, Tuple2<Object,Object>>, Tuple4<Object, Object, Object, Object>>() {
+    private static final Apply<Tuple2<Tuple2<Object,Object>,Tuple2<Object,Object>>,Tuple4<Object,Object,Object,Object>> zip4Transformer = new Apply<Tuple2<Tuple2<Object, Object>, Tuple2<Object,Object>>, Tuple4<Object, Object, Object, Object>>() {
         @Override
-        public final Tuple4<Object, Object, Object, Object> transform(Tuple2<Tuple2<Object, Object>, Tuple2<Object, Object>> source) {
+        public final Tuple4<Object, Object, Object, Object> apply(Tuple2<Tuple2<Object, Object>, Tuple2<Object, Object>> source) {
             return source._1.join(source._2);
         }
     };
@@ -621,8 +621,8 @@ final class FunctionalImpl {
         return (Iterable<List<T>>)(Object)map(minAndMax, ret);
     }
     
-    static final Transformer<Iterable<?>, List<?>> minAndMax = new Transformer<Iterable<?>,List<?>>() {
-        public List<?> transform(Iterable<?> source) {
+    static final Apply<Iterable<?>, List<?>> minAndMax = new Apply<Iterable<?>,List<?>>() {
+        public List<?> apply(Iterable<?> source) {
             List<?> ts = newList(source);
             return ts.size() == 1 ? ts : newList(head(ts), last(ts));
         };
@@ -665,9 +665,9 @@ final class FunctionalImpl {
     }
     
     static final <T,R> Iterable<R> sequence(final T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
-        return map(new Transformer<Apply<? super T,? extends R>, R>() {
+        return map(new Apply<Apply<? super T,? extends R>, R>() {
             @Override
-            public final R transform(Apply<? super T,? extends R> source) {
+            public final R apply(Apply<? super T,? extends R> source) {
                 return source.apply(value);
             }
         }, fs);
@@ -695,9 +695,9 @@ final class FunctionalImpl {
         if (!first.isDefined()) {
             return "";
         }
-        Iterable<CharSequence> rest = map(new Transformer<Tuple2<String,? extends CharSequence>,CharSequence>() {
+        Iterable<CharSequence> rest = map(new Apply<Tuple2<String,? extends CharSequence>,CharSequence>() {
             @Override
-            public final CharSequence transform(Tuple2<String, ? extends CharSequence> source) {
+            public final CharSequence apply(Tuple2<String, ? extends CharSequence> source) {
                 return Functional.concat(source._1, source._2);
             }
         }, zip(lineSeparators, tail(xs)));

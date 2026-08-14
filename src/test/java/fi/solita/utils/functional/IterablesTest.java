@@ -101,9 +101,9 @@ public class IterablesTest {
             newList(7, 8, 9)
         );
         Iterable<Iterable<Integer>> transposed = transpose(lists);
-        List<List<Integer>> result = newList(map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> result = newList(map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, transposed));
@@ -121,9 +121,9 @@ public class IterablesTest {
             newList(4, 5)
         );
         Iterable<Iterable<Integer>> transposed = transpose(lists);
-        List<List<Integer>> result = newList(map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> result = newList(map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, transposed));
@@ -281,9 +281,9 @@ public class IterablesTest {
     @Test
     public void testTransformingIterable() {
         Iterable<Integer> list = newList(1, 2, 3);
-        Iterable<String> transformed = map(new Transformer<Integer, String>() {
+        Iterable<String> transformed = map(new Apply<Integer, String>() {
             @Override
-            public String transform(Integer source) {
+            public String apply(Integer source) {
                 return "num" + source;
             }
         }, list);
@@ -294,9 +294,9 @@ public class IterablesTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testTransformingIterableThrowsOnNullIterable() {
-        new TransformingIterable<Integer, String>(null, new Transformer<Integer, String>() {
+        new TransformingIterable<Integer, String>(null, new Apply<Integer, String>() {
             @Override
-            public String transform(Integer source) {
+            public String apply(Integer source) {
                 return source.toString();
             }
         });
@@ -310,9 +310,9 @@ public class IterablesTest {
     @Test
     public void testTransformingIterablePreservesSize() {
         Iterable<Integer> list = newList(1, 2, 3);
-        Iterable<String> transformed = map(new Transformer<Integer, String>() {
+        Iterable<String> transformed = map(new Apply<Integer, String>() {
             @Override
-            public String transform(Integer source) {
+            public String apply(Integer source) {
                 return source.toString();
             }
         }, list);
@@ -481,9 +481,9 @@ public class IterablesTest {
     public void testGroupingIterable() {
         Iterable<Integer> list = newList(1, 1, 2, 2, 2, 3, 4, 4);
         Iterable<Iterable<Integer>> grouped = group(list);
-        List<List<Integer>> result = newList(map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> result = newList(map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, grouped));
@@ -505,9 +505,9 @@ public class IterablesTest {
                 return t2 - t1 == 1;
             }
         }, list);
-        List<List<Integer>> result = newList(map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> result = newList(map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, grouped));

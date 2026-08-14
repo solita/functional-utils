@@ -353,9 +353,9 @@ public class OptionTest {
         assertFalse(deserializedOption.isDefined());
     }
     
-    static Apply<String,Integer> strlen = new Transformer<String,Integer>() {
+    static Apply<String,Integer> strlen = new Apply<String,Integer>() {
         @Override
-        public Integer transform(String source) {
+        public Integer apply(String source) {
             return source.length();
         }
     };

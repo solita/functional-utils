@@ -138,9 +138,9 @@ public class FunctionalTest {
          assertThat(mkString("", map(toString, t)), equalTo("[1, 3][2, 4]"));
     }
     
-    private static final Transformer<Object,String> toString = new Transformer<Object,String>() {
+    private static final Apply<Object,String> toString = new Apply<Object,String>() {
         @Override
-        public String transform(Object source) {
+        public String apply(Object source) {
             return source.toString();
         }
     };
@@ -168,9 +168,9 @@ public class FunctionalTest {
     @Test
     public void testName() {
         Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
-        Iterable<Iterable<String>> b = map(new Transformer<Tuple2<Integer,String>,Iterable<String>>() {
+        Iterable<Iterable<String>> b = map(new Apply<Tuple2<Integer,String>,Iterable<String>>() {
             @Override
-            public Iterable<String> transform(Tuple2<Integer,String> source) {
+            public Iterable<String> apply(Tuple2<Integer,String> source) {
                 return newList(source._2);
             }
         }, a);

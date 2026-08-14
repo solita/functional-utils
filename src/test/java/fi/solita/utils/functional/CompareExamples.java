@@ -16,15 +16,15 @@ public class CompareExamples {
         public Option<String> name;
     }
     
-    static Apply<Employee,Integer> salary = new Transformer<Employee,Integer>() {
+    static Apply<Employee,Integer> salary = new Apply<Employee,Integer>() {
         @Override
-        public Integer transform(Employee source) {
+        public Integer apply(Employee source) {
             return source.salary;
         }
     };
-    static Apply<Employee,Option<String>> name = new Transformer<Employee,Option<String>>() {
+    static Apply<Employee,Option<String>> name = new Apply<Employee,Option<String>>() {
         @Override
-        public Option<String> transform(Employee source) {
+        public Option<String> apply(Employee source) {
             return source.name;
         }
     };

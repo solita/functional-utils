@@ -40,8 +40,8 @@ public abstract class Iterables {
         return size < someCache.length ? someCache[(int)size] : Some(size);
     }
     
-    public static final Transformer<Iterable<?>,Option<Long>> resolveSize = new Transformer<Iterable<?>,Option<Long>>() {
-        public final Option<Long> transform(Iterable<?> source) {
+    public static final Apply<Iterable<?>,Option<Long>> resolveSize = new Apply<Iterable<?>,Option<Long>>() {
+        public final Option<Long> apply(Iterable<?> source) {
             if (source instanceof Collection) {
                 return wrapSome((long)((Collection<?>)source).size());
             }
@@ -55,26 +55,26 @@ public abstract class Iterables {
         }
     };
     
-    private static final Transformer<Iterator<?>,Boolean> hasNext = new Transformer<Iterator<?>,Boolean>() {
-        public final Boolean transform(Iterator<?> source) {
+    private static final Apply<Iterator<?>,Boolean> hasNext = new Apply<Iterator<?>,Boolean>() {
+        public final Boolean apply(Iterator<?> source) {
             return source.hasNext();
         }
     };
     
-    private static final Transformer<Iterator<Object>, Object> next = new Transformer<Iterator<Object>,Object>() {
-        public final Object transform(Iterator<Object> source) {
+    private static final Apply<Iterator<Object>, Object> next = new Apply<Iterator<Object>,Object>() {
+        public final Object apply(Iterator<Object> source) {
             return source.next();
         }
     };
     
-    private static final Transformer<Iterable<Object>,Iterator<Object>> toIterator = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        public final Iterator<Object> transform(Iterable<Object> source) {
+    private static final Apply<Iterable<Object>,Iterator<Object>> toIterator = new Apply<Iterable<Object>,Iterator<Object>>() {
+        public final Iterator<Object> apply(Iterable<Object> source) {
             return source.iterator();
         }
     };
     
-    private static final Transformer<Iterable<Object>,Iterator<Object>> toIteratorForced = new Transformer<Iterable<Object>,Iterator<Object>>() {
-        public final Iterator<Object> transform(Iterable<Object> source) {
+    private static final Apply<Iterable<Object>,Iterator<Object>> toIteratorForced = new Apply<Iterable<Object>,Iterator<Object>>() {
+        public final Iterator<Object> apply(Iterable<Object> source) {
             if (source instanceof ForceableIterable) {
                 ((ForceableIterable) source).completeIterationNeeded();
             }
@@ -215,7 +215,7 @@ public abstract class Iterables {
         public final Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
-                private final List<Iterator<T>> iterators = newList(map((Transformer<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
+                private final List<Iterator<T>> iterators = newList(map((Apply<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
                 
                 
                 public final boolean hasNext() {
@@ -228,7 +228,7 @@ public abstract class Iterables {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
-                    return newList(map((Transformer<Iterator<T>, T>)(Object)next, iterators));
+                    return newList(map((Apply<Iterator<T>, T>)(Object)next, iterators));
                 }
 
                 
@@ -346,7 +346,7 @@ public abstract class Iterables {
         public final Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = Functional.map((Transformer<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
+                private final Iterator<Iterator<? extends T>> it = Functional.map((Apply<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 

@@ -72,7 +72,6 @@ import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
-import fi.solita.utils.functional.Transformer;
 import fi.solita.utils.functional.Transformers;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple0;
@@ -197,10 +196,10 @@ public final class Builder<T> {
      * @return a copy of this builder initialized with data from given object.
      */
     public final Builder<T> init(final T t) {
-        List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(new Transformer<Apply<? super T,? extends Object>, Pair<? extends Apply<? super T,? extends Object>,? extends Object>>() {
+        List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(new Apply<Apply<? super T,? extends Object>, Pair<? extends Apply<? super T,? extends Object>,? extends Object>>() {
             @SuppressWarnings("unchecked")
             @Override
-            public Pair<? extends Apply<? super T,? extends Object>,? extends Object> transform(Apply<? super T,? extends Object> source) {
+            public Pair<? extends Apply<? super T,? extends Object>,? extends Object> apply(Apply<? super T,? extends Object> source) {
                 return (Pair<Apply<? super T,? extends Object>,Object>)(Object)Pair.of(source, source.apply(t));
             }
         }, members));
@@ -249,9 +248,9 @@ public final class Builder<T> {
     
     @SuppressWarnings("unchecked")
     private final T build(final boolean allowIncomplete) throws IncompleteException {
-        T ret = constructor.apply(newArray(Object.class, map(new Transformer<Apply<? super T,? extends Object>,Object>() {
+        T ret = constructor.apply(newArray(Object.class, map(new Apply<Apply<? super T,? extends Object>,Object>() {
             @Override
-            public Object transform(Apply<? super T, ? extends Object> member) {
+            public Object apply(Apply<? super T, ? extends Object> member) {
                 for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
                     if (o._1.equals(member)) {
                         return o._2;

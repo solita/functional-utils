@@ -299,9 +299,9 @@ Just a few examples of using these utils.
 
 ### fi.solita.utils.functional.Function
 
-	static Transformer<String,Integer> length = new Transformer<String,Integer>() {
+	static Apply<String,Integer> length = new Apply<String,Integer>() {
 	    @Override
-	    public Integer transform(String source) {
+	    public Integer apply(String source) {
 	        return source.length();
 	    }
 	};

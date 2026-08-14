@@ -61,23 +61,23 @@ public class FunctionalExamples {
     static Iterable<Integer> someIterableOrArray = newList(1, 2, 3);
     static Map<Integer,String> someMap = newMap(Pair.of(42, "foo"));
     
-    Apply<Map.Entry<Integer,String>,Boolean> evenKey = new Transformer<Map.Entry<Integer,String>,Boolean>() {
+    Apply<Map.Entry<Integer,String>,Boolean> evenKey = new Apply<Map.Entry<Integer,String>,Boolean>() {
         @Override
-        public Boolean transform(Entry<Integer, String> source) {
+        public Boolean apply(Entry<Integer, String> source) {
             return source.getKey() % 2 == 0;
         }
     };
     
-    Apply<Integer,Void> someProcedure = new Transformer<Integer,Void>() {
+    Apply<Integer,Void> someProcedure = new Apply<Integer,Void>() {
         @Override
-        public Void transform(Integer source) {
+        public Void apply(Integer source) {
             return null;
         }
     };
     
-    Apply<Integer,List<Integer>> repeatTwice = new Transformer<Integer,List<Integer>>() {
+    Apply<Integer,List<Integer>> repeatTwice = new Apply<Integer,List<Integer>>() {
         @Override
-        public List<Integer> transform(Integer source) {
+        public List<Integer> apply(Integer source) {
             return newList(source, source);
         }
     };

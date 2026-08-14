@@ -256,9 +256,9 @@ public class FunctionalATest {
         
         Iterable<Iterable<Integer>> result = group(xs);
         
-        List<List<Integer>> resultList = newList(Functional.map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> resultList = newList(Functional.map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, result));
@@ -905,9 +905,9 @@ public class FunctionalATest {
         
         Iterable<Iterable<Integer>> result = transpose(xs);
         
-        List<List<Integer>> resultList = newList(Functional.map(new Transformer<Iterable<Integer>, List<Integer>>() {
+        List<List<Integer>> resultList = newList(Functional.map(new Apply<Iterable<Integer>, List<Integer>>() {
             @Override
-            public List<Integer> transform(Iterable<Integer> source) {
+            public List<Integer> apply(Iterable<Integer> source) {
                 return newList(source);
             }
         }, result));

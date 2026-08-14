@@ -17,16 +17,16 @@ import fi.solita.utils.functional.Iterables.RepeatingIterable;
  */
 public abstract class FunctionalC extends FunctionalS {
 
-    static final Transformer<CharSequence, Iterable<Character>> charSeq2iterable = new Transformer<CharSequence, Iterable<Character>>() {
+    static final Apply<CharSequence, Iterable<Character>> charSeq2iterable = new Apply<CharSequence, Iterable<Character>>() {
         @Override
-        public final Iterable<Character> transform(CharSequence source) {
+        public final Iterable<Character> apply(CharSequence source) {
             return it(source);
         }
     };
     
-    private static final Transformer<Iterable<Character>, CharSequence> iterable2charSeq = new Transformer<Iterable<Character>, CharSequence>() {
+    private static final Apply<Iterable<Character>, CharSequence> iterable2charSeq = new Apply<Iterable<Character>, CharSequence>() {
         @Override
-        public final CharSequence transform(Iterable<Character> source) {
+        public final CharSequence apply(Iterable<Character> source) {
             return it(source);
         }
     };

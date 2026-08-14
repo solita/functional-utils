@@ -130,28 +130,28 @@ public abstract class FunctionalM {
         }, map.entrySet());
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Iterable<R>>> valueMapper(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Iterable<R>>>() {
             @Override
-            public Map.Entry<T, Iterable<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, Iterable<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), FunctionalImpl.map(f, e.getValue()));
             }
         };
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, List<R>>> valueMapperList(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, List<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, List<R>>> valueMapperList(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, List<R>>>() {
             @Override
-            public Map.Entry<T, List<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, List<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), newList(FunctionalImpl.map(f, e.getValue())));
             }
         };
     }
     
-    private static <T,V,R> Transformer<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Set<R>>> valueMapperSet(final Apply<? super V,? extends R> f) {
-        return new Transformer<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Set<R>>>() {
+    private static <T,V,R> Apply<Map.Entry<T, ? extends Iterable<V>>,Map.Entry<T, Set<R>>> valueMapperSet(final Apply<? super V,? extends R> f) {
+        return new Apply<Map.Entry<T, ? extends Iterable<V>>, Map.Entry<T, Set<R>>>() {
             @Override
-            public Map.Entry<T, Set<R>> transform(Map.Entry<T, ? extends Iterable<V>> e) {
+            public Map.Entry<T, Set<R>> apply(Map.Entry<T, ? extends Iterable<V>> e) {
                 return Pair.of(e.getKey(), newSet(FunctionalImpl.map(f, e.getValue())));
             }
         };

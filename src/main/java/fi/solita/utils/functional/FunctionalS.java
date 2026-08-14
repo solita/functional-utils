@@ -240,8 +240,8 @@ public abstract class FunctionalS extends FunctionalA {
             return emptySet();
         }
         final Set<T> first = Functional.head(sets);
-        Pair<Iterable<Set<T>>,Iterable<Set<T>>> intersectsAndNot = Functional.partition(new Transformer<Set<T>, Either<Set<T>,Set<T>>>() {
-            public Either<Set<T>,Set<T>> transform(Set<T> source) {
+        Pair<Iterable<Set<T>>,Iterable<Set<T>>> intersectsAndNot = Functional.partition(new Apply<Set<T>, Either<Set<T>,Set<T>>>() {
+            public Either<Set<T>,Set<T>> apply(Set<T> source) {
                 return intersection(source, first).isEmpty() ? Either.<Set<T>,Set<T>>right(source) : Either.<Set<T>,Set<T>>left(source);
             };
         }, sets);

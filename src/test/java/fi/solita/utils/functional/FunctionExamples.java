@@ -10,9 +10,9 @@ import org.junit.Test;
 
 public class FunctionExamples {
     
-    static Transformer<String,Integer> length = new Transformer<String,Integer>() {
+    static Function1<String,Integer> length = new Function1<String,Integer>() {
         @Override
-        public Integer transform(String source) {
+        public Integer apply(String source) {
             return source.length();
         }
     };
