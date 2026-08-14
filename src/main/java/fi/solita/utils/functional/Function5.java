@@ -8,6 +8,17 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
     public abstract R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5);
 
     @Override
+    public final <U> Function5<T1, T2, T3, T4, T5, U> andThen(final java.util.function.Function<? super R, ? extends U> next) {
+        final Function5<T1, T2, T3, T4, T5, R> self = this;
+        return new Function5<T1, T2, T3, T4, T5, U>() {
+            @Override
+            public U apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {
+                return next.apply(self.apply(t1, t2, t3, t4, t5));
+            }
+        };
+    }
+
+    @Override
     public final Function1<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R> tuppled() {
         return new Function1<Tuple5<? extends T1, ? extends T2, ? extends T3, ? extends T4, ? extends T5>, R>() {
             @Override
@@ -44,6 +55,7 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
         return ap(t1).ap(t2);
     }
     
+    @Override
     public final Function4<T2,T3,T4,T5,R> ap(final T1 t) {
         return new Function4<T2,T3,T4,T5,R>() {
             @Override
@@ -53,17 +65,17 @@ public abstract class Function5<T1, T2, T3, T4, T5, R> extends MultiParamFunctio
         };
     }
     
-    static final <T1,T2,T3,T4,T5,R> Function5<T1,T2,T3,T4,T5,R> partial(final MultiParamFunction<? extends Tuple,R,?> f, final Object... paramsAndPlaceholders) {
+    static final <T1,T2,T3,T4,T5,R> Function5<T1,T2,T3,T4,T5,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function5<T1,T2,T3,T4,T5,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {
-                return PartialApplicationHelper.doApply((MultiParamFunction<Tuple,R,?>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5);
+                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5);
             }
         };
     }
     
-    static final <T1,T2,T3,T4,T5,R,FR> Function5<T1,T2,T3,T4,T5,FR> split(final MultiParamFunction<? extends Tuple,R,?> f, final Object... placeholders) {
+    static final <T1,T2,T3,T4,T5,R,FR extends Apply<?,R>> Function5<T1,T2,T3,T4,T5,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
         return new Function5<T1,T2,T3,T4,T5,FR>() {
             @Override
             public FR apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {

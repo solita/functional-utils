@@ -9,6 +9,17 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
     public abstract R apply(T1 t1, T2 t2, T3 t3);
     
     @Override
+    public final <U> Function3<T1, T2, T3, U> andThen(final java.util.function.Function<? super R, ? extends U> next) {
+        final Function3<T1, T2, T3, R> self = this;
+        return new Function3<T1, T2, T3, U>() {
+            @Override
+            public U apply(T1 t1, T2 t2, T3 t3) {
+                return next.apply(self.apply(t1, t2, t3));
+            }
+        };
+    }
+    
+    @Override
     public final Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R> tuppled() { 
         return new Function1<Tuple3<? extends T1, ? extends T2, ? extends T3>, R>() {
             @Override
@@ -33,6 +44,7 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         };
     }
     
+    @Override
     public final Function2<T2,T3,R> ap(final T1 arg1) {
         return new Function2<T2,T3,R>() {
             @Override
@@ -49,17 +61,17 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return ap(arg1).ap(arg2);
     }
     
-    static final <T1,T2,T3,R> Function3<T1,T2,T3,R> partial(final MultiParamFunction<? extends Tuple,R,?> f, final Object... paramsAndPlaceholders) {
+    static final <T1,T2,T3,R> Function3<T1,T2,T3,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function3<T1,T2,T3,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public R apply(T1 t1, T2 t2, T3 t3) {
-                return PartialApplicationHelper.doApply((MultiParamFunction<Tuple,R,?>)f, paramsAndPlaceholders, t1, t2, t3);
+                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3);
             }
         };
     }
     
-    static final <T1,T2,T3,R,FR> Function3<T1,T2,T3,FR> split(final MultiParamFunction<? extends Tuple,R,?> f, final Object... placeholders) {
+    static final <T1,T2,T3,R,FR extends Apply<?,R>> Function3<T1,T2,T3,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
         return new Function3<T1,T2,T3,FR>() {
             @Override
             public FR apply(T1 t1, T2 t2, T3 t3) {
