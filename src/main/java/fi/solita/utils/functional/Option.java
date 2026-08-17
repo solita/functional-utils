@@ -81,6 +81,11 @@ public abstract class Option<T> implements Iterable<T>, Serializable {
      * @return whether this {@code Option} contains a value or not.
      */
     public abstract boolean isDefined();
+    
+    /**
+     * Synonym for {@link #isDefined()}.
+     */
+    public abstract boolean isPresent();
 }
 
 final class NoneImpl<T> extends Option<T> implements Serializable {
@@ -128,6 +133,11 @@ final class NoneImpl<T> extends Option<T> implements Serializable {
     
     @Override
     public final boolean isDefined() {
+        return false;
+    }
+    
+    @Override
+    public boolean isPresent() {
         return false;
     }
     
@@ -193,6 +203,11 @@ final class SomeImpl<T> extends Option<T> {
     public final boolean isDefined() {
         return true;
     }
+    
+    @Override
+    public boolean isPresent() {
+        return true;
+    };
 
     public final Iterator<T> iterator() {
         return Collections.singleton(t).iterator();
