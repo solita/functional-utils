@@ -32,9 +32,9 @@ public class Either3Test {
         assertTrue(either.isLeft());
         assertFalse(either.isMiddle());
         assertFalse(either.isRight());
-        assertTrue(either.left.isDefined());
-        assertFalse(either.middle.isDefined());
-        assertFalse(either.right.isDefined());
+        assertTrue(either.left.isPresent());
+        assertFalse(either.middle.isPresent());
+        assertFalse(either.right.isPresent());
         assertEquals("foo", either.left.get());
     }
 
@@ -44,9 +44,9 @@ public class Either3Test {
         assertFalse(either.isLeft());
         assertTrue(either.isMiddle());
         assertFalse(either.isRight());
-        assertFalse(either.left.isDefined());
-        assertTrue(either.middle.isDefined());
-        assertFalse(either.right.isDefined());
+        assertFalse(either.left.isPresent());
+        assertTrue(either.middle.isPresent());
+        assertFalse(either.right.isPresent());
         assertEquals(Integer.valueOf(42), either.middle.get());
     }
 
@@ -56,9 +56,9 @@ public class Either3Test {
         assertFalse(either.isLeft());
         assertFalse(either.isMiddle());
         assertTrue(either.isRight());
-        assertFalse(either.left.isDefined());
-        assertFalse(either.middle.isDefined());
-        assertTrue(either.right.isDefined());
+        assertFalse(either.left.isPresent());
+        assertFalse(either.middle.isPresent());
+        assertTrue(either.right.isPresent());
         assertEquals(Boolean.TRUE, either.right.get());
     }
 
@@ -417,66 +417,6 @@ public class Either3Test {
         String result = either.toString();
         assertTrue(result.contains("right"));
         assertTrue(result.contains("true"));
-    }
-
-    @Test
-    public void serialization_left() throws Exception {
-        Either3<String, Integer, Boolean> either = left("foo");
-        assertThat(either, instanceOf(Serializable.class));
-        
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bao);
-        out.writeObject(either);
-        out.close();
-        
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bao.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Either3<String, Integer, Boolean> deserialized = (Either3<String, Integer, Boolean>) in.readObject();
-        in.close();
-        
-        assertThat(deserialized, instanceOf(Serializable.class));
-        assertTrue(deserialized.isLeft());
-        assertEquals("foo", deserialized.left.get());
-    }
-
-    @Test
-    public void serialization_middle() throws Exception {
-        Either3<String, Integer, Boolean> either = middle(42);
-        assertThat(either, instanceOf(Serializable.class));
-        
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bao);
-        out.writeObject(either);
-        out.close();
-        
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bao.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Either3<String, Integer, Boolean> deserialized = (Either3<String, Integer, Boolean>) in.readObject();
-        in.close();
-        
-        assertThat(deserialized, instanceOf(Serializable.class));
-        assertTrue(deserialized.isMiddle());
-        assertEquals(Integer.valueOf(42), deserialized.middle.get());
-    }
-
-    @Test
-    public void serialization_right() throws Exception {
-        Either3<String, Integer, Boolean> either = right(true);
-        assertThat(either, instanceOf(Serializable.class));
-        
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bao);
-        out.writeObject(either);
-        out.close();
-        
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bao.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Either3<String, Integer, Boolean> deserialized = (Either3<String, Integer, Boolean>) in.readObject();
-        in.close();
-        
-        assertThat(deserialized, instanceOf(Serializable.class));
-        assertTrue(deserialized.isRight());
-        assertEquals(Boolean.TRUE, deserialized.right.get());
     }
 
     // Helper functions for tests

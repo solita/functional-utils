@@ -1,12 +1,13 @@
 package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.emptyList;
-import static fi.solita.utils.functional.Option.*;
+import static fi.solita.utils.functional.Collections.it;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 
@@ -36,7 +37,7 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return first element in {@code xs} satisfying {@code predicate}, if any.
      */
-    public static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.find(predicate, xs);
     }
 
@@ -199,8 +200,8 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return first element in {@code xs}, if any.
      */
-    public static final <T> Option<T> headOption(Iterable<? extends T> xs) {
-        return FunctionalImpl.headOption(xs);
+    public static final <T> Optional<T> headOptional(Iterable<? extends T> xs) {
+        return FunctionalImpl.headOptional(xs);
     }
 
     /**
@@ -226,8 +227,8 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return last element in {@code xs}, if any.
      */
-    public static final <T> Option<T> lastOption(Iterable<? extends T> xs) {
-        return FunctionalImpl.lastOption(xs);
+    public static final <T> Optional<T> lastOptional(Iterable<? extends T> xs) {
+        return FunctionalImpl.lastOptional(xs);
     }
 
     /**
@@ -409,7 +410,7 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return elements in {@code xs}, if any, folded together by natural semigrouping.
      */
-    public static final <T extends SemiGroup<T>> Option<T> reduce(Iterable<? extends T> xs) {
+    public static final <T extends SemiGroup<T>> Optional<T> reduce(Iterable<? extends T> xs) {
         return FunctionalImpl.reduce(xs);
     }
 
@@ -423,7 +424,7 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return elements in {@code xs}, if any, folded together by bifunction {@code f}.
      */
-    public static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(f, xs);
     }
 
@@ -437,7 +438,7 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return smallest value in {@code xs}, if any, determined by natural ordering.
      */
-    public static <T extends Comparable<? super T>> Option<T> min(Iterable<? extends T> xs) {
+    public static <T extends Comparable<? super T>> Optional<T> min(Iterable<? extends T> xs) {
         return FunctionalImpl.min(xs);
     }
     
@@ -458,14 +459,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return smallest of {@code xs} by {@code comparator}.
      */
-    public static final <T> Option<T> minBy(Comparator<? super T> comparator, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> minBy(Comparator<? super T> comparator, Iterable<? extends T> xs) {
         return FunctionalImpl.minBy(comparator, xs);
     }
 
     /**
      * @return largest value in {@code xs}, if any, determined by natural ordering.
      */
-    public static final <T extends Comparable<? super T>> Option<T> max(Iterable<? extends T> xs) {
+    public static final <T extends Comparable<? super T>> Optional<T> max(Iterable<? extends T> xs) {
         return FunctionalImpl.max(xs);
     }
     
@@ -486,7 +487,7 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return largest of {@code xs} by {@code comparator}.
      */
-    public static final <T> Option<T> maxBy(Comparator<? super T> comparator, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> maxBy(Comparator<? super T> comparator, Iterable<? extends T> xs) {
         return FunctionalImpl.maxBy(comparator, xs);
     }
     
@@ -702,48 +703,48 @@ public abstract class Functional extends FunctionalC {
     /**
      * Applicative for optionals.
      * 
-     * @return {@code Some(f(a,b))} if {@code a} and {@code b} are defined. {@code None()} otherwise.
+     * @return {@code Optional.of(f(a,b))} if {@code a} and {@code b} are defined. {@code Optional.empty()} otherwise.
      */
-    public static final <A,B,T> Option<T> map2(Option<A> a, Option<B> b, ApplyBi<? super A,? super B,? extends T> f) {
-        for (A aa: a) {
-            for (B bb: b) {
-                return Some(f.apply(aa, bb));
+    public static final <A,B,T> Optional<T> map2(Optional<A> a, Optional<B> b, ApplyBi<? super A,? super B,? extends T> f) {
+        for (A aa: it(a)) {
+            for (B bb: it(b)) {
+                return Optional.of(f.apply(aa, bb));
             }
         }
-        return None();
+        return Optional.empty();
     }
     
     /**
      * Applicative for optionals.
      * 
-     * @return {@code Some(f(a,b,c))} if {@code a} and {@code b} and {@code c} are defined. {@code None()} otherwise.
+     * @return {@code Optional.of(f(a,b,c))} if {@code a} and {@code b} and {@code c} are defined. {@code Optional.empty()} otherwise.
      */
-    public static final <A,B,C,T> Option<T> map3(Option<A> a, Option<B> b, Option<C> c, Apply3<? super A,? super B,? super C,? extends T> f) {
-        for (A aa: a) {
-            for (B bb: b) {
-                for (C cc: c) {
-                    return Some(f.apply(aa, bb, cc));
+    public static final <A,B,C,T> Optional<T> map3(Optional<A> a, Optional<B> b, Optional<C> c, Apply3<? super A,? super B,? super C,? extends T> f) {
+        for (A aa: it(a)) {
+            for (B bb: it(b)) {
+                for (C cc: it(c)) {
+                    return Optional.of(f.apply(aa, bb, cc));
                 }
             }
         }
-        return None();
+        return Optional.empty();
     }
     
     /**
      * Applicative for optionals.
      * 
-     * @return {@code Some(f(a,b,c,d))} if {@code a} and {@code b} and {@code c} and {@code d} are defined. {@code None()} otherwise.
+     * @return {@code Optional.of(f(a,b,c,d))} if {@code a} and {@code b} and {@code c} and {@code d} are defined. {@code Optional.empty()} otherwise.
      */
-    public static final <A,B,C,D,T> Option<T> map4(Option<A> a, Option<B> b, Option<C> c, Option<D> d, Apply4<? super A,? super B,? super C,? super D,? extends T> f) {
-        for (A aa: a) {
-            for (B bb: b) {
-                for (C cc: c) {
-                    for (D dd: d) {
-                        return Some(f.apply(aa, bb, cc, dd));
+    public static final <A,B,C,D,T> Optional<T> map4(Optional<A> a, Optional<B> b, Optional<C> c, Optional<D> d, Apply4<? super A,? super B,? super C,? super D,? extends T> f) {
+        for (A aa: it(a)) {
+            for (B bb: it(b)) {
+                for (C cc: it(c)) {
+                    for (D dd: it(d)) {
+                        return Optional.of(f.apply(aa, bb, cc, dd));
                     }
                 }
             }
         }
-        return None();
+        return Optional.empty();
     }
 }

@@ -21,11 +21,11 @@ import static fi.solita.utils.functional.FunctionalA.group;
 import static fi.solita.utils.functional.FunctionalA.groupBy;
 import static fi.solita.utils.functional.FunctionalA.grouped;
 import static fi.solita.utils.functional.FunctionalA.head;
-import static fi.solita.utils.functional.FunctionalA.headOption;
+import static fi.solita.utils.functional.FunctionalA.headOptional;
 import static fi.solita.utils.functional.FunctionalA.init;
 import static fi.solita.utils.functional.FunctionalA.isEmpty;
 import static fi.solita.utils.functional.FunctionalA.last;
-import static fi.solita.utils.functional.FunctionalA.lastOption;
+import static fi.solita.utils.functional.FunctionalA.lastOptional;
 import static fi.solita.utils.functional.FunctionalA.map;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.maxBy;
@@ -61,6 +61,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -109,14 +110,14 @@ public class FunctionalATest {
     public void testFind_found() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        Option<Integer> result = find(new Apply<Integer, Boolean>() {
+        Optional<Integer> result = find(new Apply<Integer, Boolean>() {
             @Override
             public Boolean apply(Integer x) {
                 return x > 3;
             }
         }, xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(4));
     }
     
@@ -124,14 +125,14 @@ public class FunctionalATest {
     public void testFind_notFound() {
         Integer[] xs = {1, 2, 3};
         
-        Option<Integer> result = find(new Apply<Integer, Boolean>() {
+        Optional<Integer> result = find(new Apply<Integer, Boolean>() {
             @Override
             public Boolean apply(Integer x) {
                 return x > 10;
             }
         }, xs);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test
@@ -297,9 +298,9 @@ public class FunctionalATest {
     public void testHeadOption() {
         Integer[] xs = {1, 2, 3};
         
-        Option<Integer> result = headOption(xs);
+        Optional<Integer> result = headOptional(xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(1));
     }
     
@@ -307,9 +308,9 @@ public class FunctionalATest {
     public void testHeadOption_empty() {
         Integer[] xs = {};
         
-        Option<Integer> result = headOption(xs);
+        Optional<Integer> result = headOptional(xs);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test
@@ -339,9 +340,9 @@ public class FunctionalATest {
     public void testLastOption() {
         Integer[] xs = {1, 2, 3};
         
-        Option<Integer> result = lastOption(xs);
+        Optional<Integer> result = lastOptional(xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(3));
     }
     
@@ -349,9 +350,9 @@ public class FunctionalATest {
     public void testLastOption_empty() {
         Integer[] xs = {};
         
-        Option<Integer> result = lastOption(xs);
+        Optional<Integer> result = lastOptional(xs);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test
@@ -621,9 +622,9 @@ public class FunctionalATest {
             new SemiGroupInteger(4)
         };
         
-        Option<SemiGroupInteger> result = reduce(xs);
+        Optional<SemiGroupInteger> result = reduce(xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get().value, equalTo(10));
     }
     
@@ -673,9 +674,9 @@ public class FunctionalATest {
     public void testMin() {
         Integer[] xs = {3, 1, 4, 1, 5};
         
-        Option<Integer> result = min(xs);
+        Optional<Integer> result = min(xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(1));
     }
     
@@ -690,14 +691,14 @@ public class FunctionalATest {
     public void testMinBy() {
         String[] xs = {"aaa", "b", "cc"};
         
-        Option<String> result = minBy(new Comparator<String>() {
+        Optional<String> result = minBy(new Comparator<String>() {
             @Override
             public int compare(String a, String b) {
                 return Integer.compare(a.length(), b.length());
             }
         }, xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo("b"));
     }
     
@@ -705,9 +706,9 @@ public class FunctionalATest {
     public void testMax() {
         Integer[] xs = {3, 1, 4, 1, 5};
         
-        Option<Integer> result = max(xs);
+        Optional<Integer> result = max(xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(5));
     }
     
@@ -722,14 +723,14 @@ public class FunctionalATest {
     public void testMaxBy() {
         String[] xs = {"aaa", "b", "cc"};
         
-        Option<String> result = maxBy(new Comparator<String>() {
+        Optional<String> result = maxBy(new Comparator<String>() {
             @Override
             public int compare(String a, String b) {
                 return Integer.compare(a.length(), b.length());
             }
         }, xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo("aaa"));
     }
     

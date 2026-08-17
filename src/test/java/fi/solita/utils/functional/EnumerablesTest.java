@@ -4,9 +4,9 @@ import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.last;
 import static fi.solita.utils.functional.Functional.range;
 import static fi.solita.utils.functional.Functional.tail;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -29,19 +29,19 @@ public class EnumerablesTest {
     
     @Test
     public void testAsciiAlpha_succ() {
-        assertEquals(Some('b'), Enumerables.asciiAlpha.succ('a'));
-        assertEquals(Some('c'), Enumerables.asciiAlpha.succ('b'));
-        assertEquals(Some('z'), Enumerables.asciiAlpha.succ('y'));
-        assertEquals(None(), Enumerables.asciiAlpha.succ('z'));
-        assertEquals(None(), Enumerables.asciiAlpha.succ(null));
+        assertEquals(Optional.of('b'), Enumerables.asciiAlpha.succ('a'));
+        assertEquals(Optional.of('c'), Enumerables.asciiAlpha.succ('b'));
+        assertEquals(Optional.of('z'), Enumerables.asciiAlpha.succ('y'));
+        assertEquals(Optional.empty(), Enumerables.asciiAlpha.succ('z'));
+        assertEquals(Optional.empty(), Enumerables.asciiAlpha.succ(null));
     }
     
     @Test
     public void testAsciiAlpha_pred() {
-        assertEquals(None(), Enumerables.asciiAlpha.pred('a'));
-        assertEquals(Some('a'), Enumerables.asciiAlpha.pred('b'));
-        assertEquals(Some('y'), Enumerables.asciiAlpha.pred('z'));
-        assertEquals(None(), Enumerables.asciiAlpha.pred(null));
+        assertEquals(Optional.empty(), Enumerables.asciiAlpha.pred('a'));
+        assertEquals(Optional.of('a'), Enumerables.asciiAlpha.pred('b'));
+        assertEquals(Optional.of('y'), Enumerables.asciiAlpha.pred('z'));
+        assertEquals(Optional.empty(), Enumerables.asciiAlpha.pred(null));
     }
     
     @Test
@@ -52,20 +52,20 @@ public class EnumerablesTest {
     
     @Test
     public void testShorts_succ() {
-        assertEquals(Some((short)1), Enumerables.shorts.succ((short)0));
-        assertEquals(Some((short)0), Enumerables.shorts.succ((short)-1));
-        assertEquals(Some((short)(Short.MAX_VALUE)), Enumerables.shorts.succ((short)(Short.MAX_VALUE - 1)));
-        assertEquals(None(), Enumerables.shorts.succ(Short.MAX_VALUE));
-        assertEquals(None(), Enumerables.shorts.succ(null));
+        assertEquals(Optional.of((short)1), Enumerables.shorts.succ((short)0));
+        assertEquals(Optional.of((short)0), Enumerables.shorts.succ((short)-1));
+        assertEquals(Optional.of((short)(Short.MAX_VALUE)), Enumerables.shorts.succ((short)(Short.MAX_VALUE - 1)));
+        assertEquals(Optional.empty(), Enumerables.shorts.succ(Short.MAX_VALUE));
+        assertEquals(Optional.empty(), Enumerables.shorts.succ(null));
     }
     
     @Test
     public void testShorts_pred() {
-        assertEquals(Some((short)-1), Enumerables.shorts.pred((short)0));
-        assertEquals(Some((short)0), Enumerables.shorts.pred((short)1));
-        assertEquals(Some((short)(Short.MIN_VALUE)), Enumerables.shorts.pred((short)(Short.MIN_VALUE + 1)));
-        assertEquals(None(), Enumerables.shorts.pred(Short.MIN_VALUE));
-        assertEquals(None(), Enumerables.shorts.pred(null));
+        assertEquals(Optional.of((short)-1), Enumerables.shorts.pred((short)0));
+        assertEquals(Optional.of((short)0), Enumerables.shorts.pred((short)1));
+        assertEquals(Optional.of((short)(Short.MIN_VALUE)), Enumerables.shorts.pred((short)(Short.MIN_VALUE + 1)));
+        assertEquals(Optional.empty(), Enumerables.shorts.pred(Short.MIN_VALUE));
+        assertEquals(Optional.empty(), Enumerables.shorts.pred(null));
     }
     
     @Test
@@ -83,20 +83,20 @@ public class EnumerablesTest {
     
     @Test
     public void testInts_succ() {
-        assertEquals(Some(1), Enumerables.ints.succ(0));
-        assertEquals(Some(0), Enumerables.ints.succ(-1));
-        assertEquals(Some(Integer.MAX_VALUE), Enumerables.ints.succ(Integer.MAX_VALUE - 1));
-        assertEquals(None(), Enumerables.ints.succ(Integer.MAX_VALUE));
-        assertEquals(None(), Enumerables.ints.succ(null));
+        assertEquals(Optional.of(1), Enumerables.ints.succ(0));
+        assertEquals(Optional.of(0), Enumerables.ints.succ(-1));
+        assertEquals(Optional.of(Integer.MAX_VALUE), Enumerables.ints.succ(Integer.MAX_VALUE - 1));
+        assertEquals(Optional.empty(), Enumerables.ints.succ(Integer.MAX_VALUE));
+        assertEquals(Optional.empty(), Enumerables.ints.succ(null));
     }
     
     @Test
     public void testInts_pred() {
-        assertEquals(Some(-1), Enumerables.ints.pred(0));
-        assertEquals(Some(0), Enumerables.ints.pred(1));
-        assertEquals(Some(Integer.MIN_VALUE), Enumerables.ints.pred(Integer.MIN_VALUE + 1));
-        assertEquals(None(), Enumerables.ints.pred(Integer.MIN_VALUE));
-        assertEquals(None(), Enumerables.ints.pred(null));
+        assertEquals(Optional.of(-1), Enumerables.ints.pred(0));
+        assertEquals(Optional.of(0), Enumerables.ints.pred(1));
+        assertEquals(Optional.of(Integer.MIN_VALUE), Enumerables.ints.pred(Integer.MIN_VALUE + 1));
+        assertEquals(Optional.empty(), Enumerables.ints.pred(Integer.MIN_VALUE));
+        assertEquals(Optional.empty(), Enumerables.ints.pred(null));
     }
     
     @Test
@@ -114,20 +114,20 @@ public class EnumerablesTest {
     
     @Test
     public void testLongs_succ() {
-        assertEquals(Some(1L), Enumerables.longs.succ(0L));
-        assertEquals(Some(0L), Enumerables.longs.succ(-1L));
-        assertEquals(Some(Long.MAX_VALUE), Enumerables.longs.succ(Long.MAX_VALUE - 1));
-        assertEquals(None(), Enumerables.longs.succ(Long.MAX_VALUE));
-        assertEquals(None(), Enumerables.longs.succ(null));
+        assertEquals(Optional.of(1L), Enumerables.longs.succ(0L));
+        assertEquals(Optional.of(0L), Enumerables.longs.succ(-1L));
+        assertEquals(Optional.of(Long.MAX_VALUE), Enumerables.longs.succ(Long.MAX_VALUE - 1));
+        assertEquals(Optional.empty(), Enumerables.longs.succ(Long.MAX_VALUE));
+        assertEquals(Optional.empty(), Enumerables.longs.succ(null));
     }
     
     @Test
     public void testLongs_pred() {
-        assertEquals(Some(-1L), Enumerables.longs.pred(0L));
-        assertEquals(Some(0L), Enumerables.longs.pred(1L));
-        assertEquals(Some(Long.MIN_VALUE), Enumerables.longs.pred(Long.MIN_VALUE + 1));
-        assertEquals(None(), Enumerables.longs.pred(Long.MIN_VALUE));
-        assertEquals(None(), Enumerables.longs.pred(null));
+        assertEquals(Optional.of(-1L), Enumerables.longs.pred(0L));
+        assertEquals(Optional.of(0L), Enumerables.longs.pred(1L));
+        assertEquals(Optional.of(Long.MIN_VALUE), Enumerables.longs.pred(Long.MIN_VALUE + 1));
+        assertEquals(Optional.empty(), Enumerables.longs.pred(Long.MIN_VALUE));
+        assertEquals(Optional.empty(), Enumerables.longs.pred(null));
     }
     
     @Test
@@ -145,16 +145,16 @@ public class EnumerablesTest {
     
     @Test
     public void testBooleans_succ() {
-        assertEquals(Some(true), Enumerables.booleans.succ(false));
-        assertEquals(None(), Enumerables.booleans.succ(true));
-        assertEquals(None(), Enumerables.booleans.succ(null));
+        assertEquals(Optional.of(true), Enumerables.booleans.succ(false));
+        assertEquals(Optional.empty(), Enumerables.booleans.succ(true));
+        assertEquals(Optional.empty(), Enumerables.booleans.succ(null));
     }
     
     @Test
     public void testBooleans_pred() {
-        assertEquals(None(), Enumerables.booleans.pred(false));
-        assertEquals(Some(false), Enumerables.booleans.pred(true));
-        assertEquals(None(), Enumerables.booleans.pred(null));
+        assertEquals(Optional.empty(), Enumerables.booleans.pred(false));
+        assertEquals(Optional.of(false), Enumerables.booleans.pred(true));
+        assertEquals(Optional.empty(), Enumerables.booleans.pred(null));
     }
     
     @Test

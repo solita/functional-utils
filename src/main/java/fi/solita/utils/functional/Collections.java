@@ -1056,7 +1056,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         List<T> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             if (size == 0) {
                 return Collections.<T>emptyList();
             } else if (size == 1) {
@@ -1104,7 +1104,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         Set<T> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             if (size == 0) {
                 return Collections.<T>emptySet();
             } else if (size == 1) {
@@ -1148,7 +1148,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         SortedSet<T> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             if (size == 0) {
                 return Collections.<T>emptySortedSet();
             } else if (size == 1) {
@@ -1206,7 +1206,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         SortedSet<T> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             if (size == 0) {
                 return Collections.<T>emptySortedSet();
             } else if (size == 1) {
@@ -1256,7 +1256,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         Map<K, V> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             if (size == 0) {
                 return Collections.<K,V>emptyMap();
             } else if (size == 1) {
@@ -1300,7 +1300,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         Map<K, V> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             ret = newMutableLinkedMapOfSize(size);
         }
         if (ret == null) {
@@ -1805,7 +1805,7 @@ public abstract class Collections {
             ((ForceableIterable) elements).completeIterationNeeded();
         }
         Map<K, List<V>> ret = null;
-        for (long size: Iterables.resolveSize.apply(elements)) {
+        for (long size: it(Iterables.resolveSize.apply(elements))) {
             ret = newMutableMapOfSize((int)(size*1.5));
         }
         if (ret == null) {

@@ -1,15 +1,15 @@
 package fi.solita.utils.functional.lens;
 
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.map;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Member;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -17,7 +17,6 @@ import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function3;
-import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple2;
 import fi.solita.utils.functional.Tuple3;
@@ -41,12 +40,12 @@ class Department {
 
 class Employee {
     final String name;
-    final Option<Integer> salary;
+    final Optional<Integer> salary;
     final Department department;
     
     public static final Builder<Employee> builder = Builder.of(Employee_.$Fields(), Employee_.$);
 
-    public Employee(String name, Option<Integer> salary, Department department) {
+    public Employee(String name, Optional<Integer> salary, Department department) {
         this.name = name;
         this.salary = salary;
         this.department = department;
@@ -77,11 +76,11 @@ class Department_ {
 
 /** Generated in practice by meta-utils */
 class Employee_ {
-    public static final Tuple3<Apply<Employee,String>,Apply<Employee,Option<Integer>>,Apply<Employee,Department>> $Fields() {
+    public static final Tuple3<Apply<Employee,String>,Apply<Employee,Optional<Integer>>,Apply<Employee,Department>> $Fields() {
         return Tuple.of(name, salary, department);
     }
-    public static final Function3<String, Option<Integer>, Department, Employee> $ = new Function3<String,Option<Integer>,Department,Employee>() {
-        public Employee apply(String t1, Option<Integer> t2, Department t3) {
+    public static final Function3<String, Optional<Integer>, Department, Employee> $ = new Function3<String,Optional<Integer>,Department,Employee>() {
+        public Employee apply(String t1, Optional<Integer> t2, Department t3) {
             return new Employee(t1, t2, t3);
         }
     };
@@ -90,8 +89,8 @@ class Employee_ {
             return t.name;
         }
     };
-    public static final Apply<Employee, Option<Integer>> salary = new Apply<Employee, Option<Integer>>() {
-        public Option<Integer> apply(Employee t) {
+    public static final Apply<Employee, Optional<Integer>> salary = new Apply<Employee, Optional<Integer>>() {
+        public Optional<Integer> apply(Employee t) {
             return t.salary;
         }
         @SuppressWarnings("unused")
@@ -120,13 +119,13 @@ public class BuilderAndLensExamples {
             .with(Employee_.department, new Department("Sales"))
             .build();
         assertEquals("John", employee.name);
-        assertEquals(None(), employee.salary);
+        assertEquals(Optional.empty(), employee.salary);
         assertEquals("Sales", employee.department.name);
     }
     
     @Test
     public void lens() {
-        Employee employee = new Employee("John", Some(42), new Department("Sales"));
+        Employee employee = new Employee("John", Optional.of(42), new Department("Sales"));
         Lens<Employee,String> name_ = Lens.of(Employee_.name, Employee.builder);
 
         assertEquals("John", employee.name);
@@ -138,7 +137,7 @@ public class BuilderAndLensExamples {
 
     @Test
     public void deepLens() {
-        Employee employee = new Employee("John", Some(42), new Department("Sales"));
+        Employee employee = new Employee("John", Optional.of(42), new Department("Sales"));
 
         Lens<Employee, Department> employeeDepartment_ = Lens.of(Employee_.department, Employee.builder);
         Lens<Department, String> departmentName_ = Lens.of(Department_.name, Department.builder);
@@ -152,16 +151,16 @@ public class BuilderAndLensExamples {
     
     @Test
     public void listLens() {
-        Department department = new Department("Sales", newList(new Employee("John", Some(42), new Department("IT"))));
+        Department department = new Department("Sales", newList(new Employee("John", Optional.of(42), new Department("IT"))));
 
         Lens<Department, List<Employee>> departmentEmployees_ = Lens.of(Department_.employees, Department.builder);
-        Setter<Employee, Option<Integer>> employeeSalary_ = Lens.of(Employee_.salary, Employee.builder);
+        Setter<Employee, Optional<Integer>> employeeSalary_ = Lens.of(Employee_.salary, Employee.builder);
 
-        assertEquals(newSet(42), newSet(flatMap(Employee_.salary, departmentEmployees_.get(department))));
+        assertEquals(newSet(42), newSet(flatMap(x -> it(x.salary), departmentEmployees_.get(department))));
 
         
-        Setter<Department,Option<Integer>> departmentSalaries_ = Setter.eachList(departmentEmployees_, employeeSalary_);
-        assertEquals(newSet(69), newSet(flatMap(Employee_.salary, departmentSalaries_.set(department, Some(69)).employees)));
+        Setter<Department,Optional<Integer>> departmentSalaries_ = Setter.eachList(departmentEmployees_, employeeSalary_);
+        assertEquals(newSet(69), newSet(flatMap(x -> it(x.salary), departmentSalaries_.set(department, Optional.of(69)).employees)));
         
         
         Lens<Department, String> departmentName_ = Lens.of(Department_.name, Department.builder);

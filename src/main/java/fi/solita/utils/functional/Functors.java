@@ -2,6 +2,8 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Functional.map;
 
+import java.util.Optional;
+
 public abstract class Functors {
     private Functors() {
     }
@@ -14,11 +16,11 @@ public abstract class Functors {
         };
     }
     
-    public static final <A,B> Functor<Option<?>, A, B, Option<A>, Option<B>> option() {
-        return new Functor<Option<?>, A, B, Option<A>, Option<B>>() {
+    public static final <A,B> Functor<Optional<?>, A, B, Optional<A>, Optional<B>> option() {
+        return new Functor<Optional<?>, A, B, Optional<A>, Optional<B>>() {
             @SuppressWarnings("unchecked")
-            public Option<B> fmap(Apply<? super A, ? extends B> f, Option<A> as) {
-                return (Option<B>) as.map(f);
+            public Optional<B> fmap(Apply<? super A, ? extends B> f, Optional<A> as) {
+                return (Optional<B>) as.map(f);
             }
         };
     }

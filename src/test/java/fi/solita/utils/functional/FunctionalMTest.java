@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -37,9 +38,9 @@ public class FunctionalMTest {
     public void testFind_existingKey() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2), Pair.of("c", 3));
         
-        Option<Integer> result = find("b", map);
+        Optional<Integer> result = find("b", map);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo(2));
     }
     
@@ -47,18 +48,18 @@ public class FunctionalMTest {
     public void testFind_nonExistingKey() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Option<Integer> result = find("z", map);
+        Optional<Integer> result = find("z", map);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test
     public void testFind_emptyMap() {
         Map<String, Integer> map = newMap(SemiGroups.<Integer>fail(), Collections.<Map.Entry<String, Integer>>emptyList());
         
-        Option<Integer> result = find("a", map);
+        Optional<Integer> result = find("a", map);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test

@@ -1,11 +1,10 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -169,10 +168,10 @@ public class OrderingTest {
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenByOption(new Apply<Person, Option<Integer>>() {
+        }).thenByOptional(new Apply<Person, Optional<Integer>>() {
             @Override
-            public Option<Integer> apply(Person t) {
-                return t.age > 0 ? Some(t.age) : Option.<Integer>None();
+            public Optional<Integer> apply(Person t) {
+                return t.age > 0 ? Optional.of(t.age) : Optional.empty();
             }
         });
         
@@ -225,10 +224,10 @@ public class OrderingTest {
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenByOption(new Apply<Person, Option<Integer>>() {
+        }).thenByOptional(new Apply<Person, Optional<Integer>>() {
             @Override
-            public Option<Integer> apply(Person t) {
-                return Some(t.age);
+            public Optional<Integer> apply(Person t) {
+                return Optional.of(t.age);
             }
         }, reverseIntComparator);
         

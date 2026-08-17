@@ -1,8 +1,9 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.Collections.it;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Not sure if this is good, but lets "Try" ;)
@@ -13,35 +14,35 @@ import java.util.Iterator;
 public class Try<FAILURE,SUCCESS> extends Either<FAILURE,SUCCESS> implements Iterable<SUCCESS> {
 
     public static final <FAILURE,SUCCESS> Try<FAILURE,SUCCESS> failure(FAILURE left) {
-        return new Try<FAILURE, SUCCESS>(Some(left), Option.<SUCCESS>None());
+        return new Try<FAILURE, SUCCESS>(Optional.of(left), Optional.empty());
     }
 
     public static final <FAILURE,SUCCESS> Try<FAILURE,SUCCESS> success(SUCCESS right) {
-        return new Try<FAILURE, SUCCESS>(Option.<FAILURE>None(), Some(right));
+        return new Try<FAILURE, SUCCESS>(Optional.empty(), Optional.of(right));
     }
 
-    public final Option<FAILURE> failure;
-    public final Option<SUCCESS> success;
+    public final Optional<FAILURE> failure;
+    public final Optional<SUCCESS> success;
     
-    private Try(Option<FAILURE> failure, Option<SUCCESS> success) {
+    private Try(Optional<FAILURE> failure, Optional<SUCCESS> success) {
         super(failure, success);
         this.failure = failure;
         this.success = success;
     }
     
     public final boolean isSuccess() {
-        return success.isDefined();
+        return success.isPresent();
     }
     
     public final boolean isFailure() {
-        return failure.isDefined();
+        return failure.isPresent();
     }
     
     public Iterator<SUCCESS> iterator() {
-        for (FAILURE f: left) {
+        for (FAILURE f: it(left)) {
             throw new UnsupportedOperationException("Try was a Failure: " + f);
         }
-        return right.iterator();
+        return it(right).iterator();
     }
     
     @SuppressWarnings("unchecked")

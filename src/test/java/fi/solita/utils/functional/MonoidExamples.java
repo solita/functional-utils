@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Functional.reduce;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class MonoidExamples {
         // For classes having a default (SemiGroup) instance,
         // no parameter is needed.
         List<Distance> distances = newList(new Distance(1), new Distance(2));
-        Option<Distance> reduced = reduce(distances);
+        Optional<Distance> reduced = reduce(distances);
         
         Map<String, Long> first = newMutableMap();
         Map<String, Long> second = newMutableMap();

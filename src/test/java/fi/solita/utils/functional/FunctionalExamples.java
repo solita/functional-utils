@@ -18,11 +18,11 @@ import static fi.solita.utils.functional.Functional.fold;
 import static fi.solita.utils.functional.Functional.forall;
 import static fi.solita.utils.functional.Functional.foreach;
 import static fi.solita.utils.functional.Functional.head;
-import static fi.solita.utils.functional.Functional.headOption;
+import static fi.solita.utils.functional.Functional.headOptional;
 import static fi.solita.utils.functional.Functional.init;
 import static fi.solita.utils.functional.Functional.isEmpty;
 import static fi.solita.utils.functional.Functional.last;
-import static fi.solita.utils.functional.Functional.lastOption;
+import static fi.solita.utils.functional.Functional.lastOptional;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.max;
 import static fi.solita.utils.functional.Functional.min;
@@ -38,11 +38,10 @@ import static fi.solita.utils.functional.FunctionalS.intersection;
 import static fi.solita.utils.functional.FunctionalS.product;
 import static fi.solita.utils.functional.FunctionalS.sum;
 import static fi.solita.utils.functional.FunctionalS.union;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -80,18 +79,18 @@ public class FunctionalExamples {
         assertEquals(1, head);
         
         // headOption
-        Option<Integer> headOption = headOption(someIterableOrArray);
-        assertEquals(Some(1), headOption);
-        assertEquals(None(), headOption(emptyList()));
+        Optional<Integer> headOption = headOptional(someIterableOrArray);
+        assertEquals(Optional.of(1), headOption);
+        assertEquals(Optional.empty(), headOptional(emptyList()));
         
         // last
         int last = last(someIterableOrArray);
         assertEquals(3, last);
         
         // lastOption
-        Option<Integer> lastOption = lastOption(someIterableOrArray);
-        assertEquals(Some(3), lastOption);
-        assertEquals(None(), lastOption(emptyList()));
+        Optional<Integer> lastOption = lastOptional(someIterableOrArray);
+        assertEquals(Optional.of(3), lastOption);
+        assertEquals(Optional.empty(), lastOptional(emptyList()));
         
         // tail
         Iterable<Integer> tail = tail(someIterableOrArray);
@@ -143,11 +142,11 @@ public class FunctionalExamples {
         assertEquals(newList(1,2,3,1,2,3), newList(concat));
         
         // find
-        Option<Integer> find = find(x -> x % 2 == 0, someIterableOrArray);
-        Option<String> findFromMap = find(42, someMap);
-        assertEquals(Some(2), find);
-        assertEquals(Some("foo"), findFromMap);
-        assertEquals(None(), find(x -> x % 2 == 0, Collections.<Integer>emptyList()));
+        Optional<Integer> find = find(x -> x % 2 == 0, someIterableOrArray);
+        Optional<String> findFromMap = find(42, someMap);
+        assertEquals(Optional.of(2), find);
+        assertEquals(Optional.of("foo"), findFromMap);
+        assertEquals(Optional.empty(), find(x -> x % 2 == 0, Collections.<Integer>emptyList()));
         
         // filter
         Iterable<Integer> filter = filter(x -> x % 2 != 0, someIterableOrArray);
@@ -185,9 +184,9 @@ public class FunctionalExamples {
         assertEquals(newList(1,2), newList(flattenArrays));
         
         // fold
-        Option<Integer> fold = fold(SemiGroups.intSum, someIterableOrArray);
+        Optional<Integer> fold = fold(SemiGroups.intSum, someIterableOrArray);
         String foldFromZero = fold("->", SemiGroups.stringConcat, map(Object::toString, someIterableOrArray));
-        assertEquals(Some(6), fold);
+        assertEquals(Optional.of(6), fold);
         assertEquals("->123", foldFromZero);
         
         // reduce
@@ -207,14 +206,14 @@ public class FunctionalExamples {
         assertEquals(newList(1,3), newList(subtract));
         
         // min
-        Option<Integer> min = min(someIterableOrArray);
-        assertEquals(Some(1), min);
-        assertEquals(None(), min(Collections.<Integer>emptyList()));
+        Optional<Integer> min = min(someIterableOrArray);
+        assertEquals(Optional.of(1), min);
+        assertEquals(Optional.empty(), min(Collections.<Integer>emptyList()));
         
         // max
-        Option<Integer> max = max(someIterableOrArray);
-        assertEquals(Some(3), max);
-        assertEquals(None(), max(Collections.<Integer>emptyList()));
+        Optional<Integer> max = max(someIterableOrArray);
+        assertEquals(Optional.of(3), max);
+        assertEquals(Optional.empty(), max(Collections.<Integer>emptyList()));
         
         // sum
         long sum = sum(1,2,3);

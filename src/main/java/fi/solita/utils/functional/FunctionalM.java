@@ -10,6 +10,7 @@ import static fi.solita.utils.functional.Functional.repeat;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -20,7 +21,7 @@ public abstract class FunctionalM {
     /**
      * @return value with {@code key} in {@code map}, if any.
      */
-    public static final <K, V> Option<V> find(K key, Map<? super K, ? extends V> map) {
+    public static final <K, V> Optional<V> find(K key, Map<? super K, ? extends V> map) {
         return FunctionalImpl.find(key, map);
     }
     

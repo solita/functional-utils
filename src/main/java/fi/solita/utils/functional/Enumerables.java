@@ -1,7 +1,6 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
+import java.util.Optional;
 
 public abstract class Enumerables {
     private Enumerables() {
@@ -16,12 +15,12 @@ public abstract class Enumerables {
           this.minBound = bounds.minBound();
         }
     
-        public Option<T> succ(T t) {
-                if (t == null || t.equals(maxBound)) return None(); else return Some(doSucc(t));
+        public Optional<T> succ(T t) {
+                if (t == null || t.equals(maxBound)) return Optional.empty(); else return Optional.of(doSucc(t));
         }
 
-        public Option<T> pred(T t) {
-              if (t == null || t.equals(minBound)) return None(); else return Some(doPred(t));
+        public Optional<T> pred(T t) {
+              if (t == null || t.equals(minBound)) return Optional.empty(); else return Optional.of(doPred(t));
         }
         
         public T minBound() {

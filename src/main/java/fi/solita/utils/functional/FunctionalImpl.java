@@ -5,8 +5,6 @@ import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableLinkedMap;
 import static fi.solita.utils.functional.Collections.newMutableMap;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -40,12 +39,12 @@ final class FunctionalImpl {
         return filter(x -> !toRemove.equals(x), xs);
     }
     
-    static final <T> Option<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
-        return headOption(filter(predicate, xs));
+    static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+        return headOptional(filter(predicate, xs));
     }
     
-    static final <K, V> Option<V> find(K key, Map<? super K, ? extends V> map) {
-        return map == null ? null : Option.of(map.get(key));
+    static final <K, V> Optional<V> find(K key, Map<? super K, ? extends V> map) {
+        return map == null ? null : Optional.ofNullable(map.get(key));
     }
     
     static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
@@ -116,8 +115,8 @@ final class FunctionalImpl {
             return null;
         }
 
-        Option<Long> estimatedSize = Iterables.resolveSize.apply(xs);
-        List<List<T>> target = estimatedSize.isDefined() ? Collections.<List<T>>newMutableListOfSize(estimatedSize.get() / groupSize) : Collections.<List<T>>newMutableList();
+        Optional<Long> estimatedSize = Iterables.resolveSize.apply(xs);
+        List<List<T>> target = estimatedSize.isPresent() ? Collections.<List<T>>newMutableListOfSize(estimatedSize.get() / groupSize) : Collections.<List<T>>newMutableList();
         Iterator<? extends T> it = xs.iterator();
         while (it.hasNext()) {
             List<T> group = Collections.newMutableListOfSize((int)groupSize);
@@ -159,9 +158,9 @@ final class FunctionalImpl {
         Map<G, List<T>> target = newMutableMap();
         for (T t: xs) {
             G g = f.apply(t);
-            Option<List<T>> groupOption = find(g, target);
+            Optional<List<T>> groupOption = find(g, target);
             List<T> group;
-            if (groupOption.isDefined()) {
+            if (groupOption.isPresent()) {
                 group = groupOption.get();
             } else {
                 group = Collections.newMutableList();
@@ -176,15 +175,15 @@ final class FunctionalImpl {
         return xs == null ? null : xs.iterator().next();
     }
     
-    static final <T> Option<T> headOption(Iterable<? extends T> xs) {
+    static final <T> Optional<T> headOptional(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         Iterator<? extends T> it = xs.iterator();
         if (it.hasNext()) {
-            return Some(it.next());
+            return Optional.of(it.next());
         } else {
-            return None();
+            return Optional.empty();
         }
     }
     
@@ -193,21 +192,21 @@ final class FunctionalImpl {
     }
     
     static final <T> T last(Iterable<? extends T> xs) {
-        return xs == null ? null : lastOption(xs).get();
+        return xs == null ? null : lastOptional(xs).get();
     }
     
-    static final <T> Option<T> lastOption(Iterable<? extends T> xs) {
+    static final <T> Optional<T> lastOptional(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         if (xs instanceof Collection && ((Collection<? extends T>) xs).isEmpty()) {
-            return None();
+            return Optional.empty();
         }
         
         if (xs instanceof List) {
-            return Some(((List<? extends T>) xs).get(((List<? extends T>) xs).size()-1));
+            return Optional.of(((List<? extends T>) xs).get(((List<? extends T>) xs).size()-1));
         } else if (xs instanceof NavigableSet) {
-            return Some(((NavigableSet<? extends T>) xs).last());
+            return Optional.of(((NavigableSet<? extends T>) xs).last());
         } else {
             Iterator<? extends T> it = xs.iterator();
             if (it.hasNext()) {
@@ -215,9 +214,9 @@ final class FunctionalImpl {
                 while (it.hasNext()) {
                     ret = it.next();
                 }
-                return Some(ret);
+                return Optional.of(ret);
             } else {
-                return None();
+                return Optional.empty();
             }
         }
     }
@@ -239,31 +238,31 @@ final class FunctionalImpl {
         return xs == null ? null : new Iterable<T>() {
             public final Iterator<T> iterator() {
                 return new Iterator<T>() {
-                    private Option<T> next;
+                    private Optional<T> next;
                     private Iterator<? extends T> source = xs.iterator();
                     {
                         readNext();
                     }
 
                     public final boolean hasNext() {
-                        return next.isDefined();
+                        return next.isPresent();
                     }
 
                     private final void readNext() {
                         if (!source.hasNext()) {
-                            next = None();
+                            next = Optional.empty();
                         } else {
                             T n = source.next();
                             if (predicate.apply(n)) {
-                                next = Some(n);
+                                next = Optional.of(n);
                             } else {
-                                next = None();
+                                next = Optional.empty();
                             }
                         }
                     }
 
                     public final T next() {
-                        if (!next.isDefined()) {
+                        if (!next.isPresent()) {
                             throw new NoSuchElementException();
                         }
                         T ret = next.get();
@@ -285,25 +284,25 @@ final class FunctionalImpl {
                 return new Iterator<T>() {
                     private boolean dropping = true;
                     private Iterator<? extends T> source = xs.iterator();
-                    private Option<T> next;
+                    private Optional<T> next;
                     {
                         readNext();
                     }
 
                     public final boolean hasNext() {
-                        return next.isDefined();
+                        return next.isPresent();
                     }
 
                     private final void readNext() {
-                        next = source.hasNext() ? Some(source.next()) : Option.<T>None();
-                        while (dropping && next.isDefined() && predicate.apply(next.get())) {
-                            next = source.hasNext() ? Some(source.next()) : Option.<T>None();
+                        next = source.hasNext() ? Optional.of(source.next()) : Optional.empty();
+                        while (dropping && next.isPresent() && predicate.apply(next.get())) {
+                            next = source.hasNext() ? Optional.of(source.next()) : Optional.empty();
                         }
                         dropping = false;
                     }
 
                     public final T next() {
-                        if (!next.isDefined()) {
+                        if (!next.isPresent()) {
                             throw new NoSuchElementException();
                         }
                         T ret = next.get();
@@ -342,19 +341,19 @@ final class FunctionalImpl {
     
     public static final <T> Iterable<T> every(int nth, Iterable<? extends T> xs) {
         // TODO: optimize...
-        return nth < 0 ? Collections.<T>emptyList() : nth == 0 ? headOption(xs) : Functional.map(Pair::right, Functional.filter(t -> t._1 % nth == 0, Functional.zipWithIndex(xs)));
+        return nth < 0 ? Collections.<T>emptyList() : nth == 0 ? it(headOptional(xs)) : Functional.map(Pair::right, Functional.filter(t -> t._1 % nth == 0, Functional.zipWithIndex(xs)));
     }
     
     static final boolean isEmpty(Iterable<?> xs) {
-        Option<Long> size = Iterables.resolveSize.apply(xs);
-        if (size.isDefined()) {
+        Optional<Long> size = Iterables.resolveSize.apply(xs);
+        if (size.isPresent()) {
             return size.get() == 0;
         }
         return !xs.iterator().hasNext();
     }
     
     static final long size(Iterable<?> xs) {
-        for (long size: Iterables.resolveSize.apply(xs)) {
+        for (long size: it(Iterables.resolveSize.apply(xs))) {
             return size;
         }
         int s = 0;
@@ -380,25 +379,25 @@ final class FunctionalImpl {
         if (xs == null) {
             return null;
         }
-        Option<Long> size = Iterables.resolveSize.apply(xs);
-        if (size.isDefined() && size.get() == 0) {
+        Optional<Long> size = Iterables.resolveSize.apply(xs);
+        if (size.isPresent() && size.get() == 0) {
             return emptyList();
         }
         return new Iterables.SortingIterable<T>(xs, comparator);
     }
     
-    static final <T extends SemiGroup<T>> Option<T> reduce(Iterable<? extends T> xs) {
+    static final <T extends SemiGroup<T>> Optional<T> reduce(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         if (isEmpty(xs)) {
-            return None();
+            return Optional.empty();
         }
         return fold(head(xs), xs);
     }
     
     static final <T> T reduce(Monoid<T> monoid, Iterable<? extends T> xs) {
-        return fold(monoid, xs).getOrElse(monoid.zero());
+        return fold(monoid, xs).orElse(monoid.zero());
     }
     
     static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
@@ -413,9 +412,9 @@ final class FunctionalImpl {
     }
     
     /**
-     * @return <i>None</i> if <i>elements</i> is empty
+     * @return <i>Optional.empty</i> if <i>elements</i> is empty
      */
-    static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
+    static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -427,7 +426,7 @@ final class FunctionalImpl {
                 ret = f.apply(ret, t);
             }
         }
-        return Option.of(ret);
+        return Optional.ofNullable(ret);
     }
     
     static final long sum(Iterable<Long> xs) {
@@ -472,36 +471,36 @@ final class FunctionalImpl {
     };
 
     @SuppressWarnings("unchecked")
-    static final <T extends Comparable<? super T>> Option<T> min(Iterable<? extends T> xs) {
+    static final <T extends Comparable<? super T>> Optional<T> min(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         xs = newList(xs);
         if (isEmpty(xs)) {
-            return None();
+            return Optional.empty();
         }
         return fold((ApplyBi<? super T,? super T,? extends T>)(Object)smaller, xs);
     }
     
     @SuppressWarnings("unchecked")
-    static final <T extends Comparable<? super T>> Option<T> max(Iterable<? extends T> xs) {
+    static final <T extends Comparable<? super T>> Optional<T> max(Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         xs = newList(xs);
         if (isEmpty(xs)) {
-            return None();
+            return Optional.empty();
         }
         return fold((ApplyBi<? super T,? super T,? extends T>)(Object)bigger, xs);
     }
     
-    static final <T> Option<T> minBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
+    static final <T> Optional<T> minBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         xs = newList(xs);
         if (isEmpty(xs)) {
-            return None();
+            return Optional.empty();
         }
         return fold(new Function2<T, T, T>() {
             @Override
@@ -511,13 +510,13 @@ final class FunctionalImpl {
        }, xs);
     }
     
-    static final <T> Option<T> maxBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
+    static final <T> Optional<T> maxBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
         xs = newList(xs);
         if (isEmpty(xs)) {
-            return None();
+            return Optional.empty();
         }
         return fold(new Function2<T, T, T>() {
              @Override
@@ -528,9 +527,9 @@ final class FunctionalImpl {
     }
     
     static final <T> boolean ordered(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
-        return isEmpty(xs) || fold(headOption(xs),
-                                   (Option<T> a, T b) -> a.isDefined() && comparator.compare(a.get(), b) <= 0 ? Option.<T>Some(b) : Option.<T>None(),
-                                   tail(xs)).isDefined();
+        return isEmpty(xs) || fold(headOptional(xs),
+                                   (Optional<T> a, T b) -> a.isPresent() && comparator.compare(a.get(), b) <= 0 ? Optional.of(b) : Optional.empty(),
+                                   tail(xs)).isPresent();
     }
     
     static final <A,B> Iterable<Pair<A, B>> zip(Iterable<? extends A> a, Iterable<? extends B> b) {
@@ -582,19 +581,19 @@ final class FunctionalImpl {
     }
     
     static final <T> Iterable<T> range(Enumerable<T> enumeration, T from) {
-        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Option.<T>None());
+        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Optional.empty());
     }
     
     static final <T> Iterable<T> range(Enumerable<T> enumeration, T from, T toInclusive) {
-        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Some(toInclusive));
+        return enumeration == null ? null : new RangeIterable<T>(enumeration, from, Optional.of(toInclusive));
     }
     
     @SuppressWarnings("unchecked")
     static final <T> Iterable<List<T>> rangify(final Enumerable<T> enumeration, Iterable<? extends T> xs) {
         Iterable<Iterable<T>> ret = FunctionalImpl.group(new ApplyBi<T,T,Boolean>() {
             public Boolean apply(T candidate1, T candidate2) {
-                Option<T> succ = enumeration.succ(candidate1);
-                return succ.isDefined() && succ.get().equals(candidate2);
+                Optional<T> succ = enumeration.succ(candidate1);
+                return succ.isPresent() && succ.get().equals(candidate2);
             };
         }, xs);
         return (Iterable<List<T>>)(Object)map(minAndMax, ret);
@@ -665,8 +664,8 @@ final class FunctionalImpl {
             return null;
         }
         Iterable<String> lineSeparators = Functional.repeat(System.getProperty("line.separator"));
-        Option<? extends CharSequence> first = headOption(xs);
-        if (!first.isDefined()) {
+        Optional<? extends CharSequence> first = headOptional(xs);
+        if (!first.isPresent()) {
             return "";
         }
         Iterable<CharSequence> rest = map(source -> Functional.concat(source._1, source._2), zip(lineSeparators, tail(xs)));

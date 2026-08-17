@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Extension to Comparator.
@@ -77,8 +78,8 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     /**
      * @return composition of {@code this} and transformation to an element with natural ordering.
      */
-    public final <S extends Comparable<? super S>> Ordering<T> thenByOption(final Apply<? super T, ? extends Option<S>> next) {
-        return then(Compare.byOption(next));
+    public final <S extends Comparable<? super S>> Ordering<T> thenByOptional(final Apply<? super T, Optional<S>> next) {
+        return then(Compare.byOptional(next));
     }
     
     /**
@@ -91,7 +92,7 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     /**
      * @return composition of {@code this} and {@code next} by transforming to a type comparable by {@code targetComparator}.
      */
-    public final <S> Ordering<T> thenByOption(final Apply<? super T, ? extends Option<S>> next, final Comparator<? super S> targetComparator) {
-        return then(Compare.byOption(next, targetComparator));
+    public final <S> Ordering<T> thenByOptional(final Apply<? super T, Optional<S>> next, final Comparator<? super S> targetComparator) {
+        return then(Compare.byOptional(next, targetComparator));
     }
 }

@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Collections.newMutableListOfSize;
@@ -13,8 +14,6 @@ import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.FunctionalA.max;
 import static fi.solita.utils.functional.FunctionalA.min;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -23,35 +22,33 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 
 public abstract class Iterables {
     // cache most used Some-object to reduce object allocation
     @SuppressWarnings("unchecked")
-    private static final Option<Long>[] someCache = new Option[4096];
+    private static final Optional<Long>[] someCache = new Optional[4096];
     static {
         for (int i = 0; i < someCache.length; ++i) {
-            someCache[i] = Some((long)i);
+            someCache[i] = Optional.of((long)i);
         }
     }
     
-    private static final Option<Long> wrapSome(long size) {
-        return size < someCache.length ? someCache[(int)size] : Some(size);
+    private static final Optional<Long> wrapSome(long size) {
+        return size < someCache.length ? someCache[(int)size] : Optional.of(size);
     }
     
-    public static final Apply<Iterable<?>,Option<Long>> resolveSize = new Apply<Iterable<?>,Option<Long>>() {
-        public final Option<Long> apply(Iterable<?> source) {
+    public static final Apply<Iterable<?>,Optional<Long>> resolveSize = new Apply<Iterable<?>,Optional<Long>>() {
+        public final Optional<Long> apply(Iterable<?> source) {
             if (source instanceof Collection) {
                 return wrapSome((long)((Collection<?>)source).size());
             }
             if (source instanceof PossiblySizeAwareIterable) {
                 return ((PossiblySizeAwareIterable<?>)source).size();
             }
-            if (source instanceof Option) {
-                return ((Option<?>)source).isDefined() ? wrapSome(1) : wrapSome(0);
-            }
-            return None();
+            return Optional.empty();
         }
     };
     
@@ -83,7 +80,7 @@ public abstract class Iterables {
     };
     
     static interface PossiblySizeAwareIterable<T> extends Iterable<T> {
-        public abstract Option<Long> size();
+        public abstract Optional<Long> size();
     }
     
     static interface ForceableIterable {
@@ -98,31 +95,31 @@ public abstract class Iterables {
     
     static final class RangeIterable<T> extends MyIterable<T> {
         private final Enumerable<T> enumeration;
-        private final Option<T> from;
-        private final Option<T> toInclusive;
-        private final Option<Long> knownSize;
+        private final Optional<T> from;
+        private final Optional<T> toInclusive;
+        private final Optional<Long> knownSize;
         
-        public RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive) {
-            this(enumeration, from, toInclusive, Option.<Long>None());
+        public RangeIterable(Enumerable<T> enumeration, T from, Optional<T> toInclusive) {
+            this(enumeration, from, toInclusive, Optional.empty());
         }
         
         public RangeIterable(Enumerable<T> enumeration, T from, T toInclusive, long knownSize) {
-            this(enumeration, from, Some(toInclusive), wrapSome(knownSize));
+            this(enumeration, from, Optional.of(toInclusive), wrapSome(knownSize));
         }
 
-        private RangeIterable(Enumerable<T> enumeration, T from, Option<T> toInclusive, Option<Long> knownSize) {
+        private RangeIterable(Enumerable<T> enumeration, T from, Optional<T> toInclusive, Optional<Long> knownSize) {
             this.enumeration = enumeration;
-            this.from = Some(from);
+            this.from = Optional.of(from);
             this.toInclusive = toInclusive;
             this.knownSize = knownSize;
         }
 
         public final Iterator<T> iterator() {
             return new Iterator<T>() {
-                private Option<T> nextToReturn = from;
+                private Optional<T> nextToReturn = from;
                 
                 public final boolean hasNext() {
-                    return nextToReturn.isDefined();
+                    return nextToReturn.isPresent();
                 }
 
                 public final T next() {
@@ -133,8 +130,8 @@ public abstract class Iterables {
                         throw new NoSuchElementException();
                     }
                     
-                    if (toInclusive.isDefined() && ret.equals(toInclusive.get())) {
-                        nextToReturn = None();
+                    if (toInclusive.isPresent() && ret.equals(toInclusive.get())) {
+                        nextToReturn = Optional.empty();
                     } else {
                         nextToReturn = enumeration.succ(ret);
                     }
@@ -150,8 +147,8 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            return knownSize.isDefined() ? wrapSome(knownSize.get()) : Option.<Long>None();
+        public final Optional<Long> size() {
+            return knownSize.isPresent() ? wrapSome(knownSize.get()) : Optional.empty();
         }
     }
 
@@ -170,8 +167,8 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            return amount != null ? wrapSome(amount) : Option.<Long>None();
+        public final Optional<Long> size() {
+            return amount != null ? wrapSome(amount) : Optional.empty();
         }
 
         
@@ -239,8 +236,8 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            return None();
+        public final Optional<Long> size() {
+            return Optional.empty();
         }
     }
 
@@ -289,13 +286,13 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            for (long a: resolveSize.apply(elements1)) {
-                for (long b: resolveSize.apply(elements2)) {
+        public final Optional<Long> size() {
+            for (long a: it(resolveSize.apply(elements1))) {
+                for (long b: it(resolveSize.apply(elements2))) {
                     return wrapSome(Math.min(a,b));
                 }
             }
-            return None();
+            return Optional.empty();
         }
     }
 
@@ -330,13 +327,13 @@ public abstract class Iterables {
             return ret;
         }
 
-        public Option<Long> size() {
+        public Optional<Long> size() {
             long s = 0;
-            for (Option<Long> size: map(resolveSize, elements)) {
-                if (size.isDefined()) {
+            for (Optional<Long> size: map(resolveSize, elements)) {
+                if (size.isPresent()) {
                     s += size.get();
                 } else {
-                    return Option.None();
+                    return Optional.empty();
                 }
             }
             return wrapSome(s);
@@ -378,8 +375,8 @@ public abstract class Iterables {
         }
         
         
-        public Option<Long> size() {
-            return None();
+        public Optional<Long> size() {
+            return Optional.empty();
         }
     }
     
@@ -395,8 +392,8 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Option<Long> size() {
-            return None();
+        public final Optional<Long> size() {
+            return Optional.empty();
         }
         
         public Iterator<T> iterator() {
@@ -460,8 +457,8 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Option<Long> size() {
-            return None();
+        public final Optional<Long> size() {
+            return Optional.empty();
         }
 
         
@@ -528,7 +525,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Option<Long> size() {
+        public final Optional<Long> size() {
             return resolveSize.apply(iterable);
         }
 
@@ -570,7 +567,7 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Option<Long> size() {
+        public final Optional<Long> size() {
             return resolveSize.apply(iterable);
         }
 
@@ -656,11 +653,11 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
+        public final Optional<Long> size() {
             if (chars instanceof String || chars instanceof StringBuilder || chars instanceof StringBuffer) {
                 return wrapSome((long)chars.length());
             } else {
-                return None();
+                return Optional.empty();
             }
         }
         
@@ -759,14 +756,14 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
+        public final Optional<Long> size() {
             if (it == null) {
                 it = iterable.iterator();
             }
             if (!it.hasNext()) {
                 return wrapSome((long)memo.length());
             } else {
-                return None();
+                return Optional.empty();
             }
         }
         
@@ -798,14 +795,14 @@ public abstract class Iterables {
             if (force && iterable instanceof ForceableIterable) {
                 ((ForceableIterable)iterable).completeIterationNeeded();
             }
-            long initialSize = resolveSize.apply(iterable).getOrElse(11l);
+            long initialSize = resolveSize.apply(iterable).orElse(11l);
             if (initialSize == 0) {
                 return java.util.Collections.<T>emptyList().iterator();
             }
             
             if (force) {
                 List<T> sorted = null;
-                for (long size: Iterables.resolveSize.apply(iterable)) {
+                for (long size: it(Iterables.resolveSize.apply(iterable))) {
                     sorted = newMutableListOfSize(size);
                 }
                 if (sorted == null) {
@@ -850,7 +847,7 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
+        public final Optional<Long> size() {
             return resolveSize.apply(iterable);
         }
     }
@@ -902,12 +899,12 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            Option<Long> s = resolveSize.apply(elements);
-            if (s.isDefined()) {
+        public final Optional<Long> size() {
+            Optional<Long> s = resolveSize.apply(elements);
+            if (s.isPresent()) {
                 return wrapSome(min(s.get(), amount));
             } else {
-                return None();
+                return Optional.empty();
             }
         }
     }
@@ -944,12 +941,12 @@ public abstract class Iterables {
         }
 
         
-        public final Option<Long> size() {
-            Option<Long> s = resolveSize.apply(elements);
-            if (s.isDefined()) {
+        public final Optional<Long> size() {
+            Optional<Long> s = resolveSize.apply(elements);
+            if (s.isPresent()) {
                 return wrapSome(max(s.get() - amount, 0l));
             } else {
-                return None();
+                return Optional.empty();
             }
         }
     }
@@ -968,8 +965,8 @@ public abstract class Iterables {
             this.force = true;
         }
         
-        public final Option<Long> size() {
-            return None();
+        public final Optional<Long> size() {
+            return Optional.empty();
         }
         
         

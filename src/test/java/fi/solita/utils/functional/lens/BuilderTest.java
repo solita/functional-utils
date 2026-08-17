@@ -1,7 +1,5 @@
 package fi.solita.utils.functional.lens;
 
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -10,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -17,7 +16,6 @@ import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.ApplyZero;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function3;
-import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple1;
 import fi.solita.utils.functional.Tuple2;
@@ -56,10 +54,10 @@ public class BuilderTest {
     
     static class Employee {
         final String name;
-        final Option<Integer> salary;
+        final Optional<Integer> salary;
         final String department;
         
-        public Employee(String name, Option<Integer> salary, String department) {
+        public Employee(String name, Optional<Integer> salary, String department) {
             this.name = name;
             this.salary = salary;
             this.department = department;
@@ -70,8 +68,8 @@ public class BuilderTest {
         static final Apply<Employee, String> name = new Apply<Employee, String>() {
             public String apply(Employee e) { return e.name; }
         };
-        static final Apply<Employee, Option<Integer>> salary = new Apply<Employee, Option<Integer>>() {
-            public Option<Integer> apply(Employee e) { return e.salary; }
+        static final Apply<Employee, Optional<Integer>> salary = new Apply<Employee, Optional<Integer>>() {
+            public Optional<Integer> apply(Employee e) { return e.salary; }
             @SuppressWarnings("unused")
             public java.lang.reflect.Member getMember() {
                 try {
@@ -84,11 +82,11 @@ public class BuilderTest {
         static final Apply<Employee, String> department = new Apply<Employee, String>() {
             public String apply(Employee e) { return e.department; }
         };
-        static final Tuple3<Apply<Employee, String>, Apply<Employee, Option<Integer>>, Apply<Employee, String>> $Fields() {
+        static final Tuple3<Apply<Employee, String>, Apply<Employee, Optional<Integer>>, Apply<Employee, String>> $Fields() {
             return Tuple.of(name, salary, department);
         }
-        static final Function3<String, Option<Integer>, String, Employee> $ = new Function3<String, Option<Integer>, String, Employee>() {
-            public Employee apply(String name, Option<Integer> salary, String dept) {
+        static final Function3<String, Optional<Integer>, String, Employee> $ = new Function3<String, Optional<Integer>, String, Employee>() {
+            public Employee apply(String name, Optional<Integer> salary, String dept) {
                 return new Employee(name, salary, dept);
             }
         };
@@ -136,12 +134,12 @@ public class BuilderTest {
         
         Employee employee = builder
             .with(Employee_.name, "Bob")
-            .with(Employee_.salary, Some(50000))
+            .with(Employee_.salary, Optional.of(50000))
             .with(Employee_.department, "IT")
             .build();
         
         assertEquals("Bob", employee.name);
-        assertEquals(Some(50000), employee.salary);
+        assertEquals(Optional.of(50000), employee.salary);
         assertEquals("IT", employee.department);
     }
     
@@ -195,7 +193,7 @@ public class BuilderTest {
             .build();
         
         assertEquals("David", employee.name);
-        assertEquals(None(), employee.salary);
+        assertEquals(Optional.empty(), employee.salary);
         assertEquals("Sales", employee.department);
     }
     
@@ -206,12 +204,12 @@ public class BuilderTest {
         // When Option field is explicitly set with None
         Employee employee = builder
             .with(Employee_.name, "Eve")
-            .with(Employee_.salary, Option.<Integer>None())
+            .with(Employee_.salary, Optional.empty())
             .with(Employee_.department, "HR")
             .build();
         
         assertEquals("Eve", employee.name);
-        assertEquals(Option.<Integer>None(), employee.salary);
+        assertEquals(Optional.empty(), employee.salary);
         assertEquals("HR", employee.department);
     }
     
@@ -291,8 +289,8 @@ public class BuilderTest {
     public void testBuilder_WithoutInvalidMember_ThrowsException() {
         Builder<Employee> builder = Builder.of(Employee_.$Fields(), Employee_.$);
         
-        Apply<Employee, Option<?>> unknownMember = new Apply<Employee, Option<?>>() {
-            public Option<?> apply(Employee e) { return None(); }
+        Apply<Employee, Optional<?>> unknownMember = new Apply<Employee, Optional<?>>() {
+            public Optional<?> apply(Employee e) { return Optional.empty(); }
         };
         
         builder.without(unknownMember);

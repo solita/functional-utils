@@ -1,36 +1,36 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Option.Some;
+import static fi.solita.utils.functional.FunctionalA.concat;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * L or M or R
  */
-public class Either3<L,M,R> implements Serializable {
+public class Either3<L,M,R> {
 
     /**
      * @return {@code value} wrapped into left of Either3.
      */
     public static final <L,M,R> Either3<L,M,R> left(L value) {
-        return new Either3<L, M, R>(Some(value), Option.<M>None(), Option.<R>None());
+        return new Either3<L, M, R>(Optional.of(value), Optional.empty(), Optional.empty());
     }
     
     /**
      * @return {@code value} wrapped into middle of Either3.
      */
     public static final <L,M,R> Either3<L,M,R> middle(M value) {
-        return new Either3<L, M, R>(Option.<L>None(), Some(value), Option.<R>None());
+        return new Either3<L, M, R>(Optional.empty(), Optional.of(value), Optional.empty());
     }
 
     /**
      * @return {@code value} wrapped into right of Either3.
      */
     public static final <L,M,R> Either3<L,M,R> right(R value) {
-        return new Either3<L, M, R>(Option.<L>None(), Option.<M>None(), Some(value));
+        return new Either3<L, M, R>(Optional.empty(), Optional.empty(), Optional.of(value));
     }
     
     public static final <T> T get(Either3<? extends T, ? extends T, ? extends T> e) {
@@ -43,31 +43,31 @@ public class Either3<L,M,R> implements Serializable {
      * @return value of either3 in a list.
      */
     public static final <T> List<T> asList(Either3<? extends T, ? extends T, ? extends T> either) {
-        return newList(concat(either.left, either.middle, either.right));
+        return newList(concat(it(either.left), it(either.middle), it(either.right)));
     }
     
     /**
      * @return all left values
      */
     public static final <T> Iterable<T> lefts(Iterable<? extends Either3<T, ?, ?>> xs) {
-        return Functional.flatMap(x -> x.left, xs);
+        return Functional.flatMap(x -> it(x.left), xs);
     }
     
     /**
      * @return all middle values
      */
     public static final <T> Iterable<T> middles(Iterable<? extends Either3<?, T, ?>> xs) {
-        return Functional.flatMap(x -> x.middle, xs);
+        return Functional.flatMap(x -> it(x.middle), xs);
     }
     
     /**
      * @return all right values
      */
     public static final <T> Iterable<T> rights(Iterable<? extends Either3<?, ?, T>> xs) {
-        return Functional.flatMap(x -> x.right, xs);
+        return Functional.flatMap(x -> it(x.right), xs);
     }
 
-    protected Either3(Option<L> left, Option<M> middle, Option<R> right) {
+    protected Either3(Optional<L> left, Optional<M> middle, Optional<R> right) {
         this.left = left;
         this.middle = middle;
         this.right = right;
@@ -76,37 +76,37 @@ public class Either3<L,M,R> implements Serializable {
     /**
      * Left side.
      */
-    public final Option<L> left;
+    public final Optional<L> left;
     
     /**
      * Middle.
      */
-    public final Option<M> middle;
+    public final Optional<M> middle;
     
     /**
      * Right side.
      */
-    public final Option<R> right;
+    public final Optional<R> right;
     
     /**
      * @return whether this Either3 has a Left element.
      */
     public final boolean isLeft() {
-        return left.isDefined();
+        return left.isPresent();
     }
     
     /**
      * @return whether this Either3 has a Middle element.
      */
     public final boolean isMiddle() {
-        return middle.isDefined();
+        return middle.isPresent();
     }
     
     /**
      * @return whether this Either3 has a Right element.
      */
     public final boolean isRight() {
-        return right.isDefined();
+        return right.isPresent();
     }
     
     /**

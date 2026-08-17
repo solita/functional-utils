@@ -3,7 +3,6 @@ package fi.solita.utils.functional.lens;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedSet;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -12,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -20,7 +20,6 @@ import org.junit.Test;
 import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
-import fi.solita.utils.functional.Option;
 
 public class SetterTest {
     
@@ -67,11 +66,11 @@ public class SetterTest {
         final List<String> items;
         final Set<Integer> numbers;
         final SortedSet<String> sortedItems;
-        final Option<String> optionalValue;
+        final Optional<String> optionalValue;
         final Collection<String> collection;
         
         public CollectionHolder(List<String> items, Set<Integer> numbers, 
-                               SortedSet<String> sortedItems, Option<String> optionalValue,
+                               SortedSet<String> sortedItems, Optional<String> optionalValue,
                                Collection<String> collection) {
             this.items = items;
             this.numbers = numbers;
@@ -151,9 +150,9 @@ public class SetterTest {
         }
     });
     
-    static final Setter<CollectionHolder, Option<String>> optionalValueSetter = Setter.of(new Function2<CollectionHolder, Apply<Option<String>, Option<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, Optional<String>> optionalValueSetter = Setter.of(new Function2<CollectionHolder, Apply<Optional<String>, Optional<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<Option<String>, Option<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, Apply<Optional<String>, Optional<String>> f) {
             return new CollectionHolder(holder.items, holder.numbers, holder.sortedItems, f.apply(holder.optionalValue), holder.collection);
         }
     });
@@ -297,7 +296,7 @@ public class SetterTest {
     @Test
     public void testEachList_ModifyAllElements() {
         List<String> items = newList("a", "b", "c");
-        CollectionHolder holder = new CollectionHolder(items, Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(items, Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachList(itemsSetter, stringToUpperSetter);
         
@@ -313,7 +312,7 @@ public class SetterTest {
     
     @Test
     public void testEachList_EmptyList() {
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachList(itemsSetter, stringToUpperSetter);
         
@@ -330,7 +329,7 @@ public class SetterTest {
     @Test
     public void testEachSet_ModifyAllElements() {
         Set<Integer> numbers = newSet(1, 2, 3);
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), numbers, Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), numbers, Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, Integer> eachSetter = Setter.eachSet(numbersSetter, intSetter);
         
@@ -346,7 +345,7 @@ public class SetterTest {
     
     @Test
     public void testEachSet_EmptySet() {
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, Integer> eachSetter = Setter.eachSet(numbersSetter, intSetter);
         
@@ -369,7 +368,7 @@ public class SetterTest {
             }
         };
         SortedSet<String> sortedItems = newSortedSet(comparator, newList("a", "b", "c"));
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), sortedItems, Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), sortedItems, Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
@@ -392,7 +391,7 @@ public class SetterTest {
             }
         };
         SortedSet<String> sortedItems = newSortedSet(reverseComparator, newList("a", "b", "c"));
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), sortedItems, Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), sortedItems, Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
@@ -410,7 +409,7 @@ public class SetterTest {
     
     @Test
     public void testEachSortedSet_NullValue() {
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), null, Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), null, Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
@@ -427,7 +426,7 @@ public class SetterTest {
     @Test
     public void testEachCollection_ModifyAllElements() {
         Collection<String> collection = newList("x", "y", "z");
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), collection);
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), collection);
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachCollection(collectionSetter, stringToUpperSetter);
         
@@ -444,7 +443,7 @@ public class SetterTest {
     @Test
     public void testEachIterable_ModifyAllElements() {
         List<String> items = newList("a", "b", "c");
-        CollectionHolder holder = new CollectionHolder(items, Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(items, Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachIterable(iterableItemsSetter, stringToUpperSetter);
         
@@ -459,10 +458,10 @@ public class SetterTest {
     }
     
     @Test
-    public void testEachOption_SomeValue() {
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Some("value"), Collections.<String>emptyList());
+    public void testEachOptional_SomeValue() {
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.of("value"), Collections.<String>emptyList());
         
-        Setter<CollectionHolder, String> eachSetter = Setter.eachOption(optionalValueSetter, stringToUpperSetter);
+        Setter<CollectionHolder, String> eachSetter = Setter.eachOptional(optionalValueSetter, stringToUpperSetter);
         
         CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
             @Override
@@ -471,14 +470,14 @@ public class SetterTest {
             }
         });
         
-        assertEquals(Some("VALUE"), modified.optionalValue);
+        assertEquals(Optional.of("VALUE"), modified.optionalValue);
     }
     
     @Test
     public void testEachOption_NoneValue() {
-        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Option.<String>None(), Collections.<String>emptyList());
+        CollectionHolder holder = new CollectionHolder(Collections.<String>emptyList(), Collections.<Integer>emptySet(), Collections.<String>emptySortedSet(), Optional.empty(), Collections.<String>emptyList());
         
-        Setter<CollectionHolder, String> eachSetter = Setter.eachOption(optionalValueSetter, stringToUpperSetter);
+        Setter<CollectionHolder, String> eachSetter = Setter.eachOptional(optionalValueSetter, stringToUpperSetter);
         
         CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
             @Override
@@ -487,7 +486,7 @@ public class SetterTest {
             }
         });
         
-        assertEquals(Option.<String>None(), modified.optionalValue);
+        assertEquals(Optional.empty(), modified.optionalValue);
     }
     
     @Test

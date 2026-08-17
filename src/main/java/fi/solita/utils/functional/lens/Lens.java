@@ -10,7 +10,6 @@ import static fi.solita.utils.functional.Functional.flatMap;
 import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.head;
 import static fi.solita.utils.functional.Functional.reduce;
-import static fi.solita.utils.functional.Option.Some;
 
 /**
  * Purely functional getter and setter. 
@@ -49,20 +48,20 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         });
     }
     
-    public static final <D,E,S> Lens<D,Option<S>> each(final Lens<D,Option<E>> lens, final Lens<E,Option<S>> lens2) {
-        return new Lens<D,Option<S>>(
-            new Apply<D, Option<S>>() {
+    public static final <D,E,S> Lens<D,Optional<S>> each(final Lens<D,Optional<E>> lens, final Lens<E,Optional<S>> lens2) {
+        return new Lens<D,Optional<S>>(
+            new Apply<D, Optional<S>>() {
                 @Override
-                public Option<S> apply(D t) {
+                public Optional<S> apply(D t) {
                     return t == null ? null : lens.apply(t).flatMap(lens2);
                 }
             },
-            new Function2<D, Apply<Option<S>,Option<S>>, D>() {
+            new Function2<D, Apply<Optional<S>,Optional<S>>, D>() {
                 @Override
-                public D apply(D d, final Apply<Option<S>, Option<S>> f) {
-                    return lens.modify(d, new Apply<Option<E>,Option<E>>() {
-                        public Option<E> apply(Option<E> c) {
-                            return c == null ? null : !c.isDefined() ? c : Some(lens2.modify(c.get(), f));
+                public D apply(D d, final Apply<Optional<S>, Optional<S>> f) {
+                    return lens.modify(d, new Apply<Optional<E>,Optional<E>>() {
+                        public Optional<E> apply(Optional<E> c) {
+                            return c == null ? null : !c.isPresent() ? c : Optional.of(lens2.modify(c.get(), f));
                         };
                     });
                 }
@@ -70,25 +69,25 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
         );
     }
     
-    public static final <D,E,S> Lens<D,Option<S>> eachOption(final Lens<D,Option<E>> lens, final Lens<E,S> lens2) {
-        return new Lens<D,Option<S>>(
-            new Apply<D, Option<S>>() {
+    public static final <D,E,S> Lens<D,Optional<S>> eachOptional(final Lens<D,Optional<E>> lens, final Lens<E,S> lens2) {
+        return new Lens<D,Optional<S>>(
+            new Apply<D, Optional<S>>() {
                 @Override
-                public Option<S> apply(D t) {
+                public Optional<S> apply(D t) {
                     return t == null ? null : lens.apply(t).map(lens2);
                 }
             },
-            new Function2<D, Apply<Option<S>,Option<S>>, D>() {
+            new Function2<D, Apply<Optional<S>,Optional<S>>, D>() {
                 @Override
-                public D apply(D d, final Apply<Option<S>, Option<S>> f) {
-                    return lens.modify(d, new Apply<Option<E>,Option<E>>() {
-                        public Option<E> apply(Option<E> c) {
-                            return c == null ? null : !c.isDefined() ? c : Some(lens2.modify(c.get(), new Apply<S, S>() {
+                public D apply(D d, final Apply<Optional<S>, Optional<S>> f) {
+                    return lens.modify(d, new Apply<Optional<E>,Optional<E>>() {
+                        public Optional<E> apply(Optional<E> c) {
+                            return c == null ? null : !c.isPresent() ? c : Optional.of(lens2.modify(c.get(), new Apply<S, S>() {
                                 @SuppressWarnings("unchecked")
                                 @Override
                                 public S apply(S t) {
-                                    Object ret = f.apply(Some(t));
-                                    return ret instanceof Option ? ((Option<S>)ret).get() : (S)ret;
+                                    Object ret = f.apply(Optional.of(t));
+                                    return ret instanceof Optional ? ((Optional<S>)ret).get() : (S)ret;
                                 }
                             }));
                         };
@@ -134,8 +133,8 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return a lens targetting each member of the collection behind {@code lens}.
      */
-    public static final <D,E,S> Lens<D,S> eachCollectionOption(final Monoid<S> combiner, final Lens<D,Collection<E>> lens, final Lens<E,Option<S>> lens2) {
-        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
+    public static final <D,E,S> Lens<D,S> eachCollectionOption(final Monoid<S> combiner, final Lens<D,Collection<E>> lens, final Lens<E,Optional<S>> lens2) {
+        return eachIterableOptional(combiner, lens, lens2, new Apply<Iterable<E>, Collection<E>>() {
             public Collection<E> apply(Iterable<E> t) {
                 return newList(t);
             }
@@ -178,8 +177,8 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return a lens targetting each member of the list behind {@code lens}.
      */
-    public static final <D,E,S> Lens<D,S> eachListOption(final Monoid<S> combiner, final Lens<D,List<E>> lens, final Lens<E,Option<S>> lens2) {
-        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, List<E>>() {
+    public static final <D,E,S> Lens<D,S> eachListOptional(final Monoid<S> combiner, final Lens<D,List<E>> lens, final Lens<E,Optional<S>> lens2) {
+        return eachIterableOptional(combiner, lens, lens2, new Apply<Iterable<E>, List<E>>() {
             public List<E> apply(Iterable<E> t) {
                 return newList(t);
             }
@@ -222,25 +221,10 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return a lens targetting each member of the set behind {@code lens}.
      */
-    public static final <D,E,S> Lens<D,S> eachSetOption(final Monoid<S> combiner, final Lens<D,Set<E>> lens, final Lens<E,Option<S>> lens2) {
-        return eachIterableOption(combiner, lens, lens2, new Apply<Iterable<E>, Set<E>>() {
+    public static final <D,E,S> Lens<D,S> eachSetOptional(final Monoid<S> combiner, final Lens<D,Set<E>> lens, final Lens<E,Optional<S>> lens2) {
+        return eachIterableOptional(combiner, lens, lens2, new Apply<Iterable<E>, Set<E>>() {
             public Set<E> apply(Iterable<E> t) {
                 return newSet(t);
-            }
-        });
-    }
-    
-    public static final <D,E,S> Lens<D,S> eachOption(final Monoid<S> combiner, final Lens<D,Option<E>> lens, final Lens<E,S> lens2) {
-        return eachIterable(combiner, lens, lens2, new Apply<Iterable<E>, Option<E>>() {
-            public Option<E> apply(Iterable<E> t) {
-                if (t instanceof Option) {
-                    return (Option<E>)t;
-                }
-                List<E> xs = newList(t);
-                if (xs.size() > 1) {
-                    throw new RuntimeException();
-                }
-                return Option.of(head(xs));
             }
         });
     }
@@ -326,11 +310,11 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return a lens targetting each member of the sortedset behind {@code lens}.
      */
-    public static final <D,E,S> Lens<D,S> eachSortedSetOption(final Monoid<S> combiner, final Lens<D,SortedSet<E>> lens, final Lens<E,Option<S>> lens2) {
+    public static final <D,E,S> Lens<D,S> eachSortedSetOptional(final Monoid<S> combiner, final Lens<D,SortedSet<E>> lens, final Lens<E,Optional<S>> lens2) {
         return new Lens<D,S>(new Apply<D, S>() {
                 @Override
                 public S apply(D t) {
-                    return reduce(combiner, flatMap(lens2, lens.apply(t)));
+                    return reduce(combiner, flatMap(x -> it(lens2.apply(x)), lens.apply(t)));
                 }
             },
             new Function2<D, Apply<S,S>, D>() {
@@ -409,11 +393,11 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
             });
     }
     
-    private static final <D,E,S,C extends Iterable<E>> Lens<D,S> eachIterableOption(final Monoid<S> combiner, final Lens<D,C> lens, final Lens<E,Option<S>> lens2, final Apply<Iterable<E>,C> wrap) {
+    private static final <D,E,S,C extends Iterable<E>> Lens<D,S> eachIterableOptional(final Monoid<S> combiner, final Lens<D,C> lens, final Lens<E,Optional<S>> lens2, final Apply<Iterable<E>,C> wrap) {
         return new Lens<D,S>(new Apply<D, S>() {
             @Override
             public S apply(D t) {
-                return reduce(combiner, flatMap(lens2, lens.apply(t)));
+                return reduce(combiner, flatMap(x -> it(lens2.apply(x)), lens.apply(t)));
             }
         },
         new Function2<D, Apply<S,S>, D>() {
@@ -520,17 +504,17 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return lens targetting left side of an Either.
      */
-    public static final <L,R> Lens<Either<L,R>,Option<L>> left() {
-        return new Lens<Either<L,R>, Option<L>>(new Apply<Either<L,R>, Option<L>>() {
-            public Option<L> apply(Either<L, R> t) {
+    public static final <L,R> Lens<Either<L,R>,Optional<L>> left() {
+        return new Lens<Either<L,R>, Optional<L>>(new Apply<Either<L,R>, Optional<L>>() {
+            public Optional<L> apply(Either<L, R> t) {
                 return t.left;
             }
-        }, new Function2<Either<L,R>, Apply<Option<L>,Option<L>>, Either<L,R>>() {
+        }, new Function2<Either<L,R>, Apply<Optional<L>,Optional<L>>, Either<L,R>>() {
             @Override
-            public Either<L, R> apply(Either<L, R> t, final Apply<Option<L>, Option<L>> f) {
+            public Either<L, R> apply(Either<L, R> t, final Apply<Optional<L>, Optional<L>> f) {
                 return t.first(new Apply<L, L>() {
                     public L apply(L t) {
-                        return f.apply(Some(t)).get();
+                        return f.apply(Optional.of(t)).get();
                     }
                 });
             }
@@ -540,17 +524,17 @@ public final class Lens<T,F> extends Setter<T,F> implements Apply<T,F> {
     /**
      * @return lens targetting right side of an Either.
      */
-    public static final <L,R> Lens<Either<L,R>,Option<R>> right() {
-        return new Lens<Either<L,R>, Option<R>>(new Apply<Either<L,R>, Option<R>>() {
-            public Option<R> apply(Either<L, R> t) {
+    public static final <L,R> Lens<Either<L,R>,Optional<R>> right() {
+        return new Lens<Either<L,R>, Optional<R>>(new Apply<Either<L,R>, Optional<R>>() {
+            public Optional<R> apply(Either<L, R> t) {
                 return t.right;
             }
-        }, new Function2<Either<L,R>, Apply<Option<R>,Option<R>>, Either<L,R>>() {
+        }, new Function2<Either<L,R>, Apply<Optional<R>,Optional<R>>, Either<L,R>>() {
             @Override
-            public Either<L, R> apply(Either<L, R> t, final Apply<Option<R>, Option<R>> f) {
+            public Either<L, R> apply(Either<L, R> t, final Apply<Optional<R>, Optional<R>> f) {
                 return t.second(new Apply<R, R>() {
                     public R apply(R t) {
-                        return f.apply(Some(t)).get();
+                        return f.apply(Optional.of(t)).get();
                     }
                 });
             }

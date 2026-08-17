@@ -2,11 +2,10 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 
@@ -66,7 +65,7 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#find
      */
-    public static final Option<Character> find(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final Optional<Character> find(Apply<Character, Boolean> predicate, CharSequence xs) {
         return FunctionalImpl.find(predicate, it(xs));
     }
     
@@ -195,16 +194,16 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     /**
-     * @see Functional#headOption
+     * @see Functional#headOptional
      */
-    public static final Option<Character> headOption(CharSequence xs) {
+    public static final Optional<Character> headOptional(CharSequence xs) {
         if (xs == null) {
             return null;
         }
         try {
-            return Some(xs.charAt(0));
+            return Optional.of(xs.charAt(0));
         } catch (IndexOutOfBoundsException e) {
-            return None();
+            return Optional.empty();
         }
     }
     
@@ -234,16 +233,16 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     /**
-     * @see Functional#lastOption
+     * @see Functional#lastOptional
      */
-    public static final Option<Character> lastOption(CharSequence xs) {
+    public static final Optional<Character> lastOptional(CharSequence xs) {
         if (xs == null) {
             return null;
         }
         try {
-            return Some(xs.charAt(xs.length() - 1));
+            return Optional.of(xs.charAt(xs.length() - 1));
         } catch (IndexOutOfBoundsException e) {
-            return None();
+            return Optional.empty();
         }
     }
     
@@ -587,21 +586,21 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final Option<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
+    public static final Optional<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     
     /**
      * @see Functional#min
      */
-    public static final Option<Character> min(CharSequence xs) {
+    public static final Optional<Character> min(CharSequence xs) {
         return FunctionalImpl.min(it(xs));
     }
     
     /**
      * @see Functional#max
      */
-    public static final Option<Character> max(CharSequence xs) {
+    public static final Optional<Character> max(CharSequence xs) {
         return FunctionalImpl.max(it(xs));
     }
     

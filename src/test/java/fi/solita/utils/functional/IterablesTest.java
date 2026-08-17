@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -36,22 +37,22 @@ public class IterablesTest {
     @Test
     public void testResolveSizeForCollection() {
         List<Integer> list = newList(1, 2, 3);
-        Option<Long> size = Iterables.resolveSize.apply(list);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(list);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
     @Test
     public void testResolveSizeForOption() {
-        Option<Integer> some = Option.Some(42);
-        Option<Integer> none = Option.None();
+        Optional<Integer> some = Optional.of(42);
+        Optional<Integer> none = Optional.empty();
         
-        Option<Long> sizeOfSome = Iterables.resolveSize.apply(some);
-        assertTrue(sizeOfSome.isDefined());
+        Optional<Long> sizeOfSome = Iterables.resolveSize.apply(it(some));
+        assertTrue(sizeOfSome.isPresent());
         assertEquals(1L, sizeOfSome.get().longValue());
         
-        Option<Long> sizeOfNone = Iterables.resolveSize.apply(none);
-        assertTrue(sizeOfNone.isDefined());
+        Optional<Long> sizeOfNone = Iterables.resolveSize.apply(it(none));
+        assertTrue(sizeOfNone.isPresent());
         assertEquals(0L, sizeOfNone.get().longValue());
     }
 
@@ -65,8 +66,8 @@ public class IterablesTest {
     @Test
     public void testRangeIterableWithKnownSize() {
         Iterable<Integer> range = range(1, 5);
-        Option<Long> size = Iterables.resolveSize.apply(range);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(range);
+        assertTrue(size.isPresent());
         assertEquals(5L, size.get().longValue());
     }
 
@@ -87,8 +88,8 @@ public class IterablesTest {
     @Test
     public void testRepeatingIterableWithSize() {
         Iterable<String> repeat = repeat("hello", 5);
-        Option<Long> size = Iterables.resolveSize.apply(repeat);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(repeat);
+        assertTrue(size.isPresent());
         assertEquals(5L, size.get().longValue());
     }
 
@@ -156,9 +157,9 @@ public class IterablesTest {
         Iterable<String> list2 = newList("a", "b", "c", "d");
         
         Iterable<Pair<Integer, String>> zipped = zip(list1, list2);
-        Option<Long> size = Iterables.resolveSize.apply(zipped);
+        Optional<Long> size = Iterables.resolveSize.apply(zipped);
         
-        assertTrue(size.isDefined());
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
@@ -180,9 +181,9 @@ public class IterablesTest {
         Iterable<Integer> list2 = newList(3, 4, 5);
         
         Iterable<Integer> concatenated = new ConcatenatingIterable<>(newList(list1, list2));
-        Option<Long> size = Iterables.resolveSize.apply(concatenated);
+        Optional<Long> size = Iterables.resolveSize.apply(concatenated);
         
-        assertTrue(size.isDefined());
+        assertTrue(size.isPresent());
         assertEquals(5L, size.get().longValue());
     }
 
@@ -291,8 +292,8 @@ public class IterablesTest {
         Iterable<Integer> list = newList(1, 2, 3);
         Iterable<String> transformed = map(Object::toString, list);
         
-        Option<Long> size = Iterables.resolveSize.apply(transformed);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(transformed);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
@@ -310,8 +311,8 @@ public class IterablesTest {
         Iterable<Integer> list = newList(1, 2, 3);
         Iterable<Integer> reversed = reverse(list);
         
-        Option<Long> size = Iterables.resolveSize.apply(reversed);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(reversed);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
@@ -333,9 +334,9 @@ public class IterablesTest {
     public void testCharSequenceIterableSize() {
         String str = "test";
         Iterable<Character> chars = it(str);
-        Option<Long> size = Iterables.resolveSize.apply(chars);
+        Optional<Long> size = Iterables.resolveSize.apply(chars);
         
-        assertTrue(size.isDefined());
+        assertTrue(size.isPresent());
         assertEquals(4L, size.get().longValue());
     }
 
@@ -372,8 +373,8 @@ public class IterablesTest {
         Iterable<Integer> list = newList(3, 1, 2);
         Iterable<Integer> sorted = sort(Compare.byNatural(), list);
         
-        Option<Long> size = Iterables.resolveSize.apply(sorted);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(sorted);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
@@ -409,8 +410,8 @@ public class IterablesTest {
         Iterable<Integer> list = newList(1, 2, 3, 4, 5);
         Iterable<Integer> taken = take(3, list);
         
-        Option<Long> size = Iterables.resolveSize.apply(taken);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(taken);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 
@@ -446,8 +447,8 @@ public class IterablesTest {
         Iterable<Integer> list = newList(1, 2, 3, 4, 5);
         Iterable<Integer> dropped = drop(2, list);
         
-        Option<Long> size = Iterables.resolveSize.apply(dropped);
-        assertTrue(size.isDefined());
+        Optional<Long> size = Iterables.resolveSize.apply(dropped);
+        assertTrue(size.isPresent());
         assertEquals(3L, size.get().longValue());
     }
 

@@ -3,8 +3,6 @@ package fi.solita.utils.functional.lens;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedSet;
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -13,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -24,7 +23,6 @@ import fi.solita.utils.functional.Either;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Monoids;
-import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple2;
@@ -75,9 +73,9 @@ public class LensTest {
     
     static class Employee {
         final String name;
-        final Option<Integer> salary;
+        final Optional<Integer> salary;
         
-        public Employee(String name, Option<Integer> salary) {
+        public Employee(String name, Optional<Integer> salary) {
             this.name = name;
             this.salary = salary;
         }
@@ -156,14 +154,14 @@ public class LensTest {
         public String apply(Employee e) { return e.name; }
     };
     
-    static final Apply<Employee, Option<Integer>> employeeSalary = new Apply<Employee, Option<Integer>>() {
-        public Option<Integer> apply(Employee e) { return e.salary; }
+    static final Apply<Employee, Optional<Integer>> employeeSalary = new Apply<Employee, Optional<Integer>>() {
+        public Optional<Integer> apply(Employee e) { return e.salary; }
     };
     
     static final Builder<Employee> employeeBuilder = Builder.of(
         Tuple.of(employeeName, employeeSalary),
-        new Function2<String, Option<Integer>, Employee>() {
-            public Employee apply(String name, Option<Integer> salary) {
+        new Function2<String, Optional<Integer>, Employee>() {
+            public Employee apply(String name, Optional<Integer> salary) {
                 return new Employee(name, salary);
             }
         }
@@ -328,8 +326,8 @@ public class LensTest {
     @Test
     public void testEachList() {
         Department dept = new Department("Sales", newList(
-            new Employee("John", Some(50000)),
-            new Employee("Jane", Some(60000))
+            new Employee("John", Optional.of(50000)),
+            new Employee("Jane", Optional.of(60000))
         ));
         
         Lens<Department, List<Employee>> employeesLens = Lens.of(departmentEmployees, departmentBuilder);
@@ -343,8 +341,8 @@ public class LensTest {
     @Test
     public void testEachListModify() {
         Department dept = new Department("Sales", newList(
-            new Employee("John", Some(50000)),
-            new Employee("Jane", Some(60000))
+            new Employee("John", Optional.of(50000)),
+            new Employee("Jane", Optional.of(60000))
         ));
         
         Lens<Department, List<Employee>> employeesLens = Lens.of(departmentEmployees, departmentBuilder);
@@ -366,8 +364,8 @@ public class LensTest {
     @Test
     public void testEachListWithMonoid() {
         Department dept = new Department("Sales", newList(
-            new Employee("John", Some(50000)),
-            new Employee("Jane", Some(60000))
+            new Employee("John", Optional.of(50000)),
+            new Employee("Jane", Optional.of(60000))
         ));
         
         Lens<Department, List<Employee>> employeesLens = Lens.of(departmentEmployees, departmentBuilder);
@@ -457,77 +455,77 @@ public class LensTest {
     
     // Option and Either lens tests
     @Test
-    public void testEachOption() {
+    public void testEachOptional() {
         class Container {
-            final Option<String> value;
-            Container(Option<String> value) { this.value = value; }
+            final Optional<String> value;
+            Container(Optional<String> value) { this.value = value; }
         }
         
-        final Apply<Container, Option<String>> containerValue = new Apply<Container, Option<String>>() {
-            public Option<String> apply(Container c) { return c.value; }
+        final Apply<Container, Optional<String>> containerValue = new Apply<Container, Optional<String>>() {
+            public Optional<String> apply(Container c) { return c.value; }
         };
         
-        Lens<Container, Option<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Option<String>,Option<String>>, Container>() {
-            public Container apply(Container c, Apply<Option<String>, Option<String>> f) {
+        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Optional<String>,Optional<String>>, Container>() {
+            public Container apply(Container c, Apply<Optional<String>, Optional<String>> f) {
                 return new Container(f.apply(c.value));
             }
         });
         
-        Container container = new Container(Some("hello"));
-        Lens<Container, Option<String>> eachLens = Lens.eachOption(valueLens, Lens.<String>id());
+        Container container = new Container(Optional.of("hello"));
+        Lens<Container, Optional<String>> eachLens = Lens.eachOptional(valueLens, Lens.<String>id());
         
-        assertEquals(Some("hello"), eachLens.get(container));
+        assertEquals(Optional.of("hello"), eachLens.get(container));
     }
     
     @Test
-    public void testEachOptionWithNone() {
+    public void testEachOptionalWithNone() {
         class Container {
-            final Option<String> value;
-            Container(Option<String> value) { this.value = value; }
+            final Optional<String> value;
+            Container(Optional<String> value) { this.value = value; }
         }
         
-        final Apply<Container, Option<String>> containerValue = new Apply<Container, Option<String>>() {
-            public Option<String> apply(Container c) { return c.value; }
+        final Apply<Container, Optional<String>> containerValue = new Apply<Container, Optional<String>>() {
+            public Optional<String> apply(Container c) { return c.value; }
         };
         
-        Lens<Container, Option<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Option<String>,Option<String>>, Container>() {
-            public Container apply(Container c, Apply<Option<String>, Option<String>> f) {
+        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Optional<String>,Optional<String>>, Container>() {
+            public Container apply(Container c, Apply<Optional<String>, Optional<String>> f) {
                 return new Container(f.apply(c.value));
             }
         });
         
-        Container container = new Container(Option.<String>None());
-        Lens<Container, Option<String>> eachLens = Lens.eachOption(valueLens, Lens.<String>id());
+        Container container = new Container(Optional.empty());
+        Lens<Container, Optional<String>> eachLens = Lens.eachOptional(valueLens, Lens.<String>id());
         
-        assertEquals(None(), eachLens.get(container));
+        assertEquals(Optional.empty(), eachLens.get(container));
     }
     
     @Test
     public void testLeftLens() {
         Either<String, Integer> either = Either.left("error");
         
-        Lens<Either<String, Integer>, Option<String>> leftLens = Lens.left();
+        Lens<Either<String, Integer>, Optional<String>> leftLens = Lens.left();
         
-        assertEquals(Some("error"), leftLens.get(either));
+        assertEquals(Optional.of("error"), leftLens.get(either));
     }
     
     @Test
     public void testLeftLensWithRight() {
         Either<String, Integer> either = Either.right(42);
         
-        Lens<Either<String, Integer>, Option<String>> leftLens = Lens.left();
+        Lens<Either<String, Integer>, Optional<String>> leftLens = Lens.left();
         
-        assertEquals(None(), leftLens.get(either));
+        assertEquals(Optional.empty(), leftLens.get(either));
     }
     
     @Test
     public void testLeftLensModify() {
         Either<String, Integer> either = Either.left("error");
         
-        Lens<Either<String, Integer>, Option<String>> leftLens = Lens.left();
+        Lens<Either<String, Integer>, Optional<String>> leftLens = Lens.left();
         
-        Either<String, Integer> updated = leftLens.modify(either, new Apply<Option<String>, Option<String>>() {
-            public Option<String> apply(Option<String> opt) {
+        Either<String, Integer> updated = leftLens.modify(either, new Apply<Optional<String>, Optional<String>>() {
+            public Optional<String> apply(Optional<String> opt) {
                 return opt.map(new Apply<String, String>() {
                     public String apply(String s) {
                         return s.toUpperCase();
@@ -536,35 +534,35 @@ public class LensTest {
             }
         });
         
-        assertEquals(Some("ERROR"), Lens.<String, Integer>left().get(updated));
+        assertEquals(Optional.of("ERROR"), Lens.<String, Integer>left().get(updated));
     }
     
     @Test
     public void testRightLens() {
         Either<String, Integer> either = Either.right(42);
         
-        Lens<Either<String, Integer>, Option<Integer>> rightLens = Lens.right();
+        Lens<Either<String, Integer>, Optional<Integer>> rightLens = Lens.right();
         
-        assertEquals(Some(42), rightLens.get(either));
+        assertEquals(Optional.of(42), rightLens.get(either));
     }
     
     @Test
     public void testRightLensWithLeft() {
         Either<String, Integer> either = Either.left("error");
         
-        Lens<Either<String, Integer>, Option<Integer>> rightLens = Lens.right();
+        Lens<Either<String, Integer>, Optional<Integer>> rightLens = Lens.right();
         
-        assertEquals(None(), rightLens.get(either));
+        assertEquals(Optional.empty(), rightLens.get(either));
     }
     
     @Test
     public void testRightLensModify() {
         Either<String, Integer> either = Either.right(42);
         
-        Lens<Either<String, Integer>, Option<Integer>> rightLens = Lens.right();
+        Lens<Either<String, Integer>, Optional<Integer>> rightLens = Lens.right();
         
-        Either<String, Integer> updated = rightLens.modify(either, new Apply<Option<Integer>, Option<Integer>>() {
-            public Option<Integer> apply(Option<Integer> opt) {
+        Either<String, Integer> updated = rightLens.modify(either, new Apply<Optional<Integer>, Optional<Integer>>() {
+            public Optional<Integer> apply(Optional<Integer> opt) {
                 return opt.map(new Apply<Integer, Integer>() {
                     public Integer apply(Integer i) {
                         return i * 2;
@@ -573,7 +571,7 @@ public class LensTest {
             }
         });
         
-        assertEquals(Some(84), Lens.<String, Integer>right().get(updated));
+        assertEquals(Optional.of(84), Lens.<String, Integer>right().get(updated));
     }
     
     // Tuple and Pair lens tests

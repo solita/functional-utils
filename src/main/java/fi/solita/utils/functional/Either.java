@@ -1,29 +1,29 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Functional.concat;
-import static fi.solita.utils.functional.Option.Some;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Simple binary sum type. Either "left" or "right".
  */
-public class Either<L,R> implements Serializable {
+public class Either<L,R> {
 
     /**
      * @return {@code value} wrapped into left side of Either.
      */
     public static final <L,R> Either<L,R> left(L value) {
-        return new Either<L, R>(Some(value), Option.<R>None());
+        return new Either<L, R>(Optional.of(value), Optional.empty());
     }
 
     /**
      * @return {@code value} wrapped into right side of Either.
      */
     public static final <L,R> Either<L,R> right(R value) {
-        return new Either<L, R>(Option.<L>None(), Some(value));
+        return new Either<L, R>(Optional.empty(), Optional.of(value));
     }
     
     /**
@@ -37,24 +37,24 @@ public class Either<L,R> implements Serializable {
      * @return value of either in a list.
      */
     public static final <T> List<T> asList(Either<? extends T, ? extends T> either) {
-        return newList(concat(either.left, either.right));
+        return newList(concat(it(either.left), it(either.right)));
     }
     
     /**
      * @return all left values
      */
     public static final <T> Iterable<T> lefts(Iterable<? extends Either<T, ?>> xs) {
-        return Functional.flatMap(x -> x.left, xs);
+        return Functional.flatMap(x -> it(x.left), xs);
     }
     
     /**
      * @return all right values
      */
     public static final <T> Iterable<T> rights(Iterable<? extends Either<?, T>> xs) {
-        return Functional.flatMap(x -> x.right, xs);
+        return Functional.flatMap(x -> it(x.right), xs);
     }
 
-    protected Either(Option<L> left, Option<R> right) {
+    protected Either(Optional<L> left, Optional<R> right) {
         this.left = left;
         this.right = right;
     }
@@ -62,25 +62,25 @@ public class Either<L,R> implements Serializable {
     /**
      * Left side.
      */
-    public final Option<L> left;
+    public final Optional<L> left;
     
     /**
      * Right side.
      */
-    public final Option<R> right;
+    public final Optional<R> right;
     
     /**
      * @return whether this Either has a Left element.
      */
     public final boolean isLeft() {
-        return left.isDefined();
+        return left.isPresent();
     }
     
     /**
      * @return whether this Either has a Right element.
      */
     public final boolean isRight() {
-        return right.isDefined();
+        return right.isPresent();
     }
     
     /**

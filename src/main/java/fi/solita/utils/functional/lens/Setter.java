@@ -3,11 +3,11 @@ package fi.solita.utils.functional.lens;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Collections.newSortedSet;
-import static fi.solita.utils.functional.Functional.headOption;
 import static fi.solita.utils.functional.Functional.map;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -16,7 +16,6 @@ import fi.solita.utils.functional.Apply2;
 import fi.solita.utils.functional.ApplyBi;
 import fi.solita.utils.functional.Function;
 import fi.solita.utils.functional.Function2;
-import fi.solita.utils.functional.Option;
 
 /**
  * A setter of a specific member.
@@ -43,10 +42,15 @@ public class Setter<T,F> {
     /**
      * @return a setter targetting each member of the set behind {@code setter}.
      */
-    public static final <D,E,S> Setter<D,S> eachOption(final Setter<D,Option<E>> setter, final Setter<E,S> setter2) {
-        return eachIterable(setter, setter2, new Apply<Iterable<E>, Option<E>>() {
-            public Option<E> apply(Iterable<E> t) {
-                return headOption(t);
+    public static final <D,E,S> Setter<D,S> eachOptional(final Setter<D,Optional<E>> setter, final Setter<E,S> setter2) {
+        return new Setter<D,S>(new Function2<D, Apply<S,S>, D>() {
+            @Override
+            public D apply(D d, final Apply<S, S> f) {
+                return setter.modify(d, new Apply<Optional<E>,Optional<E>>() {
+                    public Optional<E> apply(Optional<E> c) {
+                        return c.map(x -> setter2.modify(x, f));
+                    };
+                });
             }
         });
     }

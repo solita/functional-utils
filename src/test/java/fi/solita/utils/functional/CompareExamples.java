@@ -3,6 +3,7 @@ import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Functional.sort;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class CompareExamples {
   
     static class Employee {
         public int salary;
-        public Option<String> name;
+        public Optional<String> name;
     }
     
     static Apply<Employee,Integer> salary = new Apply<Employee,Integer>() {
@@ -22,9 +23,9 @@ public class CompareExamples {
             return source.salary;
         }
     };
-    static Apply<Employee,Option<String>> name = new Apply<Employee,Option<String>>() {
+    static Apply<Employee,Optional<String>> name = new Apply<Employee,Optional<String>>() {
         @Override
-        public Option<String> apply(Employee source) {
+        public Optional<String> apply(Employee source) {
             return source.name;
         }
     };
@@ -46,14 +47,14 @@ public class CompareExamples {
         sort(Compare.<String>byIterable(), Collections.<List<String>>newMutableList());
 
         // sorted by the contents of an Option
-        sort(Compare.<String>byOption(), Collections.<Option<String>>newMutableList());
+        sort(Compare.<String>byOptional(), Collections.<Optional<String>>newMutableList());
         
         // sorted by a function to an Option
-        sort(Compare.byOption(name), Collections.<Employee>newMutableList());
+        sort(Compare.byOptional(name), Collections.<Employee>newMutableList());
         
         // and the same with explicit comparators
         sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newMutableList());
-        sort(Compare.byOption(Compare.by(salary)), Collections.<Option<Employee>>newMutableList());
-        sort(Compare.byOption(name, Ordering.Natural()), Collections.<Employee>newMutableList());
+        sort(Compare.byOptional(Compare.by(salary)), Collections.<Optional<Employee>>newMutableList());
+        sort(Compare.byOptional(name, Ordering.Natural()), Collections.<Employee>newMutableList());
     }
 }

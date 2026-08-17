@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -66,14 +67,14 @@ public class FunctionalCTest {
     public void testFind_found() {
         CharSequence xs = "hello";
         
-        Option<Character> result = find(new Apply<Character, Boolean>() {
+        Optional<Character> result = find(new Apply<Character, Boolean>() {
             @Override
             public Boolean apply(Character c) {
                 return c == 'l';
             }
         }, xs);
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo('l'));
     }
     
@@ -81,14 +82,14 @@ public class FunctionalCTest {
     public void testFind_notFound() {
         CharSequence xs = "hello";
         
-        Option<Character> result = find(new Apply<Character, Boolean>() {
+        Optional<Character> result = find(new Apply<Character, Boolean>() {
             @Override
             public Boolean apply(Character c) {
                 return c == 'x';
             }
         }, xs);
         
-        assertFalse(result.isDefined());
+        assertFalse(result.isPresent());
     }
     
     @Test
@@ -366,20 +367,20 @@ public class FunctionalCTest {
     
     @Test
     public void testHeadOption() {
-        Option<Character> result = headOption("hello");
-        assertTrue(result.isDefined());
+        Optional<Character> result = headOptional("hello");
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo('h'));
     }
     
     @Test
     public void testHeadOption_empty() {
-        Option<Character> result = headOption("");
-        assertFalse(result.isDefined());
+        Optional<Character> result = headOptional("");
+        assertFalse(result.isPresent());
     }
     
     @Test
     public void testHeadOption_null() {
-        assertNull(headOption((CharSequence)null));
+        assertNull(headOptional((CharSequence)null));
     }
     
     @Test
@@ -411,20 +412,20 @@ public class FunctionalCTest {
     
     @Test
     public void testLastOption() {
-        Option<Character> result = lastOption("hello");
-        assertTrue(result.isDefined());
+        Optional<Character> result = lastOptional("hello");
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo('o'));
     }
     
     @Test
     public void testLastOption_empty() {
-        Option<Character> result = lastOption("");
-        assertFalse(result.isDefined());
+        Optional<Character> result = lastOptional("");
+        assertFalse(result.isPresent());
     }
     
     @Test
     public void testLastOption_null() {
-        assertNull(lastOption((CharSequence)null));
+        assertNull(lastOptional((CharSequence)null));
     }
     
     @Test
@@ -868,22 +869,22 @@ public class FunctionalCTest {
     
     @Test
     public void testFold_withoutZero() {
-        Option<Character> result = fold((a,b) -> b, "hello");
+        Optional<Character> result = fold((a,b) -> b, "hello");
         
-        assertTrue(result.isDefined());
+        assertTrue(result.isPresent());
     }
     
     @Test
     public void testMin() {
-        Option<Character> result = min("dcba");
-        assertTrue(result.isDefined());
+        Optional<Character> result = min("dcba");
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo('a'));
     }
     
     @Test
     public void testMax() {
-        Option<Character> result = max("dcba");
-        assertTrue(result.isDefined());
+        Optional<Character> result = max("dcba");
+        assertTrue(result.isPresent());
         assertThat(result.get(), equalTo('d'));
     }
     

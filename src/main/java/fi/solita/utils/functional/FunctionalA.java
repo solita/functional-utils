@@ -2,7 +2,6 @@ package fi.solita.utils.functional;
 
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
-import static fi.solita.utils.functional.Option.Some;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 
@@ -52,7 +52,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#find
      */
-    public static final <T> Option<T> find(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, T[] xs) {
         return FunctionalImpl.find(predicate, newList(xs));
     }
     
@@ -233,10 +233,10 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
-     * @see Functional#headOption
+     * @see Functional#headOptional
      */
-    public static final <T> Option<T> headOption(T[] xs) {
-        return xs == null ? null : xs.length == 0 ? Option.<T>None() : Some(xs[0]);
+    public static final <T> Optional<T> headOptional(T[] xs) {
+        return xs == null ? null : xs.length == 0 ? Optional.empty() : Optional.of(xs[0]);
     }
     
     
@@ -260,10 +260,10 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
-     * @see Functional#lastOption
+     * @see Functional#lastOptional
      */
-    public static final <T> Option<T> lastOption(T[] xs) {
-        return xs == null ? null : xs.length == 0 ? Option.<T>None() : Some(xs[xs.length-1]);
+    public static final <T> Optional<T> lastOptional(T[] xs) {
+        return xs == null ? null : xs.length == 0 ? Optional.empty() : Optional.of(xs[xs.length-1]);
     }
     
     
@@ -662,7 +662,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#reduce(Iterable)
      */
-    public static final <T extends SemiGroup<T>> Option<T> reduce(T[] xs) {
+    public static final <T extends SemiGroup<T>> Optional<T> reduce(T[] xs) {
         return FunctionalImpl.reduce(newList(xs));
     }
     
@@ -685,7 +685,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#fold(Apply, Iterable)
      */
-    public static final <T> Option<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, T[] xs) {
+    public static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     
@@ -694,7 +694,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#min
      */
-    public static final <T extends Comparable<T>> Option<T> min(T[] xs) {
+    public static final <T extends Comparable<T>> Optional<T> min(T[] xs) {
         return FunctionalImpl.min(newList(xs));
     }
     
@@ -709,7 +709,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#minBy
      */
-    public static final <T> Option<T> minBy(Comparator<? super T> comparator, T[] xs) {
+    public static final <T> Optional<T> minBy(Comparator<? super T> comparator, T[] xs) {
         return FunctionalImpl.minBy(comparator, newList(xs));
     }
     
@@ -726,7 +726,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#max
      */
-    public static final <T extends Comparable<T>> Option<T> max(T[] xs) {
+    public static final <T extends Comparable<T>> Optional<T> max(T[] xs) {
         return FunctionalImpl.max(newList(xs));
     }
     
@@ -741,7 +741,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#maxBy
      */
-    public static final <T> Option<T> maxBy(Comparator<? super T> comparator, T[] xs) {
+    public static final <T> Optional<T> maxBy(Comparator<? super T> comparator, T[] xs) {
         return FunctionalImpl.maxBy(comparator, newList(xs));
     }
     

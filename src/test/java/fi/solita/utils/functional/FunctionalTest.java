@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -480,11 +481,11 @@ public class FunctionalTest {
     
     @Test
     public void testFind() {
-        assertEquals(Option.None(), Functional.<Integer>find(x -> x == 1, Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.<Integer>find(x -> x == 1, newList(1,2,3)));
-        assertEquals(Option.Some(2), Functional.<Integer>find(x -> x == 2, newList(1,2,3)));
-        assertEquals(Option.Some(3), Functional.<Integer>find(x -> x == 3, newList(1,2,3)));
-        assertEquals(Option.None(), Functional.<Integer>find(x -> x == 4, newList(1,2,3)));
+        assertEquals(Optional.empty(), Functional.<Integer>find(x -> x == 1, Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.<Integer>find(x -> x == 1, newList(1,2,3)));
+        assertEquals(Optional.of(2), Functional.<Integer>find(x -> x == 2, newList(1,2,3)));
+        assertEquals(Optional.of(3), Functional.<Integer>find(x -> x == 3, newList(1,2,3)));
+        assertEquals(Optional.empty(), Functional.<Integer>find(x -> x == 4, newList(1,2,3)));
     }
     
     @Test
@@ -509,9 +510,9 @@ public class FunctionalTest {
     
     @Test
     public void testHeadOption() {
-        assertEquals(Option.Some(1), Functional.headOption(newList(1,2,3)));
-        assertEquals(Option.Some(42), Functional.headOption(newList(42)));
-        assertEquals(Option.None(), Functional.headOption(emptyList()));
+        assertEquals(Optional.of(1), Functional.headOptional(newList(1,2,3)));
+        assertEquals(Optional.of(42), Functional.headOptional(newList(42)));
+        assertEquals(Optional.empty(), Functional.headOptional(emptyList()));
     }
     
     @Test
@@ -531,16 +532,16 @@ public class FunctionalTest {
         assertEquals(Integer.valueOf(42), Functional.last(newList(42)));
     }
     
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = NoSuchElementException.class)
     public void testLastEmpty() {
         Functional.last(emptyList());
     }
     
     @Test
     public void testLastOption() {
-        assertEquals(Option.Some(3), Functional.lastOption(newList(1,2,3)));
-        assertEquals(Option.Some(42), Functional.lastOption(newList(42)));
-        assertEquals(Option.None(), Functional.lastOption(emptyList()));
+        assertEquals(Optional.of(3), Functional.lastOptional(newList(1,2,3)));
+        assertEquals(Optional.of(42), Functional.lastOptional(newList(42)));
+        assertEquals(Optional.empty(), Functional.lastOptional(emptyList()));
     }
     
     @Test
@@ -678,9 +679,9 @@ public class FunctionalTest {
             }
         }
         
-        assertEquals(Option.None(), Functional.reduce(Collections.<Sum>emptyList()));
-        assertEquals(Option.Some(new Sum(1)), Functional.reduce(newList(new Sum(1))));
-        assertEquals(Option.Some(new Sum(6)), Functional.reduce(newList(new Sum(1), new Sum(2), new Sum(3))));
+        assertEquals(Optional.empty(), Functional.reduce(Collections.<Sum>emptyList()));
+        assertEquals(Optional.of(new Sum(1)), Functional.reduce(newList(new Sum(1))));
+        assertEquals(Optional.of(new Sum(6)), Functional.reduce(newList(new Sum(1), new Sum(2), new Sum(3))));
     }
     
     @Test
@@ -697,9 +698,9 @@ public class FunctionalTest {
                 return a + b;
             }
         };
-        assertEquals(Option.None(), Functional.fold(Function.of(sum), Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.fold(Function.of(sum), newList(1)));
-        assertEquals(Option.Some(6), Functional.fold(Function.of(sum), newList(1,2,3)));
+        assertEquals(Optional.empty(), Functional.fold(Function.of(sum), Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.fold(Function.of(sum), newList(1)));
+        assertEquals(Optional.of(6), Functional.fold(Function.of(sum), newList(1,2,3)));
     }
     
     @Test
@@ -716,10 +717,10 @@ public class FunctionalTest {
     
     @Test
     public void testMin() {
-        assertEquals(Option.None(), Functional.min(Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.min(newList(1)));
-        assertEquals(Option.Some(1), Functional.min(newList(3,1,2)));
-        assertEquals(Option.Some(1), Functional.min(newList(1,2,3)));
+        assertEquals(Optional.empty(), Functional.min(Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.min(newList(1)));
+        assertEquals(Optional.of(1), Functional.min(newList(3,1,2)));
+        assertEquals(Optional.of(1), Functional.min(newList(1,2,3)));
     }
     
     @Test
@@ -736,9 +737,9 @@ public class FunctionalTest {
                 return b.compareTo(a);
             }
         };
-        assertEquals(Option.None(), Functional.minBy(reverseOrder, Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.minBy(reverseOrder, newList(1)));
-        assertEquals(Option.Some(3), Functional.minBy(reverseOrder, newList(3,1,2)));
+        assertEquals(Optional.empty(), Functional.minBy(reverseOrder, Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.minBy(reverseOrder, newList(1)));
+        assertEquals(Optional.of(3), Functional.minBy(reverseOrder, newList(3,1,2)));
     }
     
     @Test
@@ -754,10 +755,10 @@ public class FunctionalTest {
     
     @Test
     public void testMax() {
-        assertEquals(Option.None(), Functional.max(Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.max(newList(1)));
-        assertEquals(Option.Some(3), Functional.max(newList(3,1,2)));
-        assertEquals(Option.Some(3), Functional.max(newList(1,2,3)));
+        assertEquals(Optional.empty(), Functional.max(Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.max(newList(1)));
+        assertEquals(Optional.of(3), Functional.max(newList(3,1,2)));
+        assertEquals(Optional.of(3), Functional.max(newList(1,2,3)));
     }
     
     @Test
@@ -774,9 +775,9 @@ public class FunctionalTest {
                 return b.compareTo(a);
             }
         };
-        assertEquals(Option.None(), Functional.maxBy(reverseOrder, Collections.<Integer>emptyList()));
-        assertEquals(Option.Some(1), Functional.maxBy(reverseOrder, newList(1)));
-        assertEquals(Option.Some(1), Functional.maxBy(reverseOrder, newList(3,1,2)));
+        assertEquals(Optional.empty(), Functional.maxBy(reverseOrder, Collections.<Integer>emptyList()));
+        assertEquals(Optional.of(1), Functional.maxBy(reverseOrder, newList(1)));
+        assertEquals(Optional.of(1), Functional.maxBy(reverseOrder, newList(3,1,2)));
     }
     
     @Test
@@ -886,9 +887,9 @@ public class FunctionalTest {
                 return s + i;
             }
         };
-        assertEquals(Option.None(), Functional.map2(Option.<Integer>None(), Option.Some("a"), combine));
-        assertEquals(Option.None(), Functional.map2(Option.Some(1), Option.<String>None(), combine));
-        assertEquals(Option.Some("a1"), Functional.map2(Option.Some(1), Option.Some("a"), combine));
+        assertEquals(Optional.empty(), Functional.map2(Optional.empty(), Optional.of("a"), combine));
+        assertEquals(Optional.empty(), Functional.map2(Optional.of(1), Optional.empty(), combine));
+        assertEquals(Optional.of("a1"), Functional.map2(Optional.of(1), Optional.of("a"), combine));
     }
     
     @Test
@@ -898,10 +899,10 @@ public class FunctionalTest {
                 return s + i + b;
             }
         };
-        assertEquals(Option.None(), Functional.map3(Option.<Integer>None(), Option.Some("a"), Option.Some(true), combine));
-        assertEquals(Option.None(), Functional.map3(Option.Some(1), Option.<String>None(), Option.Some(true), combine));
-        assertEquals(Option.None(), Functional.map3(Option.Some(1), Option.Some("a"), Option.<Boolean>None(), combine));
-        assertEquals(Option.Some("a1true"), Functional.map3(Option.Some(1), Option.Some("a"), Option.Some(true), combine));
+        assertEquals(Optional.empty(), Functional.map3(Optional.empty(), Optional.of("a"), Optional.of(true), combine));
+        assertEquals(Optional.empty(), Functional.map3(Optional.of(1), Optional.empty(), Optional.of(true), combine));
+        assertEquals(Optional.empty(), Functional.map3(Optional.of(1), Optional.of("a"), Optional.empty(), combine));
+        assertEquals(Optional.of("a1true"), Functional.map3(Optional.of(1), Optional.of("a"), Optional.of(true), combine));
     }
     
     @Test
@@ -911,10 +912,10 @@ public class FunctionalTest {
                 return s + i + b + c;
             }
         };
-        assertEquals(Option.None(), Functional.map4(Option.<Integer>None(), Option.Some("a"), Option.Some(true), Option.Some('x'), combine));
-        assertEquals(Option.None(), Functional.map4(Option.Some(1), Option.<String>None(), Option.Some(true), Option.Some('x'), combine));
-        assertEquals(Option.None(), Functional.map4(Option.Some(1), Option.Some("a"), Option.<Boolean>None(), Option.Some('x'), combine));
-        assertEquals(Option.None(), Functional.map4(Option.Some(1), Option.Some("a"), Option.Some(true), Option.<Character>None(), combine));
-        assertEquals(Option.Some("a1truex"), Functional.map4(Option.Some(1), Option.Some("a"), Option.Some(true), Option.Some('x'), combine));
+        assertEquals(Optional.empty(), Functional.map4(Optional.empty(), Optional.of("a"), Optional.of(true), Optional.of('x'), combine));
+        assertEquals(Optional.empty(), Functional.map4(Optional.of(1), Optional.empty(), Optional.of(true), Optional.of('x'), combine));
+        assertEquals(Optional.empty(), Functional.map4(Optional.of(1), Optional.of("a"), Optional.empty(), Optional.of('x'), combine));
+        assertEquals(Optional.empty(), Functional.map4(Optional.of(1), Optional.of("a"), Optional.of(true), Optional.empty(), combine));
+        assertEquals(Optional.of("a1truex"), Functional.map4(Optional.of(1), Optional.of("a"), Optional.of(true), Optional.of('x'), combine));
     }
 }

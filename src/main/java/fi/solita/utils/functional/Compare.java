@@ -1,8 +1,11 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.it;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class Compare {
     
@@ -23,8 +26,8 @@ public abstract class Compare {
     /**
      * @return ordering for an optional element with natural ordering.
      */
-    public static final <T extends Comparable<? super T>> Ordering<Option<T>> byOption() {
-        return byOption(Ordering.<T>Natural());
+    public static final <T extends Comparable<? super T>> Ordering<Optional<T>> byOptional() {
+        return byOptional(Ordering.<T>Natural());
     }
     
     public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Ordering<Map<K,V>> byMap() {
@@ -61,8 +64,8 @@ public abstract class Compare {
                 if (o1 == null && o2 == null) {
                     return 0;
                 }
-                for (Long s1: Iterables.resolveSize.apply(o1)) {
-                    for (Long s2: Iterables.resolveSize.apply(o2)) {
+                for (Long s1: it(Iterables.resolveSize.apply(o1))) {
+                    for (Long s2: it(Iterables.resolveSize.apply(o2))) {
                         int s = s1.compareTo(s2);
                         if (s != 0) {
                             return s;
@@ -107,31 +110,31 @@ public abstract class Compare {
     /**
      * @return ordering for elements by transforming to an optional element with natural ordering. 
      */
-    public static final <S, T extends Comparable<? super T>> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f) {
-        return byOption(f, Ordering.Natural());
+    public static final <S, T extends Comparable<? super T>> Ordering<S> byOptional(final Apply<? super S, Optional<T>> f) {
+        return byOptional(f, Ordering.Natural());
     }
     
     /**
      * @return ordering for elements by transforming to an optional type comparable by {@code targetComparator}.
      */
-    public static final <S, T> Ordering<S> byOption(final Apply<? super S, ? extends Option<T>> f, final Comparator<? super T> targetComparator) {
-        return by(f, Compare.<T>byOption(targetComparator));
+    public static final <S, T> Ordering<S> byOptional(final Apply<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
+        return by(f, Compare.<T>byOptional(targetComparator));
     }
     
     /**
      * @return ordering for optional type comparable by {@code comparator}.
      */
-    public static final <T> Ordering<Option<T>> byOption(final Comparator<? super T> comparator) {
-        return new Ordering<Option<T>>() {
-            public final int compare(Option<T> o1, Option<T> o2) {
+    public static final <T> Ordering<Optional<T>> byOptional(final Comparator<? super T> comparator) {
+        return new Ordering<Optional<T>>() {
+            public final int compare(Optional<T> o1, Optional<T> o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
                 }
-                if (!o1.isDefined() && !o2.isDefined()) {
+                if (!o1.isPresent() && !o2.isPresent()) {
                     return 0;
-                } else if (o1.isDefined() && !o2.isDefined()) {
+                } else if (o1.isPresent() && !o2.isPresent()) {
                     return -1;
-                } else if (!o1.isDefined() && o2.isDefined()) {
+                } else if (!o1.isPresent() && o2.isPresent()) {
                     return 1;
                 } else {
                     return comparator.compare(o1.get(), o2.get());
@@ -141,13 +144,13 @@ public abstract class Compare {
     }
     
     public static final <L extends Comparable<? super L>,R extends Comparable<? super R>> Ordering<Either<L,R>> byEither() {
-        return byOption( (Either<L,R> x) -> x.left).then(byOption(x -> x.right));
+        return byOptional( (Either<L,R> x) -> x.left).then(byOptional(x -> x.right));
     }
     
     public static final <L extends Comparable<? super L>,M extends Comparable<? super M>,R extends Comparable<? super R>> Ordering<Either3<L,M,R>> byEither3() {
-        return byOption( (Either3<L,M,R> x) -> x.left).then(
-               byOption( (Either3<L,M,R> x) -> x.middle).then(
-               byOption(x -> x.right)));
+        return byOptional( (Either3<L,M,R> x) -> x.left).then(
+               byOptional( (Either3<L,M,R> x) -> x.middle).then(
+               byOptional(x -> x.right)));
     }
     
     public static final <K extends Comparable<? super K>,V> Ordering<Map.Entry<K,V>> byKey() {

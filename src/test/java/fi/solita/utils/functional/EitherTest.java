@@ -7,17 +7,10 @@ import static fi.solita.utils.functional.Either.left;
 import static fi.solita.utils.functional.Either.lefts;
 import static fi.solita.utils.functional.Either.right;
 import static fi.solita.utils.functional.Either.rights;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Test;
@@ -29,8 +22,8 @@ public class EitherTest {
         Either<String, Integer> either = left("foo");
         assertTrue(either.isLeft());
         assertFalse(either.isRight());
-        assertTrue(either.left.isDefined());
-        assertFalse(either.right.isDefined());
+        assertTrue(either.left.isPresent());
+        assertFalse(either.right.isPresent());
         assertEquals("foo", either.left.get());
     }
 
@@ -39,8 +32,8 @@ public class EitherTest {
         Either<String, Integer> either = right(42);
         assertFalse(either.isLeft());
         assertTrue(either.isRight());
-        assertFalse(either.left.isDefined());
-        assertTrue(either.right.isDefined());
+        assertFalse(either.left.isPresent());
+        assertTrue(either.right.isPresent());
         assertEquals(Integer.valueOf(42), either.right.get());
     }
 
@@ -301,46 +294,6 @@ public class EitherTest {
         String result = either.toString();
         assertTrue(result.contains("right"));
         assertTrue(result.contains("42"));
-    }
-
-    @Test
-    public void serialization_left() throws Exception {
-        Either<String, Integer> either = left("foo");
-        assertThat(either, instanceOf(Serializable.class));
-        
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bao);
-        out.writeObject(either);
-        out.close();
-        
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bao.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Either<String, Integer> deserialized = (Either<String, Integer>) in.readObject();
-        in.close();
-        
-        assertThat(deserialized, instanceOf(Serializable.class));
-        assertTrue(deserialized.isLeft());
-        assertEquals("foo", deserialized.left.get());
-    }
-
-    @Test
-    public void serialization_right() throws Exception {
-        Either<String, Integer> either = right(42);
-        assertThat(either, instanceOf(Serializable.class));
-        
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bao);
-        out.writeObject(either);
-        out.close();
-        
-        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bao.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Either<String, Integer> deserialized = (Either<String, Integer>) in.readObject();
-        in.close();
-        
-        assertThat(deserialized, instanceOf(Serializable.class));
-        assertTrue(deserialized.isRight());
-        assertEquals(Integer.valueOf(42), deserialized.right.get());
     }
 
     // Helper functions for tests

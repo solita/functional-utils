@@ -8,7 +8,6 @@ import static fi.solita.utils.functional.Functional.map;
 import static fi.solita.utils.functional.Functional.mkString;
 import static fi.solita.utils.functional.FunctionalA.filter;
 import static fi.solita.utils.functional.FunctionalA.zip;
-import static fi.solita.utils.functional.Option.None;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -21,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import fi.solita.utils.functional.Apply;
@@ -69,7 +69,6 @@ import fi.solita.utils.functional.Apply9;
 import fi.solita.utils.functional.ApplyBi;
 import fi.solita.utils.functional.ApplyZero;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Option;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Tuple;
@@ -211,9 +210,9 @@ public final class Builder<T> {
     /**
      * @return a copy of this builder with value for {@code member} removed.
      */
-    public final Builder<T> without(Apply<T,? extends Option<?>> member) {
+    public final Builder<T> without(Apply<T,? extends Optional<?>> member) {
         checkMember(member);
-        return new Builder<T>(cons(Pair.of(member, None()), values), members, constructor);
+        return new Builder<T>(cons(Pair.of(member, Optional.empty()), values), members, constructor);
     }
 
     private void checkMember(Apply<? super T, ?> member) {
@@ -255,8 +254,8 @@ public final class Builder<T> {
                     if (member.getClass().getName().equals("fi.solita.utils.meta.MetaMember")) {
                         Method fieldAccessor = member.getClass().getMethod("getMember");
                         Class<?> fieldType = ((Field)fieldAccessor.invoke(member)).getType();
-                        if (Option.class.isAssignableFrom(fieldType)) {
-                            return None();
+                        if (Optional.class.isAssignableFrom(fieldType)) {
+                            return Optional.empty();
                         }
                     }
                 } catch (InvocationTargetException e) {

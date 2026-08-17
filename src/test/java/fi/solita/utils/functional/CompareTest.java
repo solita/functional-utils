@@ -1,7 +1,5 @@
 package fi.solita.utils.functional;
 
-import static fi.solita.utils.functional.Option.None;
-import static fi.solita.utils.functional.Option.Some;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -9,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -89,12 +88,12 @@ public class CompareTest {
     
     @Test
     public void byOption_comparesOptions() {
-        Ordering<Option<Integer>> ordering = Compare.byOption();
+        Ordering<Optional<Integer>> ordering = Compare.byOptional();
         
-        Option<Integer> none = None();
-        Option<Integer> some1 = Some(1);
-        Option<Integer> some2 = Some(2);
-        Option<Integer> some1b = Some(1);
+        Optional<Integer> none = Optional.empty();
+        Optional<Integer> some1 = Optional.of(1);
+        Optional<Integer> some2 = Optional.of(2);
+        Optional<Integer> some1b = Optional.of(1);
         
         assertEquals(0, ordering.compare(none, none));
         assertTrue(ordering.compare(none, some1) > 0);
@@ -113,10 +112,10 @@ public class CompareTest {
             }
         };
         
-        Ordering<Option<Integer>> ordering = Compare.byOption(reverseOrdering);
+        Ordering<Optional<Integer>> ordering = Compare.byOptional(reverseOrdering);
         
-        Option<Integer> some1 = Some(1);
-        Option<Integer> some2 = Some(2);
+        Optional<Integer> some1 = Optional.of(1);
+        Optional<Integer> some2 = Optional.of(2);
         
         assertTrue(ordering.compare(some1, some2) > 0);
         assertTrue(ordering.compare(some2, some1) < 0);
@@ -124,7 +123,7 @@ public class CompareTest {
     
     @Test
     public void byOption_handlesNulls() {
-        Ordering<Option<Integer>> ordering = Compare.byOption();
+        Ordering<Optional<Integer>> ordering = Compare.byOptional();
         
         assertEquals(0, ordering.compare(null, null));
     }
@@ -201,25 +200,25 @@ public class CompareTest {
     @Test
     public void byOption_withTransformerFunction() {
         class Person {
-            Option<String> nickname;
+            Optional<String> nickname;
             
-            Person(Option<String> nickname) {
+            Person(Optional<String> nickname) {
                 this.nickname = nickname;
             }
         }
         
-        Apply<Person, Option<String>> getNickname = new Apply<Person, Option<String>>() {
+        Apply<Person, Optional<String>> getNickname = new Apply<Person, Optional<String>>() {
             @Override
-            public Option<String> apply(Person p) {
+            public Optional<String> apply(Person p) {
                 return p.nickname;
             }
         };
         
-        Ordering<Person> ordering = Compare.byOption(getNickname);
+        Ordering<Person> ordering = Compare.byOptional(getNickname);
         
-        Person person1 = new Person(Option.<String>None());
-        Person person2 = new Person(Some("Al"));
-        Person person3 = new Person(Some("Bo"));
+        Person person1 = new Person(Optional.empty());
+        Person person2 = new Person(Optional.of("Al"));
+        Person person3 = new Person(Optional.of("Bo"));
         
         assertTrue(ordering.compare(person1, person2) > 0);
         assertTrue(ordering.compare(person2, person3) < 0);
