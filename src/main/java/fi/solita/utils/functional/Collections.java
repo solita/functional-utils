@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -1081,6 +1082,13 @@ public abstract class Collections {
                ret.size() == 1 ? java.util.Collections.singletonList(head(ret)) :
                                  java.util.Collections.unmodifiableList(ret);
     }
+    
+    /**
+     * @return some implementation of a List containing {@code elements}.
+     */
+    public static final <T> List<T> newList(Optional<T> elements) {
+        return newList(it(elements));
+    }
 
     /**
      * @return some implementation of a Set containing {@code elements}.
@@ -1117,6 +1125,13 @@ public abstract class Collections {
         return ret.isEmpty()   ? Collections.<T>emptySet() :
                ret.size() == 1 ? java.util.Collections.singleton(head(ret)) :
                                  java.util.Collections.unmodifiableSet(ret);
+    }
+    
+    /**
+     * @return some implementation of a Set containing {@code elements}.
+     */
+    public static final <T> Set<T> newSet(Optional<T> elements) {
+        return newSet(it(elements));
     }
     
     /**
@@ -1171,6 +1186,13 @@ public abstract class Collections {
     }
     
     /**
+     * @return some implementation of a SortedSt containing {@code elements}.
+     */
+    public static final <T extends Comparable<? super T>> SortedSet<T> newSortedSet(Optional<T> elements) {
+        return newSortedSet(it(elements));
+    }
+    
+    /**
      * @return some implementation of a SortedSet containing {@code elements}, using {@code comparator} for ordering.
      */
     public static final <T> SortedSet<T> newSortedSet(final Comparator<? super T> comparator, Iterable<T> elements) {
@@ -1204,6 +1226,13 @@ public abstract class Collections {
         return ret.isEmpty()   ? Collections.<T>emptySortedSet() :
                ret.size() == 1 ? new SingletonSortedSet<T>(ret.first()) { public Comparator<? super T> comparator() { return comparator; }; } :
                                  java.util.Collections.unmodifiableSortedSet(ret);
+    }
+    
+    /**
+     * @return some implementation of a SortedSet containing {@code elements}, using {@code comparator} for ordering.
+     */
+    public static final <T> SortedSet<T> newSortedSet(final Comparator<? super T> comparator, Optional<T> elements) {
+        return newSortedSet(comparator, it(elements));
     }
     
     /**
@@ -1248,6 +1277,15 @@ public abstract class Collections {
                ret.size() == 1 ? java.util.Collections.singletonMap(head(ret.keySet()), head(ret.values())) :
                                  java.util.Collections.unmodifiableMap(ret);
     }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
+     * 
+     * @return some implementation of a Map containing {@code elements}.
+     */
+    public static final <K, V> Map<K, V> newMap(SemiGroup<V> valueCombiner, Optional<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        return newMap(valueCombiner, it(elements));
+    }
 
     /**
      * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
@@ -1274,6 +1312,15 @@ public abstract class Collections {
             ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptyMap() : java.util.Collections.unmodifiableMap(ret);
+    }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
+     * 
+     * @return some implementation of a LinkedMap containing {@code elements}.
+     */
+    public static final <K, V> Map<K, V> newLinkedMap(SemiGroup<V> valueCombiner, Optional<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        return newLinkedMap(valueCombiner, it(elements));
     }
     
     /**
@@ -1316,6 +1363,15 @@ public abstract class Collections {
     /**
      * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
      * 
+     * @return some implementation of a SortedMap containing {@code elements}.
+     */
+    public static final <K extends Comparable<? super K>, V> SortedMap<K, V> newSortedMap(SemiGroup<V> valueCombiner, Optional<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        return newSortedMap(valueCombiner, it(elements));
+    }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
+     * 
      * @return some implementation of a SortedMap containing {@code elements}, using {@code comparator} for ordering.
      */
     public static final <K, V> SortedMap<K, V> newSortedMap(SemiGroup<V> valueCombiner, Comparator<? super K> comparator, Iterable<? extends Map.Entry<? extends K, ? extends V>> elements) {
@@ -1332,6 +1388,15 @@ public abstract class Collections {
             ret.put(e.getKey(), v);
         }
         return ret.isEmpty() ? Collections.<K,V>emptySortedMap() : java.util.Collections.unmodifiableSortedMap(ret);
+    }
+    
+    /**
+     * Use {@link SemiGroups#first()}, {@link SemiGroups#last()} or {@link SemiGroups#fail()} for handling duplicate elements.
+     * 
+     * @return some implementation of a SortedMap containing {@code elements}, using {@code comparator} for ordering.
+     */
+    public static final <K, V> SortedMap<K, V> newSortedMap(SemiGroup<V> valueCombiner, Comparator<? super K> comparator, Optional<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        return newSortedMap(valueCombiner, comparator, it(elements));
     }
     
     /**
@@ -1758,6 +1823,13 @@ public abstract class Collections {
     }
     
     /**
+     * @return some implementation of a Map containing {@code elements}. One key can map to multiple values.
+     */
+    public static final <K, V> Map<K, List<V>> newMultimap(Optional<? extends Map.Entry<? extends K, ? extends V>> elements) {
+        return newMultimap(it(elements));
+    }
+    
+    /**
      * @return a <b>mutable</b> array containing elements {@code array}.
      */
     public static final Boolean[] newArray(boolean... array) {
@@ -1995,6 +2067,13 @@ public abstract class Collections {
     }
     
     /**
+     * @return a <b>mutable</b> array containing elements {@code elements} of type {@code clazz}.
+     */
+    public static final <T> T[] newArray(Class<T> clazz, Optional<? extends T> elements) {
+        return newArray(clazz, it(elements));
+    }
+    
+    /**
      * @return lazy iterable of characters in {@code charSeq}.
      */
     public static final Iterable<Character> it(CharSequence charSeq) {
@@ -2013,6 +2092,13 @@ public abstract class Collections {
      */
     public static final <T> Iterable<T> it(T t) {
         return t == null ? null : newList(t);
+    }
+    
+    /**
+     * @return iterable of single value {@code t}.
+     */
+    public static final <T> Iterable<T> it(Optional<T> t) {
+        return t == null ? null : t.isPresent() ? newList(t.get()) : emptyList();
     }
     
     /**
