@@ -62,7 +62,7 @@ Just a few examples of using these utils.
 	
 	/** Generated in practice by meta-utils */
 	class Department_ {
-	    public static final Tuple2<Apply<Department,String>,Apply<Department,List<Employee>>> $Fields() {
+	    public static final Tuple2<java.util.function.Function<Department,String>,java.util.function.Function<Department,List<Employee>>> $Fields() {
 	        return Tuple.of(name, employees);
 	    }
 	    public static final Function2<String, List<Employee>, Department> $ = new Function2<String, List<Employee>, Department>() {
@@ -70,12 +70,12 @@ Just a few examples of using these utils.
 	            return new Department(t, e);
 	        }
 	    };
-	    public static final Apply<Department, String> name = new Apply<Department, String>() {
+	    public static final java.util.function.Function<Department, String> name = new java.util.function.Function<Department, String>() {
 	        public String apply(Department t) {
 	            return t.name;
 	        }
 	    };
-	    public static final Apply<Department, List<Employee>> employees = new Apply<Department, List<Employee>>() {
+	    public static final java.util.function.Function<Department, List<Employee>> employees = new java.util.function.Function<Department, List<Employee>>() {
 	        public List<Employee> apply(Department t) {
 	            return t.employees;
 	        }
@@ -84,7 +84,7 @@ Just a few examples of using these utils.
 	
 	/** Generated in practice by meta-utils */
 	class Employee_ {
-	    public static final Tuple3<Apply<Employee,String>,Apply<Employee,Option<Integer>>,Apply<Employee,Department>> $Fields() {
+	    public static final Tuple3<java.util.function.Function<Employee,String>,java.util.function.Function<Employee,Option<Integer>>,java.util.function.Function<Employee,Department>> $Fields() {
 	        return Tuple.of(name, salary, department);
 	    }
 	    public static final Function3<String, Option<Integer>, Department, Employee> $ = new Function3<String,Option<Integer>,Department,Employee>() {
@@ -92,12 +92,12 @@ Just a few examples of using these utils.
 	            return new Employee(t1, t2, t3);
 	        }
 	    };
-	    public static final Apply<Employee, String> name = new Apply<Employee, String>() {
+	    public static final java.util.function.Function<Employee, String> name = new java.util.function.Function<Employee, String>() {
 	        public String apply(Employee t) {
 	            return t.name;
 	        }
 	    };
-	    public static final Apply<Employee, Option<Integer>> salary = new Apply<Employee, Option<Integer>>() {
+	    public static final java.util.function.Function<Employee, Option<Integer>> salary = new java.util.function.Function<Employee, Option<Integer>>() {
 	        public Option<Integer> apply(Employee t) {
 	            return t.salary;
 	        }
@@ -110,7 +110,7 @@ Just a few examples of using these utils.
 	            }
 	        }
 	    };
-	    public static final Apply<Employee, Department> department = new Apply<Employee, Department>() {
+	    public static final java.util.function.Function<Employee, Department> department = new java.util.function.Function<Employee, Department>() {
 	        public Department apply(Employee t) {
 	            return t.department;
 	        }
@@ -299,7 +299,7 @@ Just a few examples of using these utils.
 
 ### fi.solita.utils.functional.Function
 
-	static Apply<String,Integer> length = new Apply<String,Integer>() {
+	static java.util.function.Function<String,Integer> length = new java.util.function.Function<String,Integer>() {
 	    @Override
 	    public Integer apply(String source) {
 	        return source.length();
@@ -315,8 +315,8 @@ Just a few examples of using these utils.
   
 	//...  
 
-	// Apply<T,R> is a function from T to R
-	Apply<String,Integer> f = length;
+	// java.util.function.Function<T,R> is a function from T to R
+	java.util.function.Function<String,Integer> f = length;
 
 	// Function0 ia a 0-arg function, Function1 1-arg, Function2 2-arg, etc.
 	Function0<Integer> zeroArg = Function.of(42);

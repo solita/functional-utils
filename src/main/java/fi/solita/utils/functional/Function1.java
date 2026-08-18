@@ -5,11 +5,11 @@ import java.io.Serializable;
 /**
  * Most basic function from {@code T} to {@code R} 
  */
-public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
+public abstract class Function1<T, R> implements java.util.function.Function<T,R>, Serializable {
     /**
      * @return function composition with {@code next}.
      */
-    public <U> Function1<T, U> andThen(final Apply<? super R, ? extends U> next) {
+    public <U> Function1<T, U> andThen(final java.util.function.Function<? super R, ? extends U> next) {
         return new Function1<T, U>() {
             @Override
             public final U apply(T source) {
@@ -21,7 +21,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
     /**
      * @return reverse function composition with {@code next}.
      */
-    public final <U> Function1<U, R> compose(final Apply<? super U, ? extends T> next) {
+    public final <U> Function1<U, R> compose(final java.util.function.Function<? super U, ? extends T> next) {
         return new Function1<U, R>() {
             @Override
             public final R apply(U source) {
@@ -54,17 +54,17 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
         };
     }
     
-    static final <T1,R> Function1<T1,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+    static final <T1,R> Function1<T1,R> partial(final java.util.function.Function<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function1<T1,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public final R apply(T1 t1) {
-                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1);
+                return PartialApplicationHelper.doApply((java.util.function.Function<Tuple,R>)f, paramsAndPlaceholders, t1);
             }
         };
     }
     
-    static final <T1,R,FR extends Apply<?,R>> Function1<T1,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+    static final <T1,R,FR extends java.util.function.Function<?,R>> Function1<T1,FR> split(final java.util.function.Function<? extends Tuple,R> f, final Object... placeholders) {
         return new Function1<T1,FR>() {
             @Override
             public final FR apply(T1 t1) {
@@ -94,7 +94,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
             };
         }
         
-        public final <U> Ex1<T,U,E1> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Ex1<T,U,E1> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex1<T,U,E1>() {
                 @Override
                 public final U apply(T t) throws E1 {
@@ -152,7 +152,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
             };
         }
         
-        public final <U> Ex2<T,U,E1,E2> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Ex2<T,U,E1,E2> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex2<T,U,E1,E2>() {
                 @Override
                 public final U apply(T t) throws E1, E2 {
@@ -201,7 +201,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
             };
         }
         
-        public final <U> Ex3<T,U,E1,E2,E3> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Ex3<T,U,E1,E2,E3> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex3<T,U,E1,E2,E3>() {
                 @Override
                 public final U apply(T t) throws E1, E2, E3 {
@@ -241,7 +241,7 @@ public abstract class Function1<T, R> implements Apply<T,R>, Serializable {
             };
         }
         
-        public final <U> Ex4<T,U,E1,E2,E3,E4> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Ex4<T,U,E1,E2,E3,E4> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex4<T,U,E1,E2,E3,E4>() {
                 @Override
                 public final U apply(T t) throws E1, E2, E3, E4 {

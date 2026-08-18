@@ -188,19 +188,19 @@ public class Either3Test {
     public void fold_onLeft_appliesLeftFunction() {
         Either3<String, Integer, Boolean> either = left("foo");
         String result = either.fold(
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String t) {
                     return "left:" + t;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer t) {
                     return "middle:" + t;
                 }
             },
-            new Apply<Boolean, String>() {
+            new java.util.function.Function<Boolean, String>() {
                 @Override
                 public String apply(Boolean t) {
                     return "right:" + t;
@@ -214,19 +214,19 @@ public class Either3Test {
     public void fold_onMiddle_appliesMiddleFunction() {
         Either3<String, Integer, Boolean> either = middle(42);
         String result = either.fold(
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String t) {
                     return "left:" + t;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer t) {
                     return "middle:" + t;
                 }
             },
-            new Apply<Boolean, String>() {
+            new java.util.function.Function<Boolean, String>() {
                 @Override
                 public String apply(Boolean t) {
                     return "right:" + t;
@@ -240,19 +240,19 @@ public class Either3Test {
     public void fold_onRight_appliesRightFunction() {
         Either3<String, Integer, Boolean> either = right(true);
         String result = either.fold(
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String t) {
                     return "left:" + t;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer t) {
                     return "middle:" + t;
                 }
             },
-            new Apply<Boolean, String>() {
+            new java.util.function.Function<Boolean, String>() {
                 @Override
                 public String apply(Boolean t) {
                     return "right:" + t;
@@ -420,21 +420,21 @@ public class Either3Test {
     }
 
     // Helper functions for tests
-    static Apply<String, Integer> strlen = new Apply<String, Integer>() {
+    static java.util.function.Function<String, Integer> strlen = new java.util.function.Function<String, Integer>() {
         @Override
         public Integer apply(String source) {
             return source.length();
         }
     };
 
-    static Apply<Integer, String> intToString = new Apply<Integer, String>() {
+    static java.util.function.Function<Integer, String> intToString = new java.util.function.Function<Integer, String>() {
         @Override
         public String apply(Integer source) {
             return source.toString();
         }
     };
 
-    static Apply<Boolean, String> boolToString = new Apply<Boolean, String>() {
+    static java.util.function.Function<Boolean, String> boolToString = new java.util.function.Function<Boolean, String>() {
         @Override
         public String apply(Boolean source) {
             return source.toString();

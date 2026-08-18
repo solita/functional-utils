@@ -140,7 +140,7 @@ public class CompareTest {
             }
         }
         
-        Apply<Person, Integer> getAge = new Apply<Person, Integer>() {
+        java.util.function.Function<Person, Integer> getAge = new java.util.function.Function<Person, Integer>() {
             @Override
             public Integer apply(Person p) {
                 return p.age;
@@ -168,7 +168,7 @@ public class CompareTest {
             }
         }
         
-        Apply<Person, String> getName = new Apply<Person, String>() {
+        java.util.function.Function<Person, String> getName = new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person p) {
                 return p.name;
@@ -185,7 +185,7 @@ public class CompareTest {
     
     @Test
     public void by_handlesNulls() {
-        Apply<Integer, Integer> identity = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> identity = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer i) {
                 return i;
@@ -207,7 +207,7 @@ public class CompareTest {
             }
         }
         
-        Apply<Person, Optional<String>> getNickname = new Apply<Person, Optional<String>>() {
+        java.util.function.Function<Person, Optional<String>> getNickname = new java.util.function.Function<Person, Optional<String>>() {
             @Override
             public Optional<String> apply(Person p) {
                 return p.nickname;
@@ -408,14 +408,14 @@ public class CompareTest {
             }
         }
         
-        Apply<Person, String> getFirstName = new Apply<Person, String>() {
+        java.util.function.Function<Person, String> getFirstName = new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person p) {
                 return p.firstName;
             }
         };
         
-        Apply<Person, String> getLastName = new Apply<Person, String>() {
+        java.util.function.Function<Person, String> getLastName = new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person p) {
                 return p.lastName;

@@ -10,7 +10,7 @@ public abstract class Functors {
     
     public static final <A,B> Functor<Iterable<?>, A, B, Iterable<A>, Iterable<B>> iterable() {
         return new Functor<Iterable<?>, A, B, Iterable<A>, Iterable<B>>() {
-            public Iterable<B> fmap(Apply<? super A, ? extends B> f, Iterable<A> as) {
+            public Iterable<B> fmap(java.util.function.Function<? super A, ? extends B> f, Iterable<A> as) {
                 return map(f, as);
             }
         };
@@ -19,7 +19,7 @@ public abstract class Functors {
     public static final <A,B> Functor<Optional<?>, A, B, Optional<A>, Optional<B>> option() {
         return new Functor<Optional<?>, A, B, Optional<A>, Optional<B>>() {
             @SuppressWarnings("unchecked")
-            public Optional<B> fmap(Apply<? super A, ? extends B> f, Optional<A> as) {
+            public Optional<B> fmap(java.util.function.Function<? super A, ? extends B> f, Optional<A> as) {
                 return (Optional<B>) as.map(f);
             }
         };
@@ -27,7 +27,7 @@ public abstract class Functors {
     
     public static final <A,B> Functor<Function0<?>, A, B, Function0<A>, Function0<B>> function() {
         return new Functor<Function0<?>, A, B, Function0<A>, Function0<B>>() {
-            public Function0<B> fmap(final Apply<? super A, ? extends B> f, final Function0<A> as) {
+            public Function0<B> fmap(final java.util.function.Function<? super A, ? extends B> f, final Function0<A> as) {
                 return new Function0<B>() {
                     @Override
                     public B apply() {

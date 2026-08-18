@@ -1,11 +1,12 @@
 package fi.solita.utils.functional;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 /**
  * Function taking no arguments, only producing a value.
  */
-public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Serializable {
+public abstract class Function0<R> implements java.util.function.Function<Tuple0,R>, Supplier<R>, Serializable {
 
     public abstract R apply();
     
@@ -19,7 +20,7 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Ser
     /**
      * @return function composition: {@code next(this())}
      */
-    public final <U> Function0<U> andThen(final Apply<? super R, ? extends U> next) {
+    public final <U> Function0<U> andThen(final java.util.function.Function<? super R, ? extends U> next) {
         return new Function0<U>() {
             @Override
             public U apply() {
@@ -39,7 +40,7 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Ser
             return apply();
         }
         
-        public final <U> Function0.Ex1<U,E1> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Function0.Ex1<U,E1> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex1<U,E1>() {
                 @Override
                 public U apply() throws E1 {
@@ -83,7 +84,7 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Ser
             return apply();
         }
         
-        public final <U> Function0.Ex2<U,E1,E2> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Function0.Ex2<U,E1,E2> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex2<U,E1,E2>() {
                 @Override
                 public U apply() throws E1, E2 {
@@ -118,7 +119,7 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Ser
             return apply();
         }
         
-        public final <U> Function0.Ex3<U,E1,E2,E3> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Function0.Ex3<U,E1,E2,E3> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex3<U,E1,E2,E3>() {
                 @Override
                 public U apply() throws E1, E2, E3 {
@@ -144,7 +145,7 @@ public abstract class Function0<R> implements Apply<Tuple0,R>, ApplyZero<R>, Ser
             return apply();
         }
         
-        public final <U> Function0.Ex4<U,E1,E2,E3,E4> andThen(final Apply<? super R, ? extends U> next) {
+        public final <U> Function0.Ex4<U,E1,E2,E3,E4> andThen(final java.util.function.Function<? super R, ? extends U> next) {
             return new Ex4<U,E1,E2,E3,E4>() {
                 @Override
                 public U apply() throws E1, E2, E3, E4 {

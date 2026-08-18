@@ -1,6 +1,10 @@
 package fi.solita.utils.functional;
 
 import java.util.Arrays;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class Function {
     private Function() {
@@ -26,8 +30,8 @@ public abstract class Function {
             }
         };
     }
-
-    public static final <T, R> Function1<T, Void> consumer(final ApplyVoid<T> apply) {
+    
+    public static final <T, R> Function1<T, Void> consumer(final Consumer<T> apply) {
         return new Function1<T, Void>() {
             @Override
             public final Void apply(T t) {
@@ -37,7 +41,7 @@ public abstract class Function {
         };
     }
     
-    public static final <T1, T2> Function2<T1, T2, Void> consumer(final ApplyVoid2<T1, T2> apply) {
+    public static final <T1, T2> Function2<T1, T2, Void> consumer(final BiConsumer<T1, T2> apply) {
         return new Function2<T1, T2, Void>() {
             @Override
             public final Void apply(T1 t1, T2 t2) {
@@ -90,7 +94,7 @@ public abstract class Function {
     /**
      * @return a concrete version of {@code apply}.
      */
-    public static final <T, R> Function1<T, R> of(final Apply<T, R> apply) {
+    public static final <T, R> Function1<T, R> of(final java.util.function.Function<T, R> apply) {
         return new Function1<T, R>() {
             @Override
             public final R apply(T t) {
@@ -102,7 +106,7 @@ public abstract class Function {
     /**
      * @return a concrete version of {@code apply}.
      */
-    public static final <T1, T2, R> Function2<T1, T2, R> of(final Apply2<T1, T2, R> apply) {
+    public static final <T1, T2, R> Function2<T1, T2, R> of(final BiFunction<T1, T2, R> apply) {
         return new Function2<T1, T2, R>() {
             @Override
             public final R apply(T1 t1, T2 t2) {
@@ -492,7 +496,7 @@ public abstract class Function {
     /**
      * @return a wrapper for {@code supplier}, which memorizes the value thus invoking {@code supplier} only once, except if {@code supplier} returns {@code null}, it will be invoked again.
      */
-    public static final <R> Function0<R> memoize(final ApplyZero<R> supplier) {
+    public static final <R> Function0<R> memoize(final Supplier<R> supplier) {
         return new Function0<R>() {
             private R r;
             @Override
@@ -547,7 +551,7 @@ public abstract class Function {
     /**
      * @return {@code f} with its arguments flipped.
      */
-    public static final <A, B, C> Function1<B, Function1<A, C>> flip(final Apply<A, ? extends Apply<B, C>> f) {
+    public static final <A, B, C> Function1<B, Function1<A, C>> flip(final java.util.function.Function<A, ? extends java.util.function.Function<B, C>> f) {
         return new Function1<B, Function1<A, C>>() {
             @Override
             public final Function1<A, C> apply(final B g) {
@@ -564,7 +568,7 @@ public abstract class Function {
     /**
      * @return 2-parameter version of {@code f}.
      */
-    public static final <A, B, C> Function2<A, B, C> uncurried(final Apply<A, ? extends Apply<B, C>> f) {
+    public static final <A, B, C> Function2<A, B, C> uncurried(final java.util.function.Function<A, ? extends java.util.function.Function<B, C>> f) {
         return new Function2<A, B, C>() {
             @Override
             public final C apply(A t1, B t2) {
@@ -576,7 +580,7 @@ public abstract class Function {
     /**
      * @return 3-parameter version of {@code f}.
      */
-    public static final <A, B, C, D> Function3<A, B, C, D> uncurried2(final Apply<A, ? extends Apply<B, ? extends Apply<C, D>>> f) {
+    public static final <A, B, C, D> Function3<A, B, C, D> uncurried2(final java.util.function.Function<A, ? extends java.util.function.Function<B, ? extends java.util.function.Function<C, D>>> f) {
         return new Function3<A, B, C, D>() {
             @Override
             public final D apply(A t1, B t2, C t3) {
@@ -588,7 +592,7 @@ public abstract class Function {
     /**
      * @return 4-parameter version of {@code f}.
      */
-    public static final <A, B, C, D, E> Function4<A, B, C, D, E> uncurried3(final Apply<A, ? extends Apply<B, ? extends Apply<C, ? extends Apply<D, E>>>> f) {
+    public static final <A, B, C, D, E> Function4<A, B, C, D, E> uncurried3(final java.util.function.Function<A, ? extends java.util.function.Function<B, ? extends java.util.function.Function<C, ? extends java.util.function.Function<D, E>>>> f) {
         return new Function4<A, B, C, D, E>() {
             @Override
             public final E apply(A t1, B t2, C t3, D t4) {
@@ -600,7 +604,7 @@ public abstract class Function {
     /**
      * Partially apply {@code arg1} to {@code f}
      */
-    public static final <T1,T2,R> Function1<T2,R> ap(final Apply2<T1,T2,R> f, final T1 arg1) {
+    public static final <T1,T2,R> Function1<T2,R> ap(final BiFunction<T1,T2,R> f, final T1 arg1) {
         return new Function1<T2,R>() {
             @Override
             public final R apply(T2 arg2) {
@@ -794,7 +798,7 @@ class PartialApplicationHelper {
         return ret;
     }
     
-    static final <R> R doApply(Apply<Tuple,R> f, Object[] paramsAndPlaceholders, Object... params) {
+    static final <R> R doApply(java.util.function.Function<Tuple,R> f, Object[] paramsAndPlaceholders, Object... params) {
         return f.apply(Tuple.of(replacePlaceholdersWithParams(paramsAndPlaceholders, params)));
     }
     
@@ -815,8 +819,8 @@ class PartialApplicationHelper {
     }
     
     @SuppressWarnings("unchecked")
-    static final <R,FR extends Apply<?,R>> FR makeSecondFunc(final Apply<? extends Tuple,R> f, final Object[] args, final Object... t) {
-        final Apply<Tuple,R> ff = ((Apply<Tuple,R>)f);
+    static final <R,FR extends java.util.function.Function<?,R>> FR makeSecondFunc(final java.util.function.Function<? extends Tuple,R> f, final Object[] args, final Object... t) {
+        final java.util.function.Function<Tuple,R> ff = ((java.util.function.Function<Tuple,R>)f);
         switch (args.length - t.length) {
             case 1: return (FR) new Function1<Object,R>() {
                 @Override

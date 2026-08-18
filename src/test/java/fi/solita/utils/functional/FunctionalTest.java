@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import org.junit.Test;
 
@@ -282,7 +284,7 @@ public class FunctionalTest {
         assertEquals(Double.valueOf(4.0),  sumProductLengthMax._4);
     }
 
-    private static final Apply<Double, Tuple4<Double, Double, Integer, Double>> toSuitableTuple = new Apply<Double,Tuple4<Double,Double,Integer,Double>>() {
+    private static final java.util.function.Function<Double, Tuple4<Double, Double, Integer, Double>> toSuitableTuple = new java.util.function.Function<Double,Tuple4<Double,Double,Integer,Double>>() {
         public Tuple4<Double, Double, Integer, Double> apply(Double d) {
             return Tuple.of(d, d, 1, d);
         }
@@ -363,7 +365,7 @@ public class FunctionalTest {
     
     @Test
     public void testForeach_apply() {
-        foreach(new Apply<Integer, Void>() {
+        foreach(new java.util.function.Function<Integer, Void>() {
             public Void apply(Integer t) {
                 return null;
             }
@@ -372,7 +374,7 @@ public class FunctionalTest {
     
     @Test
     public void testForeach_applyVoid() {
-        foreach(new ApplyVoid<Integer>() {
+        foreach(new Consumer<Integer>() {
             public void accept(Integer t) {
                 return;
             }
@@ -577,7 +579,7 @@ public class FunctionalTest {
     @Test
     public void testPartition() {
         Pair<Iterable<String>, Iterable<Integer>> result = Functional.partition(
-            new Apply<Integer, Either<String, Integer>>() {
+            new java.util.function.Function<Integer, Either<String, Integer>>() {
                 public Either<String, Integer> apply(Integer i) {
                     return i % 2 == 0 ? Either.<String,Integer>right(i) : Either.<String,Integer>left(String.valueOf(i));
                 }
@@ -693,7 +695,7 @@ public class FunctionalTest {
     
     @Test
     public void testFold() {
-        ApplyBi<Integer,Integer,Integer> sum = new ApplyBi<Integer,Integer,Integer>() {
+        BiFunction<Integer,Integer,Integer> sum = new BiFunction<Integer,Integer,Integer>() {
             public Integer apply(Integer a, Integer b) {
                 return a + b;
             }
@@ -705,7 +707,7 @@ public class FunctionalTest {
     
     @Test
     public void testFoldWithZero() {
-        ApplyBi<Integer,Integer,Integer> sum = new ApplyBi<Integer,Integer,Integer>() {
+        BiFunction<Integer,Integer,Integer> sum = new BiFunction<Integer,Integer,Integer>() {
             public Integer apply(Integer a, Integer b) {
                 return a + b;
             }
@@ -864,25 +866,25 @@ public class FunctionalTest {
     
     @Test
     public void testSequence() {
-        Apply<Integer,String> toString = new Apply<Integer,String>() {
+        java.util.function.Function<Integer,String> toString = new java.util.function.Function<Integer,String>() {
             public String apply(Integer i) {
                 return String.valueOf(i);
             }
         };
-        Apply<Integer,Integer> double_ = new Apply<Integer,Integer>() {
+        java.util.function.Function<Integer,Integer> double_ = new java.util.function.Function<Integer,Integer>() {
             public Integer apply(Integer i) {
                 return i * 2;
             }
         };
         
-        assertEquals(emptyList(), newList(Functional.sequence(42, Collections.<Apply<Integer,?>>emptyList())));
+        assertEquals(emptyList(), newList(Functional.sequence(42, Collections.<java.util.function.Function<Integer,?>>emptyList())));
         assertEquals(newList("5"), newList(Functional.sequence(5, newList(toString))));
         assertEquals(newList("5", 10), newList(Functional.sequence(5, newList(toString, double_))));
     }
     
     @Test
     public void testMap2() {
-        ApplyBi<Integer,String,String> combine = new ApplyBi<Integer,String,String>() {
+        BiFunction<Integer,String,String> combine = new BiFunction<Integer,String,String>() {
             public String apply(Integer i, String s) {
                 return s + i;
             }

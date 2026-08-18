@@ -34,6 +34,10 @@ import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.tail;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
+import static fi.solita.utils.functional.FunctionalA.flatten;
+import static fi.solita.utils.functional.FunctionalM.filter;
+import static fi.solita.utils.functional.FunctionalM.find;
+import static fi.solita.utils.functional.FunctionalM.map;
 import static fi.solita.utils.functional.FunctionalS.intersection;
 import static fi.solita.utils.functional.FunctionalS.product;
 import static fi.solita.utils.functional.FunctionalS.sum;
@@ -43,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -56,16 +61,16 @@ public class FunctionalExamples {
     static Iterable<Integer> someIterableOrArray = newList(1, 2, 3);
     static Map<Integer,String> someMap = newMap(Pair.of(42, "foo"));
     
-    ApplyBi<Integer,String,Boolean> evenKey = (a,b) -> a % 2 == 0;
+    BiPredicate<Integer,String> evenKey = (a,b) -> a % 2 == 0;
     
-    Apply<Integer,Void> someProcedure = new Apply<Integer,Void>() {
+    java.util.function.Function<Integer,Void> someProcedure = new java.util.function.Function<Integer,Void>() {
         @Override
         public Void apply(Integer source) {
             return null;
         }
     };
     
-    Apply<Integer,List<Integer>> repeatTwice = new Apply<Integer,List<Integer>>() {
+    java.util.function.Function<Integer,List<Integer>> repeatTwice = new java.util.function.Function<Integer,List<Integer>>() {
         @Override
         public List<Integer> apply(Integer source) {
             return newList(source, source);

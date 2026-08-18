@@ -5,6 +5,7 @@ import static fi.solita.utils.functional.Function.___;
 import static fi.solita.utils.functional.FunctionalImpl.map;
 
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import org.junit.Test;
 
@@ -27,11 +28,11 @@ public class FunctionExamples {
     @SuppressWarnings("unused")
     @Test
     public void examples() {
-        // Apply<T,R> is a function from T to R
-        Apply<String,Integer> f = length;
+        // java.util.function.Function<T,R> is a function from T to R
+        java.util.function.Function<String,Integer> f = length;
         
         // Function0 ia a 0-arg function, Function1 1-arg, Function2 2-arg, etc.
-        Function0<Integer> zeroArg = Function.of(42);
+        Supplier<Integer> zeroArg = Function.of(42);
         Function1<String,Integer> oneArg = length;
         Function2<Integer, Integer, Integer> twoArg = mod;
         

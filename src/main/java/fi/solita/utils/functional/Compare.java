@@ -89,14 +89,14 @@ public abstract class Compare {
      * @return ordering for elements by transforming to an element with natural ordering.
      */
     @SuppressWarnings("unchecked")
-    public static final <T> Ordering<T> by(final Apply<? super T, ? extends Comparable<?>> f) {
+    public static final <T> Ordering<T> by(final java.util.function.Function<? super T, ? extends Comparable<?>> f) {
         return by(f, (Comparator<Object>)(Object)Ordering.Natural());
     }
     
     /**
      * @return ordering for elements by transforming to a type comparable by {@code targetComparator}.
      */
-    public static final <T,S> Ordering<S> by(final Apply<? super S, T> f, final Comparator<? super T> targetComparator) {
+    public static final <T,S> Ordering<S> by(final java.util.function.Function<? super S, T> f, final Comparator<? super T> targetComparator) {
         return new Ordering<S>() {
             public final int compare(S o1, S o2) {
                 if (o1 == null && o2 == null) {
@@ -110,14 +110,14 @@ public abstract class Compare {
     /**
      * @return ordering for elements by transforming to an optional element with natural ordering. 
      */
-    public static final <S, T extends Comparable<? super T>> Ordering<S> byOptional(final Apply<? super S, Optional<T>> f) {
+    public static final <S, T extends Comparable<? super T>> Ordering<S> byOptional(final java.util.function.Function<? super S, Optional<T>> f) {
         return byOptional(f, Ordering.Natural());
     }
     
     /**
      * @return ordering for elements by transforming to an optional type comparable by {@code targetComparator}.
      */
-    public static final <S, T> Ordering<S> byOptional(final Apply<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
+    public static final <S, T> Ordering<S> byOptional(final java.util.function.Function<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
         return by(f, Compare.<T>byOptional(targetComparator));
     }
     

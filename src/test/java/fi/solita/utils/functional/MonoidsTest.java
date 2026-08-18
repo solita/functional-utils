@@ -153,40 +153,40 @@ public class MonoidsTest {
 
     @Test
     public void testEndo() {
-        Monoid<Apply<String, String>> endoMonoid = Monoids.<String>endo();
+        Monoid<java.util.function.Function<String, String>> endoMonoid = Monoids.<String>endo();
         
         // Zero is identity function
-        Apply<String, String> identity = endoMonoid.zero();
+        java.util.function.Function<String, String> identity = endoMonoid.zero();
         assertEquals("test", identity.apply("test"));
         
         // Compose functions
-        Apply<String, String> toUpper = new Apply<String, String>() {
+        java.util.function.Function<String, String> toUpper = new java.util.function.Function<String, String>() {
             public String apply(String t) {
                 return t.toUpperCase();
             }
         };
-        Apply<String, String> addSuffix = new Apply<String, String>() {
+        java.util.function.Function<String, String> addSuffix = new java.util.function.Function<String, String>() {
             public String apply(String t) {
                 return t + "!";
             }
         };
         
-        Apply<String, String> composed = endoMonoid.apply(toUpper, addSuffix);
+        java.util.function.Function<String, String> composed = endoMonoid.apply(toUpper, addSuffix);
         assertEquals("HELLO!", composed.apply("hello"));
     }
 
     @Test
     public void testEndo_identityLaw() {
-        Monoid<Apply<Integer, Integer>> endoMonoid = Monoids.<Integer>endo();
+        Monoid<java.util.function.Function<Integer, Integer>> endoMonoid = Monoids.<Integer>endo();
         
-        Apply<Integer, Integer> addOne = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> addOne = new java.util.function.Function<Integer, Integer>() {
             public Integer apply(Integer t) {
                 return t + 1;
             }
         };
         
-        Apply<Integer, Integer> leftIdentity = endoMonoid.apply(addOne, endoMonoid.zero());
-        Apply<Integer, Integer> rightIdentity = endoMonoid.apply(endoMonoid.zero(), addOne);
+        java.util.function.Function<Integer, Integer> leftIdentity = endoMonoid.apply(addOne, endoMonoid.zero());
+        java.util.function.Function<Integer, Integer> rightIdentity = endoMonoid.apply(endoMonoid.zero(), addOne);
         
         assertEquals(Integer.valueOf(43), leftIdentity.apply(42));
         assertEquals(Integer.valueOf(43), rightIdentity.apply(42));

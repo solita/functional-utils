@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 import org.junit.Test;
 
@@ -469,9 +471,9 @@ public class IterablesTest {
     public void testGroupingIterableWithCustomComparator() {
         Iterable<Integer> list = newList(1, 2, 3, 6, 7, 10);
         // Group by whether difference is 1
-        Iterable<Iterable<Integer>> grouped = group(new ApplyBi<Integer, Integer, Boolean>() {
+        Iterable<Iterable<Integer>> grouped = group(new BiPredicate<Integer, Integer>() {
             @Override
-            public Boolean apply(Integer t1, Integer t2) {
+            public boolean test(Integer t1, Integer t2) {
                 return t2 - t1 == 1;
             }
         }, list);

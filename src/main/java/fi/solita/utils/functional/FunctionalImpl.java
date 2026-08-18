@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 import fi.solita.utils.functional.Iterables.FilteringIterable;
@@ -39,7 +42,7 @@ final class FunctionalImpl {
         return filter(x -> !toRemove.equals(x), xs);
     }
     
-    static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    static final <T> Optional<T> find(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return headOptional(filter(predicate, xs));
     }
     
@@ -47,32 +50,32 @@ final class FunctionalImpl {
         return map == null ? null : Optional.ofNullable(map.get(key));
     }
     
-    static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    static final <T> Iterable<T> filter(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return xs == null ? null : new FilteringIterable<T>(xs, predicate);
     }
     
-    static final <T, E> Map<T, E> filter(ApplyBi<? super T, ? super E, Boolean> predicate, Map<T, E> map) {
+    static final <T, E> Map<T, E> filter(BiPredicate<? super T, ? super E> predicate, Map<T, E> map) {
         // to preserve iteration order
-        return Collections.newLinkedMap(SemiGroups.<E>fail(), filter(e -> predicate.apply(e.getKey(), e.getValue()), map.entrySet()));
+        return Collections.newLinkedMap(SemiGroups.<E>fail(), filter(e -> predicate.test(e.getKey(), e.getValue()), map.entrySet()));
     }
     
-    static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<? extends S> xs) {
+    static final <S, T> Iterable<T> map(java.util.function.Function<? super S, ? extends T> f, Iterable<? extends S> xs) {
         return xs == null ? null : new TransformingIterable<S,T>(xs, f);
     }
     
-    static final <S, T1, T2> Iterable<Pair<T1,T2>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, Iterable<? extends S> xs) {
+    static final <S, T1, T2> Iterable<Pair<T1,T2>> map(final java.util.function.Function<? super S, ? extends T1> f1, final java.util.function.Function<? super S, ? extends T2> f2, Iterable<? extends S> xs) {
         return xs == null ? null : new TransformingIterable<S,Pair<T1,T2>>(xs, source -> Pair.of(f1.apply(source), f2.apply(source)));
     }
     
-    static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, final Apply<? super S, ? extends T3> f3, Iterable<? extends S> xs) {
+    static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(final java.util.function.Function<? super S, ? extends T1> f1, final java.util.function.Function<? super S, ? extends T2> f2, final java.util.function.Function<? super S, ? extends T3> f3, Iterable<? extends S> xs) {
         return xs == null ? null : new TransformingIterable<S,Tuple3<T1,T2,T3>>(xs, source -> Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source)));
     }
     
-    static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(final Apply<? super S, ? extends T1> f1, final Apply<? super S, ? extends T2> f2, final Apply<? super S, ? extends T3> f3, final Apply<? super S, ? extends T4> f4, Iterable<? extends S> xs) {
+    static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(final java.util.function.Function<? super S, ? extends T1> f1, final java.util.function.Function<? super S, ? extends T2> f2, final java.util.function.Function<? super S, ? extends T3> f3, final java.util.function.Function<? super S, ? extends T4> f4, Iterable<? extends S> xs) {
         return xs == null ? null : new TransformingIterable<S,Tuple4<T1,T2,T3,T4>>(xs, source -> Tuple.of(f1.apply(source), f2.apply(source), f3.apply(source), f4.apply(source)));
     }
     
-    static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, ApplyBi<? super K1, ? super V1, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
+    static final <K1, V1, K2, V2> Map<K2, V2> map(SemiGroup<V2> valueCombiner, BiFunction<? super K1, ? super V1, ? extends Map.Entry<K2,V2>> f, Map<K1, V1> map) {
         // to preserve iteration order
         Map<K2, V2> ret = newMutableLinkedMap();
         for (Map.Entry<K1, V1> k: map.entrySet()) {
@@ -84,7 +87,7 @@ final class FunctionalImpl {
         return ret;
     }
     
-    static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<? extends T>> f, Iterable<? extends S> xs) {
+    static final <S, T> Iterable<T> flatMap(java.util.function.Function<? super S, ? extends Iterable<? extends T>> f, Iterable<? extends S> xs) {
         return flatten(map(f, xs));
     }
     
@@ -92,13 +95,13 @@ final class FunctionalImpl {
         return xs == null ? null : new FlatteningIterable<T>(xs);
     }
     
-    static final <T> void foreach(Apply<? super T, Void> procedure, Iterable<? extends T> xs) {
+    static final <T> void foreach(java.util.function.Function<? super T, Void> procedure, Iterable<? extends T> xs) {
         for (T t: xs) {
             procedure.apply(t);
         }
     }
     
-    static final <T> void foreach(ApplyVoid<? super T> procedure, Iterable<? extends T> xs) {
+    static final <T> void foreach(Consumer<? super T> procedure, Iterable<? extends T> xs) {
         for (T t: xs) {
             procedure.accept(t);
         }
@@ -132,26 +135,18 @@ final class FunctionalImpl {
         return target;
     }
     
-    @SuppressWarnings("unchecked")
     static final <T> Iterable<Iterable<T>> group(Iterable<? extends T> xs) {
-        return group((ApplyBi<T,T,Boolean>)(Object)tuple2elementsEqual, xs);
+        return group((a,b) -> a.equals(b), xs);
     }
     
-    private static final ApplyBi<Object,Object,Boolean> tuple2elementsEqual = new ApplyBi<Object,Object,Boolean>() {
-        @Override
-        public Boolean apply(Object candidate1, Object candidate2) {
-            return candidate1.equals(candidate2);
-        }
-    };
-    
-    static final <T> Iterable<Iterable<T>> group(ApplyBi<? super T, ? super T, Boolean> comparator, Iterable<? extends T> xs) {
+    static final <T> Iterable<Iterable<T>> group(BiPredicate<? super T, ? super T> comparator, Iterable<? extends T> xs) {
         return xs == null ? null : new Iterables.GroupingIterable<T>(xs, comparator);
     }
     
     /**
      * Non-lazy
      */
-    static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,? extends G> f, Iterable<? extends T> xs) {
+    static final <G, T> Map<G, List<T>> groupBy(java.util.function.Function<? super T,? extends G> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -234,7 +229,7 @@ final class FunctionalImpl {
         return xs == null ? null : new Iterables.DroppingIterable<T>(xs, amount);
     }
     
-    static final <T> Iterable<T> takeWhile(final Apply<? super T, Boolean> predicate, final Iterable<? extends T> xs) {
+    static final <T> Iterable<T> takeWhile(final java.util.function.Predicate<? super T> predicate, final Iterable<? extends T> xs) {
         return xs == null ? null : new Iterable<T>() {
             public final Iterator<T> iterator() {
                 return new Iterator<T>() {
@@ -253,7 +248,7 @@ final class FunctionalImpl {
                             next = Optional.empty();
                         } else {
                             T n = source.next();
-                            if (predicate.apply(n)) {
+                            if (predicate.test(n)) {
                                 next = Optional.of(n);
                             } else {
                                 next = Optional.empty();
@@ -278,7 +273,7 @@ final class FunctionalImpl {
         };
     }
     
-    static final <T> Iterable<T> dropWhile(final Apply<? super T, Boolean> predicate, final Iterable<? extends T> xs) {
+    static final <T> Iterable<T> dropWhile(final java.util.function.Predicate<? super T> predicate, final Iterable<? extends T> xs) {
         return xs == null ? null : new Iterable<T>() {
             public final Iterator<T> iterator() {
                 return new Iterator<T>() {
@@ -295,7 +290,7 @@ final class FunctionalImpl {
 
                     private final void readNext() {
                         next = source.hasNext() ? Optional.of(source.next()) : Optional.empty();
-                        while (dropping && next.isPresent() && predicate.apply(next.get())) {
+                        while (dropping && next.isPresent() && predicate.test(next.get())) {
                             next = source.hasNext() ? Optional.of(source.next()) : Optional.empty();
                         }
                         dropping = false;
@@ -318,12 +313,12 @@ final class FunctionalImpl {
         };
     }
     
-    static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    static final <T> Pair<Iterable<T>, Iterable<T>> span(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         // TODO: a more efficient implementation
         return xs == null ? null : Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
-    static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, Iterable<? extends T> xs) {
+    static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(java.util.function.Function<? super T, Either<L,R>> f, Iterable<? extends T> xs) {
         // TODO: a more efficient implementation
         Iterable<Either<L, R>> ys = map(f, xs);
         return xs == null ? null : Pair.of(map(x -> x.left.get(), filter(Either::isLeft, ys)), map(x -> x.right.get(), filter(Either::isRight, ys)));
@@ -363,12 +358,12 @@ final class FunctionalImpl {
         return s;
     }
     
-    static final <T> boolean exists(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    static final <T> boolean exists(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return !isEmpty(filter(predicate, xs));
     }
     
-    static final <T> boolean forall(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
-        return !exists(x -> !predicate.apply(x), xs);
+    static final <T> boolean forall(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
+        return !exists(x -> !predicate.test(x), xs);
     }
     
     static final <T extends Comparable<? super T>> Iterable<T> sort(Iterable<? extends T> xs) {
@@ -400,7 +395,7 @@ final class FunctionalImpl {
         return fold(monoid, xs).orElse(monoid.zero());
     }
     
-    static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
+    static final <T,Z> Z fold(Z zero, BiFunction<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -414,7 +409,7 @@ final class FunctionalImpl {
     /**
      * @return <i>Optional.empty</i> if <i>elements</i> is empty
      */
-    static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
+    static final <T> Optional<T> fold(BiFunction<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         if (xs == null) {
             return null;
         }
@@ -453,7 +448,7 @@ final class FunctionalImpl {
     }
     
     @SuppressWarnings("rawtypes")
-    private static final ApplyBi<Comparable,Comparable,Comparable> smaller = new Function2<Comparable, Comparable, Comparable>() {
+    private static final BiFunction<Comparable,Comparable,Comparable> smaller = new BiFunction<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public Comparable apply(Comparable t1, Comparable t2) {
@@ -462,7 +457,7 @@ final class FunctionalImpl {
     };
     
     @SuppressWarnings("rawtypes")
-    private static final ApplyBi<Comparable,Comparable,Comparable> bigger = new Function2<Comparable, Comparable, Comparable>() {
+    private static final BiFunction<Comparable,Comparable,Comparable> bigger = new BiFunction<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public Comparable apply(Comparable t1, Comparable t2) {
@@ -479,7 +474,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return Optional.empty();
         }
-        return fold((ApplyBi<? super T,? super T,? extends T>)(Object)smaller, xs);
+        return fold((BiFunction<? super T,? super T,? extends T>)(Object)smaller, xs);
     }
     
     @SuppressWarnings("unchecked")
@@ -491,7 +486,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return Optional.empty();
         }
-        return fold((ApplyBi<? super T,? super T,? extends T>)(Object)bigger, xs);
+        return fold((BiFunction<? super T,? super T,? extends T>)(Object)bigger, xs);
     }
     
     static final <T> Optional<T> minBy(final Comparator<? super T> comparator, Iterable<? extends T> xs) {
@@ -502,7 +497,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return Optional.empty();
         }
-        return fold(new Function2<T, T, T>() {
+        return fold(new BiFunction<T, T, T>() {
             @Override
             public T apply(T t1, T t2) {
                 return comparator.compare(t1, t2) > 0 ? t2 : t1;
@@ -518,7 +513,7 @@ final class FunctionalImpl {
         if (isEmpty(xs)) {
             return Optional.empty();
         }
-        return fold(new Function2<T, T, T>() {
+        return fold(new BiFunction<T, T, T>() {
              @Override
             public T apply(T t1, T t2) {
                 return comparator.compare(t1, t2) < 0 ? t2 : t1;
@@ -538,26 +533,26 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <A,B,C> Iterable<Tuple3<A, B, C>> zip(Iterable<? extends A> a, Iterable<? extends B> b, Iterable<? extends C> c) {
-        return map((Apply<Pair<Pair<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer, zip(zip(a, b), c));
+        return map((java.util.function.Function<Pair<Pair<A, B>, C>, Tuple3<A, B, C>>)(Object)zip3Transformer, zip(zip(a, b), c));
     }
     
     @SuppressWarnings("unchecked")
     static final <A,B,C,D> Iterable<Tuple4<A, B, C, D>> zip(Iterable<? extends A> a, Iterable<? extends B> b, Iterable<? extends C> c, Iterable<? extends D> d) {
-        return map((Apply<Pair<Pair<A, B>, Pair<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
+        return map((java.util.function.Function<Pair<Pair<A, B>, Pair<C,D>>, Tuple4<A, B, C, D>>)(Object)zip4Transformer, zip(zip(a, b), zip(c,d)));
     }
     
     static final <A> Iterable<Pair<Integer, A>> zipWithIndex(Iterable<? extends A> xs) {
         return new ZippingIterable<Integer, A>(range(Enumerables.ints, 0), xs);
     }
     
-    private static final Apply<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new Apply<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
+    private static final java.util.function.Function<Tuple2<Tuple2<Object,Object>,Object>,Tuple3<Object,Object,Object>> zip3Transformer = new java.util.function.Function<Tuple2<Tuple2<Object, Object>, Object>, Tuple3<Object, Object, Object>>() {
         @Override
         public final Tuple3<Object, Object, Object> apply(Tuple2<Tuple2<Object, Object>, Object> source) {
             return source._1.append(source._2);
         }
     };
     
-    private static final Apply<Tuple2<Tuple2<Object,Object>,Tuple2<Object,Object>>,Tuple4<Object,Object,Object,Object>> zip4Transformer = new Apply<Tuple2<Tuple2<Object, Object>, Tuple2<Object,Object>>, Tuple4<Object, Object, Object, Object>>() {
+    private static final java.util.function.Function<Tuple2<Tuple2<Object,Object>,Tuple2<Object,Object>>,Tuple4<Object,Object,Object,Object>> zip4Transformer = new java.util.function.Function<Tuple2<Tuple2<Object, Object>, Tuple2<Object,Object>>, Tuple4<Object, Object, Object, Object>>() {
         @Override
         public final Tuple4<Object, Object, Object, Object> apply(Tuple2<Tuple2<Object, Object>, Tuple2<Object, Object>> source) {
             return source._1.join(source._2);
@@ -590,8 +585,8 @@ final class FunctionalImpl {
     
     @SuppressWarnings("unchecked")
     static final <T> Iterable<List<T>> rangify(final Enumerable<T> enumeration, Iterable<? extends T> xs) {
-        Iterable<Iterable<T>> ret = FunctionalImpl.group(new ApplyBi<T,T,Boolean>() {
-            public Boolean apply(T candidate1, T candidate2) {
+        Iterable<Iterable<T>> ret = FunctionalImpl.group(new BiPredicate<T,T>() {
+            public boolean test(T candidate1, T candidate2) {
                 Optional<T> succ = enumeration.succ(candidate1);
                 return succ.isPresent() && succ.get().equals(candidate2);
             };
@@ -599,7 +594,7 @@ final class FunctionalImpl {
         return (Iterable<List<T>>)(Object)map(minAndMax, ret);
     }
     
-    static final Apply<Iterable<?>, List<?>> minAndMax = new Apply<Iterable<?>,List<?>>() {
+    static final java.util.function.Function<Iterable<?>, List<?>> minAndMax = new java.util.function.Function<Iterable<?>,List<?>>() {
         public List<?> apply(Iterable<?> source) {
             List<?> ts = newList(source);
             return ts.size() == 1 ? ts : newList(head(ts), last(ts));
@@ -642,12 +637,12 @@ final class FunctionalImpl {
         return xs == null ? null : new Iterables.DistinctIterable<T>(xs);
     }
     
-    static final <T,R> Iterable<R> sequence(final T value, Iterable<? extends Apply<? super T,? extends R>> fs) {
+    static final <T,R> Iterable<R> sequence(final T value, Iterable<? extends java.util.function.Function<? super T,? extends R>> fs) {
         return map(source -> source.apply(value), fs);
     }
     
-    static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Iterable<? extends Apply<? super P,? extends Apply<T,T>>> fs) {
-        return new Function2<P, T, T>() {
+    static final <P,T,R> BiFunction<P,T,T> combineEndo(final Iterable<? extends java.util.function.Function<? super P,? extends java.util.function.Function<T,T>>> fs) {
+        return new BiFunction<P, T, T>() {
             @Override
             public T apply(P p, T t) {
                 return FunctionalImpl.reduce(Monoids.<T>endo(), FunctionalImpl.sequence(p, fs)).apply(t);

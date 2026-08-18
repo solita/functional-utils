@@ -9,12 +9,11 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import org.junit.Test;
 
-import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.ApplyZero;
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple1;
@@ -36,16 +35,16 @@ public class BuilderTest {
     }
     
     static class Person_ {
-        static final Apply<Person, String> name = new Apply<Person, String>() {
+        static final java.util.function.Function<Person, String> name = new java.util.function.Function<Person, String>() {
             public String apply(Person p) { return p.name; }
         };
-        static final Apply<Person, Integer> age = new Apply<Person, Integer>() {
+        static final java.util.function.Function<Person, Integer> age = new java.util.function.Function<Person, Integer>() {
             public Integer apply(Person p) { return p.age; }
         };
-        static final Tuple2<Apply<Person, String>, Apply<Person, Integer>> $Fields() {
+        static final Tuple2<java.util.function.Function<Person, String>, java.util.function.Function<Person, Integer>> $Fields() {
             return Tuple.of(name, age);
         }
-        static final Function2<String, Integer, Person> $ = new Function2<String, Integer, Person>() {
+        static final BiFunction<String, Integer, Person> $ = new BiFunction<String, Integer, Person>() {
             public Person apply(String name, Integer age) {
                 return new Person(name, age);
             }
@@ -65,10 +64,10 @@ public class BuilderTest {
     }
     
     static class Employee_ {
-        static final Apply<Employee, String> name = new Apply<Employee, String>() {
+        static final java.util.function.Function<Employee, String> name = new java.util.function.Function<Employee, String>() {
             public String apply(Employee e) { return e.name; }
         };
-        static final Apply<Employee, Optional<Integer>> salary = new Apply<Employee, Optional<Integer>>() {
+        static final java.util.function.Function<Employee, Optional<Integer>> salary = new java.util.function.Function<Employee, Optional<Integer>>() {
             public Optional<Integer> apply(Employee e) { return e.salary; }
             @SuppressWarnings("unused")
             public java.lang.reflect.Member getMember() {
@@ -79,10 +78,10 @@ public class BuilderTest {
                 }
             }
         };
-        static final Apply<Employee, String> department = new Apply<Employee, String>() {
+        static final java.util.function.Function<Employee, String> department = new java.util.function.Function<Employee, String>() {
             public String apply(Employee e) { return e.department; }
         };
-        static final Tuple3<Apply<Employee, String>, Apply<Employee, Optional<Integer>>, Apply<Employee, String>> $Fields() {
+        static final Tuple3<java.util.function.Function<Employee, String>, java.util.function.Function<Employee, Optional<Integer>>, java.util.function.Function<Employee, String>> $Fields() {
             return Tuple.of(name, salary, department);
         }
         static final Function3<String, Optional<Integer>, String, Employee> $ = new Function3<String, Optional<Integer>, String, Employee>() {
@@ -98,13 +97,13 @@ public class BuilderTest {
     }
     
     static class Simple_ {
-        static final Apply<Simple, String> value = new Apply<Simple, String>() {
+        static final java.util.function.Function<Simple, String> value = new java.util.function.Function<Simple, String>() {
             public String apply(Simple s) { return s.value; }
         };
-        static final Tuple1<Apply<Simple, String>> $Fields() {
+        static final Tuple1<java.util.function.Function<Simple, String>> $Fields() {
             return Tuple.of(value);
         }
-        static final Apply<String, Simple> $ = new Apply<String, Simple>() {
+        static final java.util.function.Function<String, Simple> $ = new java.util.function.Function<String, Simple>() {
             public Simple apply(String value) {
                 return new Simple(value);
             }
@@ -154,7 +153,7 @@ public class BuilderTest {
     
     @Test
     public void testBuilder_Tuple0_NoArgs() {
-        Builder<NoArgs> builder = Builder.of(Tuple.of(), new ApplyZero<NoArgs>() {
+        Builder<NoArgs> builder = Builder.of(Tuple.of(), new Supplier<NoArgs>() {
             public NoArgs get() { return new NoArgs(); }
         });
         
@@ -244,7 +243,7 @@ public class BuilderTest {
     public void testBuilder_GetMembers() {
         Builder<Person> builder = Builder.of(Person_.$Fields(), Person_.$);
         
-        Collection<? extends Apply<? super Person, ? extends Object>> members = builder.getMembers();
+        Collection<? extends java.util.function.Function<? super Person, ? extends Object>> members = builder.getMembers();
         
         assertEquals(2, members.size());
         assertTrue(members.contains(Person_.name));
@@ -278,7 +277,7 @@ public class BuilderTest {
     public void testBuilder_WithInvalidMember_ThrowsException() {
         Builder<Person> builder = Builder.of(Person_.$Fields(), Person_.$);
         
-        Apply<Person, String> unknownMember = new Apply<Person, String>() {
+        java.util.function.Function<Person, String> unknownMember = new java.util.function.Function<Person, String>() {
             public String apply(Person p) { return "unknown"; }
         };
         
@@ -289,7 +288,7 @@ public class BuilderTest {
     public void testBuilder_WithoutInvalidMember_ThrowsException() {
         Builder<Employee> builder = Builder.of(Employee_.$Fields(), Employee_.$);
         
-        Apply<Employee, Optional<?>> unknownMember = new Apply<Employee, Optional<?>>() {
+        java.util.function.Function<Employee, Optional<?>> unknownMember = new java.util.function.Function<Employee, Optional<?>>() {
             public Optional<?> apply(Employee e) { return Optional.empty(); }
         };
         

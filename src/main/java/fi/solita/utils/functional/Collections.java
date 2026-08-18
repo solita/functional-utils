@@ -27,6 +27,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 import fi.solita.utils.functional.Iterables.ForceableIterable;
 
@@ -1238,9 +1239,9 @@ public abstract class Collections {
     /**
      * @return some implementation of a Map containing {@code elements} as keys and values acquired with {@code fValue}.
      */
-    public static final <T, V> Map<T, V> newMap(Apply<? super T,? extends V> fValue, Set<T> xs) {
+    public static final <T, V> Map<T, V> newMap(java.util.function.Function<? super T,? extends V> fValue, Set<T> xs) {
         // cannot be duplicate keys, since xs is a Set
-        return newMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, xs));
+        return newMap(SemiGroups.<V>fail(), Functional.map(java.util.function.Function.<T>identity(), fValue, xs));
     }
     
     /**
@@ -1326,17 +1327,17 @@ public abstract class Collections {
     /**
      * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}.
      */
-    public static final <T extends Comparable<? super T>, V> SortedMap<T, V> newSortedMap(Apply<? super T,? extends V> fValue, Set<T> elements) {
+    public static final <T extends Comparable<? super T>, V> SortedMap<T, V> newSortedMap(java.util.function.Function<? super T,? extends V> fValue, Set<T> elements) {
         // cannot be duplicate keys, since xs is a Set
-        return newSortedMap(SemiGroups.<V>fail(), Functional.map(Function.<T>id(), fValue, elements));
+        return newSortedMap(SemiGroups.<V>fail(), Functional.map(java.util.function.Function.<T>identity(), fValue, elements));
     }
     
     /**
      * @return some implementation of a SortedMap containing {@code elements} as keys and values acquired with {@code fValue}, using {@code comparator} for ordering.
      */
-    public static final <T, V> SortedMap<T, V> newSortedMap(Comparator<? super T> comparator, Apply<? super T,? extends V> fValue, Set<T> elements) {
+    public static final <T, V> SortedMap<T, V> newSortedMap(Comparator<? super T> comparator, java.util.function.Function<? super T,? extends V> fValue, Set<T> elements) {
         // cannot be duplicate keys, since xs is a Set
-        return newSortedMap(SemiGroups.<V>fail(), comparator, Functional.map(Function.<T>id(), fValue, elements));
+        return newSortedMap(SemiGroups.<V>fail(), comparator, Functional.map(java.util.function.Function.<T>identity(), fValue, elements));
     }
     
     /**
@@ -2104,7 +2105,7 @@ public abstract class Collections {
     /**
      * @return a lazy iterable for an iterable produced by {@code producer}.
      */
-    public static final <T> Iterable<T> lazily(final ApplyZero<Iterable<T>> producer) {
+    public static final <T> Iterable<T> lazily(final Supplier<Iterable<T>> producer) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return producer.get().iterator();

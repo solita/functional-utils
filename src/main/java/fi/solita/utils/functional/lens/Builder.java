@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
-import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Apply10;
 import fi.solita.utils.functional.Apply11;
 import fi.solita.utils.functional.Apply12;
@@ -66,8 +67,6 @@ import fi.solita.utils.functional.Apply6;
 import fi.solita.utils.functional.Apply7;
 import fi.solita.utils.functional.Apply8;
 import fi.solita.utils.functional.Apply9;
-import fi.solita.utils.functional.ApplyBi;
-import fi.solita.utils.functional.ApplyZero;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Predicate;
@@ -146,37 +145,37 @@ public final class Builder<T> {
     }
 
     public static final class IncompleteException extends RuntimeException {
-        public IncompleteException(Apply<?, ?> member) {
+        public IncompleteException(java.util.function.Function<?, ?> member) {
             super("Missing value for member " + member);
         }
     }
 
-    private final LinkedHashSet<? extends Apply<? super T,? extends Object>> members;
-    private final List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> values;
-    private final Apply<Object[], T> constructor;
+    private final LinkedHashSet<? extends java.util.function.Function<? super T,? extends Object>> members;
+    private final List<Pair<? extends java.util.function.Function<? super T, ? extends Object>, ? extends Object>> values;
+    private final java.util.function.Function<Object[], T> constructor;
     private Type resultTypeCache;
 
     @SuppressWarnings("unchecked")
-    private Builder(Iterable<Pair<? extends Apply<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends Apply<? super T, ? extends Object>> members, Apply<? extends Object[], T> constructor) {
+    private Builder(Iterable<Pair<? extends java.util.function.Function<? super T,? extends Object>,? extends Object>> values, LinkedHashSet<? extends java.util.function.Function<? super T, ? extends Object>> members, java.util.function.Function<? extends Object[], T> constructor) {
         this.members = members;
         this.values = newList(values);
-        this.constructor = (Apply<Object[], T>) constructor;
+        this.constructor = (java.util.function.Function<Object[], T>) constructor;
     }
     
     @SuppressWarnings("unchecked")
-    private static <T> Builder<T> newBuilder(Collection<? extends Apply<? super T, ? extends Object>> members, Apply<?, T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(members), (Apply<? extends Object[], T>) constructor);
+    private static <T> Builder<T> newBuilder(Collection<? extends java.util.function.Function<? super T, ? extends Object>> members, java.util.function.Function<?, T> constructor) {
+        return new Builder<T>(Collections.<Pair<? extends java.util.function.Function<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<java.util.function.Function<? super T, ? extends Object>>(members), (java.util.function.Function<? extends Object[], T>) constructor);
     }
     
-    private static <T> Builder<T> newBuilder(final ApplyZero<T> constructor) {
-        return new Builder<T>(Collections.<Pair<? extends Apply<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<Apply<? super T, ? extends Object>>(), new Apply<Object[], T>() {
+    private static <T> Builder<T> newBuilder(final Supplier<T> constructor) {
+        return new Builder<T>(Collections.<Pair<? extends java.util.function.Function<? super T, ? extends Object>,? extends Object>>emptyList(), new LinkedHashSet<java.util.function.Function<? super T, ? extends Object>>(), new java.util.function.Function<Object[], T>() {
             public T apply(Object[] t) {
                 return constructor.get();
             }
         });
     }
     
-    public Collection<? extends Apply<? super T, ? extends Object>> getMembers() {
+    public Collection<? extends java.util.function.Function<? super T, ? extends Object>> getMembers() {
         return members;
     }
     
@@ -195,14 +194,14 @@ public final class Builder<T> {
      */
     @SuppressWarnings("unchecked")
     public final Builder<T> init(final T t) {
-        List<Pair<? extends Apply<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(source -> (Pair<Apply<? super T,? extends Object>,Object>)(Object)Pair.of(source, source.apply(t)), members));
+        List<Pair<? extends java.util.function.Function<? super T, ? extends Object>, ? extends Object>> newValues = newList(map(source -> (Pair<java.util.function.Function<? super T,? extends Object>,Object>)(Object)Pair.of(source, source.apply(t)), members));
         return new Builder<T>(newValues, members, constructor);
     }
 
     /**
      * @return a copy of this builder with {@code member} initialized to value {@code newValue}.
      */
-    public final <F1> Builder<T> with(Apply<? super T,? super F1> member, F1 newValue) {
+    public final <F1> Builder<T> with(java.util.function.Function<? super T,? super F1> member, F1 newValue) {
         checkMember(member);
         return new Builder<T>(cons(Pair.of(member, newValue), values), members, constructor);
     }
@@ -210,12 +209,12 @@ public final class Builder<T> {
     /**
      * @return a copy of this builder with value for {@code member} removed.
      */
-    public final Builder<T> without(Apply<T,? extends Optional<?>> member) {
+    public final Builder<T> without(java.util.function.Function<T,? extends Optional<?>> member) {
         checkMember(member);
         return new Builder<T>(cons(Pair.of(member, Optional.empty()), values), members, constructor);
     }
 
-    private void checkMember(Apply<? super T, ?> member) {
+    private void checkMember(java.util.function.Function<? super T, ?> member) {
         if (!members.contains(member)) {
             throw new IllegalArgumentException(member.toString());
         }
@@ -224,7 +223,7 @@ public final class Builder<T> {
     /**
      * @return a lens from this builder and {@code getter}.
      */
-    public final <U> Lens<T,U> toLens(Apply<? super T, U> getter) {
+    public final <U> Lens<T,U> toLens(java.util.function.Function<? super T, U> getter) {
         return Lens.of(getter, this);
     }
 
@@ -242,7 +241,7 @@ public final class Builder<T> {
     @SuppressWarnings("unchecked")
     private final T build(final boolean allowIncomplete) throws IncompleteException {
         T ret = constructor.apply(newArray(Object.class, map(member -> {
-            for (Pair<? extends Apply<? super T, ? extends Object>, ? extends Object> o: values) {
+            for (Pair<? extends java.util.function.Function<? super T, ? extends Object>, ? extends Object> o: values) {
                 if (o._1.equals(member)) {
                     return o._2;
                 }
@@ -291,12 +290,12 @@ public final class Builder<T> {
         }
     }
     
-    public static <T> Builder<T> of(final Class<T> beanClass, final Apply<PropertyDescriptor,Apply<T, ?>> memberProvider) {
+    public static <T> Builder<T> of(final Class<T> beanClass, final java.util.function.Function<PropertyDescriptor,java.util.function.Function<T, ?>> memberProvider) {
         final List<PropertyDescriptor> descriptors = readableWritableBeanDescriptors(beanClass);
         
-        List<? extends Apply<? super T, ?>> members = newList(map(memberProvider, descriptors));
+        List<? extends java.util.function.Function<? super T, ?>> members = newList(map(memberProvider, descriptors));
         
-        return newBuilder(members, new Apply<Object[], T>() {
+        return newBuilder(members, new java.util.function.Function<Object[], T>() {
             @Override
             public T apply(Object[] t) {
                 T ret;
@@ -332,8 +331,8 @@ public final class Builder<T> {
     }
     
     @SuppressWarnings("unchecked")
-    public static <K,V> Builder<Map<K,V>> ofMap(final Set<K> keys, List<? extends Apply<Map<K,V>, ? extends Object>> members) {
-        Apply<?, Map<K,V>> constructor = new Apply<Object[], Map<K,V>>() {
+    public static <K,V> Builder<Map<K,V>> ofMap(final Set<K> keys, List<? extends java.util.function.Function<Map<K,V>, ? extends Object>> members) {
+        java.util.function.Function<?, Map<K,V>> constructor = new java.util.function.Function<Object[], Map<K,V>>() {
             @Override
             public Map<K, V> apply(Object[] t) {
                 Map<K, V> ret = newMutableLinkedMap();
@@ -343,16 +342,16 @@ public final class Builder<T> {
                 return ret;
             }
         };
-        Builder<Map<K, V>> ret = new Builder<Map<K,V>>(Collections.<Pair<? extends Apply<? super Map<K,V>, ?>,? extends Object>>emptyList(),
-                                     new LinkedHashSet<Apply<? super Map<K,V>, ?>>(members),
-                                     (Apply<? extends Object[], Map<K,V>>) constructor);
+        Builder<Map<K, V>> ret = new Builder<Map<K,V>>(Collections.<Pair<? extends java.util.function.Function<? super Map<K,V>, ?>,? extends Object>>emptyList(),
+                                     new LinkedHashSet<java.util.function.Function<? super Map<K,V>, ?>>(members),
+                                     (java.util.function.Function<? extends Object[], Map<K,V>>) constructor);
         ret.resultTypeCache = new MapType<K>(keys);
         return ret;
     }
     
     @SuppressWarnings("unchecked")
-    public static <T,TUP extends Tuple> Builder<T> ofUnsafe(TUP members, final Apply<TUP, T> constructor) {
-        return newBuilder((List<? extends Apply<? super T, ?>>)(Object)newList(members.toArray()), new Apply<Object[], T>() {
+    public static <T,TUP extends Tuple> Builder<T> ofUnsafe(TUP members, final java.util.function.Function<TUP, T> constructor) {
+        return newBuilder((List<? extends java.util.function.Function<? super T, ?>>)(Object)newList(members.toArray()), new java.util.function.Function<Object[], T>() {
             @Override
             public T apply(Object[] t) {
                 return constructor.apply((TUP)Tuple.of(t));
@@ -360,12 +359,12 @@ public final class Builder<T> {
         });
     }
     
-    public static <T> Builder<T> of(Tuple0 members, ApplyZero<T> constructor) {
+    public static <T> Builder<T> of(Tuple0 members, Supplier<T> constructor) {
         return newBuilder(constructor);
     }
     
-    public static <T,F1> Builder<T> of(Tuple1<? extends Apply<? super T,F1>> members, final Apply<? super F1,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+    public static <T,F1> Builder<T> of(Tuple1<? extends java.util.function.Function<? super T,F1>> members, final java.util.function.Function<? super F1,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0]);
@@ -373,9 +372,9 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2> Builder<T> of(
-            Tuple2<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>> members, final ApplyBi<? super F1,? super F2,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple2<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>> members, final BiFunction<? super F1,? super F2,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1]);
@@ -383,10 +382,10 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3> Builder<T> of(
-            Tuple3<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>> members, final Apply3<? super F1,? super F2,? super F3,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple3<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>> members, final Apply3<? super F1,? super F2,? super F3,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2]);
@@ -394,11 +393,11 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4> Builder<T> of(
-            Tuple4<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>> members, final Apply4<? super F1,? super F2,? super F3,? super F4,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple4<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>> members, final Apply4<? super F1,? super F2,? super F3,? super F4,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3]);
@@ -406,12 +405,12 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5> Builder<T> of(
-            Tuple5<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>> members, final Apply5<? super F1,? super F2,? super F3,? super F4,? super F5,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple5<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>,
+                   ? extends java.util.function.Function<? super T,F5>> members, final Apply5<? super F1,? super F2,? super F3,? super F4,? super F5,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4]);
@@ -419,13 +418,13 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6> Builder<T> of(
-            Tuple6<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>> members, final Apply6<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple6<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>,
+                   ? extends java.util.function.Function<? super T,F5>,
+                   ? extends java.util.function.Function<? super T,F6>> members, final Apply6<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5]);
@@ -433,14 +432,14 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7> Builder<T> of(
-            Tuple7<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>,
-                   ? extends Apply<? super T,F7>> members, final Apply7<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple7<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>,
+                   ? extends java.util.function.Function<? super T,F5>,
+                   ? extends java.util.function.Function<? super T,F6>,
+                   ? extends java.util.function.Function<? super T,F7>> members, final Apply7<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6]);
@@ -448,15 +447,15 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8> Builder<T> of(
-            Tuple8<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>,
-                   ? extends Apply<? super T,F7>,
-                   ? extends Apply<? super T,F8>> members, final Apply8<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple8<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>,
+                   ? extends java.util.function.Function<? super T,F5>,
+                   ? extends java.util.function.Function<? super T,F6>,
+                   ? extends java.util.function.Function<? super T,F7>,
+                   ? extends java.util.function.Function<? super T,F8>> members, final Apply8<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7]);
@@ -464,16 +463,16 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9> Builder<T> of(
-            Tuple9<? extends Apply<? super T,F1>,
-                   ? extends Apply<? super T,F2>,
-                   ? extends Apply<? super T,F3>,
-                   ? extends Apply<? super T,F4>,
-                   ? extends Apply<? super T,F5>,
-                   ? extends Apply<? super T,F6>,
-                   ? extends Apply<? super T,F7>,
-                   ? extends Apply<? super T,F8>,
-                   ? extends Apply<? super T,F9>> members, final Apply9<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple9<? extends java.util.function.Function<? super T,F1>,
+                   ? extends java.util.function.Function<? super T,F2>,
+                   ? extends java.util.function.Function<? super T,F3>,
+                   ? extends java.util.function.Function<? super T,F4>,
+                   ? extends java.util.function.Function<? super T,F5>,
+                   ? extends java.util.function.Function<? super T,F6>,
+                   ? extends java.util.function.Function<? super T,F7>,
+                   ? extends java.util.function.Function<? super T,F8>,
+                   ? extends java.util.function.Function<? super T,F9>> members, final Apply9<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8]);
@@ -481,17 +480,17 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10> Builder<T> of(
-            Tuple10<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>> members, final Apply10<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple10<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>> members, final Apply10<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9]);
@@ -499,18 +498,18 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11> Builder<T> of(
-            Tuple11<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>> members, final Apply11<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple11<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>> members, final Apply11<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10]);
@@ -518,19 +517,19 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12> Builder<T> of(
-            Tuple12<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>> members, final Apply12<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple12<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>> members, final Apply12<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11]);
@@ -538,20 +537,20 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13> Builder<T> of(
-            Tuple13<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>> members, final Apply13<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple13<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>> members, final Apply13<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12]);
@@ -559,21 +558,21 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14> Builder<T> of(
-            Tuple14<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>> members, final Apply14<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple14<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>> members, final Apply14<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13]);
@@ -581,22 +580,22 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15> Builder<T> of(
-            Tuple15<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>> members, final Apply15<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple15<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>> members, final Apply15<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14]);
@@ -604,23 +603,23 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16> Builder<T> of(
-            Tuple16<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>> members, final Apply16<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple16<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>> members, final Apply16<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15]);
@@ -628,24 +627,24 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17> Builder<T> of(
-            Tuple17<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>> members, final Apply17<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple17<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>> members, final Apply17<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16]);
@@ -653,25 +652,25 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18> Builder<T> of(
-            Tuple18<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>> members, final Apply18<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple18<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>> members, final Apply18<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17]);
@@ -679,26 +678,26 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19> Builder<T> of(
-            Tuple19<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>> members, final Apply19<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple19<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>> members, final Apply19<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18]);
@@ -706,27 +705,27 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20> Builder<T> of(
-            Tuple20<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>> members, final Apply20<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple20<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>> members, final Apply20<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19]);
@@ -734,28 +733,28 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21> Builder<T> of(
-            Tuple21<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>> members, final Apply21<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple21<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>> members, final Apply21<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20]);
@@ -763,29 +762,29 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22> Builder<T> of(
-            Tuple22<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>> members, final Apply22<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple22<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>> members, final Apply22<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21]);
@@ -793,30 +792,30 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23> Builder<T> of(
-            Tuple23<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>> members, final Apply23<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple23<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>> members, final Apply23<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22]);
@@ -824,31 +823,31 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24> Builder<T> of(
-            Tuple24<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>> members, final Apply24<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple24<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>> members, final Apply24<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23]);
@@ -856,32 +855,32 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25> Builder<T> of(
-            Tuple25<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>> members, final Apply25<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple25<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>> members, final Apply25<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24]);
@@ -889,33 +888,33 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26> Builder<T> of(
-            Tuple26<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>> members, final Apply26<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple26<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>> members, final Apply26<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25]);
@@ -923,34 +922,34 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27> Builder<T> of(
-            Tuple27<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>> members, final Apply27<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple27<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>> members, final Apply27<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26]);
@@ -958,35 +957,35 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28> Builder<T> of(
-            Tuple28<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>> members, final Apply28<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple28<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>> members, final Apply28<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27]);
@@ -994,36 +993,36 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29> Builder<T> of(
-            Tuple29<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>> members, final Apply29<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple29<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>> members, final Apply29<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28]);
@@ -1031,37 +1030,37 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30> Builder<T> of(
-            Tuple30<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>> members, final Apply30<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple30<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>> members, final Apply30<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29]);
@@ -1069,38 +1068,38 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31> Builder<T> of(
-            Tuple31<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>> members, final Apply31<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple31<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>> members, final Apply31<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30]);
@@ -1108,39 +1107,39 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32> Builder<T> of(
-            Tuple32<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>> members, final Apply32<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple32<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>> members, final Apply32<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31]);
@@ -1148,40 +1147,40 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33> Builder<T> of(
-            Tuple33<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>> members, final Apply33<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple33<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>> members, final Apply33<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32]);
@@ -1189,41 +1188,41 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34> Builder<T> of(
-            Tuple34<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>> members, final Apply34<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple34<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>> members, final Apply34<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33]);
@@ -1231,42 +1230,42 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35> Builder<T> of(
-            Tuple35<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>> members, final Apply35<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple35<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>> members, final Apply35<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34]);
@@ -1274,43 +1273,43 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36> Builder<T> of(
-            Tuple36<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>> members, final Apply36<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple36<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>> members, final Apply36<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35]);
@@ -1318,44 +1317,44 @@ public final class Builder<T> {
     }
 
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37> Builder<T> of(
-            Tuple37<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>> members, final Apply37<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple37<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>> members, final Apply37<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36]);
@@ -1363,45 +1362,45 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38> Builder<T> of(
-            Tuple38<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>> members, final Apply38<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple38<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>> members, final Apply38<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37]);
@@ -1409,46 +1408,46 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39> Builder<T> of(
-            Tuple39<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>> members, final Apply39<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple39<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>> members, final Apply39<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38]);
@@ -1456,47 +1455,47 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40> Builder<T> of(
-            Tuple40<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>> members, final Apply40<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple40<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>,
+                    ? extends java.util.function.Function<? super T,F40>> members, final Apply40<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39]);
@@ -1504,48 +1503,48 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41> Builder<T> of(
-            Tuple41<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>,
-                    ? extends Apply<? super T,F41>> members, final Apply41<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple41<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>,
+                    ? extends java.util.function.Function<? super T,F40>,
+                    ? extends java.util.function.Function<? super T,F41>> members, final Apply41<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40]);
@@ -1553,49 +1552,49 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42> Builder<T> of(
-            Tuple42<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>,
-                    ? extends Apply<? super T,F41>,
-                    ? extends Apply<? super T,F42>> members, final Apply42<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple42<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>,
+                    ? extends java.util.function.Function<? super T,F40>,
+                    ? extends java.util.function.Function<? super T,F41>,
+                    ? extends java.util.function.Function<? super T,F42>> members, final Apply42<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41]);
@@ -1603,50 +1602,50 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42,F43> Builder<T> of(
-            Tuple43<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>,
-                    ? extends Apply<? super T,F41>,
-                    ? extends Apply<? super T,F42>,
-                    ? extends Apply<? super T,F43>> members, final Apply43<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple43<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>,
+                    ? extends java.util.function.Function<? super T,F40>,
+                    ? extends java.util.function.Function<? super T,F41>,
+                    ? extends java.util.function.Function<? super T,F42>,
+                    ? extends java.util.function.Function<? super T,F43>> members, final Apply43<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41], (F43)t[42]);
@@ -1654,51 +1653,51 @@ public final class Builder<T> {
     }
     
     public static <T,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,F13,F14,F15,F16,F17,F18,F19,F20,F21,F22,F23,F24,F25,F26,F27,F28,F29,F30,F31,F32,F33,F34,F35,F36,F37,F38,F39,F40,F41,F42,F43,F44> Builder<T> of(
-            Tuple44<? extends Apply<? super T,F1>,
-                    ? extends Apply<? super T,F2>,
-                    ? extends Apply<? super T,F3>,
-                    ? extends Apply<? super T,F4>,
-                    ? extends Apply<? super T,F5>,
-                    ? extends Apply<? super T,F6>,
-                    ? extends Apply<? super T,F7>,
-                    ? extends Apply<? super T,F8>,
-                    ? extends Apply<? super T,F9>,
-                    ? extends Apply<? super T,F10>,
-                    ? extends Apply<? super T,F11>,
-                    ? extends Apply<? super T,F12>,
-                    ? extends Apply<? super T,F13>,
-                    ? extends Apply<? super T,F14>,
-                    ? extends Apply<? super T,F15>,
-                    ? extends Apply<? super T,F16>,
-                    ? extends Apply<? super T,F17>,
-                    ? extends Apply<? super T,F18>,
-                    ? extends Apply<? super T,F19>,
-                    ? extends Apply<? super T,F20>,
-                    ? extends Apply<? super T,F21>,
-                    ? extends Apply<? super T,F22>,
-                    ? extends Apply<? super T,F23>,
-                    ? extends Apply<? super T,F24>,
-                    ? extends Apply<? super T,F25>,
-                    ? extends Apply<? super T,F26>,
-                    ? extends Apply<? super T,F27>,
-                    ? extends Apply<? super T,F28>,
-                    ? extends Apply<? super T,F29>,
-                    ? extends Apply<? super T,F30>,
-                    ? extends Apply<? super T,F31>,
-                    ? extends Apply<? super T,F32>,
-                    ? extends Apply<? super T,F33>,
-                    ? extends Apply<? super T,F34>,
-                    ? extends Apply<? super T,F35>,
-                    ? extends Apply<? super T,F36>,
-                    ? extends Apply<? super T,F37>,
-                    ? extends Apply<? super T,F38>,
-                    ? extends Apply<? super T,F39>,
-                    ? extends Apply<? super T,F40>,
-                    ? extends Apply<? super T,F41>,
-                    ? extends Apply<? super T,F42>,
-                    ? extends Apply<? super T,F43>,
-                    ? extends Apply<? super T,F44>> members, final Apply44<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,? super F44,T> constructor) {
-        return newBuilder(Tuple.asList(members), new Apply<Object[],T>() {
+            Tuple44<? extends java.util.function.Function<? super T,F1>,
+                    ? extends java.util.function.Function<? super T,F2>,
+                    ? extends java.util.function.Function<? super T,F3>,
+                    ? extends java.util.function.Function<? super T,F4>,
+                    ? extends java.util.function.Function<? super T,F5>,
+                    ? extends java.util.function.Function<? super T,F6>,
+                    ? extends java.util.function.Function<? super T,F7>,
+                    ? extends java.util.function.Function<? super T,F8>,
+                    ? extends java.util.function.Function<? super T,F9>,
+                    ? extends java.util.function.Function<? super T,F10>,
+                    ? extends java.util.function.Function<? super T,F11>,
+                    ? extends java.util.function.Function<? super T,F12>,
+                    ? extends java.util.function.Function<? super T,F13>,
+                    ? extends java.util.function.Function<? super T,F14>,
+                    ? extends java.util.function.Function<? super T,F15>,
+                    ? extends java.util.function.Function<? super T,F16>,
+                    ? extends java.util.function.Function<? super T,F17>,
+                    ? extends java.util.function.Function<? super T,F18>,
+                    ? extends java.util.function.Function<? super T,F19>,
+                    ? extends java.util.function.Function<? super T,F20>,
+                    ? extends java.util.function.Function<? super T,F21>,
+                    ? extends java.util.function.Function<? super T,F22>,
+                    ? extends java.util.function.Function<? super T,F23>,
+                    ? extends java.util.function.Function<? super T,F24>,
+                    ? extends java.util.function.Function<? super T,F25>,
+                    ? extends java.util.function.Function<? super T,F26>,
+                    ? extends java.util.function.Function<? super T,F27>,
+                    ? extends java.util.function.Function<? super T,F28>,
+                    ? extends java.util.function.Function<? super T,F29>,
+                    ? extends java.util.function.Function<? super T,F30>,
+                    ? extends java.util.function.Function<? super T,F31>,
+                    ? extends java.util.function.Function<? super T,F32>,
+                    ? extends java.util.function.Function<? super T,F33>,
+                    ? extends java.util.function.Function<? super T,F34>,
+                    ? extends java.util.function.Function<? super T,F35>,
+                    ? extends java.util.function.Function<? super T,F36>,
+                    ? extends java.util.function.Function<? super T,F37>,
+                    ? extends java.util.function.Function<? super T,F38>,
+                    ? extends java.util.function.Function<? super T,F39>,
+                    ? extends java.util.function.Function<? super T,F40>,
+                    ? extends java.util.function.Function<? super T,F41>,
+                    ? extends java.util.function.Function<? super T,F42>,
+                    ? extends java.util.function.Function<? super T,F43>,
+                    ? extends java.util.function.Function<? super T,F44>> members, final Apply44<? super F1,? super F2,? super F3,? super F4,? super F5,? super F6,? super F7,? super F8,? super F9,? super F10,? super F11,? super F12,? super F13,? super F14,? super F15,? super F16,? super F17,? super F18,? super F19,? super F20,? super F21,? super F22,? super F23,? super F24,? super F25,? super F26,? super F27,? super F28,? super F29,? super F30,? super F31,? super F32,? super F33,? super F34,? super F35,? super F36,? super F37,? super F38,? super F39,? super F40,? super F41,? super F42,? super F43,? super F44,T> constructor) {
+        return newBuilder(Tuple.asList(members), new java.util.function.Function<Object[],T>() {
             @SuppressWarnings("unchecked")
             public T apply(Object[] t) {
                 return constructor.apply((F1)t[0], (F2)t[1], (F3)t[2], (F4)t[3], (F5)t[4], (F6)t[5], (F7)t[6], (F8)t[7], (F9)t[8], (F10)t[9], (F11)t[10], (F12)t[11], (F13)t[12], (F14)t[13], (F15)t[14], (F16)t[15], (F17)t[16], (F18)t[17], (F19)t[18], (F20)t[19], (F21)t[20], (F22)t[21], (F23)t[22], (F24)t[23], (F25)t[24], (F26)t[25], (F27)t[26], (F28)t[27], (F29)t[28], (F30)t[29], (F31)t[30], (F32)t[31], (F33)t[32], (F34)t[33], (F35)t[34], (F36)t[35], (F37)t[36], (F38)t[37], (F39)t[38], (F40)t[39], (F41)t[40], (F42)t[41], (F43)t[42], (F44)t[43]);

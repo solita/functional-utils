@@ -14,14 +14,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.BiFunction;
 
 import org.junit.Test;
 
-import fi.solita.utils.functional.Apply;
-import fi.solita.utils.functional.ApplyBi;
+
 import fi.solita.utils.functional.Either;
 import fi.solita.utils.functional.Function;
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Monoids;
 import fi.solita.utils.functional.Pair;
 import fi.solita.utils.functional.Tuple;
@@ -82,85 +81,85 @@ public class LensTest {
     }
     
     // Getters and builders
-    static final Apply<Person, String> personName = new Apply<Person, String>() {
+    static final java.util.function.Function<Person, String> personName = new java.util.function.Function<Person, String>() {
         public String apply(Person p) { return p.name; }
     };
     
-    static final Apply<Person, Integer> personAge = new Apply<Person, Integer>() {
+    static final java.util.function.Function<Person, Integer> personAge = new java.util.function.Function<Person, Integer>() {
         public Integer apply(Person p) { return p.age; }
     };
     
     static final Builder<Person> personBuilder = Builder.of(
         Tuple.of(personName, personAge),
-        new Function2<String, Integer, Person>() {
+        new BiFunction<String, Integer, Person>() {
             public Person apply(String name, Integer age) {
                 return new Person(name, age);
             }
         }
     );
     
-    static final Apply<Address, String> addressStreet = new Apply<Address, String>() {
+    static final java.util.function.Function<Address, String> addressStreet = new java.util.function.Function<Address, String>() {
         public String apply(Address a) { return a.street; }
     };
     
-    static final Apply<Address, String> addressCity = new Apply<Address, String>() {
+    static final java.util.function.Function<Address, String> addressCity = new java.util.function.Function<Address, String>() {
         public String apply(Address a) { return a.city; }
     };
     
     static final Builder<Address> addressBuilder = Builder.of(
         Tuple.of(addressStreet, addressCity),
-        new Function2<String, String, Address>() {
+        new BiFunction<String, String, Address>() {
             public Address apply(String street, String city) {
                 return new Address(street, city);
             }
         }
     );
     
-    static final Apply<PersonWithAddress, String> personWithAddressName = new Apply<PersonWithAddress, String>() {
+    static final java.util.function.Function<PersonWithAddress, String> personWithAddressName = new java.util.function.Function<PersonWithAddress, String>() {
         public String apply(PersonWithAddress p) { return p.name; }
     };
     
-    static final Apply<PersonWithAddress, Address> personWithAddressAddress = new Apply<PersonWithAddress, Address>() {
+    static final java.util.function.Function<PersonWithAddress, Address> personWithAddressAddress = new java.util.function.Function<PersonWithAddress, Address>() {
         public Address apply(PersonWithAddress p) { return p.address; }
     };
     
     static final Builder<PersonWithAddress> personWithAddressBuilder = Builder.of(
         Tuple.of(personWithAddressName, personWithAddressAddress),
-        new Function2<String, Address, PersonWithAddress>() {
+        new BiFunction<String, Address, PersonWithAddress>() {
             public PersonWithAddress apply(String name, Address address) {
                 return new PersonWithAddress(name, address);
             }
         }
     );
     
-    static final Apply<Department, String> departmentName = new Apply<Department, String>() {
+    static final java.util.function.Function<Department, String> departmentName = new java.util.function.Function<Department, String>() {
         public String apply(Department d) { return d.name; }
     };
     
-    static final Apply<Department, List<Employee>> departmentEmployees = new Apply<Department, List<Employee>>() {
+    static final java.util.function.Function<Department, List<Employee>> departmentEmployees = new java.util.function.Function<Department, List<Employee>>() {
         public List<Employee> apply(Department d) { return d.employees; }
     };
     
     static final Builder<Department> departmentBuilder = Builder.of(
         Tuple.of(departmentName, departmentEmployees),
-        new Function2<String, List<Employee>, Department>() {
+        new BiFunction<String, List<Employee>, Department>() {
             public Department apply(String name, List<Employee> employees) {
                 return new Department(name, employees);
             }
         }
     );
     
-    static final Apply<Employee, String> employeeName = new Apply<Employee, String>() {
+    static final java.util.function.Function<Employee, String> employeeName = new java.util.function.Function<Employee, String>() {
         public String apply(Employee e) { return e.name; }
     };
     
-    static final Apply<Employee, Optional<Integer>> employeeSalary = new Apply<Employee, Optional<Integer>>() {
+    static final java.util.function.Function<Employee, Optional<Integer>> employeeSalary = new java.util.function.Function<Employee, Optional<Integer>>() {
         public Optional<Integer> apply(Employee e) { return e.salary; }
     };
     
     static final Builder<Employee> employeeBuilder = Builder.of(
         Tuple.of(employeeName, employeeSalary),
-        new Function2<String, Optional<Integer>, Employee>() {
+        new BiFunction<String, Optional<Integer>, Employee>() {
             public Employee apply(String name, Optional<Integer> salary) {
                 return new Employee(name, salary);
             }
@@ -180,8 +179,8 @@ public class LensTest {
     @Test
     public void testLensOfWithSetter() {
         Person person = new Person("John", 30);
-        Lens<Person, String> nameLens = Lens.of(personName, new ApplyBi<Person, Apply<String, String>, Person>() {
-            public Person apply(Person p, Apply<String, String> f) {
+        Lens<Person, String> nameLens = Lens.of(personName, new BiFunction<Person, java.util.function.Function<String, String>, Person>() {
+            public Person apply(Person p, java.util.function.Function<String, String> f) {
                 return new Person(f.apply(p.name), p.age);
             }
         });
@@ -223,7 +222,7 @@ public class LensTest {
         Person person = new Person("John", 30);
         Lens<Person, String> nameLens = Lens.of(personName, personBuilder);
         
-        Person updated = nameLens.modify(person, new Apply<String, String>() {
+        Person updated = nameLens.modify(person, new java.util.function.Function<String, String>() {
             public String apply(String name) {
                 return name.toUpperCase();
             }
@@ -239,7 +238,7 @@ public class LensTest {
         Person person = new Person("John", 30);
         Lens<Person, Integer> ageLens = Lens.of(personAge, personBuilder);
         
-        Person updated = ageLens.modify(person, new Apply<Integer, Integer>() {
+        Person updated = ageLens.modify(person, new java.util.function.Function<Integer, Integer>() {
             public Integer apply(Integer age) {
                 return age + 1;
             }
@@ -302,7 +301,7 @@ public class LensTest {
         Lens<Address, String> streetLens = Lens.of(addressStreet, addressBuilder);
         Lens<PersonWithAddress, String> composedLens = addressLens.andThen(streetLens);
         
-        PersonWithAddress updated = composedLens.modify(person, new Apply<String, String>() {
+        PersonWithAddress updated = composedLens.modify(person, new java.util.function.Function<String, String>() {
             public String apply(String street) {
                 return street + " Apt 1";
             }
@@ -350,7 +349,7 @@ public class LensTest {
         Lens<Department, Iterable<String>> namesLens = Lens.eachList(employeesLens, nameLens);
         
         // Modify each name by converting to uppercase
-        Department updated = namesLens.modify(dept, new Apply<Iterable<String>, Iterable<String>>() {
+        Department updated = namesLens.modify(dept, new java.util.function.Function<Iterable<String>, Iterable<String>>() {
             public Iterable<String> apply(Iterable<String> names) {
                 // The names iterable contains a single name that needs to be transformed
                 String name = newList(names).get(0);
@@ -383,12 +382,12 @@ public class LensTest {
             Container(Set<String> items) { this.items = items; }
         }
         
-        final Apply<Container, Set<String>> containerItems = new Apply<Container, Set<String>>() {
+        final java.util.function.Function<Container, Set<String>> containerItems = new java.util.function.Function<Container, Set<String>>() {
             public Set<String> apply(Container c) { return c.items; }
         };
         
-        Lens<Container, Set<String>> itemsLens = Lens.of(containerItems, new ApplyBi<Container, Apply<Set<String>,Set<String>>, Container>() {
-            public Container apply(Container c, Apply<Set<String>, Set<String>> f) {
+        Lens<Container, Set<String>> itemsLens = Lens.of(containerItems, new BiFunction<Container, java.util.function.Function<Set<String>,Set<String>>, Container>() {
+            public Container apply(Container c, java.util.function.Function<Set<String>, Set<String>> f) {
                 return new Container(f.apply(c.items));
             }
         });
@@ -407,12 +406,12 @@ public class LensTest {
             Container(SortedSet<String> items) { this.items = items; }
         }
         
-        final Apply<Container, SortedSet<String>> containerItems = new Apply<Container, SortedSet<String>>() {
+        final java.util.function.Function<Container, SortedSet<String>> containerItems = new java.util.function.Function<Container, SortedSet<String>>() {
             public SortedSet<String> apply(Container c) { return c.items; }
         };
         
-        Lens<Container, SortedSet<String>> itemsLens = Lens.of(containerItems, new ApplyBi<Container, Apply<SortedSet<String>,SortedSet<String>>, Container>() {
-            public Container apply(Container c, Apply<SortedSet<String>, SortedSet<String>> f) {
+        Lens<Container, SortedSet<String>> itemsLens = Lens.of(containerItems, new BiFunction<Container, java.util.function.Function<SortedSet<String>,SortedSet<String>>, Container>() {
+            public Container apply(Container c, java.util.function.Function<SortedSet<String>, SortedSet<String>> f) {
                 return new Container(f.apply(c.items));
             }
         });
@@ -436,12 +435,12 @@ public class LensTest {
             Container(Collection<Integer> numbers) { this.numbers = numbers; }
         }
         
-        final Apply<Container, Collection<Integer>> containerNumbers = new Apply<Container, Collection<Integer>>() {
+        final java.util.function.Function<Container, Collection<Integer>> containerNumbers = new java.util.function.Function<Container, Collection<Integer>>() {
             public Collection<Integer> apply(Container c) { return c.numbers; }
         };
         
-        Lens<Container, Collection<Integer>> numbersLens = Lens.of(containerNumbers, new ApplyBi<Container, Apply<Collection<Integer>,Collection<Integer>>, Container>() {
-            public Container apply(Container c, Apply<Collection<Integer>, Collection<Integer>> f) {
+        Lens<Container, Collection<Integer>> numbersLens = Lens.of(containerNumbers, new BiFunction<Container, java.util.function.Function<Collection<Integer>,Collection<Integer>>, Container>() {
+            public Container apply(Container c, java.util.function.Function<Collection<Integer>, Collection<Integer>> f) {
                 return new Container(f.apply(c.numbers));
             }
         });
@@ -461,12 +460,12 @@ public class LensTest {
             Container(Optional<String> value) { this.value = value; }
         }
         
-        final Apply<Container, Optional<String>> containerValue = new Apply<Container, Optional<String>>() {
+        final java.util.function.Function<Container, Optional<String>> containerValue = new java.util.function.Function<Container, Optional<String>>() {
             public Optional<String> apply(Container c) { return c.value; }
         };
         
-        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Optional<String>,Optional<String>>, Container>() {
-            public Container apply(Container c, Apply<Optional<String>, Optional<String>> f) {
+        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new BiFunction<Container, java.util.function.Function<Optional<String>,Optional<String>>, Container>() {
+            public Container apply(Container c, java.util.function.Function<Optional<String>, Optional<String>> f) {
                 return new Container(f.apply(c.value));
             }
         });
@@ -484,12 +483,12 @@ public class LensTest {
             Container(Optional<String> value) { this.value = value; }
         }
         
-        final Apply<Container, Optional<String>> containerValue = new Apply<Container, Optional<String>>() {
+        final java.util.function.Function<Container, Optional<String>> containerValue = new java.util.function.Function<Container, Optional<String>>() {
             public Optional<String> apply(Container c) { return c.value; }
         };
         
-        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new ApplyBi<Container, Apply<Optional<String>,Optional<String>>, Container>() {
-            public Container apply(Container c, Apply<Optional<String>, Optional<String>> f) {
+        Lens<Container, Optional<String>> valueLens = Lens.of(containerValue, new BiFunction<Container, java.util.function.Function<Optional<String>,Optional<String>>, Container>() {
+            public Container apply(Container c, java.util.function.Function<Optional<String>, Optional<String>> f) {
                 return new Container(f.apply(c.value));
             }
         });
@@ -524,9 +523,9 @@ public class LensTest {
         
         Lens<Either<String, Integer>, Optional<String>> leftLens = Lens.left();
         
-        Either<String, Integer> updated = leftLens.modify(either, new Apply<Optional<String>, Optional<String>>() {
+        Either<String, Integer> updated = leftLens.modify(either, new java.util.function.Function<Optional<String>, Optional<String>>() {
             public Optional<String> apply(Optional<String> opt) {
-                return opt.map(new Apply<String, String>() {
+                return opt.map(new java.util.function.Function<String, String>() {
                     public String apply(String s) {
                         return s.toUpperCase();
                     }
@@ -561,9 +560,9 @@ public class LensTest {
         
         Lens<Either<String, Integer>, Optional<Integer>> rightLens = Lens.right();
         
-        Either<String, Integer> updated = rightLens.modify(either, new Apply<Optional<Integer>, Optional<Integer>>() {
+        Either<String, Integer> updated = rightLens.modify(either, new java.util.function.Function<Optional<Integer>, Optional<Integer>>() {
             public Optional<Integer> apply(Optional<Integer> opt) {
-                return opt.map(new Apply<Integer, Integer>() {
+                return opt.map(new java.util.function.Function<Integer, Integer>() {
                     public Integer apply(Integer i) {
                         return i * 2;
                     }
@@ -606,7 +605,7 @@ public class LensTest {
         assertEquals(Integer.valueOf(42), _2.get(tuple));
         assertEquals(Boolean.TRUE, _3.get(tuple));
         
-        Tuple3<String, Integer, Boolean> updated = (Tuple3<String, Integer, Boolean>) _2.modify(tuple, new Apply<Integer, Integer>() {
+        Tuple3<String, Integer, Boolean> updated = (Tuple3<String, Integer, Boolean>) _2.modify(tuple, new java.util.function.Function<Integer, Integer>() {
             public Integer apply(Integer i) {
                 return i * 2;
             }
@@ -665,7 +664,7 @@ public class LensTest {
         
         Lens<Map<String, Integer>, Integer> xLens = Lens.mapValue("x");
         
-        Map<String, Integer> updated = xLens.modify(map, new Apply<Integer, Integer>() {
+        Map<String, Integer> updated = xLens.modify(map, new java.util.function.Function<Integer, Integer>() {
             public Integer apply(Integer value) {
                 return value * 2;
             }
@@ -702,7 +701,7 @@ public class LensTest {
         String updated = idLens.set(value, "world");
         assertEquals("world", updated);
         
-        String modified = idLens.modify(value, new Apply<String, String>() {
+        String modified = idLens.modify(value, new java.util.function.Function<String, String>() {
             public String apply(String s) {
                 return s.toUpperCase();
             }

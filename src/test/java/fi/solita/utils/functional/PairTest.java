@@ -79,21 +79,21 @@ public class PairTest {
     
     @Test
     public void fanout_appliesBothFunctionsToSameInput() {
-        Apply<Integer, String> toString = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> toString = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return t.toString();
             }
         };
         
-        Apply<Integer, Integer> doubleIt = new Function1<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> doubleIt = new Function1<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t * 2;
             }
         };
         
-        Apply<Integer, Pair<String, Integer>> fanoutFunction = Pair.fanout(toString, doubleIt);
+        java.util.function.Function<Integer, Pair<String, Integer>> fanoutFunction = Pair.fanout(toString, doubleIt);
         Pair<String, Integer> result = fanoutFunction.apply(42);
         
         assertEquals("42", result.left());
@@ -104,14 +104,14 @@ public class PairTest {
     public void bimap_transformsBothSides() {
         Pair<Integer, String> pair = Pair.of(42, "hello");
         
-        Apply<Integer, String> intToString = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> intToString = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return "num:" + t;
             }
         };
         
-        Apply<String, Integer> stringToLength = new Function1<String, Integer>() {
+        java.util.function.Function<String, Integer> stringToLength = new Function1<String, Integer>() {
             @Override
             public Integer apply(String t) {
                 return t.length();
@@ -128,7 +128,7 @@ public class PairTest {
     public void first_transformsLeftSideOnly() {
         Pair<Integer, String> pair = Pair.of(42, "hello");
         
-        Apply<Integer, String> intToString = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> intToString = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return "num:" + t;
@@ -145,7 +145,7 @@ public class PairTest {
     public void second_transformsRightSideOnly() {
         Pair<Integer, String> pair = Pair.of(42, "hello");
         
-        Apply<String, Integer> stringToLength = new Function1<String, Integer>() {
+        java.util.function.Function<String, Integer> stringToLength = new Function1<String, Integer>() {
             @Override
             public Integer apply(String t) {
                 return t.length();
@@ -341,21 +341,21 @@ public class PairTest {
     
     @Test
     public void fanout_withNullResult() {
-        Apply<Integer, String> nullReturner = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> nullReturner = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return null;
             }
         };
         
-        Apply<Integer, Integer> identity = new Function1<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> identity = new Function1<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t;
             }
         };
         
-        Apply<Integer, Pair<String, Integer>> fanoutFunction = Pair.fanout(nullReturner, identity);
+        java.util.function.Function<Integer, Pair<String, Integer>> fanoutFunction = Pair.fanout(nullReturner, identity);
         Pair<String, Integer> result = fanoutFunction.apply(42);
         
         assertEquals(null, result.left());
@@ -366,14 +366,14 @@ public class PairTest {
     public void bimap_withNullInput() {
         Pair<String, Integer> pair = Pair.of(null, null);
         
-        Apply<String, Integer> stringToLength = new Function1<String, Integer>() {
+        java.util.function.Function<String, Integer> stringToLength = new Function1<String, Integer>() {
             @Override
             public Integer apply(String t) {
                 return t == null ? 0 : t.length();
             }
         };
         
-        Apply<Integer, String> intToString = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> intToString = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return t == null ? "null" : t.toString();
@@ -390,7 +390,7 @@ public class PairTest {
     public void first_withNullValue() {
         Pair<String, Integer> pair = Pair.of(null, 42);
         
-        Apply<String, Integer> stringToLength = new Function1<String, Integer>() {
+        java.util.function.Function<String, Integer> stringToLength = new Function1<String, Integer>() {
             @Override
             public Integer apply(String t) {
                 return t == null ? 0 : t.length();
@@ -407,7 +407,7 @@ public class PairTest {
     public void second_withNullValue() {
         Pair<String, Integer> pair = Pair.of("hello", null);
         
-        Apply<Integer, String> intToString = new Function1<Integer, String>() {
+        java.util.function.Function<Integer, String> intToString = new Function1<Integer, String>() {
             @Override
             public String apply(Integer t) {
                 return t == null ? "null" : t.toString();

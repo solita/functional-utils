@@ -105,7 +105,7 @@ public class OrderingTest {
 
     @Test
     public void then_chainsComparators() {
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
@@ -140,12 +140,12 @@ public class OrderingTest {
 
     @Test
     public void thenBy_chainsWithNaturalOrdering() {
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenBy(new Apply<Person, Integer>() {
+        }).thenBy(new java.util.function.Function<Person, Integer>() {
             @Override
             public Integer apply(Person t) {
                 return t.age;
@@ -163,12 +163,12 @@ public class OrderingTest {
 
     @Test
     public void thenByOption_handlesOptions() {
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenByOptional(new Apply<Person, Optional<Integer>>() {
+        }).thenByOptional(new java.util.function.Function<Person, Optional<Integer>>() {
             @Override
             public Optional<Integer> apply(Person t) {
                 return t.age > 0 ? Optional.of(t.age) : Optional.empty();
@@ -191,12 +191,12 @@ public class OrderingTest {
             }
         };
         
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenBy(new Apply<Person, Integer>() {
+        }).thenBy(new java.util.function.Function<Person, Integer>() {
             @Override
             public Integer apply(Person t) {
                 return t.age;
@@ -219,12 +219,12 @@ public class OrderingTest {
             }
         };
         
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
             }
-        }).thenByOptional(new Apply<Person, Optional<Integer>>() {
+        }).thenByOptional(new java.util.function.Function<Person, Optional<Integer>>() {
             @Override
             public Optional<Integer> apply(Person t) {
                 return Optional.of(t.age);
@@ -274,14 +274,14 @@ public class OrderingTest {
 
     @Test
     public void complexChaining_combinesMultipleOperations() {
-        Ordering<Person> ordering = Compare.by(new Apply<Person, String>() {
+        Ordering<Person> ordering = Compare.by(new java.util.function.Function<Person, String>() {
             @Override
             public String apply(Person t) {
                 return t.name;
             }
         })
         .reverse()
-        .thenBy(new Apply<Person, Integer>() {
+        .thenBy(new java.util.function.Function<Person, Integer>() {
             @Override
             public Integer apply(Person t) {
                 return t.age;

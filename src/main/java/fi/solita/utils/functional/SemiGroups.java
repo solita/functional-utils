@@ -5,7 +5,14 @@ import static fi.solita.utils.functional.Collections.newSet;
 import static fi.solita.utils.functional.Functional.concat;
 import static fi.solita.utils.functional.Functional.filter;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
 
 public abstract class SemiGroups {
     
@@ -72,8 +79,8 @@ public abstract class SemiGroups {
     }
     
     @SuppressWarnings("unchecked")
-    public static final <T> SemiGroup<Apply<T,T>> endo() {
-        return (SemiGroup<Apply<T,T>>)(Object)endo;
+    public static final <T> SemiGroup<java.util.function.Function<T,T>> endo() {
+        return (SemiGroup<java.util.function.Function<T,T>>)(Object)endo;
     }
     
     @SuppressWarnings("unchecked")
@@ -155,98 +162,98 @@ public abstract class SemiGroups {
     
     
     
-  static class BooleanDisjunction extends Function2<Boolean,Boolean,Boolean> implements SemiGroup<Boolean> {
+  static class BooleanDisjunction implements BiFunction<Boolean,Boolean,Boolean>, SemiGroup<Boolean> {
       @Override
       public final Boolean apply(Boolean first, Boolean second) {
           return first || second;
       }
   }
 
-  static class BooleanConjunction extends Function2<Boolean,Boolean,Boolean> implements SemiGroup<Boolean> {
+  static class BooleanConjunction implements BiFunction<Boolean,Boolean,Boolean>, SemiGroup<Boolean> {
       @Override
       public final Boolean apply(Boolean first, Boolean second) {
           return first && second;
       }
   }
 
-  static class StringConcat extends Function2<String,String,String> implements SemiGroup<String> {
+  static class StringConcat implements BiFunction<String,String,String>, SemiGroup<String> {
       @Override
       public final String apply(String first, String second) {
           return first + second;
       }
   }
 
-  static class LongProduct extends Function2<Long,Long,Long> implements SemiGroup<Long> {
+  static class LongProduct implements BiFunction<Long,Long,Long>, SemiGroup<Long> {
       @Override
       public final Long apply(Long first, Long second) {
           return first * second;
       }
   }
 
-  static class LongSum extends Function2<Long,Long,Long> implements SemiGroup<Long> {
+  static class LongSum implements BiFunction<Long,Long,Long>, SemiGroup<Long> {
       @Override
       public final Long apply(Long first, Long second) {
           return first + second;
       }
   }
 
-  static class IntProduct extends Function2<Integer,Integer,Integer> implements SemiGroup<Integer> {
+  static class IntProduct implements BiFunction<Integer,Integer,Integer>, SemiGroup<Integer> {
       @Override
       public final Integer apply(Integer first, Integer second) {
           return first * second;
       }
   }
 
-  static class IntSum extends Function2<Integer,Integer,Integer> implements SemiGroup<Integer> {
+  static class IntSum implements BiFunction<Integer,Integer,Integer>, SemiGroup<Integer> {
       @Override
       public final Integer apply(Integer first, Integer second) {
           return first + second;
       }
   }
   
-  static class DoubleProduct extends Function2<Double,Double,Double> implements SemiGroup<Double> {
+  static class DoubleProduct implements BiFunction<Double,Double,Double>, SemiGroup<Double> {
       @Override
       public final Double apply(Double first, Double second) {
           return first * second;
       }
   }
   
-  static class DoubleSum extends Function2<Double,Double,Double> implements SemiGroup<Double> {
+  static class DoubleSum implements BiFunction<Double,Double,Double>, SemiGroup<Double> {
       @Override
       public final Double apply(Double first, Double second) {
           return first + second;
       }
   }
   
-  static final class First<T> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class First<T> implements BiFunction<T,T,T>, SemiGroup<T> {
       @Override
       public final T apply(T t1, T t2) {
           return t1;
       }
   }
   
-  static final class Last<T> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class Last<T> implements BiFunction<T,T,T>, SemiGroup<T> {
       @Override
       public final T apply(T t1, T t2) {
           return t2;
       }
   }
   
-  static final class Max<T extends Comparable<T>> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class Max<T extends Comparable<T>> implements BiFunction<T,T,T>, SemiGroup<T> {
     @Override
     public final T apply(T t1, T t2) {
         return t1.compareTo(t2) < 0 ? t2 : t1;
     }
   }
   
-  static final class Min<T extends Comparable<T>> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class Min<T extends Comparable<T>> implements BiFunction<T,T,T>, SemiGroup<T> {
       @Override
       public final T apply(T t1, T t2) {
           return t1.compareTo(t2) > 0 ? t2 : t1;
       }
   }
   
-  static final class MaxBy<T> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class MaxBy<T> implements BiFunction<T,T,T>, SemiGroup<T> {
       private final Comparator<? super T> comparator;
       public MaxBy(Comparator<? super T> comparator) {
           this.comparator = comparator;
@@ -258,7 +265,7 @@ public abstract class SemiGroups {
       }
   }
   
-  static final class MinBy<T> extends Function2<T,T,T> implements SemiGroup<T> {
+  static final class MinBy<T> implements BiFunction<T,T,T>, SemiGroup<T> {
       private final Comparator<? super T> comparator;
       public MinBy(Comparator<? super T> comparator) {
           this.comparator = comparator;
@@ -270,14 +277,14 @@ public abstract class SemiGroups {
       }
   }
   
-  static class Endo<T> extends Function2<Apply<T,T>,Apply<T,T>,Apply<T,T>> implements SemiGroup<Apply<T, T>> {
+  static class Endo<T> implements BiFunction<java.util.function.Function<T,T>,java.util.function.Function<T,T>,java.util.function.Function<T,T>>, SemiGroup<java.util.function.Function<T, T>> {
       @Override
-      public final Apply<T, T> apply(Apply<T, T> t1, Apply<T, T> t2) {
+      public final java.util.function.Function<T, T> apply(java.util.function.Function<T, T> t1, java.util.function.Function<T, T> t2) {
           return Function.of(t1).andThen(t2);
       }
   }
   
-  static class SetUnion<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
+  static class SetUnion<T> implements BiFunction<Set<T>,Set<T>,Set<T>>, SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, Set<T> second) {
           if (first == null || first.isEmpty()) {
@@ -290,7 +297,7 @@ public abstract class SemiGroups {
       }
   }
   
-  static class SetIntersection<T> extends Function2<Set<T>,Set<T>,Set<T>> implements SemiGroup<Set<T>> {
+  static class SetIntersection<T> implements BiFunction<Set<T>,Set<T>,Set<T>>, SemiGroup<Set<T>> {
       @Override
       public final Set<T> apply(Set<T> first, final Set<T> second) {
           if (first == null || first.isEmpty()) {
@@ -310,16 +317,11 @@ public abstract class SemiGroups {
               larger = first;
           }
           
-          return newSet(filter(new Predicate<T>() {
-              @Override
-              public boolean accept(T candidate) {
-                  return larger.contains(candidate);
-              }
-          }, smaller));
+          return newSet(filter(larger::contains, smaller));
       }
   }
   
-  static class ComparatorConcat<T> extends Function2<Comparator<T>,Comparator<T>,Comparator<T>> implements SemiGroup<Comparator<T>> {
+  static class ComparatorConcat<T> implements BiFunction<Comparator<T>,Comparator<T>,Comparator<T>>, SemiGroup<Comparator<T>> {
       @Override
       public final Comparator<T> apply(final Comparator<T> first, final Comparator<T> second) {
           return new Comparator<T>() {
@@ -334,12 +336,11 @@ public abstract class SemiGroups {
       }
   }
   
-  static class MapCombine<K, V> extends Function2<Map<K,V>,Map<K,V>,Map<K,V>> implements SemiGroup<Map<K,V>> {
-      private final Function2<V,V,V> sg;
+  static class MapCombine<K, V> implements BiFunction<Map<K,V>,Map<K,V>,Map<K,V>>, SemiGroup<Map<K,V>> {
+      private final BiFunction<V,V,V> sg;
 
-      @SuppressWarnings("unchecked")
       public MapCombine(final SemiGroup<V> sg) {
-          this.sg = sg instanceof Function2 ? (Function2<V,V,V>)sg : new Function2<V,V,V>() {
+          this.sg = sg instanceof BiFunction ? (BiFunction<V,V,V>)sg : new BiFunction<V,V,V>() {
             @Override
             public V apply(V t1, V t2) {
                 return sg.apply(t1, t2);
@@ -378,7 +379,7 @@ public abstract class SemiGroups {
       }
   }
   
-  static final class Product2<T1,T2> extends Function2<Tuple2<T1,T2>,Tuple2<T1,T2>,Tuple2<T1,T2>> implements SemiGroup<Tuple2<T1,T2>> {
+  static final class Product2<T1,T2> implements BiFunction<Tuple2<T1,T2>,Tuple2<T1,T2>,Tuple2<T1,T2>>, SemiGroup<Tuple2<T1,T2>> {
     private final SemiGroup<T1> s1;
     private final SemiGroup<T2> s2;
     
@@ -393,7 +394,7 @@ public abstract class SemiGroups {
     }
   }
   
-  static final class Product3<T1,T2,T3> extends Function2<Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>> implements SemiGroup<Tuple3<T1,T2,T3>> {
+  static final class Product3<T1,T2,T3> implements BiFunction<Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>,Tuple3<T1,T2,T3>>, SemiGroup<Tuple3<T1,T2,T3>> {
       private final SemiGroup<T1> s1;
       private final SemiGroup<T2> s2;
       private final SemiGroup<T3> s3;
@@ -410,7 +411,7 @@ public abstract class SemiGroups {
       }
     }
   
-  static final class Product4<T1,T2,T3,T4> extends Function2<Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>> implements SemiGroup<Tuple4<T1,T2,T3,T4>> {
+  static final class Product4<T1,T2,T3,T4> implements BiFunction<Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>,Tuple4<T1,T2,T3,T4>>, SemiGroup<Tuple4<T1,T2,T3,T4>> {
       private final SemiGroup<T1> s1;
       private final SemiGroup<T2> s2;
       private final SemiGroup<T3> s3;
@@ -435,5 +436,5 @@ public abstract class SemiGroups {
     private static final SemiGroup<?> first = new First<Object>();
     private static final SemiGroup<?> last = new Last<Object>();
     
-    private static final SemiGroup<Apply<Object,Object>> endo = new Endo<Object>();
+    private static final SemiGroup<java.util.function.Function<Object,Object>> endo = new Endo<Object>();
 }

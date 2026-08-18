@@ -10,12 +10,11 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import org.junit.Test;
 
-import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Collections;
-import fi.solita.utils.functional.Function2;
 import fi.solita.utils.functional.Function3;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple2;
@@ -54,20 +53,20 @@ class Employee {
 
 /** Generated in practice by meta-utils */
 class Department_ {
-    public static final Tuple2<Apply<Department,String>,Apply<Department,List<Employee>>> $Fields() {
+    public static final Tuple2<java.util.function.Function<Department,String>,java.util.function.Function<Department,List<Employee>>> $Fields() {
         return Tuple.of(name, employees);
     }
-    public static final Function2<String, List<Employee>, Department> $ = new Function2<String, List<Employee>, Department>() {
+    public static final BiFunction<String, List<Employee>, Department> $ = new BiFunction<String, List<Employee>, Department>() {
         public Department apply(String t, List<Employee> e) {
             return new Department(t, e);
         }
     };
-    public static final Apply<Department, String> name = new Apply<Department, String>() {
+    public static final java.util.function.Function<Department, String> name = new java.util.function.Function<Department, String>() {
         public String apply(Department t) {
             return t.name;
         }
     };
-    public static final Apply<Department, List<Employee>> employees = new Apply<Department, List<Employee>>() {
+    public static final java.util.function.Function<Department, List<Employee>> employees = new java.util.function.Function<Department, List<Employee>>() {
         public List<Employee> apply(Department t) {
             return t.employees;
         }
@@ -76,7 +75,7 @@ class Department_ {
 
 /** Generated in practice by meta-utils */
 class Employee_ {
-    public static final Tuple3<Apply<Employee,String>,Apply<Employee,Optional<Integer>>,Apply<Employee,Department>> $Fields() {
+    public static final Tuple3<java.util.function.Function<Employee,String>,java.util.function.Function<Employee,Optional<Integer>>,java.util.function.Function<Employee,Department>> $Fields() {
         return Tuple.of(name, salary, department);
     }
     public static final Function3<String, Optional<Integer>, Department, Employee> $ = new Function3<String,Optional<Integer>,Department,Employee>() {
@@ -84,12 +83,12 @@ class Employee_ {
             return new Employee(t1, t2, t3);
         }
     };
-    public static final Apply<Employee, String> name = new Apply<Employee, String>() {
+    public static final java.util.function.Function<Employee, String> name = new java.util.function.Function<Employee, String>() {
         public String apply(Employee t) {
             return t.name;
         }
     };
-    public static final Apply<Employee, Optional<Integer>> salary = new Apply<Employee, Optional<Integer>>() {
+    public static final java.util.function.Function<Employee, Optional<Integer>> salary = new java.util.function.Function<Employee, Optional<Integer>>() {
         public Optional<Integer> apply(Employee t) {
             return t.salary;
         }
@@ -102,7 +101,7 @@ class Employee_ {
             }
         }
     };
-    public static final Apply<Employee, Department> department = new Apply<Employee, Department>() {
+    public static final java.util.function.Function<Employee, Department> department = new java.util.function.Function<Employee, Department>() {
         public Department apply(Employee t) {
             return t.department;
         }

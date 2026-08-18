@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import fi.solita.utils.functional.Iterables.ConcatenatingIterable;
 
@@ -52,7 +55,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#find
      */
-    public static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Optional<T> find(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.find(predicate, newList(xs));
     }
     
@@ -61,7 +64,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#filter
      */
-    public static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Iterable<T> filter(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.filter(predicate, newList(xs));
     }
     
@@ -70,35 +73,35 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#map(Apply, Iterable)
      */
-    public static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, S[] xs) {
+    public static final <S, T> Iterable<T> map(java.util.function.Function<? super S, ? extends T> f, S[] xs) {
         return FunctionalImpl.map(f, newList(xs));
     }
     
     /**
-     * @see Functional#map(ApplyBi, Iterable)
+     * @see Functional#map(BiFunction, Iterable)
      */
-    public static final <S1, S2, T> Iterable<T> map(Apply2<? super S1, ? super S2, ? extends T> f, Map.Entry<S1, S2>[] xs) {
+    public static final <S1, S2, T> Iterable<T> map(BiFunction<? super S1, ? super S2, ? extends T> f, Map.Entry<S1, S2>[] xs) {
         return FunctionalImpl.map(Function.of(f).tuppled(), newList(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, S[] elements) {
+    public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, S[] elements) {
         return FunctionalImpl.map(f1, f2, newList(elements));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, S[] xs) {
+    public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, newList(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
      */
-    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Apply<? super S, ? extends T4> f4, S[] xs) {
+    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, java.util.function.Function<? super S, ? extends T4> f4, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, newList(xs));
     }
 
@@ -107,7 +110,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#flatMap
      */
-    public static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<T>> f, S[] xs) {
+    public static final <S, T> Iterable<T> flatMap(java.util.function.Function<? super S, ? extends Iterable<T>> f, S[] xs) {
         return FunctionalImpl.flatMap(f, newList(xs));
     }
     
@@ -176,14 +179,14 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#foreach
      */
-    public static final <T> void foreach(Apply<? super T, Void> procedure, T[] xs) {
+    public static final <T> void foreach(java.util.function.Function<? super T, Void> procedure, T[] xs) {
         FunctionalImpl.foreach(procedure, newList(xs));
     }
     
     /**
      * @see Functional#foreach
      */
-    public static final <T> void foreach(ApplyVoid<? super T> procedure, T[] xs) {
+    public static final <T> void foreach(Consumer<? super T> procedure, T[] xs) {
         FunctionalImpl.foreach(procedure, newList(xs));
     }
     
@@ -206,9 +209,9 @@ public abstract class FunctionalA extends FunctionalM {
     }
     
     /**
-     * @see Functional#group(Apply, Iterable)
+     * @see Functional#group(java.util.function.Function, Iterable)
      */
-    public static final <T> Iterable<Iterable<T>> group(ApplyBi<? super T,? super T,Boolean> comparator, T[] xs) {
+    public static final <T> Iterable<Iterable<T>> group(BiPredicate<? super T,? super T> comparator, T[] xs) {
         return FunctionalImpl.group(comparator, newList(xs));
     }
     
@@ -217,7 +220,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#groupBy
      */
-    public static final <G, T> Map<G, List<T>> groupBy(Apply<? super T,? extends G> f, T[] xs) {
+    public static final <G, T> Map<G, List<T>> groupBy(java.util.function.Function<? super T,? extends G> f, T[] xs) {
         return FunctionalImpl.groupBy(f, newList(xs));
     }
     
@@ -298,7 +301,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#takeWhile
      */
-    public static final <T> Iterable<T> takeWhile(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Iterable<T> takeWhile(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.takeWhile(predicate, newList(xs));
     }
     
@@ -307,7 +310,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#dropWhile
      */
-    public static final <T> Iterable<T> dropWhile(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Iterable<T> dropWhile(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.dropWhile(predicate, newList(xs));
     }
     
@@ -316,7 +319,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#span
      */
-    public static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> Pair<Iterable<T>, Iterable<T>> span(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.span(predicate, newList(xs));
     }
 
@@ -325,7 +328,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#partition
      */
-    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, T[] xs) {
+    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(java.util.function.Function<? super T, Either<L,R>> f, T[] xs) {
         return FunctionalImpl.partition(f, newList(xs));
     }
     
@@ -386,7 +389,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#exists
      */
-    public static final <T> boolean exists(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> boolean exists(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.exists(predicate, newList(xs));
     }
     
@@ -395,7 +398,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#forall
      */
-    public static final <T> boolean forall(Apply<? super T, Boolean> predicate, T[] xs) {
+    public static final <T> boolean forall(java.util.function.Predicate<? super T> predicate, T[] xs) {
         return FunctionalImpl.forall(predicate, newList(xs));
     }
     
@@ -676,16 +679,16 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
-     * @see Functional#fold(Object, Apply, Iterable)
+     * @see Functional#fold(Object, java.util.function.Function, Iterable)
      */
-    public static final <T,Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, T[] xs) {
+    public static final <T,Z> Z fold(Z zero, BiFunction<? super Z, ? super T, ? extends Z> f, T[] xs) {
         return FunctionalImpl.fold(zero, f, newList(xs));
     }
     
     /**
-     * @see Functional#fold(Apply, Iterable)
+     * @see Functional#fold(java.util.function.Function, Iterable)
      */
-    public static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, T[] xs) {
+    public static final <T> Optional<T> fold(BiFunction<? super T, ? super T, ? extends T> f, T[] xs) {
         return FunctionalImpl.fold(f, newList(xs));
     }
     
@@ -970,7 +973,7 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#sequence
      */
-    public static final <T,R> Iterable<R> sequence(T value, Apply<? super T,? extends R>[] fs) {
+    public static final <T,R> Iterable<R> sequence(T value, java.util.function.Function<? super T,? extends R>[] fs) {
         return FunctionalImpl.sequence(value, newList(fs));
     }
     
@@ -979,49 +982,49 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<? super P,? extends Apply<T,T>> f1) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<? super P,? extends java.util.function.Function<T,T>> f1) {
         return FunctionalImpl.combineEndo(newList(f1));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2) {
         return FunctionalImpl.combineEndo(newList(f1, f2));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3) {
         return FunctionalImpl.combineEndo(newList(f1, f2, f3));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f4) {
         return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f4, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f5) {
         return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4, f5));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f4, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f5, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f6) {
         return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4, f5, f6));
     }
     
     /**
      * @see Functional#combineEndo
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>> f7) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f4, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f5, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f6, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f7) {
         return FunctionalImpl.combineEndo(newList(f1, f2, f3, f4, f5, f6, f7));
     }
     
@@ -1029,7 +1032,7 @@ public abstract class FunctionalA extends FunctionalM {
      * @see Functional#combineEndo
      */
     @SafeVarargs
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Apply<P,? extends Apply<T,T>> f1, final Apply<P,? extends Apply<T,T>> f2, final Apply<P,? extends Apply<T,T>> f3, final Apply<P,? extends Apply<T,T>> f4, final Apply<P,? extends Apply<T,T>> f5, final Apply<P,? extends Apply<T,T>> f6, final Apply<P,? extends Apply<T,T>> f7, final Apply<P,? extends Apply<T,T>>... fs) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f1, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f2, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f3, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f4, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f5, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f6, final java.util.function.Function<P,? extends java.util.function.Function<T,T>> f7, final java.util.function.Function<P,? extends java.util.function.Function<T,T>>... fs) {
         return FunctionalImpl.combineEndo(concat(newList(f1, f2, f3, f4, f5, f6, f7), fs));
     }
     

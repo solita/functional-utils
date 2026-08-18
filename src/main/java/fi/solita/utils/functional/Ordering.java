@@ -71,28 +71,28 @@ public abstract class Ordering<T> implements Comparator<T>, Monoid<Ordering<T>> 
     /**
      * @return composition of {@code this} and transformation to an element with natural ordering.
      */
-    public final Ordering<T> thenBy(final Apply<? super T, ? extends Comparable<?>> next) {
+    public final Ordering<T> thenBy(final java.util.function.Function<? super T, ? extends Comparable<?>> next) {
         return then(Compare.by(next));
     }
     
     /**
      * @return composition of {@code this} and transformation to an element with natural ordering.
      */
-    public final <S extends Comparable<? super S>> Ordering<T> thenByOptional(final Apply<? super T, Optional<S>> next) {
+    public final <S extends Comparable<? super S>> Ordering<T> thenByOptional(final java.util.function.Function<? super T, Optional<S>> next) {
         return then(Compare.byOptional(next));
     }
     
     /**
      * @return composition of {@code this} and {@code next} by transforming to a type comparable by {@code targetComparator}.
      */
-    public final <S> Ordering<T> thenBy(final Apply<? super T, S> next, final Comparator<? super S> targetComparator) {
+    public final <S> Ordering<T> thenBy(final java.util.function.Function<? super T, S> next, final Comparator<? super S> targetComparator) {
         return then(Compare.by(next, targetComparator));
     }
     
     /**
      * @return composition of {@code this} and {@code next} by transforming to a type comparable by {@code targetComparator}.
      */
-    public final <S> Ordering<T> thenByOptional(final Apply<? super T, Optional<S>> next, final Comparator<? super S> targetComparator) {
+    public final <S> Ordering<T> thenByOptional(final java.util.function.Function<? super T, Optional<S>> next, final Comparator<? super S> targetComparator) {
         return then(Compare.byOptional(next, targetComparator));
     }
 }

@@ -354,23 +354,23 @@ public class SemiGroupsTest {
 
     @Test
     public void testEndo() {
-        SemiGroup<Apply<Integer, Integer>> endo = endo();
+        SemiGroup<java.util.function.Function<Integer, Integer>> endo = endo();
         
-        Apply<Integer, Integer> addOne = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> addOne = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t + 1;
             }
         };
         
-        Apply<Integer, Integer> multiplyByTwo = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> multiplyByTwo = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t * 2;
             }
         };
         
-        Apply<Integer, Integer> composed = endo.apply(addOne, multiplyByTwo);
+        java.util.function.Function<Integer, Integer> composed = endo.apply(addOne, multiplyByTwo);
         
         // Should first add one, then multiply by two: (5 + 1) * 2 = 12
         assertEquals(Integer.valueOf(12), composed.apply(5));
@@ -600,23 +600,23 @@ public class SemiGroupsTest {
 
     @Test
     public void testEndo_multipleCompositions() {
-        SemiGroup<Apply<Integer, Integer>> endo = endo();
+        SemiGroup<java.util.function.Function<Integer, Integer>> endo = endo();
         
-        Apply<Integer, Integer> addOne = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> addOne = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t + 1;
             }
         };
         
-        Apply<Integer, Integer> multiplyByTwo = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> multiplyByTwo = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t * 2;
             }
         };
         
-        Apply<Integer, Integer> subtractThree = new Apply<Integer, Integer>() {
+        java.util.function.Function<Integer, Integer> subtractThree = new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer t) {
                 return t - 3;
@@ -624,7 +624,7 @@ public class SemiGroupsTest {
         };
         
         // Compose all three: ((5 + 1) * 2) - 3 = 9
-        Apply<Integer, Integer> composed = endo.apply(endo.apply(addOne, multiplyByTwo), subtractThree);
+        java.util.function.Function<Integer, Integer> composed = endo.apply(endo.apply(addOne, multiplyByTwo), subtractThree);
         assertEquals(Integer.valueOf(9), composed.apply(5));
     }
 

@@ -71,9 +71,9 @@ public class FunctionalMTest {
             Pair.of("cherry", 4)
         );
         
-        Iterable<Integer> result = findBy(new Apply<String, Boolean>() {
+        Iterable<Integer> result = findBy(new java.util.function.Predicate<String>() {
             @Override
-            public Boolean apply(String key) {
+            public boolean test(String key) {
                 return key.startsWith("a");
             }
         }, map);
@@ -89,9 +89,9 @@ public class FunctionalMTest {
     public void testFindBy_noMatch() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Iterable<Integer> result = findBy(new Apply<String, Boolean>() {
+        Iterable<Integer> result = findBy(new java.util.function.Predicate<String>() {
             @Override
-            public Boolean apply(String key) {
+            public boolean test(String key) {
                 return key.startsWith("z");
             }
         }, map);
@@ -130,13 +130,13 @@ public class FunctionalMTest {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
         Map<String, String> result = map(SemiGroups.<String>fail(), 
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String key) {
                     return key.toUpperCase();
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer value) {
                     return String.valueOf(value * 10);
@@ -154,13 +154,13 @@ public class FunctionalMTest {
         
         // Transform keys so "b" and "c" both become "X"
         Map<String, Integer> result = map(SemiGroups.intSum, 
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String key) {
                     return key.equals("a") ? "A" : "X";
                 }
             },
-            new Apply<Integer, Integer>() {
+            new java.util.function.Function<Integer, Integer>() {
                 @Override
                 public Integer apply(Integer value) {
                     return value;
@@ -182,7 +182,7 @@ public class FunctionalMTest {
             )
         );
         
-        SortedMap<String, Iterable<Integer>> result = map(new Apply<Integer, Integer>() {
+        SortedMap<String, Iterable<Integer>> result = map(new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer val) {
                 return val * 10;
@@ -200,7 +200,7 @@ public class FunctionalMTest {
             Pair.of("b", newList(4, 5, 6))
         );
         
-        Map<String, Iterable<Integer>> result = mapValues(new Apply<Integer, Integer>() {
+        Map<String, Iterable<Integer>> result = mapValues(new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer val) {
                 return val * 2;
@@ -213,7 +213,7 @@ public class FunctionalMTest {
     
     @Test
     public void testMapValues_null() {
-        Map<String, Iterable<Integer>> result = mapValues(new Apply<Integer, Integer>() {
+        Map<String, Iterable<Integer>> result = mapValues(new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer val) {
                 return val * 2;
@@ -230,7 +230,7 @@ public class FunctionalMTest {
             Pair.of("b", newList(4, 5))
         );
         
-        Map<String, List<String>> result = mapValueList(new Apply<Integer, String>() {
+        Map<String, List<String>> result = mapValueList(new java.util.function.Function<Integer, String>() {
             @Override
             public String apply(Integer val) {
                 return "v" + val;
@@ -248,7 +248,7 @@ public class FunctionalMTest {
             Pair.of("b", newList(3, 4, 3))
         );
         
-        Map<String, Set<String>> result = mapValueSet(new Apply<Integer, String>() {
+        Map<String, Set<String>> result = mapValueSet(new java.util.function.Function<Integer, String>() {
             @Override
             public String apply(Integer val) {
                 return "v" + val;
@@ -263,7 +263,7 @@ public class FunctionalMTest {
     public void testMapKey() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Map<String, Integer> result = mapKey(SemiGroups.<Integer>fail(), new Apply<String, String>() {
+        Map<String, Integer> result = mapKey(SemiGroups.<Integer>fail(), new java.util.function.Function<String, String>() {
             @Override
             public String apply(String key) {
                 return key.toUpperCase();
@@ -278,7 +278,7 @@ public class FunctionalMTest {
     public void testMapKey_withCombiner() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2), Pair.of("c", 3));
         
-        Map<String, Integer> result = mapKey(SemiGroups.intSum, new Apply<String, String>() {
+        Map<String, Integer> result = mapKey(SemiGroups.intSum, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String key) {
                 return "KEY";  // All keys map to same value
@@ -293,7 +293,7 @@ public class FunctionalMTest {
     public void testMapValue() {
         Map<String, Integer> map = newMap(Pair.of("a", 1), Pair.of("b", 2));
         
-        Map<String, String> result = mapValue(new Apply<Integer, String>() {
+        Map<String, String> result = mapValue(new java.util.function.Function<Integer, String>() {
             @Override
             public String apply(Integer val) {
                 return "value-" + val;
@@ -366,7 +366,7 @@ public class FunctionalMTest {
     public void testGroupBy() {
         List<String> items = newList("apple", "apricot", "banana", "blueberry", "cherry");
         
-        Map<Character, List<String>> result = groupBy(new Apply<String, Character>() {
+        Map<Character, List<String>> result = groupBy(new java.util.function.Function<String, Character>() {
             @Override
             public Character apply(String str) {
                 return str.charAt(0);
@@ -383,13 +383,13 @@ public class FunctionalMTest {
         List<String> items = newList("apple", "apricot", "banana");
         
         Map<Character, List<Integer>> result = groupBy(
-            new Apply<String, Character>() {
+            new java.util.function.Function<String, Character>() {
                 @Override
                 public Character apply(String str) {
                     return str.charAt(0);
                 }
             },
-            new Apply<String, Integer>() {
+            new java.util.function.Function<String, Integer>() {
                 @Override
                 public Integer apply(String str) {
                     return str.length();

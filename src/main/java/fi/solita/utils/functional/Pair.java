@@ -14,7 +14,7 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
         return new Pair<LEFT, RIGHT>(left, right);
     }
     
-    public static <T, LEFT, RIGHT> Apply<T, Pair<LEFT, RIGHT>> fanout(final Apply<? super T, ? extends LEFT> l, final Apply<? super T, ? extends RIGHT> r) {
+    public static <T, LEFT, RIGHT> java.util.function.Function<T, Pair<LEFT, RIGHT>> fanout(final java.util.function.Function<? super T, ? extends LEFT> l, final java.util.function.Function<? super T, ? extends RIGHT> r) {
         return new Function1<T, Pair<LEFT,RIGHT>>() {
             @Override
             public Pair<LEFT, RIGHT> apply(T t) {
@@ -42,19 +42,19 @@ public class Pair<LEFT, RIGHT> extends Tuple2<LEFT, RIGHT> {
     }
     
     @Override
-    public final <A,B> Pair<A,B> bimap(Apply<? super LEFT, ? extends A> fLeft, Apply<? super RIGHT, ? extends B> fRight) {
+    public final <A,B> Pair<A,B> bimap(java.util.function.Function<? super LEFT, ? extends A> fLeft, java.util.function.Function<? super RIGHT, ? extends B> fRight) {
         Map.Entry<A, B> ret = BiFunctors.<LEFT,A,RIGHT,B>entry().bimap(fLeft, fRight, this);
         return Pair.of(ret.getKey(), ret.getValue());
     }
 
     @Override
-    public final <A> Pair<A,RIGHT> first(Apply<? super LEFT, ? extends A> f) {
+    public final <A> Pair<A,RIGHT> first(java.util.function.Function<? super LEFT, ? extends A> f) {
         Map.Entry<A, RIGHT> ret = BiFunctors.<LEFT,A,RIGHT,RIGHT>entry().first(f, this);
         return Pair.of(ret.getKey(), ret.getValue());
     }
 
     @Override
-    public final <B> Pair<LEFT,B> second(Apply<? super RIGHT, ? extends B> f) {
+    public final <B> Pair<LEFT,B> second(java.util.function.Function<? super RIGHT, ? extends B> f) {
         Map.Entry<LEFT, B> ret = BiFunctors.<LEFT,LEFT,RIGHT,B>entry().second(f, this);
         return Pair.of(ret.getKey(), ret.getValue());
     }

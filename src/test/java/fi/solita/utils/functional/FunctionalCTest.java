@@ -9,6 +9,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import org.junit.Test;
 
@@ -67,9 +70,9 @@ public class FunctionalCTest {
     public void testFind_found() {
         CharSequence xs = "hello";
         
-        Optional<Character> result = find(new Apply<Character, Boolean>() {
+        Optional<Character> result = find(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'l';
             }
         }, xs);
@@ -82,9 +85,9 @@ public class FunctionalCTest {
     public void testFind_notFound() {
         CharSequence xs = "hello";
         
-        Optional<Character> result = find(new Apply<Character, Boolean>() {
+        Optional<Character> result = find(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'x';
             }
         }, xs);
@@ -96,9 +99,9 @@ public class FunctionalCTest {
     public void testFilter_charSequence() {
         CharSequence xs = "hello";
         
-        CharSequence result = filter(new Apply<Character, Boolean>() {
+        CharSequence result = filter(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, xs);
@@ -110,9 +113,9 @@ public class FunctionalCTest {
     public void testFilter_string() {
         String xs = "hello";
         
-        String result = filter(new Apply<Character, Boolean>() {
+        String result = filter(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, xs);
@@ -122,9 +125,9 @@ public class FunctionalCTest {
     
     @Test
     public void testFilter_null() {
-        assertNull(filter(new Apply<Character, Boolean>() {
+        assertNull(filter(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return true;
             }
         }, (String)null));
@@ -134,7 +137,7 @@ public class FunctionalCTest {
     public void testMap() {
         CharSequence xs = "abc";
         
-        Iterable<Integer> result = map(new Apply<Character, Integer>() {
+        Iterable<Integer> result = map(new java.util.function.Function<Character, Integer>() {
             @Override
             public Integer apply(Character c) {
                 return (int)c;
@@ -149,13 +152,13 @@ public class FunctionalCTest {
         CharSequence xs = "abc";
         
         Iterable<Pair<Character, Integer>> result = map(
-            new Apply<Character, Character>() {
+            new java.util.function.Function<Character, Character>() {
                 @Override
                 public Character apply(Character c) {
                     return Character.toUpperCase(c);
                 }
             },
-            new Apply<Character, Integer>() {
+            new java.util.function.Function<Character, Integer>() {
                 @Override
                 public Integer apply(Character c) {
                     return (int)c;
@@ -175,19 +178,19 @@ public class FunctionalCTest {
         CharSequence xs = "abc";
         
         Iterable<Tuple3<Character, Integer, Boolean>> result = map(
-            new Apply<Character, Character>() {
+            new java.util.function.Function<Character, Character>() {
                 @Override
                 public Character apply(Character c) {
                     return Character.toUpperCase(c);
                 }
             },
-            new Apply<Character, Integer>() {
+            new java.util.function.Function<Character, Integer>() {
                 @Override
                 public Integer apply(Character c) {
                     return (int)c;
                 }
             },
-            new Apply<Character, Boolean>() {
+            new java.util.function.Function<Character, Boolean>() {
                 @Override
                 public Boolean apply(Character c) {
                     return Character.isLowerCase(c);
@@ -207,25 +210,25 @@ public class FunctionalCTest {
         CharSequence xs = "ab";
         
         Iterable<Tuple4<Character, Integer, Boolean, String>> result = map(
-            new Apply<Character, Character>() {
+            new java.util.function.Function<Character, Character>() {
                 @Override
                 public Character apply(Character c) {
                     return Character.toUpperCase(c);
                 }
             },
-            new Apply<Character, Integer>() {
+            new java.util.function.Function<Character, Integer>() {
                 @Override
                 public Integer apply(Character c) {
                     return (int)c;
                 }
             },
-            new Apply<Character, Boolean>() {
+            new java.util.function.Function<Character, Boolean>() {
                 @Override
                 public Boolean apply(Character c) {
                     return Character.isLowerCase(c);
                 }
             },
-            new Apply<Character, String>() {
+            new java.util.function.Function<Character, String>() {
                 @Override
                 public String apply(Character c) {
                     return String.valueOf(c);
@@ -243,7 +246,7 @@ public class FunctionalCTest {
     public void testFlatMap() {
         CharSequence xs = "ab";
         
-        Iterable<Character> result = flatMap(new Apply<Character, Iterable<Character>>() {
+        Iterable<Character> result = flatMap(new java.util.function.Function<Character, Iterable<Character>>() {
             @Override
             public Iterable<Character> apply(Character c) {
                 return newList(c, Character.toUpperCase(c));
@@ -257,7 +260,7 @@ public class FunctionalCTest {
     public void testForeach() {
         final StringBuilder sb = new StringBuilder();
         
-        foreach(new Apply<Character, Void>() {
+        foreach(new java.util.function.Function<Character, Void>() {
             @Override
             public Void apply(Character c) {
                 sb.append(c);
@@ -272,7 +275,7 @@ public class FunctionalCTest {
     public void testForeach_applyVoid() {
         final StringBuilder sb = new StringBuilder();
         
-        foreach(new ApplyVoid<Character>() {
+        foreach(new Consumer<Character>() {
             @Override
             public void accept(Character c) {
                 sb.append(c);
@@ -339,9 +342,9 @@ public class FunctionalCTest {
     
     @Test
     public void testGroup_withComparator() {
-        ApplyBi<Character, Character, Boolean> comparator = new ApplyBi<Character, Character, Boolean>() {
+        BiPredicate<Character, Character> comparator = new BiPredicate<Character, Character>() {
             @Override
-            public Boolean apply(Character a, Character b) {
+            public boolean test(Character a, Character b) {
                 return Character.toLowerCase(a) == Character.toLowerCase(b);
             }
         };
@@ -517,9 +520,9 @@ public class FunctionalCTest {
     
     @Test
     public void testTakeWhile_charSequence() {
-        CharSequence result = takeWhile(new Apply<Character, Boolean>() {
+        CharSequence result = takeWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, (CharSequence)"hello");
@@ -529,9 +532,9 @@ public class FunctionalCTest {
     
     @Test
     public void testTakeWhile_string() {
-        String result = takeWhile(new Apply<Character, Boolean>() {
+        String result = takeWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, "hello");
@@ -541,9 +544,9 @@ public class FunctionalCTest {
     
     @Test
     public void testTakeWhile_null() {
-        assertNull(takeWhile(new Apply<Character, Boolean>() {
+        assertNull(takeWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return true;
             }
         }, (String)null));
@@ -551,9 +554,9 @@ public class FunctionalCTest {
     
     @Test
     public void testDropWhile_charSequence() {
-        CharSequence result = dropWhile(new Apply<Character, Boolean>() {
+        CharSequence result = dropWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, (CharSequence)"hello");
@@ -563,9 +566,9 @@ public class FunctionalCTest {
     
     @Test
     public void testDropWhile_string() {
-        String result = dropWhile(new Apply<Character, Boolean>() {
+        String result = dropWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, "hello");
@@ -575,9 +578,9 @@ public class FunctionalCTest {
     
     @Test
     public void testDropWhile_null() {
-        assertNull(dropWhile(new Apply<Character, Boolean>() {
+        assertNull(dropWhile(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return true;
             }
         }, (String)null));
@@ -585,9 +588,9 @@ public class FunctionalCTest {
     
     @Test
     public void testSpan_charSequence() {
-        Pair<CharSequence, CharSequence> result = span(new Apply<Character, Boolean>() {
+        Pair<CharSequence, CharSequence> result = span(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, (CharSequence)"hello");
@@ -598,9 +601,9 @@ public class FunctionalCTest {
     
     @Test
     public void testSpan_string() {
-        Pair<String, String> result = span(new Apply<Character, Boolean>() {
+        Pair<String, String> result = span(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c != 'l';
             }
         }, "hello");
@@ -611,9 +614,9 @@ public class FunctionalCTest {
     
     @Test
     public void testSpan_null() {
-        assertNull(span(new Apply<Character, Boolean>() {
+        assertNull(span(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return true;
             }
         }, (String)null));
@@ -621,9 +624,9 @@ public class FunctionalCTest {
     
     @Test
     public void testPartition_charSequence() {
-        Pair<CharSequence, CharSequence> result = partition(new Apply<Character, Boolean>() {
+        Pair<CharSequence, CharSequence> result = partition(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'l';
             }
         }, (CharSequence)"hello");
@@ -634,9 +637,9 @@ public class FunctionalCTest {
     
     @Test
     public void testPartition_string() {
-        Pair<String, String> result = partition(new Apply<Character, Boolean>() {
+        Pair<String, String> result = partition(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'l';
             }
         }, "hello");
@@ -732,16 +735,16 @@ public class FunctionalCTest {
     
     @Test
     public void testExists() {
-        assertTrue(exists(new Apply<Character, Boolean>() {
+        assertTrue(exists(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'l';
             }
         }, "hello"));
         
-        assertFalse(exists(new Apply<Character, Boolean>() {
+        assertFalse(exists(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'x';
             }
         }, "hello"));
@@ -749,16 +752,16 @@ public class FunctionalCTest {
     
     @Test
     public void testForall() {
-        assertTrue(forall(new Apply<Character, Boolean>() {
+        assertTrue(forall(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return Character.isLowerCase(c);
             }
         }, "hello"));
         
-        assertFalse(forall(new Apply<Character, Boolean>() {
+        assertFalse(forall(new java.util.function.Predicate<Character>() {
             @Override
-            public Boolean apply(Character c) {
+            public boolean test(Character c) {
                 return c == 'h';
             }
         }, "hello"));

@@ -19,7 +19,7 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Ta
     /**
      * @return pair of left value transformed with {@code first} and right value transformed with {@code second}.
      */
-    public <A,B> Tuple2<A,B> bimap(Apply<? super T1, ? extends A> first, Apply<? super T2, ? extends B> second) {
+    public <A,B> Tuple2<A,B> bimap(java.util.function.Function<? super T1, ? extends A> first, java.util.function.Function<? super T2, ? extends B> second) {
         Map.Entry<A, B> ret = BiFunctors.<T1,A,T2,B>entry().bimap(first, second, this);
         return Tuple.of(ret.getKey(), ret.getValue());
     }
@@ -27,7 +27,7 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Ta
     /**
      * @return first value transformed with {@code f}.
      */
-    public <A> Tuple2<A,T2> first(Apply<? super T1, ? extends A> f) {
+    public <A> Tuple2<A,T2> first(java.util.function.Function<? super T1, ? extends A> f) {
         Map.Entry<A, T2> ret = BiFunctors.<T1,A,T2,T2>entry().first(f, this);
         return Tuple.of(ret.getKey(), ret.getValue());
     }
@@ -35,7 +35,7 @@ public class Tuple2<T1, T2> extends Tuple implements Map.Entry<T1, T2>, Tuple.Ta
     /**
      * @return second value transformed with {@code f}.
      */
-    public <B> Tuple2<T1,B> second(Apply<? super T2, ? extends B> f) {
+    public <B> Tuple2<T1,B> second(java.util.function.Function<? super T2, ? extends B> f) {
         Map.Entry<T1, B> ret = BiFunctors.<T1,T1,T2,B>entry().second(f, this);
         return Tuple.of(ret.getKey(), ret.getValue());
     }

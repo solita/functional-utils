@@ -3,16 +3,17 @@ package fi.solita.utils.functional;
 /**
  * Specialization of {@code Function1<T, Boolean>}.
  */
+@Deprecated
 public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred<T> {
     
     /**
      * @return concrete {@code Predicate} for abstract function {@code apply}.
      */
-    public static final <T> Predicate<T> of(final Apply<? super T,Boolean> apply) {
+    public static final <T> Predicate<T> of(final java.util.function.Predicate<? super T> apply) {
         return new Predicate<T>() {
             @Override
             public boolean accept(T t) {
-                return apply.apply(t);
+                return apply.test(t);
             }
         };
     }

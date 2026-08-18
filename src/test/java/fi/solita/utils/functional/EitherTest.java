@@ -120,13 +120,13 @@ public class EitherTest {
     public void fold_onLeft_appliesLeftFunction() {
         Either<String, Integer> either = left("foo");
         String result = either.fold(
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String t) {
                     return "left:" + t;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer t) {
                     return "right:" + t;
@@ -140,13 +140,13 @@ public class EitherTest {
     public void fold_onRight_appliesRightFunction() {
         Either<String, Integer> either = right(42);
         String result = either.fold(
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String t) {
                     return "left:" + t;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer t) {
                     return "right:" + t;
@@ -177,7 +177,7 @@ public class EitherTest {
     @Test
     public void flatMap_onLeft_returnsLeftUnchanged() {
         Either<String, Integer> either = left("foo");
-        Apply<Integer, Either<String, ? extends String>> f = toStringEither;
+        java.util.function.Function<Integer, Either<String, ? extends String>> f = toStringEither;
         Either<String, String> result = either.<String>flatMap(f);
         
         assertTrue(result.isLeft());
@@ -187,7 +187,7 @@ public class EitherTest {
     @Test
     public void flatMap_onRight_appliesFunction() {
         Either<String, Integer> either = right(42);
-        Apply<Integer, Either<String, ? extends String>> f = toValueEither;
+        java.util.function.Function<Integer, Either<String, ? extends String>> f = toValueEither;
         Either<String, String> result = either.<String>flatMap(f);
         
         assertTrue(result.isRight());
@@ -197,7 +197,7 @@ public class EitherTest {
     @Test
     public void flatMap_onRight_canReturnLeft() {
         Either<String, Integer> either = right(42);
-        Apply<Integer, Either<String, ? extends String>> f = toErrorEither;
+        java.util.function.Function<Integer, Either<String, ? extends String>> f = toErrorEither;
         Either<String, String> result = either.<String>flatMap(f);
         
         assertTrue(result.isLeft());
@@ -297,35 +297,35 @@ public class EitherTest {
     }
 
     // Helper functions for tests
-    static Apply<String, Integer> strlen = new Apply<String, Integer>() {
+    static java.util.function.Function<String, Integer> strlen = new java.util.function.Function<String, Integer>() {
         @Override
         public Integer apply(String source) {
             return source.length();
         }
     };
 
-    static Apply<Integer, String> intToString = new Apply<Integer, String>() {
+    static java.util.function.Function<Integer, String> intToString = new java.util.function.Function<Integer, String>() {
         @Override
         public String apply(Integer source) {
             return source.toString();
         }
     };
 
-    static Apply<Integer, Either<String, ? extends String>> toStringEither = new Apply<Integer, Either<String, ? extends String>>() {
+    static java.util.function.Function<Integer, Either<String, ? extends String>> toStringEither = new java.util.function.Function<Integer, Either<String, ? extends String>>() {
         @Override
         public Either<String, ? extends String> apply(Integer t) {
             return right(t.toString());
         }
     };
 
-    static Apply<Integer, Either<String, ? extends String>> toValueEither = new Apply<Integer, Either<String, ? extends String>>() {
+    static java.util.function.Function<Integer, Either<String, ? extends String>> toValueEither = new java.util.function.Function<Integer, Either<String, ? extends String>>() {
         @Override
         public Either<String, ? extends String> apply(Integer t) {
             return right("value:" + t);
         }
     };
 
-    static Apply<Integer, Either<String, ? extends String>> toErrorEither = new Apply<Integer, Either<String, ? extends String>>() {
+    static java.util.function.Function<Integer, Either<String, ? extends String>> toErrorEither = new java.util.function.Function<Integer, Either<String, ? extends String>>() {
         @Override
         public Either<String, ? extends String> apply(Integer t) {
             return left("error");

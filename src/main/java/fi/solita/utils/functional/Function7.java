@@ -73,17 +73,17 @@ public abstract class Function7<T1, T2, T3, T4, T5, T6, T7, R> extends MultiPara
         };
     }
     
-    static final <T1,T2,T3,T4,T5,T6,T7,R> Function7<T1,T2,T3,T4,T5,T6,T7,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+    static final <T1,T2,T3,T4,T5,T6,T7,R> Function7<T1,T2,T3,T4,T5,T6,T7,R> partial(final java.util.function.Function<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function7<T1,T2,T3,T4,T5,T6,T7,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {
-                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5, t6, t7);
+                return PartialApplicationHelper.doApply((java.util.function.Function<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3, t4, t5, t6, t7);
             }
         };
     }
     
-    static final <T1,T2,T3,T4,T5,T6,T7,R,FR extends Apply<?,R>> Function7<T1,T2,T3,T4,T5,T6,T7,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+    static final <T1,T2,T3,T4,T5,T6,T7,R,FR extends java.util.function.Function<?,R>> Function7<T1,T2,T3,T4,T5,T6,T7,FR> split(final java.util.function.Function<? extends Tuple,R> f, final Object... placeholders) {
         return new Function7<T1,T2,T3,T4,T5,T6,T7,FR>() {
             @Override
             public FR apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7) {

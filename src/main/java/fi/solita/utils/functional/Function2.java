@@ -1,6 +1,7 @@
 package fi.solita.utils.functional;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import fi.solita.utils.functional.Function.GivenEvenLater;
 import fi.solita.utils.functional.Function.GivenLater;
@@ -8,7 +9,7 @@ import fi.solita.utils.functional.Function.GivenLater;
 /**
  * Two argument function from {@code T1} and {@code T2} to {@code R}
  */
-public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<? extends T1,? extends T2>, R, T1> implements ApplyBi<T1, T2, R> {
+public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<? extends T1,? extends T2>, R, T1> implements BiFunction<T1, T2, R> {
 
     @Override
     public final <U> Function2<T1, T2, U> andThen(final java.util.function.Function<? super R, ? extends U> next) {
@@ -120,17 +121,17 @@ public abstract class Function2<T1, T2, R> extends MultiParamFunction<Map.Entry<
         };
     }
     
-    static final <T1,T2,R> Function2<T1,T2,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+    static final <T1,T2,R> Function2<T1,T2,R> partial(final java.util.function.Function<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function2<T1,T2,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public final R apply(T1 t1, T2 t2) {
-                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2);
+                return PartialApplicationHelper.doApply((java.util.function.Function<Tuple,R>)f, paramsAndPlaceholders, t1, t2);
             }
         };
     }
     
-    static final <T1,T2,R,FR extends Apply<?,R>> Function2<T1,T2,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+    static final <T1,T2,R,FR extends java.util.function.Function<?,R>> Function2<T1,T2,FR> split(final java.util.function.Function<? extends Tuple,R> f, final Object... placeholders) {
         return new Function2<T1,T2,FR>() {
             @Override
             public final FR apply(T1 t1, T2 t2) {

@@ -61,17 +61,17 @@ public abstract class Function3<T1, T2, T3, R> extends MultiParamFunction<Tuple3
         return ap(arg1).ap(arg2);
     }
     
-    static final <T1,T2,T3,R> Function3<T1,T2,T3,R> partial(final Apply<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
+    static final <T1,T2,T3,R> Function3<T1,T2,T3,R> partial(final java.util.function.Function<? extends Tuple,R> f, final Object... paramsAndPlaceholders) {
         return new Function3<T1,T2,T3,R>() {
             @SuppressWarnings("unchecked")
             @Override
             public R apply(T1 t1, T2 t2, T3 t3) {
-                return PartialApplicationHelper.doApply((Apply<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3);
+                return PartialApplicationHelper.doApply((java.util.function.Function<Tuple,R>)f, paramsAndPlaceholders, t1, t2, t3);
             }
         };
     }
     
-    static final <T1,T2,T3,R,FR extends Apply<?,R>> Function3<T1,T2,T3,FR> split(final Apply<? extends Tuple,R> f, final Object... placeholders) {
+    static final <T1,T2,T3,R,FR extends java.util.function.Function<?,R>> Function3<T1,T2,T3,FR> split(final java.util.function.Function<? extends Tuple,R> f, final Object... placeholders) {
         return new Function3<T1,T2,T3,FR>() {
             @Override
             public FR apply(T1 t1, T2 t2, T3 t3) {

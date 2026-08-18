@@ -17,13 +17,13 @@ public class CompareExamples {
         public Optional<String> name;
     }
     
-    static Apply<Employee,Integer> salary = new Apply<Employee,Integer>() {
+    static java.util.function.Function<Employee,Integer> salary = new java.util.function.Function<Employee,Integer>() {
         @Override
         public Integer apply(Employee source) {
             return source.salary;
         }
     };
-    static Apply<Employee,Optional<String>> name = new Apply<Employee,Optional<String>>() {
+    static java.util.function.Function<Employee,Optional<String>> name = new java.util.function.Function<Employee,Optional<String>>() {
         @Override
         public Optional<String> apply(Employee source) {
             return source.name;

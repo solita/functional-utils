@@ -4,6 +4,7 @@ import static fi.solita.utils.functional.Collections.*;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import org.junit.Test;
 
@@ -1039,7 +1040,7 @@ public class CollectionsTest {
     @Test
     public void testNewMapWithValueFunction() {
         Set<String> keys = newSet("a", "b", "c");
-        Map<String, Integer> map = newMap(new Apply<String, Integer>() {
+        Map<String, Integer> map = newMap(new java.util.function.Function<String, Integer>() {
             public Integer apply(String t) {
                 return t.length();
             }
@@ -1094,7 +1095,7 @@ public class CollectionsTest {
     @Test
     public void testNewSortedMapWithValueFunction() {
         Set<String> keys = newSet("a", "bb", "ccc");
-        SortedMap<String, Integer> map = newSortedMap(new Apply<String, Integer>() {
+        SortedMap<String, Integer> map = newSortedMap(new java.util.function.Function<String, Integer>() {
             public Integer apply(String t) {
                 return t.length();
             }
@@ -1117,7 +1118,7 @@ public class CollectionsTest {
             }
         };
         Set<String> keys = newSet("a", "b", "c");
-        SortedMap<String, Integer> map = newSortedMap(reverseOrder, new Apply<String, Integer>() {
+        SortedMap<String, Integer> map = newSortedMap(reverseOrder, new java.util.function.Function<String, Integer>() {
             public Integer apply(String t) {
                 return t.length();
             }
@@ -1302,7 +1303,7 @@ public class CollectionsTest {
         list.add("a");
         list.add("b");
         
-        Iterable<String> lazy = lazily(new ApplyZero<Iterable<String>>() {
+        Iterable<String> lazy = lazily(new Supplier<Iterable<String>>() {
             public Iterable<String> get() {
                 return list;
             }
@@ -1325,7 +1326,7 @@ public class CollectionsTest {
     public void testLazilyMultipleIterations() {
         final int[] counter = new int[]{0};
         
-        Iterable<Integer> lazy = lazily(new ApplyZero<Iterable<Integer>>() {
+        Iterable<Integer> lazy = lazily(new Supplier<Iterable<Integer>>() {
             public Iterable<Integer> get() {
                 counter[0]++;
                 return Arrays.asList(1, 2, 3);
@@ -1368,7 +1369,7 @@ public class CollectionsTest {
     @Test
     public void testNewMapWithValueFunctionAndSingletonSet() {
         Set<String> keys = newSet("a");
-        Map<String, Integer> map = newMap(new Apply<String, Integer>() {
+        Map<String, Integer> map = newMap(new java.util.function.Function<String, Integer>() {
             public Integer apply(String t) {
                 return t.length();
             }

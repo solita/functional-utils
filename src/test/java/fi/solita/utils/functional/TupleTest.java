@@ -268,13 +268,13 @@ public class TupleTest {
         Tuple2<String, Integer> tuple = Tuple.of("hello", 5);
         
         Tuple2<Integer, String> mapped = tuple.bimap(
-            new Apply<String, Integer>() {
+            new java.util.function.Function<String, Integer>() {
                 @Override
                 public Integer apply(String s) {
                     return s.length();
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer i) {
                     return i.toString();
@@ -290,7 +290,7 @@ public class TupleTest {
     public void testFirst() {
         Tuple2<String, Integer> tuple = Tuple.of("hello", 5);
         
-        Tuple2<Integer, Integer> result = tuple.first(new Apply<String, Integer>() {
+        Tuple2<Integer, Integer> result = tuple.first(new java.util.function.Function<String, Integer>() {
             @Override
             public Integer apply(String s) {
                 return s.length();
@@ -305,7 +305,7 @@ public class TupleTest {
     public void testSecond() {
         Tuple2<String, Integer> tuple = Tuple.of("hello", 5);
         
-        Tuple2<String, String> result = tuple.second(new Apply<Integer, String>() {
+        Tuple2<String, String> result = tuple.second(new java.util.function.Function<Integer, String>() {
             @Override
             public String apply(Integer i) {
                 return i.toString();

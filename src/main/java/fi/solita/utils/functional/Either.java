@@ -86,38 +86,38 @@ public class Either<L,R> {
     /**
      * @return left side transformed with {@code fLeft} or right side transformed with {@code fRight}.
      */
-    public final <A,B> Either<A,B> bimap(Apply<? super L, ? extends A> fLeft, Apply<? super R, ? extends B> fRight) {
+    public final <A,B> Either<A,B> bimap(java.util.function.Function<? super L, ? extends A> fLeft, java.util.function.Function<? super R, ? extends B> fRight) {
         return BiFunctors.<L,A,R,B>either().bimap(fLeft, fRight, this);
     }
     
     /**
      * @return left side transformed with {@code fLeft} or right side transformed with {@code fRight}.
      */
-    public <T> T fold(Apply<? super L, ? extends T> ifLeft, Apply<? super R, ? extends T> ifRight){
+    public <T> T fold(java.util.function.Function<? super L, ? extends T> ifLeft, java.util.function.Function<? super R, ? extends T> ifRight){
         return isLeft() ? ifLeft.apply(left.get()) : ifRight.apply(right.get());
     }
     
     @SuppressWarnings("unchecked")
-    public <T> Either<L,T> map(Apply<? super R, ? extends T> f){
+    public <T> Either<L,T> map(java.util.function.Function<? super R, ? extends T> f){
         return isLeft() ? (Either<L,T>)this : Either.<L,T>right(f.apply(right.get()));
     }
     
     @SuppressWarnings("unchecked")
-    public <T> Either<L,T> flatMap(Apply<? super R, Either<L,? extends T>> f){
+    public <T> Either<L,T> flatMap(java.util.function.Function<? super R, Either<L,? extends T>> f){
         return isLeft() ? (Either<L,T>)this : (Either<L,T>)f.apply(right.get());
     }
 
     /**
      * @return left side transformed with {@code f}.
      */
-    public final <A> Either<A,R> first(Apply<? super L, ? extends A> f) {
+    public final <A> Either<A,R> first(java.util.function.Function<? super L, ? extends A> f) {
         return BiFunctors.<L,A,R,R>either().first(f, this);
     }
 
     /**
      * @return right side transformed with {@code f}.
      */
-    public final <B> Either<L,B> second(Apply<? super R, ? extends B> f) {
+    public final <B> Either<L,B> second(java.util.function.Function<? super R, ? extends B> f) {
         return BiFunctors.<L,L,R,B>either().second(f, this);
     }
     

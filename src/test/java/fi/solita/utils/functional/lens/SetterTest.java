@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.BiFunction;
 
 import org.junit.Test;
 
-import fi.solita.utils.functional.Apply;
 import fi.solita.utils.functional.Function;
-import fi.solita.utils.functional.Function2;
 
 public class SetterTest {
     
@@ -81,109 +80,109 @@ public class SetterTest {
     }
     
     // Setters for Person
-    static final Setter<Person, String> nameSetter = Setter.of(new Function2<Person, Apply<String, String>, Person>() {
+    static final Setter<Person, String> nameSetter = Setter.of(new BiFunction<Person, java.util.function.Function<String, String>, Person>() {
         @Override
-        public Person apply(Person person, Apply<String, String> f) {
+        public Person apply(Person person, java.util.function.Function<String, String> f) {
             return new Person(f.apply(person.name), person.age);
         }
     });
     
-    static final Setter<Person, Integer> ageSetter = Setter.of(new Function2<Person, Apply<Integer, Integer>, Person>() {
+    static final Setter<Person, Integer> ageSetter = Setter.of(new BiFunction<Person, java.util.function.Function<Integer, Integer>, Person>() {
         @Override
-        public Person apply(Person person, Apply<Integer, Integer> f) {
+        public Person apply(Person person, java.util.function.Function<Integer, Integer> f) {
             return new Person(person.name, f.apply(person.age));
         }
     });
     
     // Setters for Address
-    static final Setter<Address, String> streetSetter = Setter.of(new Function2<Address, Apply<String, String>, Address>() {
+    static final Setter<Address, String> streetSetter = Setter.of(new BiFunction<Address, java.util.function.Function<String, String>, Address>() {
         @Override
-        public Address apply(Address address, Apply<String, String> f) {
+        public Address apply(Address address, java.util.function.Function<String, String> f) {
             return new Address(f.apply(address.street), address.city);
         }
     });
     
-    static final Setter<Address, String> citySetter = Setter.of(new Function2<Address, Apply<String, String>, Address>() {
+    static final Setter<Address, String> citySetter = Setter.of(new BiFunction<Address, java.util.function.Function<String, String>, Address>() {
         @Override
-        public Address apply(Address address, Apply<String, String> f) {
+        public Address apply(Address address, java.util.function.Function<String, String> f) {
             return new Address(address.street, f.apply(address.city));
         }
     });
     
     // Setters for PersonWithAddress
-    static final Setter<PersonWithAddress, Address> addressSetter = Setter.of(new Function2<PersonWithAddress, Apply<Address, Address>, PersonWithAddress>() {
+    static final Setter<PersonWithAddress, Address> addressSetter = Setter.of(new BiFunction<PersonWithAddress, java.util.function.Function<Address, Address>, PersonWithAddress>() {
         @Override
-        public PersonWithAddress apply(PersonWithAddress person, Apply<Address, Address> f) {
+        public PersonWithAddress apply(PersonWithAddress person, java.util.function.Function<Address, Address> f) {
             return new PersonWithAddress(person.name, f.apply(person.address));
         }
     });
     
     // Setter for Container
     static final <T> Setter<Container<T>, T> valueSetter() {
-        return Setter.of(new Function2<Container<T>, Apply<T, T>, Container<T>>() {
+        return Setter.of(new BiFunction<Container<T>, java.util.function.Function<T, T>, Container<T>>() {
             @Override
-            public Container<T> apply(Container<T> container, Apply<T, T> f) {
+            public Container<T> apply(Container<T> container, java.util.function.Function<T, T> f) {
                 return new Container<T>(f.apply(container.value));
             }
         });
     }
     
     // Setters for CollectionHolder
-    static final Setter<CollectionHolder, List<String>> itemsSetter = Setter.of(new Function2<CollectionHolder, Apply<List<String>, List<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, List<String>> itemsSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<List<String>, List<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<List<String>, List<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<List<String>, List<String>> f) {
             return new CollectionHolder(f.apply(holder.items), holder.numbers, holder.sortedItems, holder.optionalValue, holder.collection);
         }
     });
     
-    static final Setter<CollectionHolder, Set<Integer>> numbersSetter = Setter.of(new Function2<CollectionHolder, Apply<Set<Integer>, Set<Integer>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, Set<Integer>> numbersSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<Set<Integer>, Set<Integer>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<Set<Integer>, Set<Integer>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<Set<Integer>, Set<Integer>> f) {
             return new CollectionHolder(holder.items, f.apply(holder.numbers), holder.sortedItems, holder.optionalValue, holder.collection);
         }
     });
     
-    static final Setter<CollectionHolder, SortedSet<String>> sortedItemsSetter = Setter.of(new Function2<CollectionHolder, Apply<SortedSet<String>, SortedSet<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, SortedSet<String>> sortedItemsSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<SortedSet<String>, SortedSet<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<SortedSet<String>, SortedSet<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<SortedSet<String>, SortedSet<String>> f) {
             return new CollectionHolder(holder.items, holder.numbers, f.apply(holder.sortedItems), holder.optionalValue, holder.collection);
         }
     });
     
-    static final Setter<CollectionHolder, Optional<String>> optionalValueSetter = Setter.of(new Function2<CollectionHolder, Apply<Optional<String>, Optional<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, Optional<String>> optionalValueSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<Optional<String>, Optional<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<Optional<String>, Optional<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<Optional<String>, Optional<String>> f) {
             return new CollectionHolder(holder.items, holder.numbers, holder.sortedItems, f.apply(holder.optionalValue), holder.collection);
         }
     });
     
-    static final Setter<CollectionHolder, Iterable<String>> iterableItemsSetter = Setter.of(new Function2<CollectionHolder, Apply<Iterable<String>, Iterable<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, Iterable<String>> iterableItemsSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<Iterable<String>, Iterable<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<Iterable<String>, Iterable<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<Iterable<String>, Iterable<String>> f) {
             Iterable<String> transformed = f.apply(holder.items);
             return new CollectionHolder(newList(transformed), holder.numbers, holder.sortedItems, holder.optionalValue, holder.collection);
         }
     });
     
-    static final Setter<CollectionHolder, Collection<String>> collectionSetter = Setter.of(new Function2<CollectionHolder, Apply<Collection<String>, Collection<String>>, CollectionHolder>() {
+    static final Setter<CollectionHolder, Collection<String>> collectionSetter = Setter.of(new BiFunction<CollectionHolder, java.util.function.Function<Collection<String>, Collection<String>>, CollectionHolder>() {
         @Override
-        public CollectionHolder apply(CollectionHolder holder, Apply<Collection<String>, Collection<String>> f) {
+        public CollectionHolder apply(CollectionHolder holder, java.util.function.Function<Collection<String>, Collection<String>> f) {
             return new CollectionHolder(holder.items, holder.numbers, holder.sortedItems, holder.optionalValue, f.apply(holder.collection));
         }
     });
     
     // Setter for individual string elements
-    static final Setter<String, String> stringToUpperSetter = Setter.of(new Function2<String, Apply<String, String>, String>() {
+    static final Setter<String, String> stringToUpperSetter = Setter.of(new BiFunction<String, java.util.function.Function<String, String>, String>() {
         @Override
-        public String apply(String s, Apply<String, String> f) {
+        public String apply(String s, java.util.function.Function<String, String> f) {
             return f.apply(s);
         }
     });
     
     // Setter for individual integer elements
-    static final Setter<Integer, Integer> intSetter = Setter.of(new Function2<Integer, Apply<Integer, Integer>, Integer>() {
+    static final Setter<Integer, Integer> intSetter = Setter.of(new BiFunction<Integer, java.util.function.Function<Integer, Integer>, Integer>() {
         @Override
-        public Integer apply(Integer i, Apply<Integer, Integer> f) {
+        public Integer apply(Integer i, java.util.function.Function<Integer, Integer> f) {
             return f.apply(i);
         }
     });
@@ -211,7 +210,7 @@ public class SetterTest {
     public void testModify_WithFunction() {
         Person person = new Person("Alice", 30);
         
-        Person modified = nameSetter.modify(person, new Apply<String, String>() {
+        Person modified = nameSetter.modify(person, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String name) {
                 return name.toUpperCase();
@@ -224,7 +223,7 @@ public class SetterTest {
     
     @Test
     public void testModify_NullObject_ReturnsNull() {
-        Person modified = nameSetter.modify(null, new Apply<String, String>() {
+        Person modified = nameSetter.modify(null, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String name) {
                 return name.toUpperCase();
@@ -238,7 +237,7 @@ public class SetterTest {
     public void testModify_IncrementAge() {
         Person person = new Person("Alice", 30);
         
-        Person modified = ageSetter.modify(person, new Apply<Integer, Integer>() {
+        Person modified = ageSetter.modify(person, new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer age) {
                 return age + 1;
@@ -270,7 +269,7 @@ public class SetterTest {
         
         Setter<PersonWithAddress, String> composedSetter = addressSetter.andThen(streetSetter);
         
-        PersonWithAddress modified = composedSetter.modify(person, new Apply<String, String>() {
+        PersonWithAddress modified = composedSetter.modify(person, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String street) {
                 return street + " Apt 5";
@@ -283,7 +282,7 @@ public class SetterTest {
     }
     
     @Test
-    public void testOf_CreateSetterFromApplyBi() {
+    public void testOf_CreateSetterFromBiFunction() {
         Setter<Person, String> setter = nameSetter;
         
         Person person = new Person("Alice", 30);
@@ -300,7 +299,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachList(itemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -316,7 +315,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachList(itemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -333,7 +332,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, Integer> eachSetter = Setter.eachSet(numbersSetter, intSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<Integer, Integer>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer i) {
                 return i * 2;
@@ -349,7 +348,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, Integer> eachSetter = Setter.eachSet(numbersSetter, intSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<Integer, Integer>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer i) {
                 return i * 2;
@@ -372,7 +371,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -395,7 +394,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -413,7 +412,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachSortedSet(sortedItemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -430,7 +429,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachCollection(collectionSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -447,7 +446,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachIterable(iterableItemsSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -463,7 +462,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachOptional(optionalValueSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -479,7 +478,7 @@ public class SetterTest {
         
         Setter<CollectionHolder, String> eachSetter = Setter.eachOptional(optionalValueSetter, stringToUpperSetter);
         
-        CollectionHolder modified = eachSetter.modify(holder, new Apply<String, String>() {
+        CollectionHolder modified = eachSetter.modify(holder, new java.util.function.Function<String, String>() {
             @Override
             public String apply(String s) {
                 return s.toUpperCase();
@@ -505,13 +504,13 @@ public class SetterTest {
         
         // Chain multiple modifications
         Person modified = ageSetter.modify(
-            nameSetter.modify(person, new Apply<String, String>() {
+            nameSetter.modify(person, new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String name) {
                     return name.toUpperCase();
                 }
             }), 
-            new Apply<Integer, Integer>() {
+            new java.util.function.Function<Integer, Integer>() {
                 @Override
                 public Integer apply(Integer age) {
                     return age + 5;

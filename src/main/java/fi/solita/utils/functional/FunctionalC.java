@@ -6,6 +6,9 @@ import static fi.solita.utils.functional.Collections.newList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 
@@ -14,14 +17,14 @@ import fi.solita.utils.functional.Iterables.RepeatingIterable;
  */
 public abstract class FunctionalC extends FunctionalS {
 
-    static final Apply<CharSequence, Iterable<Character>> charSeq2iterable = new Apply<CharSequence, Iterable<Character>>() {
+    static final java.util.function.Function<CharSequence, Iterable<Character>> charSeq2iterable = new java.util.function.Function<CharSequence, Iterable<Character>>() {
         @Override
         public final Iterable<Character> apply(CharSequence source) {
             return it(source);
         }
     };
     
-    private static final Apply<Iterable<Character>, CharSequence> iterable2charSeq = new Apply<Iterable<Character>, CharSequence>() {
+    private static final java.util.function.Function<Iterable<Character>, CharSequence> iterable2charSeq = new java.util.function.Function<Iterable<Character>, CharSequence>() {
         @Override
         public final CharSequence apply(Iterable<Character> source) {
             return it(source);
@@ -65,7 +68,7 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#find
      */
-    public static final Optional<Character> find(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final Optional<Character> find(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return FunctionalImpl.find(predicate, it(xs));
     }
     
@@ -74,14 +77,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#filter
      */
-    public static final CharSequence filter(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final CharSequence filter(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return it(FunctionalImpl.filter(predicate, it(xs)));
     }
     
     /**
      * @see Functional#filter
      */
-    public static final String filter(Apply<Character, Boolean> predicate, String xs) {
+    public static final String filter(java.util.function.Predicate<Character> predicate, String xs) {
         return xs == null ? null : filter(predicate, (CharSequence)xs).toString();
     }
     
@@ -90,35 +93,35 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#map(Apply, Iterable)
      */
-    public static final <T> Iterable<T> map(Apply<Character, ? extends T> f, CharSequence xs) {
+    public static final <T> Iterable<T> map(java.util.function.Function<Character, ? extends T> f, CharSequence xs) {
         return FunctionalImpl.map(f, it(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Iterable)
      */
-    public static final <T1, T2> Iterable<Pair<T1,T2>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, CharSequence xs) {
+    public static final <T1, T2> Iterable<Pair<T1,T2>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, it(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Iterable)
      */
-    public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, Apply<Character, ? extends T3> f3, CharSequence xs) {
+    public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, java.util.function.Function<Character, ? extends T3> f3, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, it(xs));
     }
     
     /**
      * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
      */
-    public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(Apply<Character, ? extends T1> f1, Apply<Character, ? extends T2> f2, Apply<Character, ? extends T3> f3, Apply<Character, ? extends T4> f4, CharSequence xs) {
+    public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, java.util.function.Function<Character, ? extends T3> f3, java.util.function.Function<Character, ? extends T4> f4, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, it(xs));
     }
     
     /**
      * @see Functional#flatMap
      */
-    public static final <T> Iterable<T> flatMap(Apply<Character, ? extends Iterable<? extends T>> f, CharSequence xs) {
+    public static final <T> Iterable<T> flatMap(java.util.function.Function<Character, ? extends Iterable<? extends T>> f, CharSequence xs) {
         return FunctionalImpl.flatMap(f, it(xs));
     }
     
@@ -127,14 +130,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#foreach
      */
-    public static final void foreach(Apply<Character, Void> procedure, CharSequence xs) {
+    public static final void foreach(java.util.function.Function<Character, Void> procedure, CharSequence xs) {
         FunctionalImpl.foreach(procedure, it(xs));
     }
     
     /**
      * @see Functional#foreach
      */
-    public static final void foreach(ApplyVoid<Character> procedure, CharSequence xs) {
+    public static final void foreach(Consumer<Character> procedure, CharSequence xs) {
         FunctionalImpl.foreach(procedure, it(xs));
     }
     
@@ -171,16 +174,16 @@ public abstract class FunctionalC extends FunctionalS {
     }
     
     /**
-     * @see Functional#group(Apply, Iterable)
+     * @see Functional#group(java.util.function.Function, Iterable)
      */
-    public static final Iterable<CharSequence> group(ApplyBi<Character,Character,Boolean> comparator, CharSequence xs) {
+    public static final Iterable<CharSequence> group(BiPredicate<Character,Character> comparator, CharSequence xs) {
         return FunctionalImpl.map(iterable2charSeq, FunctionalImpl.group(comparator, it(xs)));
     }
     
     /**
-     * @see Functional#group(Apply, Iterable)
+     * @see Functional#group(java.util.function.Function, Iterable)
      */
-    public static final Iterable<String> group(ApplyBi<Character,Character,Boolean> comparator, String xs) {
+    public static final Iterable<String> group(BiPredicate<Character,Character> comparator, String xs) {
         return FunctionalImpl.map(Object::toString, group(comparator, (CharSequence)xs));
     }
     
@@ -329,14 +332,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#takeWhile
      */
-    public static final CharSequence takeWhile(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final CharSequence takeWhile(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return it(FunctionalImpl.takeWhile(predicate, it(xs)));
     }
     
     /**
      * @see Functional#takeWhile
      */
-    public static final String takeWhile(Apply<Character, Boolean> predicate, String xs) {
+    public static final String takeWhile(java.util.function.Predicate<Character> predicate, String xs) {
         return xs == null ? null : takeWhile(predicate, (CharSequence)xs).toString();
     }
     
@@ -345,14 +348,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#dropWhile
      */
-    public static final CharSequence dropWhile(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final CharSequence dropWhile(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return it(FunctionalImpl.dropWhile(predicate, it(xs)));
     }
     
     /**
      * @see Functional#dropWhile
      */
-    public static final String dropWhile(Apply<Character, Boolean> predicate, String xs) {
+    public static final String dropWhile(java.util.function.Predicate<Character> predicate, String xs) {
         return xs == null ? null : dropWhile(predicate, (CharSequence)xs).toString();
     }
     
@@ -361,19 +364,19 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#span
      */
-    public static final Pair<CharSequence, CharSequence> span(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final Pair<CharSequence, CharSequence> span(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return Pair.of(takeWhile(predicate, xs), dropWhile(predicate, xs));
     }
     
     /**
      * @see Functional#span
      */
-    public static final Pair<String, String> span(Apply<Character, Boolean> predicate, String xs) {
+    public static final Pair<String, String> span(java.util.function.Predicate<Character> predicate, String xs) {
         if (xs == null) {
             return null;
         }
         for (int i = 0; i < xs.length(); ++i) {
-            if (!predicate.apply(xs.charAt(i))) {
+            if (!predicate.test(xs.charAt(i))) {
                 return Pair.of(xs.substring(0, i), xs.substring(i));
             }
         }
@@ -383,14 +386,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#partition
      */
-    public static final Pair<CharSequence, CharSequence> partition(Apply<Character, Boolean> predicate, CharSequence xs) {
-        return Pair.of(filter(predicate, xs), filter(x -> !predicate.apply(x), xs));
+    public static final Pair<CharSequence, CharSequence> partition(java.util.function.Predicate<Character> predicate, CharSequence xs) {
+        return Pair.of(filter(predicate, xs), filter(x -> !predicate.test(x), xs));
     }
     
     /**
      * @see Functional#partition
      */
-    public static final Pair<String, String> partition(Apply<Character, Boolean> predicate, String xs) {
+    public static final Pair<String, String> partition(java.util.function.Predicate<Character> predicate, String xs) {
         return partition(predicate, (CharSequence)xs).bimap(Object::toString, Object::toString);
     }
     
@@ -485,14 +488,14 @@ public abstract class FunctionalC extends FunctionalS {
     /**
      * @see Functional#exists
      */
-    public static final boolean exists(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final boolean exists(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return FunctionalImpl.exists(predicate, it(xs));
     }
     
     /**
      * @see Functional#forall
      */
-    public static final boolean forall(Apply<Character, Boolean> predicate, CharSequence xs) {
+    public static final boolean forall(java.util.function.Predicate<Character> predicate, CharSequence xs) {
         return FunctionalImpl.forall(predicate, it(xs));
     }
     
@@ -577,16 +580,16 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     /**
-     * @see Functional#fold(Object, Apply, Iterable)
+     * @see Functional#fold(Object, java.util.function.Function, Iterable)
      */
-    public static final <Z> Z fold(Z zero, ApplyBi<? super Z, Character, Z> f, CharSequence xs) {
+    public static final <Z> Z fold(Z zero, BiFunction<? super Z, Character, Z> f, CharSequence xs) {
         return FunctionalImpl.fold(zero, f, it(xs));
     }
     
     /**
-     * @see Functional#fold(Apply, Iterable)
+     * @see Functional#fold(java.util.function.Function, Iterable)
      */
-    public static final Optional<Character> fold(ApplyBi<Character, Character, Character> f, CharSequence xs) {
+    public static final Optional<Character> fold(BiFunction<Character, Character, Character> f, CharSequence xs) {
         return FunctionalImpl.fold(f, it(xs));
     }
     

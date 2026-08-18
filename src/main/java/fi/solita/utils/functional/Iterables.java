@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 public abstract class Iterables {
     // cache most used Some-object to reduce object allocation
@@ -40,7 +42,7 @@ public abstract class Iterables {
         return size < someCache.length ? someCache[(int)size] : Optional.of(size);
     }
     
-    public static final Apply<Iterable<?>,Optional<Long>> resolveSize = new Apply<Iterable<?>,Optional<Long>>() {
+    public static final java.util.function.Function<Iterable<?>,Optional<Long>> resolveSize = new java.util.function.Function<Iterable<?>,Optional<Long>>() {
         public final Optional<Long> apply(Iterable<?> source) {
             if (source instanceof Collection) {
                 return wrapSome((long)((Collection<?>)source).size());
@@ -52,25 +54,25 @@ public abstract class Iterables {
         }
     };
     
-    private static final Apply<Iterator<?>,Boolean> hasNext = new Apply<Iterator<?>,Boolean>() {
-        public final Boolean apply(Iterator<?> source) {
+    private static final java.util.function.Predicate<Iterator<?>> hasNext = new java.util.function.Predicate<Iterator<?>>() {
+        public final boolean test(Iterator<?> source) {
             return source.hasNext();
         }
     };
     
-    private static final Apply<Iterator<Object>, Object> next = new Apply<Iterator<Object>,Object>() {
+    private static final java.util.function.Function<Iterator<Object>, Object> next = new java.util.function.Function<Iterator<Object>,Object>() {
         public final Object apply(Iterator<Object> source) {
             return source.next();
         }
     };
     
-    private static final Apply<Iterable<Object>,Iterator<Object>> toIterator = new Apply<Iterable<Object>,Iterator<Object>>() {
+    private static final java.util.function.Function<Iterable<Object>,Iterator<Object>> toIterator = new java.util.function.Function<Iterable<Object>,Iterator<Object>>() {
         public final Iterator<Object> apply(Iterable<Object> source) {
             return source.iterator();
         }
     };
     
-    private static final Apply<Iterable<Object>,Iterator<Object>> toIteratorForced = new Apply<Iterable<Object>,Iterator<Object>>() {
+    private static final java.util.function.Function<Iterable<Object>,Iterator<Object>> toIteratorForced = new java.util.function.Function<Iterable<Object>,Iterator<Object>>() {
         public final Iterator<Object> apply(Iterable<Object> source) {
             if (source instanceof ForceableIterable) {
                 ((ForceableIterable) source).completeIterationNeeded();
@@ -212,7 +214,7 @@ public abstract class Iterables {
         public final Iterator<Iterable<T>> iterator() {
             return new Iterator<Iterable<T>>() {
                 @SuppressWarnings("unchecked")
-                private final List<Iterator<T>> iterators = newList(map((Apply<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
+                private final List<Iterator<T>> iterators = newList(map((java.util.function.Function<Iterable<T>,Iterator<T>>)(Object)(force ? toIteratorForced : toIterator), elements));
                 
                 
                 public final boolean hasNext() {
@@ -225,7 +227,7 @@ public abstract class Iterables {
                     if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
-                    return newList(map((Apply<Iterator<T>, T>)(Object)next, iterators));
+                    return newList(map((java.util.function.Function<Iterator<T>, T>)(Object)next, iterators));
                 }
 
                 
@@ -343,7 +345,7 @@ public abstract class Iterables {
         public final Iterator<T> iterator() {
             return new Iterator<T>() {
                 @SuppressWarnings("unchecked")
-                private final Iterator<Iterator<? extends T>> it = Functional.map((Apply<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
+                private final Iterator<Iterator<? extends T>> it = Functional.map((java.util.function.Function<Iterable<? extends T>,Iterator<? extends T>>)(Object)(force ? toIteratorForced : toIterator), elements).iterator();
 
                 private Iterator<? extends T> lastUsed = it.hasNext() ? it.next() : java.util.Collections.<T>emptyList().iterator();
 
@@ -445,10 +447,10 @@ public abstract class Iterables {
 
     static final class FilteringIterable<T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<? extends T> iterable;
-        private final Apply<? super T, Boolean> filter;
+        private final java.util.function.Predicate<? super T> filter;
         private boolean force = false;
 
-        public FilteringIterable(Iterable<? extends T> iterable, Apply<? super T, Boolean> filter) {
+        public FilteringIterable(Iterable<? extends T> iterable, java.util.function.Predicate<? super T> filter) {
             this.iterable = iterable;
             this.filter = filter;
         }
@@ -483,7 +485,7 @@ public abstract class Iterables {
                     hasNext = false;
                     while (!hasNext && source.hasNext()) {
                         T n = source.next();
-                        if (filter.apply(n)) {
+                        if (filter.test(n)) {
                             next = n;
                             hasNext = true;
                         }
@@ -510,10 +512,10 @@ public abstract class Iterables {
 
     static final class TransformingIterable<S,T> extends MyIterable<T> implements ForceableIterable {
         private final Iterable<? extends S> iterable;
-        private final Apply<? super S, ? extends T> transformer;
+        private final java.util.function.Function<? super S, ? extends T> transformer;
         private boolean force = false;
 
-        public TransformingIterable(Iterable<? extends S> iterable, Apply<? super S, ? extends T> transformer) {
+        public TransformingIterable(Iterable<? extends S> iterable, java.util.function.Function<? super S, ? extends T> transformer) {
             if (iterable == null || transformer == null) {
                 throw new IllegalArgumentException();
             }
@@ -953,10 +955,10 @@ public abstract class Iterables {
     
     static final class GroupingIterable<T> extends MyIterable<Iterable<T>> implements ForceableIterable {
         private final Iterable<? extends T> elements;
-        private final ApplyBi<? super T,? super T,Boolean> comparator;
+        private final BiPredicate<? super T,? super T> comparator;
         private boolean force = false;
 
-        public GroupingIterable(Iterable<? extends T> elements, ApplyBi<? super T,? super T,Boolean> comparator) {
+        public GroupingIterable(Iterable<? extends T> elements, BiPredicate<? super T,? super T> comparator) {
             this.elements = elements;
             this.comparator = comparator;
         }
@@ -989,13 +991,13 @@ public abstract class Iterables {
                         throw new NoSuchElementException();
                     }
                     final Object[] prev = { GroupingIterable.class };
-                    List<T> s = newList(takeWhile(new Predicate<T>() {
-                        public boolean accept(T candidate) {
+                    List<T> s = newList(takeWhile(new java.util.function.Predicate<T>() {
+                        public boolean test(T candidate) {
                             if (prev[0] == GroupingIterable.class) {
                                 prev[0] = candidate;
                                 return true;
                             }
-                            boolean ret = comparator.apply((T)prev[0], candidate);
+                            boolean ret = comparator.test((T)prev[0], candidate);
                             prev[0] = candidate;
                             return ret;
                         }

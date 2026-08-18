@@ -10,13 +10,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public abstract class Monoids {
     
     /**
      * @return a monoid constructed from {@code semigroup} and {@code zeroElement}.
      */
-    public static final <T> Monoid<T> of(final SemiGroup<T> semigroup, final ApplyZero<T> zeroElement) {
+    public static final <T> Monoid<T> of(final SemiGroup<T> semigroup, final Supplier<T> zeroElement) {
         return new Monoid<T>() {
             public T apply(T a, T b) {
                 return semigroup.apply(a, b);
@@ -50,8 +51,8 @@ public abstract class Monoids {
     public static final Monoid<Boolean> booleanDisjunction = new BooleanDisjunction();
     
     @SuppressWarnings("unchecked")
-    public static final <T> Monoid<Apply<T,T>> endo() {
-        return (Monoid<Apply<T,T>>)(Object)endo;
+    public static final <T> Monoid<java.util.function.Function<T,T>> endo() {
+        return (Monoid<java.util.function.Function<T,T>>)(Object)endo;
     }
 
     /**
@@ -202,8 +203,8 @@ public abstract class Monoids {
       }
   }
   
-  static final class Endo<T> extends SemiGroups.Endo<T> implements Monoid<Apply<T,T>> {
-      public Apply<T, T> zero() {
+  static final class Endo<T> extends SemiGroups.Endo<T> implements Monoid<java.util.function.Function<T,T>> {
+      public java.util.function.Function<T, T> zero() {
           return Function.id();
       }
   }
@@ -236,6 +237,6 @@ public abstract class Monoids {
   
   private static final Monoid<Set<Object>> setUnion = new SetUnion<Object>();
   private static final ComparatorConcat<Object> comparatorConcat = new ComparatorConcat<Object>();
-  private static final Monoid<Apply<Object,Object>> endo = new Endo<Object>();
+  private static final Monoid<java.util.function.Function<Object,Object>> endo = new Endo<Object>();
   
 }

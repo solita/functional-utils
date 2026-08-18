@@ -8,6 +8,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import org.junit.Test;
 
 public class FunctionTest {
@@ -28,7 +33,7 @@ public class FunctionTest {
     @Test
     public void testConsumer1() {
         final StringBuilder result = new StringBuilder();
-        Function1<String, Void> consumer = Function.consumer(new ApplyVoid<String>() {
+        Function1<String, Void> consumer = Function.consumer(new Consumer<String>() {
             @Override
             public void accept(String t) {
                 result.append(t);
@@ -42,7 +47,7 @@ public class FunctionTest {
     @Test
     public void testConsumer2() {
         final StringBuilder result = new StringBuilder();
-        Function2<String, String, Void> consumer = Function.consumer(new ApplyVoid2<String, String>() {
+        Function2<String, String, Void> consumer = Function.consumer(new BiConsumer<String, String>() {
             @Override
             public void accept(String t1, String t2) {
                 result.append(t1).append(t2);
@@ -111,7 +116,7 @@ public class FunctionTest {
     
     @Test
     public void testOfApply() {
-        Function1<String, Integer> function = Function.of(new Apply<String, Integer>() {
+        Function1<String, Integer> function = Function.of(new java.util.function.Function<String, Integer>() {
             @Override
             public Integer apply(String t) {
                 return t.length();
@@ -123,7 +128,7 @@ public class FunctionTest {
     
     @Test
     public void testOfApply2() {
-        Function2<Integer, Integer, Integer> function = Function.of(new Apply2<Integer, Integer, Integer>() {
+        Function2<Integer, Integer, Integer> function = Function.of(new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer t1, Integer t2) {
                 return t1 + t2;
@@ -232,7 +237,7 @@ public class FunctionTest {
     @Test
     public void testMemoize() {
         final int[] callCount = {0};
-        Function0<String> memoized = Function.memoize(new ApplyZero<String>() {
+        Function0<String> memoized = Function.memoize(new Supplier<String>() {
             @Override
             public String get() {
                 callCount[0]++;
@@ -251,7 +256,7 @@ public class FunctionTest {
     @Test
     public void testMemoizeWithNull() {
         final int[] callCount = {0};
-        Function0<String> memoized = Function.memoize(new ApplyZero<String>() {
+        Function0<String> memoized = Function.memoize(new Supplier<String>() {
             @Override
             public String get() {
                 callCount[0]++;
@@ -317,10 +322,10 @@ public class FunctionTest {
     
     @Test
     public void testFlip() {
-        Apply<Integer, Apply<String, String>> original = new Apply<Integer, Apply<String, String>>() {
+        java.util.function.Function<Integer, java.util.function.Function<String, String>> original = new java.util.function.Function<Integer, java.util.function.Function<String, String>>() {
             @Override
-            public Apply<String, String> apply(final Integer i) {
-                return new Apply<String, String>() {
+            public java.util.function.Function<String, String> apply(final Integer i) {
+                return new java.util.function.Function<String, String>() {
                     @Override
                     public String apply(String s) {
                         return s + i;
@@ -336,10 +341,10 @@ public class FunctionTest {
     
     @Test
     public void testUncurried() {
-        Apply<Integer, Apply<String, String>> curried = new Apply<Integer, Apply<String, String>>() {
+        java.util.function.Function<Integer, java.util.function.Function<String, String>> curried = new java.util.function.Function<Integer, java.util.function.Function<String, String>>() {
             @Override
-            public Apply<String, String> apply(final Integer i) {
-                return new Apply<String, String>() {
+            public java.util.function.Function<String, String> apply(final Integer i) {
+                return new java.util.function.Function<String, String>() {
                     @Override
                     public String apply(String s) {
                         return s + i;
@@ -355,14 +360,14 @@ public class FunctionTest {
     
     @Test
     public void testUncurried2() {
-        Apply<Integer, Apply<String, Apply<Double, String>>> curried = 
-            new Apply<Integer, Apply<String, Apply<Double, String>>>() {
+        java.util.function.Function<Integer, java.util.function.Function<String, java.util.function.Function<Double, String>>> curried = 
+            new java.util.function.Function<Integer, java.util.function.Function<String, java.util.function.Function<Double, String>>>() {
                 @Override
-                public Apply<String, Apply<Double, String>> apply(final Integer i) {
-                    return new Apply<String, Apply<Double, String>>() {
+                public java.util.function.Function<String, java.util.function.Function<Double, String>> apply(final Integer i) {
+                    return new java.util.function.Function<String, java.util.function.Function<Double, String>>() {
                         @Override
-                        public Apply<Double, String> apply(final String s) {
-                            return new Apply<Double, String>() {
+                        public java.util.function.Function<Double, String> apply(final String s) {
+                            return new java.util.function.Function<Double, String>() {
                                 @Override
                                 public String apply(Double d) {
                                     return s + i + d;
@@ -380,17 +385,17 @@ public class FunctionTest {
     
     @Test
     public void testUncurried3() {
-        Apply<Integer, Apply<String, Apply<Double, Apply<Boolean, String>>>> curried = 
-            new Apply<Integer, Apply<String, Apply<Double, Apply<Boolean, String>>>>() {
+        java.util.function.Function<Integer, java.util.function.Function<String, java.util.function.Function<Double, java.util.function.Function<Boolean, String>>>> curried = 
+            new java.util.function.Function<Integer, java.util.function.Function<String, java.util.function.Function<Double, java.util.function.Function<Boolean, String>>>>() {
                 @Override
-                public Apply<String, Apply<Double, Apply<Boolean, String>>> apply(final Integer i) {
-                    return new Apply<String, Apply<Double, Apply<Boolean, String>>>() {
+                public java.util.function.Function<String, java.util.function.Function<Double, java.util.function.Function<Boolean, String>>> apply(final Integer i) {
+                    return new java.util.function.Function<String, java.util.function.Function<Double, java.util.function.Function<Boolean, String>>>() {
                         @Override
-                        public Apply<Double, Apply<Boolean, String>> apply(final String s) {
-                            return new Apply<Double, Apply<Boolean, String>>() {
+                        public java.util.function.Function<Double, java.util.function.Function<Boolean, String>> apply(final String s) {
+                            return new java.util.function.Function<Double, java.util.function.Function<Boolean, String>>() {
                                 @Override
-                                public Apply<Boolean, String> apply(final Double d) {
-                                    return new Apply<Boolean, String>() {
+                                public java.util.function.Function<Boolean, String> apply(final Double d) {
+                                    return new java.util.function.Function<Boolean, String>() {
                                         @Override
                                         public String apply(Boolean b) {
                                             return s + i + d + b;
@@ -410,7 +415,7 @@ public class FunctionTest {
     
     @Test
     public void testAp2() {
-        Apply2<Integer, Integer, Integer> add = new Apply2<Integer, Integer, Integer>() {
+        BiFunction<Integer, Integer, Integer> add = new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer a, Integer b) {
                 return a + b;

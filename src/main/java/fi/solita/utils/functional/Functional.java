@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import fi.solita.utils.functional.Iterables.RepeatingIterable;
 
@@ -37,28 +40,28 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return first element in {@code xs} satisfying {@code predicate}, if any.
      */
-    public static final <T> Optional<T> find(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> find(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.find(predicate, xs);
     }
 
     /**
      * @return all elements in {@code xs} satisfying {@code predicate}.
      */
-    public static final <T> Iterable<T> filter(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Iterable<T> filter(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.filter(predicate, xs);
     }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f}.
      */
-    public static final <S, T> Iterable<T> map(Apply<? super S, ? extends T> f, Iterable<? extends S> xs) {
+    public static final <S, T> Iterable<T> map(java.util.function.Function<? super S, ? extends T> f, Iterable<? extends S> xs) {
         return FunctionalImpl.map(f, xs);
     }
     
     /**
      * @return all elements in {@code xs} transformed with {@code f}.
      */
-    public static final <S1, S2, T> Iterable<T> map(ApplyBi<? super S1, ? super S2, ? extends T> f, Iterable<? extends Map.Entry<S1, S2>> xs) {
+    public static final <S1, S2, T> Iterable<T> map(BiFunction<? super S1, ? super S2, ? extends T> f, Iterable<? extends Map.Entry<S1, S2>> xs) {
         return FunctionalImpl.map(e -> f.apply(e.getKey(), e.getValue()), xs);
     }
     
@@ -79,21 +82,21 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return all elements in {@code xs} transformed with {@code f1} and {@code f2} respectively.
      */
-    public static final <S, T1, T2> Iterable<Pair<T1, T2>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Iterable<? extends S> xs) {
+    public static final <S, T1, T2> Iterable<Pair<T1, T2>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, Iterable<? extends S> xs) {
         return FunctionalImpl.map(f1, f2, xs);
     }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1}, {@code f2} and {@code f3} respectively.
      */
-    public static final <S, T1, T2, T3> Iterable<Tuple3<T1, T2, T3>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Iterable<? extends S> xs) {
+    public static final <S, T1, T2, T3> Iterable<Tuple3<T1, T2, T3>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, Iterable<? extends S> xs) {
         return FunctionalImpl.map(f1, f2, f3, xs);
     }
 
     /**
      * @return all elements in {@code xs} transformed with {@code f1}, {@code f2}, {@code f3} and {@code f4} respectively.
      */
-    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1, T2, T3, T4>> map(Apply<? super S, ? extends T1> f1, Apply<? super S, ? extends T2> f2, Apply<? super S, ? extends T3> f3, Apply<? super S, ? extends T4> f4, Iterable<? extends S> xs) {
+    public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1, T2, T3, T4>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, java.util.function.Function<? super S, ? extends T4> f4, Iterable<? extends S> xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, xs);
     }
 
@@ -101,7 +104,7 @@ public abstract class Functional extends FunctionalC {
      * @param functor Functor definition corresponding to {@code xs}.
      * @return functor {@code xs} transformed with {@code f}.
      */
-    public static final <F, A, B, FA extends F, FB extends F> FB fmap(Functor<F, A, B, FA, FB> functor, Apply<A, B> f, FA xs) {
+    public static final <F, A, B, FA extends F, FB extends F> FB fmap(Functor<F, A, B, FA, FB> functor, java.util.function.Function<A, B> f, FA xs) {
         return functor.fmap(f, xs);
     }
 
@@ -111,7 +114,7 @@ public abstract class Functional extends FunctionalC {
      * @param bifunctor Bifunctor definition corresponding to {@code xs}.
      * @return bifuntor {@code xs} transformed with {@code f1} and {@code f2} respectively.
      */
-    public static final <F, A, B, C, D, FAC extends F, FBD extends F> FBD bimap(BiFunctor<F, A, B, C, D, FAC, FBD, ?, ?> bifunctor, Apply<A, B> f, Apply<C, D> f2, FAC xs) {
+    public static final <F, A, B, C, D, FAC extends F, FBD extends F> FBD bimap(BiFunctor<F, A, B, C, D, FAC, FBD, ?, ?> bifunctor, java.util.function.Function<A, B> f, java.util.function.Function<C, D> f2, FAC xs) {
         return bifunctor.bimap(f, f2, xs);
     }
 
@@ -121,7 +124,7 @@ public abstract class Functional extends FunctionalC {
      * @param bifunctor Bifunctor definition corresponding to {@code xs}.
      * @return bifunctor {@code xs} transformed with {@code f} over its first value.
      */
-    public static final <F, A, B, FAC extends F, FBC extends F> FBC first(BiFunctor<F, A, B, ?, ?, FAC, ?, FBC, ?> bifunctor, Apply<A, B> f, FAC xs) {
+    public static final <F, A, B, FAC extends F, FBC extends F> FBC first(BiFunctor<F, A, B, ?, ?, FAC, ?, FBC, ?> bifunctor, java.util.function.Function<A, B> f, FAC xs) {
         return bifunctor.first(f, xs);
     }
 
@@ -131,14 +134,14 @@ public abstract class Functional extends FunctionalC {
      * @param bifunctor Bifunctor definition corresponding to {@code xs}.
      * @return bifunctor {@code xs} transformed with {@code f} over its second value.
      */
-    public static final <F, C, D, FAC extends F, FAD extends F> FAD second(BiFunctor<F, ?, ?, C, D, FAC, ?, ?, FAD> bifunctor, Apply<C, D> f, FAC xs) {
+    public static final <F, C, D, FAC extends F, FAD extends F> FAD second(BiFunctor<F, ?, ?, C, D, FAC, ?, ?, FAD> bifunctor, java.util.function.Function<C, D> f, FAC xs) {
         return bifunctor.second(f, xs);
     }
 
     /**
      * @return elements of {@code xs} transformed with {@code f} flattening the resulting iterable. 
      */
-    public static final <S, T> Iterable<T> flatMap(Apply<? super S, ? extends Iterable<? extends T>> f, Iterable<? extends S> xs) {
+    public static final <S, T> Iterable<T> flatMap(java.util.function.Function<? super S, ? extends Iterable<? extends T>> f, Iterable<? extends S> xs) {
         return FunctionalImpl.flatMap(f, xs);
     }
 
@@ -152,14 +155,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * Applies side-effectful {@code procedure} to each element in {@code xs}.
      */
-    public static final <T> void foreach(Apply<? super T, Void> procedure, Iterable<? extends T> xs) {
+    public static final <T> void foreach(java.util.function.Function<? super T, Void> procedure, Iterable<? extends T> xs) {
         FunctionalImpl.foreach(procedure, xs);
     }
 
     /**
      * Applies side-effectful {@code procedure} to each element in {@code xs}.
      */
-    public static final <T> void foreach(ApplyVoid<? super T> procedure, Iterable<? extends T> xs) {
+    public static final <T> void foreach(Consumer<? super T> procedure, Iterable<? extends T> xs) {
         FunctionalImpl.foreach(procedure, xs);
     }
 
@@ -184,7 +187,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return equal (by {@code comparator}) consecutive elements in {@code xs} grouped together.
      */
-    public static final <T> Iterable<Iterable<T>> group(ApplyBi<? super T, ? super T, Boolean> comparator, Iterable<? extends T> xs) {
+    public static final <T> Iterable<Iterable<T>> group(BiPredicate<? super T, ? super T> comparator, Iterable<? extends T> xs) {
         return FunctionalImpl.group(comparator, xs);
     }
 
@@ -283,7 +286,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return longest prefix of {@code xs} where all elements satisfy {@code predicate}.
      */
-    public static final <T> Iterable<T> takeWhile(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Iterable<T> takeWhile(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.takeWhile(predicate, xs);
     }
 
@@ -292,7 +295,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return elements in {@code xs} since the first one not satisfying {@code predicate}.
      */
-    public static final <T> Iterable<T> dropWhile(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Iterable<T> dropWhile(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.dropWhile(predicate, xs);
     }
 
@@ -301,14 +304,14 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return two iterables where the first is the longest prefix of {@code xs} where all elements satisfy {@code predicate}, and the second is the rest of the elements in {@code xs}.
      */
-    public static final <T> Pair<Iterable<T>, Iterable<T>> span(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> Pair<Iterable<T>, Iterable<T>> span(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.span(predicate, xs);
     }
     
     /**
      * @return elements in {@code xs} divided into two groups by {@code f}.
      */
-    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(Apply<? super T, Either<L,R>> f, Iterable<? extends T> xs) {
+    public static final <T,L,R> Pair<Iterable<L>, Iterable<R>> partition(java.util.function.Function<? super T, Either<L,R>> f, Iterable<? extends T> xs) {
         return FunctionalImpl.partition(f, xs);
     }
     
@@ -361,14 +364,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return whether there exists an element in {@code xs} satisfying {@code predicate}.
      */
-    public static final <T> boolean exists(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> boolean exists(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.exists(predicate, xs);
     }
 
     /**
      * @return whether all elements in {@code xs} satisfy {@code predicate}.
      */
-    public static final <T> boolean forall(Apply<? super T, Boolean> predicate, Iterable<? extends T> xs) {
+    public static final <T> boolean forall(java.util.function.Predicate<? super T> predicate, Iterable<? extends T> xs) {
         return FunctionalImpl.forall(predicate, xs);
     }
 
@@ -424,14 +427,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return elements in {@code xs}, if any, folded together by bifunction {@code f}.
      */
-    public static final <T> Optional<T> fold(ApplyBi<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
+    public static final <T> Optional<T> fold(BiFunction<? super T, ? super T, ? extends T> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(f, xs);
     }
 
     /**
      * @return elements in {@code xs} folded together by bifunction {@code f}. {@code zero} for an empty {@code xs}.
      */
-    public static final <T, Z> Z fold(Z zero, ApplyBi<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
+    public static final <T, Z> Z fold(Z zero, BiFunction<? super Z, ? super T, ? extends Z> f, Iterable<? extends T> xs) {
         return FunctionalImpl.fold(zero, f, xs);
     }
 
@@ -674,14 +677,14 @@ public abstract class Functional extends FunctionalC {
     /**
      * @return results of applying {@code value} to each function in {@code fs}.
      */
-    public static final <T, R> Iterable<R> sequence(T value, Iterable<? extends Apply<? super T, ? extends R>> fs) {
+    public static final <T, R> Iterable<R> sequence(T value, Iterable<? extends java.util.function.Function<? super T, ? extends R>> fs) {
         return FunctionalImpl.sequence(value, fs);
     }
     
     /**
      * @return propagate an argument to all given endofunctions and combining them
      */
-    public static final <P,T,R> ApplyBi<P,T,T> combineEndo(final Iterable<? extends Apply<P,? extends Apply<T,T>>> fs) {
+    public static final <P,T,R> BiFunction<P,T,T> combineEndo(final Iterable<? extends java.util.function.Function<P,? extends java.util.function.Function<T,T>>> fs) {
         return FunctionalImpl.combineEndo(fs);
     }
 
@@ -705,7 +708,7 @@ public abstract class Functional extends FunctionalC {
      * 
      * @return {@code Optional.of(f(a,b))} if {@code a} and {@code b} are defined. {@code Optional.empty()} otherwise.
      */
-    public static final <A,B,T> Optional<T> map2(Optional<A> a, Optional<B> b, ApplyBi<? super A,? super B,? extends T> f) {
+    public static final <A,B,T> Optional<T> map2(Optional<A> a, Optional<B> b, BiFunction<? super A,? super B,? extends T> f) {
         for (A aa: it(a)) {
             for (B bb: it(b)) {
                 return Optional.of(f.apply(aa, bb));

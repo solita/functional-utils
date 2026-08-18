@@ -62,6 +62,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import org.junit.Test;
 
@@ -110,9 +111,9 @@ public class FunctionalATest {
     public void testFind_found() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        Optional<Integer> result = find(new Apply<Integer, Boolean>() {
+        Optional<Integer> result = find(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x > 3;
             }
         }, xs);
@@ -125,9 +126,9 @@ public class FunctionalATest {
     public void testFind_notFound() {
         Integer[] xs = {1, 2, 3};
         
-        Optional<Integer> result = find(new Apply<Integer, Boolean>() {
+        Optional<Integer> result = find(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x > 10;
             }
         }, xs);
@@ -139,9 +140,9 @@ public class FunctionalATest {
     public void testFilter() {
         Integer[] xs = {1, 2, 3, 4, 5, 6};
         
-        Iterable<Integer> result = filter(new Apply<Integer, Boolean>() {
+        Iterable<Integer> result = filter(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x % 2 == 0;
             }
         }, xs);
@@ -153,7 +154,7 @@ public class FunctionalATest {
     public void testMap() {
         Integer[] xs = {1, 2, 3};
         
-        Iterable<Integer> result = map(new Apply<Integer, Integer>() {
+        Iterable<Integer> result = map(new java.util.function.Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer x) {
                 return x * 2;
@@ -168,13 +169,13 @@ public class FunctionalATest {
         String[] xs = {"a", "bb", "ccc"};
         
         Iterable<Pair<Integer, String>> result = map(
-            new Apply<String, Integer>() {
+            new java.util.function.Function<String, Integer>() {
                 @Override
                 public Integer apply(String s) {
                     return s.length();
                 }
             },
-            new Apply<String, String>() {
+            new java.util.function.Function<String, String>() {
                 @Override
                 public String apply(String s) {
                     return s.toUpperCase();
@@ -193,7 +194,7 @@ public class FunctionalATest {
     public void testFlatMap() {
         Integer[] xs = {1, 2, 3};
         
-        Iterable<Integer> result = flatMap(new Apply<Integer, Iterable<Integer>>() {
+        Iterable<Integer> result = flatMap(new java.util.function.Function<Integer, Iterable<Integer>>() {
             @Override
             public Iterable<Integer> apply(Integer x) {
                 return newList(x, x * 10);
@@ -228,7 +229,7 @@ public class FunctionalATest {
         Integer[] xs = {1, 2, 3};
         final List<Integer> collected = Collections.newMutableList();
         
-        foreach(new Apply<Integer, Void>() {
+        foreach(new java.util.function.Function<Integer, Void>() {
             @Override
             public Void apply(Integer x) {
                 collected.add(x * 2);
@@ -268,7 +269,7 @@ public class FunctionalATest {
     public void testGroupBy() {
         String[] xs = {"a", "bb", "c", "dd", "eee"};
         
-        Map<Integer, List<String>> result = groupBy(new Apply<String, Integer>() {
+        Map<Integer, List<String>> result = groupBy(new java.util.function.Function<String, Integer>() {
             @Override
             public Integer apply(String s) {
                 return s.length();
@@ -386,9 +387,9 @@ public class FunctionalATest {
     public void testTakeWhile() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        Iterable<Integer> result = takeWhile(new Apply<Integer, Boolean>() {
+        Iterable<Integer> result = takeWhile(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x < 4;
             }
         }, xs);
@@ -400,9 +401,9 @@ public class FunctionalATest {
     public void testDropWhile() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        Iterable<Integer> result = dropWhile(new Apply<Integer, Boolean>() {
+        Iterable<Integer> result = dropWhile(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x < 4;
             }
         }, xs);
@@ -414,9 +415,9 @@ public class FunctionalATest {
     public void testSpan() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        Pair<Iterable<Integer>, Iterable<Integer>> result = span(new Apply<Integer, Boolean>() {
+        Pair<Iterable<Integer>, Iterable<Integer>> result = span(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x < 4;
             }
         }, xs);
@@ -429,7 +430,7 @@ public class FunctionalATest {
     public void testPartition() {
         Integer[] xs = {1, 2, 3, 4, 5, 6};
         
-        Pair<Iterable<Integer>, Iterable<String>> result = partition(new Apply<Integer, Either<Integer, String>>() {
+        Pair<Iterable<Integer>, Iterable<String>> result = partition(new java.util.function.Function<Integer, Either<Integer, String>>() {
             @Override
             public Either<Integer, String> apply(Integer x) {
                 if (x % 2 == 0) {
@@ -497,16 +498,16 @@ public class FunctionalATest {
     public void testExists() {
         Integer[] xs = {1, 2, 3, 4, 5};
         
-        assertTrue(exists(new Apply<Integer, Boolean>() {
+        assertTrue(exists(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x > 3;
             }
         }, xs));
         
-        assertFalse(exists(new Apply<Integer, Boolean>() {
+        assertFalse(exists(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x > 10;
             }
         }, xs));
@@ -516,16 +517,16 @@ public class FunctionalATest {
     public void testForall() {
         Integer[] xs = {2, 4, 6};
         
-        assertTrue(forall(new Apply<Integer, Boolean>() {
+        assertTrue(forall(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x % 2 == 0;
             }
         }, xs));
         
-        assertFalse(forall(new Apply<Integer, Boolean>() {
+        assertFalse(forall(new java.util.function.Predicate<Integer>() {
             @Override
-            public Boolean apply(Integer x) {
+            public boolean test(Integer x) {
                 return x > 3;
             }
         }, xs));
@@ -658,7 +659,7 @@ public class FunctionalATest {
     public void testFold() {
         Integer[] xs = {1, 2, 3, 4};
         
-        ApplyBi<Integer, Integer, Integer> sum = new ApplyBi<Integer, Integer, Integer>() {
+        BiFunction<Integer, Integer, Integer> sum = new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer acc, Integer val) {
                 return acc + val;
@@ -871,14 +872,14 @@ public class FunctionalATest {
     @Test
     public void testSequence() {
         @SuppressWarnings("unchecked")
-        Apply<Integer, String>[] fs = new Apply[]{
-            new Apply<Integer, String>() {
+        java.util.function.Function<Integer, String>[] fs = new java.util.function.Function[]{
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer x) {
                     return "value:" + x;
                 }
             },
-            new Apply<Integer, String>() {
+            new java.util.function.Function<Integer, String>() {
                 @Override
                 public String apply(Integer x) {
                     return "double:" + (x * 2);
