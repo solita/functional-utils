@@ -2,6 +2,7 @@ package fi.solita.utils.functional;
 import static fi.solita.utils.functional.Collections.newMutableList;
 import static fi.solita.utils.functional.Functional.sort;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,16 +33,16 @@ public class CompareExamples {
     
     @Test
     public void examples() {
-        Ordering<Comparable<?>> byNaturalOrdering = Compare.byNatural();
-        Ordering<Employee> byComparable = Compare.by(salary);
-        Ordering<Employee> byExplicitComparator = Compare.by(salary, Ordering.Natural());
+        Comparator<Comparable<?>> byNaturalComparator = (Comparator<Comparable<?>>) Comparator.naturalOrder();
+        Comparator<Employee> byComparable = Comparator.comparing(salary);
+        Comparator<Employee> byExplicitComparator = Comparator.comparing(salary, Comparator.naturalOrder());
         
-        Ordering<_1<? extends Comparable<?>>> by_1 = Compare.by(Tuple._1::get_1);
+        Comparator<_1<? extends Comparable>> by_1 = Comparator.comparing(Tuple._1::get_1);
 
         List<Tuple2<String, Employee>> listOfTuples = newMutableList();
         sort(by_1, listOfTuples);
         // Employee does not implement comparable, but we can first map to _2 and then to salary
-        sort(Compare.by(t -> salary.apply(t._2)), listOfTuples);
+        sort(Comparator.comparing(t -> salary.apply(t._2)), listOfTuples);
         
         // sorted by the contents of an iterable
         sort(Compare.<String>byIterable(), Collections.<List<String>>newMutableList());
@@ -53,8 +54,8 @@ public class CompareExamples {
         sort(Compare.byOptional(name), Collections.<Employee>newMutableList());
         
         // and the same with explicit comparators
-        sort(Compare.byIterable(Compare.by(salary)), Collections.<List<Employee>>newMutableList());
-        sort(Compare.byOptional(Compare.by(salary)), Collections.<Optional<Employee>>newMutableList());
-        sort(Compare.byOptional(name, Ordering.Natural()), Collections.<Employee>newMutableList());
+        sort(Compare.byIterable(Comparator.comparing(salary)), Collections.<List<Employee>>newMutableList());
+        sort(Compare.byOptional(Comparator.comparing(salary)), Collections.<Optional<Employee>>newMutableList());
+        sort(Compare.byOptional(name, Comparator.naturalOrder()), Collections.<Employee>newMutableList());
     }
 }

@@ -24,7 +24,7 @@ public abstract class MultiParamFunction<T, R, T1> implements java.util.function
     public abstract java.util.function.Function<?,R> ap(final T1 arg1);
     
     /**
-     * Apply this function to parameters {@code t};
+     * Function this function to parameters {@code t};
      */
     public final R apply(T t) {
         return tuppled().apply(t);

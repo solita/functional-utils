@@ -36,45 +36,45 @@ public class PredicatesTest {
 
     @Test
     public void testGreaterThan() {
-        Predicate<Integer> greaterThan5 = greaterThan(5);
-        assertTrue(greaterThan5.accept(6));
-        assertTrue(greaterThan5.accept(10));
-        assertFalse(greaterThan5.accept(5));
-        assertFalse(greaterThan5.accept(4));
+        java.util.function.Predicate<Integer> greaterThan5 = greaterThan(5);
+        assertTrue(greaterThan5.test(6));
+        assertTrue(greaterThan5.test(10));
+        assertFalse(greaterThan5.test(5));
+        assertFalse(greaterThan5.test(4));
     }
 
     @Test
     public void testLessThan() {
-        Predicate<Integer> lessThan5 = lessThan(5);
-        assertTrue(lessThan5.accept(4));
-        assertTrue(lessThan5.accept(0));
-        assertFalse(lessThan5.accept(5));
-        assertFalse(lessThan5.accept(6));
+        java.util.function.Predicate<Integer> lessThan5 = lessThan(5);
+        assertTrue(lessThan5.test(4));
+        assertTrue(lessThan5.test(0));
+        assertFalse(lessThan5.test(5));
+        assertFalse(lessThan5.test(6));
     }
 
     @Test
     public void testGreaterThanOrEqualTo() {
-        Predicate<Integer> gte5 = greaterThanOrEqualTo(5);
-        assertTrue(gte5.accept(5));
-        assertTrue(gte5.accept(6));
-        assertFalse(gte5.accept(4));
+        java.util.function.Predicate<Integer> gte5 = greaterThanOrEqualTo(5);
+        assertTrue(gte5.test(5));
+        assertTrue(gte5.test(6));
+        assertFalse(gte5.test(4));
     }
 
     @Test
     public void testLessThanOrEqualTo() {
-        Predicate<Integer> lte5 = lessThanOrEqualTo(5);
-        assertTrue(lte5.accept(5));
-        assertTrue(lte5.accept(4));
-        assertFalse(lte5.accept(6));
+        java.util.function.Predicate<Integer> lte5 = lessThanOrEqualTo(5);
+        assertTrue(lte5.test(5));
+        assertTrue(lte5.test(4));
+        assertFalse(lte5.test(6));
     }
 
     @Test
     public void testBetween() {
-        Predicate<Integer> between5And10 = between(5, 10);
-        assertTrue(between5And10.accept(5));
-        assertTrue(between5And10.accept(7));
-        assertTrue(between5And10.accept(10));
-        assertFalse(between5And10.accept(4));
-        assertFalse(between5And10.accept(11));
+        java.util.function.Predicate<Integer> between5And10 = between(5, 10);
+        assertTrue(between5And10.test(5));
+        assertTrue(between5And10.test(7));
+        assertTrue(between5And10.test(10));
+        assertFalse(between5And10.test(4));
+        assertFalse(between5And10.test(11));
     }
 }

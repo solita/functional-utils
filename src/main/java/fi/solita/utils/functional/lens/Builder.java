@@ -69,7 +69,6 @@ import fi.solita.utils.functional.Apply8;
 import fi.solita.utils.functional.Apply9;
 import fi.solita.utils.functional.Collections;
 import fi.solita.utils.functional.Pair;
-import fi.solita.utils.functional.Predicate;
 import fi.solita.utils.functional.Tuple;
 import fi.solita.utils.functional.Tuple0;
 import fi.solita.utils.functional.Tuple1;
@@ -279,12 +278,7 @@ public final class Builder<T> {
     
     public static final List<PropertyDescriptor> readableWritableBeanDescriptors(Class<?> beanClass) {
         try {
-            return newList(filter(new Predicate<PropertyDescriptor>() {
-                @Override
-                public boolean accept(PropertyDescriptor candidate) {
-                    return candidate.getReadMethod() != null && candidate.getWriteMethod() != null;
-                }
-            }, Introspector.getBeanInfo(beanClass).getPropertyDescriptors()));
+            return newList(filter(x -> x.getReadMethod() != null && x.getWriteMethod() != null, Introspector.getBeanInfo(beanClass).getPropertyDescriptors()));
         } catch (IntrospectionException e) {
             throw new RuntimeException(e);
         }

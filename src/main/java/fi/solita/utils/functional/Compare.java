@@ -10,56 +10,49 @@ import java.util.Optional;
 public abstract class Compare {
     
     /**
-     * @return natural ordering.
+     * @return Comparator for iterables containing elements with natural Comparator.
      */
-    public static final <T extends Comparable<?>> Ordering<T> byNatural() {
-        return Ordering.Natural();
+    public static final <T extends Comparable<? super T>> Comparator<Iterable<T>> byIterable() {
+        return byIterable(Comparator.<T>naturalOrder());
     }
     
     /**
-     * @return ordering for iterables containing elements with natural ordering.
+     * @return Comparator for an optional element with natural Comparator.
      */
-    public static final <T extends Comparable<? super T>> Ordering<Iterable<T>> byIterable() {
-        return byIterable(Ordering.<T>Natural());
+    public static final <T extends Comparable<? super T>> Comparator<Optional<T>> byOptional() {
+        return byOptional(Comparator.naturalOrder());
     }
     
-    /**
-     * @return ordering for an optional element with natural ordering.
-     */
-    public static final <T extends Comparable<? super T>> Ordering<Optional<T>> byOptional() {
-        return byOptional(Ordering.<T>Natural());
+    public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Comparator<Map<K,V>> byMap() {
+        return byMap(Comparator.naturalOrder(), Comparator.naturalOrder());
     }
     
-    public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Ordering<Map<K,V>> byMap() {
-        return byMap(Ordering.<K>Natural(), Ordering.<V>Natural());
+    public static final <K, V> Comparator<Map<K,V>> byMap(final Comparator<? super K> keyComparator, final Comparator<? super V> valueComparator) {
+        return Comparator.comparing(Map::entrySet, byIterable(byEntry(keyComparator, valueComparator)));
     }
     
-    public static final <K, V> Ordering<Map<K,V>> byMap(final Comparator<? super K> keyComparator, final Comparator<? super V> valueComparator) {
-        return by(Map::entrySet, byIterable(byEntry(keyComparator, valueComparator)));
-    }
-    
-    public static final <L, R> Ordering<Map.Entry<L,R>> byEntry(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
-        return Compare.by( (Map.Entry<L,R> e) -> e.getKey(), leftComparator).then(by(e -> e.getValue(), rightComparator));
+    public static final <L, R> Comparator<Map.Entry<L,R>> byEntry(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
+        return Comparator.comparing( (Map.Entry<L,R> e) -> e.getKey(), leftComparator).thenComparing(e -> e.getValue(), rightComparator);
     }
     
     @SuppressWarnings("unchecked")
-    public static final <L, R> Ordering<Pair<L,R>> byPair(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
-        return (Ordering<Pair<L,R>>)(Object)byEntry(leftComparator, rightComparator);
+    public static final <L, R> Comparator<Pair<L,R>> byPair(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
+        return (Comparator<Pair<L,R>>)(Object)byEntry(leftComparator, rightComparator);
     }
     
-    public static final <T1, T2, T3> Ordering<Tuple3<T1, T2, T3>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3) {
-        return Compare.<T1,Tuple3<T1, T2, T3>>by(t -> t._1, comparator1).thenBy(t -> t._2, comparator2).then(by(t -> t._3, comparator3));
+    public static final <T1, T2, T3> Comparator<Tuple3<T1, T2, T3>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3) {
+        return Comparator.<Tuple3<T1, T2, T3>, T1>comparing(t -> t._1, comparator1).thenComparing(t -> t._2, comparator2).thenComparing(t -> t._3, comparator3);
     }
     
-    public static final <T1, T2, T3, T4> Ordering<Tuple4<T1, T2, T3, T4>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3, final Comparator<? super T4> comparator4) {
-        return Compare.<T1,Tuple4<T1, T2, T3, T4>>by(t -> t._1, comparator1).thenBy(t -> t._2, comparator2).then(by(t -> t._3, comparator3)).then(by(t -> t._4, comparator4));
+    public static final <T1, T2, T3, T4> Comparator<Tuple4<T1, T2, T3, T4>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3, final Comparator<? super T4> comparator4) {
+        return Comparator.<Tuple4<T1, T2, T3, T4>,T1>comparing(t -> t._1, comparator1).thenComparing(t -> t._2, comparator2).thenComparing(t -> t._3, comparator3).thenComparing(t -> t._4, comparator4);
     }
     
     /**
-     * @return ordering for iterables containing elements comparable by {@code elementComparator}.
+     * @return Comparator for iterables containing elements comparable by {@code elementComparator}.
      */
-    public static final <S, T extends Iterable<? extends S>> Ordering<T> byIterable(final Comparator<S> elementComparator) {
-        return new Ordering<T>() {
+    public static final <S, T extends Iterable<? extends S>> Comparator<T> byIterable(final Comparator<S> elementComparator) {
+        return new Comparator<T>() {
             public final int compare(T o1, T o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
@@ -86,46 +79,24 @@ public abstract class Compare {
     }
     
     /**
-     * @return ordering for elements by transforming to an element with natural ordering.
+     * @return Comparator for elements by transforming to an optional element with natural Comparator. 
      */
-    @SuppressWarnings("unchecked")
-    public static final <T> Ordering<T> by(final java.util.function.Function<? super T, ? extends Comparable<?>> f) {
-        return by(f, (Comparator<Object>)(Object)Ordering.Natural());
+    public static final <S, T extends Comparable<? super T>> Comparator<S> byOptional(final java.util.function.Function<? super S, Optional<T>> f) {
+        return Comparator.comparing(f, Compare.<T>byOptional(Comparator.<T>naturalOrder()));
     }
     
     /**
-     * @return ordering for elements by transforming to a type comparable by {@code targetComparator}.
+     * @return Comparator for elements by transforming to an optional type comparable by {@code targetComparator}.
      */
-    public static final <T,S> Ordering<S> by(final java.util.function.Function<? super S, T> f, final Comparator<? super T> targetComparator) {
-        return new Ordering<S>() {
-            public final int compare(S o1, S o2) {
-                if (o1 == null && o2 == null) {
-                    return 0;
-                }
-                return targetComparator.compare(f.apply(o1), f.apply(o2));
-            }
-        };
+    public static final <S, T> Comparator<S> byOptional(final java.util.function.Function<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
+        return Comparator.comparing(f, Compare.<T>byOptional(targetComparator));
     }
     
     /**
-     * @return ordering for elements by transforming to an optional element with natural ordering. 
+     * @return Comparator for optional type comparable by {@code comparator}.
      */
-    public static final <S, T extends Comparable<? super T>> Ordering<S> byOptional(final java.util.function.Function<? super S, Optional<T>> f) {
-        return byOptional(f, Ordering.Natural());
-    }
-    
-    /**
-     * @return ordering for elements by transforming to an optional type comparable by {@code targetComparator}.
-     */
-    public static final <S, T> Ordering<S> byOptional(final java.util.function.Function<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
-        return by(f, Compare.<T>byOptional(targetComparator));
-    }
-    
-    /**
-     * @return ordering for optional type comparable by {@code comparator}.
-     */
-    public static final <T> Ordering<Optional<T>> byOptional(final Comparator<? super T> comparator) {
-        return new Ordering<Optional<T>>() {
+    public static final <T> Comparator<Optional<T>> byOptional(final Comparator<? super T> comparator) {
+        return new Comparator<Optional<T>>() {
             public final int compare(Optional<T> o1, Optional<T> o2) {
                 if (o1 == null && o2 == null) {
                     return 0;
@@ -143,21 +114,13 @@ public abstract class Compare {
         };
     }
     
-    public static final <L extends Comparable<? super L>,R extends Comparable<? super R>> Ordering<Either<L,R>> byEither() {
-        return byOptional( (Either<L,R> x) -> x.left).then(byOptional(x -> x.right));
+    public static final <L extends Comparable<? super L>,R extends Comparable<? super R>> Comparator<Either<L,R>> byEither() {
+        return byOptional( (Either<L,R> x) -> x.left).thenComparing(x -> x.right, Compare.<R>byOptional());
     }
     
-    public static final <L extends Comparable<? super L>,M extends Comparable<? super M>,R extends Comparable<? super R>> Ordering<Either3<L,M,R>> byEither3() {
-        return byOptional( (Either3<L,M,R> x) -> x.left).then(
-               byOptional( (Either3<L,M,R> x) -> x.middle).then(
+    public static final <L extends Comparable<? super L>,M extends Comparable<? super M>,R extends Comparable<? super R>> Comparator<Either3<L,M,R>> byEither3() {
+        return byOptional( (Either3<L,M,R> x) -> x.left).thenComparing(
+               byOptional( (Either3<L,M,R> x) -> x.middle).thenComparing(
                byOptional(x -> x.right)));
-    }
-    
-    public static final <K extends Comparable<? super K>,V> Ordering<Map.Entry<K,V>> byKey() {
-        return by(Map.Entry::getKey);
-    }
-    
-    public static final <K,V extends Comparable<? super V>> Ordering<Map.Entry<K,V>> byValue() {
-        return by(Map.Entry::getValue);
     }
 }

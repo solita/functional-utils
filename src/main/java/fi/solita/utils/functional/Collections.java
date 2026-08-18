@@ -74,7 +74,7 @@ public abstract class Collections {
         @SuppressWarnings("unchecked")
         @Override
         public Comparator<? super E> comparator() {
-            return (Comparator<? super E>) Ordering.Natural();
+            return (Comparator<? super E>) Comparator.naturalOrder();
         }
 
         @SuppressWarnings("unchecked")

@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 import org.junit.Test;
@@ -245,12 +244,7 @@ public class IterablesTest {
     @Test
     public void testFilteringIterable() {
         Iterable<Integer> list = newList(1, 2, 3, 4, 5, 6);
-        Iterable<Integer> filtered = filter(new Predicate<Integer>() {
-            @Override
-            public boolean accept(Integer candidate) {
-                return candidate % 2 == 0;
-            }
-        }, list);
+        Iterable<Integer> filtered = filter(x -> x % 2 == 0, list);
         
         List<Integer> result = newList(filtered);
         assertEquals(newList(2, 4, 6), result);
@@ -259,12 +253,7 @@ public class IterablesTest {
     @Test
     public void testFilteringIterableEmptyResult() {
         Iterable<Integer> list = newList(1, 3, 5);
-        Iterable<Integer> filtered = filter(new Predicate<Integer>() {
-            @Override
-            public boolean accept(Integer candidate) {
-                return candidate % 2 == 0;
-            }
-        }, list);
+        Iterable<Integer> filtered = filter(x -> x % 2 == 0, list);
         
         List<Integer> result = newList(filtered);
         assertTrue(result.isEmpty());
@@ -373,7 +362,7 @@ public class IterablesTest {
     @Test
     public void testSortingIterablePreservesSize() {
         Iterable<Integer> list = newList(3, 1, 2);
-        Iterable<Integer> sorted = sort(Compare.byNatural(), list);
+        Iterable<Integer> sorted = sort(Comparator.naturalOrder(), list);
         
         Optional<Long> size = Iterables.resolveSize.apply(sorted);
         assertTrue(size.isPresent());

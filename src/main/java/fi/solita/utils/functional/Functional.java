@@ -506,7 +506,7 @@ public abstract class Functional extends FunctionalC {
      * @return Whether {@code xs} is ordered by natural ordering.
      */
     public static final <T extends Comparable<T>> boolean ordered(Iterable<? extends T> xs) {
-        return FunctionalImpl.ordered(Compare.byNatural(), xs);
+        return FunctionalImpl.ordered(Comparator.naturalOrder(), xs);
     }
     
     

@@ -91,28 +91,28 @@ public abstract class FunctionalC extends FunctionalS {
     
     
     /**
-     * @see Functional#map(Apply, Iterable)
+     * @see Functional#map(Function, Iterable)
      */
     public static final <T> Iterable<T> map(java.util.function.Function<Character, ? extends T> f, CharSequence xs) {
         return FunctionalImpl.map(f, it(xs));
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Iterable)
      */
     public static final <T1, T2> Iterable<Pair<T1,T2>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, it(xs));
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Function, Iterable)
      */
     public static final <T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, java.util.function.Function<Character, ? extends T3> f3, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, it(xs));
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Function, Function, Iterable)
      */
     public static final <T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(java.util.function.Function<Character, ? extends T1> f1, java.util.function.Function<Character, ? extends T2> f2, java.util.function.Function<Character, ? extends T3> f3, java.util.function.Function<Character, ? extends T4> f4, CharSequence xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, it(xs));

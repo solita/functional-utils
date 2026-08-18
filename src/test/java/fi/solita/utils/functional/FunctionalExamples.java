@@ -34,15 +34,12 @@ import static fi.solita.utils.functional.Functional.subtract;
 import static fi.solita.utils.functional.Functional.tail;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
-import static fi.solita.utils.functional.FunctionalA.flatten;
-import static fi.solita.utils.functional.FunctionalM.filter;
-import static fi.solita.utils.functional.FunctionalM.find;
-import static fi.solita.utils.functional.FunctionalM.map;
 import static fi.solita.utils.functional.FunctionalS.intersection;
 import static fi.solita.utils.functional.FunctionalS.product;
 import static fi.solita.utils.functional.FunctionalS.sum;
 import static fi.solita.utils.functional.FunctionalS.union;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -230,7 +227,7 @@ public class FunctionalExamples {
         
         // sort
         Iterable<Integer> sort = sort(someIterableOrArray);
-        Iterable<Integer> sortBy = sort(Compare.byNatural().reverse(), someIterableOrArray);
+        Iterable<Integer> sortBy = sort(Comparator.<Integer>naturalOrder().reversed(), someIterableOrArray);
         assertEquals(newList(1,2,3), newList(sort));
         assertEquals(newList(3,2,1), newList(sortBy));
         

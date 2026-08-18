@@ -4,7 +4,7 @@ package fi.solita.utils.functional;
  * Specialization of {@code Function1<T, Boolean>}.
  */
 @Deprecated
-public abstract class Predicate<T> extends Function1<T, Boolean> implements Pred<T> {
+public abstract class Predicate<T> extends Function1<T, Boolean> implements java.util.function.Predicate<T> {
     
     /**
      * @return concrete {@code Predicate} for abstract function {@code apply}.

@@ -1201,7 +1201,7 @@ public class CollectionsTest {
 
     @Test
     public void testNewSortedMapWithComparatorFromNull() {
-        Comparator<Integer> comparator = Ordering.Natural();
+        Comparator<Integer> comparator = Comparator.naturalOrder();
         Iterable<Map.Entry<Integer, String>> entries = null;
         SortedMap<Integer, String> map = newSortedMap(SemiGroups.<String>fail(), comparator, entries);
         assertNull(map);
@@ -1346,7 +1346,7 @@ public class CollectionsTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testImmutableSortedSetWithComparator() {
-        Comparator<Integer> comparator = Ordering.Natural();
+        Comparator<Integer> comparator = Comparator.naturalOrder();
         Iterable<Integer> iterable = Arrays.asList(1, 2, 3);
         SortedSet<Integer> set = newSortedSet(comparator, iterable);
         set.add(4);
@@ -1397,7 +1397,7 @@ public class CollectionsTest {
 
     @Test
     public void testNewSortedMapWithComparatorFromEmptyIterable() {
-        Comparator<Integer> comparator = Ordering.Natural();
+        Comparator<Integer> comparator = Comparator.naturalOrder();
         List<Map.Entry<Integer, String>> entries = Arrays.asList();
         SortedMap<Integer, String> map = newSortedMap(SemiGroups.<String>fail(), comparator, entries);
         assertNotNull(map);
@@ -1428,7 +1428,7 @@ public class CollectionsTest {
 
     @Test
     public void testNewSortedSetWithComparatorAndSingleElement() {
-        Comparator<Integer> comparator = Ordering.Natural();
+        Comparator<Integer> comparator = Comparator.naturalOrder();
         Iterable<Integer> iterable = Arrays.asList(42);
         SortedSet<Integer> set = newSortedSet(comparator, iterable);
         assertNotNull(set);

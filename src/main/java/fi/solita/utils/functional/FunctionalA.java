@@ -71,7 +71,7 @@ public abstract class FunctionalA extends FunctionalM {
     
     
     /**
-     * @see Functional#map(Apply, Iterable)
+     * @see Functional#map(Function, Iterable)
      */
     public static final <S, T> Iterable<T> map(java.util.function.Function<? super S, ? extends T> f, S[] xs) {
         return FunctionalImpl.map(f, newList(xs));
@@ -85,21 +85,21 @@ public abstract class FunctionalA extends FunctionalM {
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Iterable)
      */
     public static final <S, T1, T2> Iterable<Pair<T1,T2>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, S[] elements) {
         return FunctionalImpl.map(f1, f2, newList(elements));
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Function, Iterable)
      */
     public static final <S, T1, T2, T3> Iterable<Tuple3<T1,T2,T3>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, newList(xs));
     }
     
     /**
-     * @see Functional#map(Apply, Apply, Apply, Apply, Iterable)
+     * @see Functional#map(Function, Function, Function, Function, Iterable)
      */
     public static final <S, T1, T2, T3, T4> Iterable<Tuple4<T1,T2,T3,T4>> map(java.util.function.Function<? super S, ? extends T1> f1, java.util.function.Function<? super S, ? extends T2> f2, java.util.function.Function<? super S, ? extends T3> f3, java.util.function.Function<? super S, ? extends T4> f4, S[] xs) {
         return FunctionalImpl.map(f1, f2, f3, f4, newList(xs));
@@ -771,7 +771,7 @@ public abstract class FunctionalA extends FunctionalM {
      */
     @SafeVarargs
     public static final <T extends Comparable<T>> boolean ordered(T x, T... xs) {
-        return FunctionalImpl.ordered(Compare.byNatural(), cons(x, xs));
+        return FunctionalImpl.ordered(Comparator.naturalOrder(), cons(x, xs));
     }
     
     

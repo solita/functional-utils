@@ -30,12 +30,7 @@ import fi.solita.utils.functional.Iterables.ZippingIterable;
 final class FunctionalImpl {
     @SuppressWarnings("unchecked")
     static final <T> Iterable<T> subtract(Iterable<? extends T> xs, final Collection<? extends T> toSubtract) {
-        return  (Iterable<T>) (toSubtract == null ? xs : filter(new Predicate<T>() {
-            @Override
-            public final boolean accept(T object) {
-                return !toSubtract.contains(object);
-            }
-        }, xs));
+        return  (Iterable<T>) (toSubtract == null ? xs : filter(x -> !toSubtract.contains(x), xs));
     }
     
     static final <T> Iterable<T> remove(T toRemove, Iterable<? extends T> xs) {
@@ -367,7 +362,7 @@ final class FunctionalImpl {
     }
     
     static final <T extends Comparable<? super T>> Iterable<T> sort(Iterable<? extends T> xs) {
-        return sort(Ordering.Natural(), xs);
+        return sort(Comparator.naturalOrder(), xs);
     }
     
     static final <T> Iterable<T> sort(Comparator<? super T> comparator, Iterable<? extends T> xs) {

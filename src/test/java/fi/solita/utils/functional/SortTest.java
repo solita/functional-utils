@@ -8,6 +8,7 @@ import static fi.solita.utils.functional.FunctionalS.range;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Test;
@@ -18,7 +19,7 @@ class TestClass {
 
 public class SortTest {
     
-    Function1<TestClass,Double> accessor = new Function1<TestClass,Double>() {
+    java.util.function.Function<TestClass,Double> accessor = new java.util.function.Function<TestClass,Double>() {
         @Override
         public Double apply(TestClass t) {
             return t.id;
@@ -43,14 +44,14 @@ public class SortTest {
         
         long start = System.nanoTime();
         List<TestClass> regular = new ArrayList<TestClass>(data);
-        java.util.Collections.sort(regular, Compare.by(accessor));
+        java.util.Collections.sort(regular, Comparator.comparing(accessor));
         regular = regular.subList(0, Math.min(firstToTake, regular.size()));
         long end = System.nanoTime();
         
         System.out.println("Regular sort took " + ((end-start)/1000/1000) + " ms");
         
         start = System.nanoTime();
-        List<TestClass> lazy = newList(take(firstToTake, sort(Compare.by(accessor), data)));
+        List<TestClass> lazy = newList(take(firstToTake, sort(Comparator.comparing(accessor), data)));
         end = System.nanoTime();
         
         System.out.println("Lazy sort took    " + ((end-start)/1000/1000) + " ms");

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,33 +15,8 @@ import org.junit.Test;
 public class CompareTest {
     
     @Test
-    public void byNatural_comparesIntegers() {
-        Ordering<Integer> ordering = Compare.byNatural();
-        
-        assertTrue(ordering.compare(1, 2) < 0);
-        assertTrue(ordering.compare(2, 1) > 0);
-        assertEquals(0, ordering.compare(5, 5));
-    }
-    
-    @Test
-    public void byNatural_comparesStrings() {
-        Ordering<String> ordering = Compare.byNatural();
-        
-        assertTrue(ordering.compare("a", "b") < 0);
-        assertTrue(ordering.compare("z", "a") > 0);
-        assertEquals(0, ordering.compare("hello", "hello"));
-    }
-    
-    @Test
-    public void byNatural_handlesNulls() {
-        Ordering<Integer> ordering = Compare.byNatural();
-        
-        assertEquals(0, ordering.compare(null, null));
-    }
-    
-    @Test
     public void byIterable_comparesLists() {
-        Ordering<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
+        Comparator<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
         
         List<Integer> list1 = Arrays.asList(1, 2, 3);
         List<Integer> list2 = Arrays.asList(1, 2, 4);
@@ -53,7 +29,7 @@ public class CompareTest {
     
     @Test
     public void byIterable_comparesDifferentLengths() {
-        Ordering<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
+        Comparator<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
         
         List<Integer> shorter = Arrays.asList(1, 2);
         List<Integer> longer = Arrays.asList(1, 2, 3);
@@ -64,14 +40,14 @@ public class CompareTest {
     
     @Test
     public void byIterable_withCustomComparator() {
-        Ordering<Integer> reverseOrdering = new Ordering<Integer>() {
+        Comparator<Integer> reverseOrdering = new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return o2.compareTo(o1);
             }
         };
         
-        Ordering<List<Integer>> ordering = Compare.byIterable(reverseOrdering);
+        Comparator<List<Integer>> ordering = Compare.byIterable(reverseOrdering);
         
         List<Integer> list1 = Arrays.asList(3, 2, 1);
         List<Integer> list2 = Arrays.asList(1, 2, 3);
@@ -81,14 +57,14 @@ public class CompareTest {
     
     @Test
     public void byIterable_handlesNulls() {
-        Ordering<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
+        Comparator<Iterable<Integer>> ordering = Compare.<Integer>byIterable();
         
         assertEquals(0, ordering.compare(null, null));
     }
     
     @Test
-    public void byOption_comparesOptions() {
-        Ordering<Optional<Integer>> ordering = Compare.byOptional();
+    public void byOptional_comparesOptions() {
+        Comparator<Optional<Integer>> ordering = Compare.byOptional();
         
         Optional<Integer> none = Optional.empty();
         Optional<Integer> some1 = Optional.of(1);
@@ -104,15 +80,15 @@ public class CompareTest {
     }
     
     @Test
-    public void byOption_withCustomComparator() {
-        Ordering<Integer> reverseOrdering = new Ordering<Integer>() {
+    public void byOptional_withCustomComparator() {
+        Comparator<Integer> reverseOrdering = new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return o2.compareTo(o1);
             }
         };
         
-        Ordering<Optional<Integer>> ordering = Compare.byOptional(reverseOrdering);
+        Comparator<Optional<Integer>> ordering = Compare.byOptional(reverseOrdering);
         
         Optional<Integer> some1 = Optional.of(1);
         Optional<Integer> some2 = Optional.of(2);
@@ -122,83 +98,14 @@ public class CompareTest {
     }
     
     @Test
-    public void byOption_handlesNulls() {
-        Ordering<Optional<Integer>> ordering = Compare.byOptional();
+    public void byOptional_handlesNulls() {
+        Comparator<Optional<Integer>> ordering = Compare.byOptional();
         
         assertEquals(0, ordering.compare(null, null));
     }
     
     @Test
-    public void by_withTransformerFunction() {
-        class Person {
-            String name;
-            int age;
-            
-            Person(String name, int age) {
-                this.name = name;
-                this.age = age;
-            }
-        }
-        
-        java.util.function.Function<Person, Integer> getAge = new java.util.function.Function<Person, Integer>() {
-            @Override
-            public Integer apply(Person p) {
-                return p.age;
-            }
-        };
-        
-        Ordering<Person> ordering = Compare.by(getAge);
-        
-        Person person1 = new Person("Alice", 25);
-        Person person2 = new Person("Bob", 30);
-        Person person3 = new Person("Charlie", 25);
-        
-        assertTrue(ordering.compare(person1, person2) < 0);
-        assertTrue(ordering.compare(person2, person1) > 0);
-        assertEquals(0, ordering.compare(person1, person3));
-    }
-    
-    @Test
-    public void by_withExplicitComparator() {
-        class Person {
-            String name;
-            
-            Person(String name) {
-                this.name = name;
-            }
-        }
-        
-        java.util.function.Function<Person, String> getName = new java.util.function.Function<Person, String>() {
-            @Override
-            public String apply(Person p) {
-                return p.name;
-            }
-        };
-        
-        Ordering<Person> ordering = Compare.by(getName, Ordering.Natural());
-        
-        Person person1 = new Person("Alice");
-        Person person2 = new Person("Bob");
-        
-        assertTrue(ordering.compare(person1, person2) < 0);
-    }
-    
-    @Test
-    public void by_handlesNulls() {
-        java.util.function.Function<Integer, Integer> identity = new java.util.function.Function<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer i) {
-                return i;
-            }
-        };
-        
-        Ordering<Integer> ordering = Compare.by(identity);
-        
-        assertEquals(0, ordering.compare(null, null));
-    }
-    
-    @Test
-    public void byOption_withTransformerFunction() {
+    public void byOptional_withTransformerFunction() {
         class Person {
             Optional<String> nickname;
             
@@ -214,7 +121,7 @@ public class CompareTest {
             }
         };
         
-        Ordering<Person> ordering = Compare.byOptional(getNickname);
+        Comparator<Person> ordering = Compare.byOptional(getNickname);
         
         Person person1 = new Person(Optional.empty());
         Person person2 = new Person(Optional.of("Al"));
@@ -226,7 +133,7 @@ public class CompareTest {
     
     @Test
     public void byMap_comparesMapsByEntries() {
-        Ordering<Map<String, Integer>> ordering = Compare.byMap();
+        Comparator<Map<String, Integer>> ordering = Compare.byMap();
         
         Map<String, Integer> map1 = new HashMap<>();
         map1.put("a", 1);
@@ -246,10 +153,10 @@ public class CompareTest {
     
     @Test
     public void byMap_withCustomComparators() {
-        Ordering<String> stringOrdering = Compare.byNatural();
-        Ordering<Integer> intOrdering = Compare.byNatural();
+        Comparator<String> stringOrdering = Comparator.naturalOrder();
+        Comparator<Integer> intOrdering = Comparator.naturalOrder();
         
-        Ordering<Map<String, Integer>> ordering = Compare.byMap(stringOrdering, intOrdering);
+        Comparator<Map<String, Integer>> ordering = Compare.byMap(stringOrdering, intOrdering);
         
         Map<String, Integer> map1 = new HashMap<>();
         map1.put("a", 1);
@@ -262,9 +169,9 @@ public class CompareTest {
     
     @Test
     public void byPair_comparesPairs() {
-        Ordering<Pair<Integer, String>> ordering = Compare.byPair(
-            Ordering.Natural(), 
-            Ordering.Natural()
+        Comparator<Pair<Integer, String>> ordering = Compare.byPair(
+            Comparator.naturalOrder(),
+            Comparator.naturalOrder()
         );
         
         Pair<Integer, String> pair1 = Pair.of(1, "a");
@@ -279,10 +186,10 @@ public class CompareTest {
     
     @Test
     public void byTuple_comparesTuple3() {
-        Ordering<Tuple3<Integer, String, Double>> ordering = Compare.byTuple(
-            Ordering.Natural(),
-            Ordering.Natural(),
-            Ordering.Natural()
+        Comparator<Tuple3<Integer, String, Double>> ordering = Compare.byTuple(
+            Comparator.naturalOrder(),
+            Comparator.naturalOrder(),
+            Comparator.naturalOrder()
         );
         
         Tuple3<Integer, String, Double> tuple1 = Tuple.of(1, "a", 1.0);
@@ -297,11 +204,11 @@ public class CompareTest {
     
     @Test
     public void byTuple_comparesTuple4() {
-        Ordering<Tuple4<Integer, String, Double, Boolean>> ordering = Compare.byTuple(
-            Ordering.Natural(),
-            Ordering.Natural(),
-            Ordering.Natural(),
-            new Ordering<Boolean>() {
+        Comparator<Tuple4<Integer, String, Double, Boolean>> ordering = Compare.byTuple(
+            Comparator.naturalOrder(),
+            Comparator.naturalOrder(),
+            Comparator.naturalOrder(),
+            new Comparator<Boolean>() {
                 @Override
                 public int compare(Boolean o1, Boolean o2) {
                     return o1.compareTo(o2);
@@ -319,7 +226,7 @@ public class CompareTest {
     
     @Test
     public void byEither_comparesEithers() {
-        Ordering<Either<Integer, String>> ordering = Compare.byEither();
+        Comparator<Either<Integer, String>> ordering = Compare.byEither();
         
         Either<Integer, String> left1 = Either.left(1);
         Either<Integer, String> left2 = Either.left(2);
@@ -333,7 +240,7 @@ public class CompareTest {
     
     @Test
     public void byEither3_comparesEither3() {
-        Ordering<Either3<Integer, String, Double>> ordering = Compare.byEither3();
+        Comparator<Either3<Integer, String, Double>> ordering = Compare.byEither3();
         
         Either3<Integer, String, Double> left = Either3.left(1);
         Either3<Integer, String, Double> middle = Either3.middle("a");
@@ -346,7 +253,7 @@ public class CompareTest {
     
     @Test
     public void byKey_comparesMapEntries() {
-        Ordering<Map.Entry<Integer, String>> ordering = Compare.byKey();
+        Comparator<Map.Entry<Integer, String>> ordering = Comparator.comparing(Map.Entry::getKey);
         
         Pair<Integer, String> entry1 = Pair.of(1, "z");
         Pair<Integer, String> entry2 = Pair.of(2, "a");
@@ -356,7 +263,7 @@ public class CompareTest {
     
     @Test
     public void byValue_comparesMapEntries() {
-        Ordering<Map.Entry<Integer, String>> ordering = Compare.byValue();
+        Comparator<Map.Entry<Integer, String>> ordering = Comparator.comparing(Map.Entry::getValue);
         
         Pair<Integer, String> entry1 = Pair.of(5, "a");
         Pair<Integer, String> entry2 = Pair.of(1, "z");
@@ -369,7 +276,7 @@ public class CompareTest {
         Tuple2<Integer, String> tuple1 = Tuple.of(1, "z");
         Tuple2<Integer, String> tuple2 = Tuple.of(2, "a");
         
-        assertTrue(Compare.<Tuple2<Integer,String>>by(t -> t._1).compare(tuple1, tuple2) < 0);
+        assertTrue(Comparator.<Tuple2<Integer,String>,Integer>comparing(t -> t._1).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -377,7 +284,7 @@ public class CompareTest {
         Tuple2<Integer, String> tuple1 = Tuple.of(5, "a");
         Tuple2<Integer, String> tuple2 = Tuple.of(1, "z");
         
-        assertTrue(Compare.<Tuple2<Integer,String>>by(t -> t._2).compare(tuple1, tuple2) < 0);
+        assertTrue(Comparator.<Tuple2<Integer,String>,String>comparing(t -> t._2).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -385,7 +292,7 @@ public class CompareTest {
         Tuple3<Integer, String, Double> tuple1 = Tuple.of(5, "z", 1.0);
         Tuple3<Integer, String, Double> tuple2 = Tuple.of(1, "a", 2.0);
         
-        assertTrue(Compare.<Tuple3<Integer,String,Double>>by(t -> t._3).compare(tuple1, tuple2) < 0);
+        assertTrue(Comparator.<Tuple3<Integer,String,Double>,Double>comparing(t -> t._3).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -393,7 +300,7 @@ public class CompareTest {
         Tuple4<Integer, String, Double, Boolean> tuple1 = Tuple.of(5, "z", 2.0, false);
         Tuple4<Integer, String, Double, Boolean> tuple2 = Tuple.of(1, "a", 1.0, true);
         
-        assertTrue(Compare.<Tuple4<Integer,String,Double,Boolean>>by(t -> t._4).compare(tuple1, tuple2) < 0);
+        assertTrue(Comparator.<Tuple4<Integer,String,Double,Boolean>,Boolean>comparing(t -> t._4).compare(tuple1, tuple2) < 0);
     }
     
     @Test
@@ -422,7 +329,7 @@ public class CompareTest {
             }
         };
         
-        Ordering<Person> ordering = Compare.by(getFirstName).then(Compare.by(getLastName));
+        Comparator<Person> ordering = Comparator.comparing(getFirstName).thenComparing(getLastName);
         
         Person person1 = new Person("Alice", "Smith");
         Person person2 = new Person("Alice", "Jones");
@@ -434,8 +341,8 @@ public class CompareTest {
     
     @Test
     public void ordering_reverse_reversesOrder() {
-        Ordering<Integer> natural = Compare.byNatural();
-        Ordering<Integer> reversed = natural.reverse();
+        Comparator<Integer> natural = Comparator.naturalOrder();
+        Comparator<Integer> reversed = natural.reversed();
         
         assertTrue(natural.compare(1, 2) < 0);
         assertTrue(reversed.compare(1, 2) > 0);

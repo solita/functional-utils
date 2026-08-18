@@ -25,7 +25,6 @@ import static fi.solita.utils.functional.Functional.split;
 import static fi.solita.utils.functional.Functional.take;
 import static fi.solita.utils.functional.Functional.takeWhile;
 import static fi.solita.utils.functional.Functional.transpose;
-import static fi.solita.utils.functional.FunctionalC.group;
 import static fi.solita.utils.functional.FunctionalS.range;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -163,14 +162,6 @@ public class FunctionalTest {
     @Test(expected = IllegalStateException.class)
     public void testCycleSingleUseIterableFailsOnSecondPass() {
         newList(take(2, Functional.cycle(onceIterable)));
-    }
-    
-    @Test
-    public void testName() {
-        Iterable<Pair<Integer, String>> a = flatMap(zipWithIndex, Arrays.asList(onceIterable));
-        Iterable<Iterable<String>> b = map(source -> newList(source._2), a);
-        Iterable<String> c = flatten(b);
-        newList(c);
     }
     
     public static final Function1<Iterable<String>, Iterable<Pair<Integer,String>>> zipWithIndex = new Function1<Iterable<String>, Iterable<Pair<Integer,String>>>() {
@@ -452,13 +443,13 @@ public class FunctionalTest {
         assertTrue(Functional.ordered(Collections.<Integer>newList(1)));
         assertTrue(Functional.ordered(Collections.<Integer>newList(1,2,3)));
         
-        assertTrue(Functional.ordered(Compare.byNatural(), Collections.<Integer>emptyList()));
-        assertTrue(Functional.ordered(Compare.byNatural(), Collections.<Integer>newList(1)));
-        assertTrue(Functional.ordered(Compare.byNatural(), Collections.<Integer>newList(1,2,3)));
+        assertTrue(Functional.ordered(Comparator.naturalOrder(), Collections.<Integer>emptyList()));
+        assertTrue(Functional.ordered(Comparator.naturalOrder(), Collections.<Integer>newList(1)));
+        assertTrue(Functional.ordered(Comparator.naturalOrder(), Collections.<Integer>newList(1,2,3)));
         
         assertFalse(Functional.ordered(Collections.<Integer>newList(2,1)));
         
-        assertFalse(Functional.ordered(Compare.byNatural(), Collections.<Integer>newList(2,1)));
+        assertFalse(Functional.ordered(Comparator.naturalOrder(), Collections.<Integer>newList(2,1)));
     }
     
     @Test
