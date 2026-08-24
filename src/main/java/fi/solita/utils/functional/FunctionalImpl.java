@@ -442,6 +442,11 @@ final class FunctionalImpl {
         return a == null && b == null ? null : a == null ? (Iterable<T>)b : b == null ? (Iterable<T>)a : new ConcatenatingIterable<T>(Arrays.asList(a, b));
     }
     
+    @SuppressWarnings("unchecked")
+    static final <T> Iterable<T> concat(Optional<? extends T> a, Optional<? extends T> b) {
+        return a == null && b == null ? null : a == null ? newList((Optional<T>)b) : b == null ? newList((Optional<T>)a) : concat(it(a),it(b));
+    }
+    
     @SuppressWarnings("rawtypes")
     private static final BiFunction<Comparable,Comparable,Comparable> smaller = new BiFunction<Comparable, Comparable, Comparable>() {
         @SuppressWarnings("unchecked")

@@ -44,14 +44,14 @@ public class Either<L,R> {
      * @return all left values
      */
     public static final <T> Iterable<T> lefts(Iterable<? extends Either<T, ?>> xs) {
-        return Functional.flatMap(x -> it(x.left), xs);
+        return Functional.concatMap(x -> x.left, xs);
     }
     
     /**
      * @return all right values
      */
     public static final <T> Iterable<T> rights(Iterable<? extends Either<?, T>> xs) {
-        return Functional.flatMap(x -> it(x.right), xs);
+        return Functional.concatMap(x -> x.right, xs);
     }
 
     protected Either(Optional<L> left, Optional<R> right) {

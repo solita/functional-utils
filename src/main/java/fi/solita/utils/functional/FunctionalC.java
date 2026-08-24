@@ -125,6 +125,13 @@ public abstract class FunctionalC extends FunctionalS {
         return FunctionalImpl.flatMap(f, it(xs));
     }
     
+    /**
+     * @see Functional#flatMap
+     */
+    public static final <T> Iterable<T> concatMap(java.util.function.Function<Character, ? extends Optional<? extends T>> f, CharSequence xs) {
+        return FunctionalImpl.flatMap(x -> it(f.apply(x)), it(xs));
+    }
+    
     
     
     /**

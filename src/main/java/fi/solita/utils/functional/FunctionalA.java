@@ -1,5 +1,6 @@
 package fi.solita.utils.functional;
 
+import static fi.solita.utils.functional.Collections.it;
 import static fi.solita.utils.functional.Collections.newList;
 import static fi.solita.utils.functional.Collections.newSet;
 
@@ -112,6 +113,13 @@ public abstract class FunctionalA extends FunctionalM {
      */
     public static final <S, T> Iterable<T> flatMap(java.util.function.Function<? super S, ? extends Iterable<T>> f, S[] xs) {
         return FunctionalImpl.flatMap(f, newList(xs));
+    }
+    
+    /**
+     * @see Functional#flatMap
+     */
+    public static final <S, T> Iterable<T> concatMap(java.util.function.Function<? super S, ? extends Optional<T>> f, S[] xs) {
+        return FunctionalImpl.flatMap(x -> it(f.apply(x)), newList(xs));
     }
     
     
@@ -517,8 +525,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3) {
+        return x1 == null && x2 == null && x3 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4) {
         return x1 == null && x2 == null && x3 == null && x4 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4) {
+        return x1 == null && x2 == null && x3 == null && x4 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4))));
     }
     
     /**
@@ -531,8 +553,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6) {
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6))));
     }
     
     /**
@@ -545,8 +581,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8) {
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6, x7, x8)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8))));
     }
     
     /**
@@ -559,8 +609,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10) {
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10))));
     }
     
     /**
@@ -573,8 +637,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10, Optional<? extends T> x11) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10), it(x11))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12) {
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10, Optional<? extends T> x11, Optional<? extends T> x12) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10), it(x11), it(x12))));
     }
     
     /**
@@ -587,8 +665,22 @@ public abstract class FunctionalA extends FunctionalM {
     /**
      * @see Functional#concat
      */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10, Optional<? extends T> x11, Optional<? extends T> x12, Optional<? extends T> x13) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10), it(x11), it(x12), it(x13))));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13, Iterable<? extends T> x14) {
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14)));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10, Optional<? extends T> x11, Optional<? extends T> x12, Optional<? extends T> x13, Optional<? extends T> x14) {
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10), it(x11), it(x12), it(x13), it(x14))));
     }
     
     /**
@@ -598,6 +690,16 @@ public abstract class FunctionalA extends FunctionalM {
     public static final <T> Iterable<T> concat(Iterable<? extends T> x1, Iterable<? extends T> x2, Iterable<? extends T> x3, Iterable<? extends T> x4, Iterable<? extends T> x5, Iterable<? extends T> x6, Iterable<? extends T> x7, Iterable<? extends T> x8, Iterable<? extends T> x9, Iterable<? extends T> x10, Iterable<? extends T> x11, Iterable<? extends T> x12, Iterable<? extends T> x13, Iterable<? extends T> x14, Iterable<? extends T>... xs) {
         Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Objects::nonNull, newList(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14));
         Iterable<Iterable<? extends T>> b = filter(Objects::nonNull, xs);
+        return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null && xs == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.concat(a, b));
+    }
+    
+    /**
+     * @see Functional#concat
+     */
+    @SafeVarargs
+    public static final <T> Iterable<T> concat(Optional<? extends T> x1, Optional<? extends T> x2, Optional<? extends T> x3, Optional<? extends T> x4, Optional<? extends T> x5, Optional<? extends T> x6, Optional<? extends T> x7, Optional<? extends T> x8, Optional<? extends T> x9, Optional<? extends T> x10, Optional<? extends T> x11, Optional<? extends T> x12, Optional<? extends T> x13, Optional<? extends T> x14, Optional<? extends T>... xs) {
+        Iterable<Iterable<? extends T>> a = FunctionalImpl.filter(Objects::nonNull, newList(it(x1), it(x2), it(x3), it(x4), it(x5), it(x6), it(x7), it(x8), it(x9), it(x10), it(x11), it(x12), it(x13), it(x14)));
+        Iterable<Iterable<? extends T>> b = FunctionalImpl.map(x -> it(x), filter(Objects::nonNull, xs));
         return x1 == null && x2 == null && x3 == null && x4 == null && x5 == null && x6 == null && x7 == null && x8 == null && x9 == null && x10 == null && x11 == null && x12 == null && x13 == null && x14 == null && xs == null ? null : new ConcatenatingIterable<T>(FunctionalImpl.concat(a, b));
     }
     

@@ -144,6 +144,13 @@ public abstract class Functional extends FunctionalC {
     public static final <S, T> Iterable<T> flatMap(java.util.function.Function<? super S, ? extends Iterable<? extends T>> f, Iterable<? extends S> xs) {
         return FunctionalImpl.flatMap(f, xs);
     }
+    
+    /**
+     * @return elements of {@code xs} transformed with {@code f} flattening the resulting iterable. 
+     */
+    public static final <S, T> Iterable<T> concatMap(java.util.function.Function<? super S, ? extends Optional<? extends T>> f, Iterable<? extends S> xs) {
+        return FunctionalImpl.flatMap(x -> it(f.apply(x)), xs);
+    }
 
     /**
      * @return elements of {@code xs} with one level of iteration removed.
@@ -393,6 +400,13 @@ public abstract class Functional extends FunctionalC {
      * @return elements in {@code a} and then elements in {@code b}.
      */
     public static final <T> Iterable<T> concat(Iterable<? extends T> a, Iterable<? extends T> b) {
+        return FunctionalImpl.concat(a, b);
+    }
+    
+    /**
+     * @return elements in {@code a} and then elements in {@code b}.
+     */
+    public static final <T> Iterable<T> concat(Optional<? extends T> a, Optional<? extends T> b) {
         return FunctionalImpl.concat(a, b);
     }
 
