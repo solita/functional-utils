@@ -432,6 +432,10 @@ final class FunctionalImpl {
         return x == null && xs == null ? null : x == null ? (Iterable<T>)xs : xs == null ? newList(x) : concat(Arrays.asList(x), xs);
     }
     
+    static final <T> Iterable<T> cons(T x, Optional<? extends T> xs) {
+        return x == null && xs == null ? null : x == null ? (xs.isPresent() ? newList(xs.get()) : emptyList()) : xs == null ? newList(x) : concat(Arrays.asList(x), it(xs));
+    }
+    
     @SuppressWarnings("unchecked")
     static final <T> Iterable<T> append(T x, Iterable<? extends T> xs) {
         return x == null && xs == null ? null : x == null ? (Iterable<T>)xs : xs == null ? newList(x) : concat(xs, Arrays.asList(x));
