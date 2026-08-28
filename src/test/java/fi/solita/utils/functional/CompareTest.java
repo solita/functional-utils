@@ -105,33 +105,6 @@ public class CompareTest {
     }
     
     @Test
-    public void byOptional_withTransformerFunction() {
-        class Person {
-            Optional<String> nickname;
-            
-            Person(Optional<String> nickname) {
-                this.nickname = nickname;
-            }
-        }
-        
-        java.util.function.Function<Person, Optional<String>> getNickname = new java.util.function.Function<Person, Optional<String>>() {
-            @Override
-            public Optional<String> apply(Person p) {
-                return p.nickname;
-            }
-        };
-        
-        Comparator<Person> ordering = Compare.byOptional(getNickname);
-        
-        Person person1 = new Person(Optional.empty());
-        Person person2 = new Person(Optional.of("Al"));
-        Person person3 = new Person(Optional.of("Bo"));
-        
-        assertTrue(ordering.compare(person1, person2) > 0);
-        assertTrue(ordering.compare(person2, person3) < 0);
-    }
-    
-    @Test
     public void byMap_comparesMapsByEntries() {
         Comparator<Map<String, Integer>> ordering = Compare.byMap();
         

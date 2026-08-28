@@ -50,12 +50,8 @@ public class CompareExamples {
         // sorted by the contents of an Option
         sort(Compare.<String>byOptional(), Collections.<Optional<String>>newMutableList());
         
-        // sorted by a function to an Option
-        sort(Compare.byOptional(name), Collections.<Employee>newMutableList());
-        
         // and the same with explicit comparators
         sort(Compare.byIterable(Comparator.comparing(salary)), Collections.<List<Employee>>newMutableList());
         sort(Compare.byOptional(Comparator.comparing(salary)), Collections.<Optional<Employee>>newMutableList());
-        sort(Compare.byOptional(name, Comparator.naturalOrder()), Collections.<Employee>newMutableList());
     }
 }

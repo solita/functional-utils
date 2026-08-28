@@ -9,20 +9,6 @@ import java.util.Optional;
 
 public abstract class Compare {
     
-    /**
-     * @return Comparator for iterables containing elements with natural Comparator.
-     */
-    public static final <T extends Comparable<? super T>> Comparator<Iterable<T>> byIterable() {
-        return byIterable(Comparator.<T>naturalOrder());
-    }
-    
-    /**
-     * @return Comparator for an optional element with natural Comparator.
-     */
-    public static final <T extends Comparable<? super T>> Comparator<Optional<T>> byOptional() {
-        return byOptional(Comparator.naturalOrder());
-    }
-    
     public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Comparator<Map<K,V>> byMap() {
         return byMap(Comparator.naturalOrder(), Comparator.naturalOrder());
     }
@@ -31,8 +17,21 @@ public abstract class Compare {
         return Comparator.comparing(Map::entrySet, byIterable(byEntry(keyComparator, valueComparator)));
     }
     
+    
+    
+    public static final <L extends Comparable<? super L>, R extends Comparable<? super R>> Comparator<Map.Entry<L,R>> byEntry() {
+        return Comparator.comparing( (Map.Entry<L,R> e) -> e.getKey(), Comparator.naturalOrder()).thenComparing(e -> e.getValue(), Comparator.naturalOrder());
+    }
+    
     public static final <L, R> Comparator<Map.Entry<L,R>> byEntry(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
         return Comparator.comparing( (Map.Entry<L,R> e) -> e.getKey(), leftComparator).thenComparing(e -> e.getValue(), rightComparator);
+    }
+    
+    
+    
+    @SuppressWarnings("unchecked")
+    public static final <L extends Comparable<? super L>, R extends Comparable<? super R>> Comparator<Pair<L,R>> byPair() {
+        return (Comparator<Pair<L,R>>)(Object)byEntry(Comparator.naturalOrder(), Comparator.naturalOrder());
     }
     
     @SuppressWarnings("unchecked")
@@ -40,12 +39,23 @@ public abstract class Compare {
         return (Comparator<Pair<L,R>>)(Object)byEntry(leftComparator, rightComparator);
     }
     
+    
+    
     public static final <T1, T2, T3> Comparator<Tuple3<T1, T2, T3>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3) {
         return Comparator.<Tuple3<T1, T2, T3>, T1>comparing(t -> t._1, comparator1).thenComparing(t -> t._2, comparator2).thenComparing(t -> t._3, comparator3);
     }
     
     public static final <T1, T2, T3, T4> Comparator<Tuple4<T1, T2, T3, T4>> byTuple(final Comparator<? super T1> comparator1, final Comparator<? super T2> comparator2, final Comparator<? super T3> comparator3, final Comparator<? super T4> comparator4) {
         return Comparator.<Tuple4<T1, T2, T3, T4>,T1>comparing(t -> t._1, comparator1).thenComparing(t -> t._2, comparator2).thenComparing(t -> t._3, comparator3).thenComparing(t -> t._4, comparator4);
+    }
+    
+    
+    
+    /**
+     * @return Comparator for iterables containing elements with natural Comparator.
+     */
+    public static final <T extends Comparable<? super T>> Comparator<Iterable<T>> byIterable() {
+        return byIterable(Comparator.<T>naturalOrder());
     }
     
     /**
@@ -78,18 +88,13 @@ public abstract class Compare {
         }; 
     }
     
-    /**
-     * @return Comparator for elements by transforming to an optional element with natural Comparator. 
-     */
-    public static final <S, T extends Comparable<? super T>> Comparator<S> byOptional(final java.util.function.Function<? super S, Optional<T>> f) {
-        return Comparator.comparing(f, Compare.<T>byOptional(Comparator.<T>naturalOrder()));
-    }
+    
     
     /**
-     * @return Comparator for elements by transforming to an optional type comparable by {@code targetComparator}.
+     * @return Comparator for an optional element with natural Comparator.
      */
-    public static final <S, T> Comparator<S> byOptional(final java.util.function.Function<? super S, ? extends Optional<T>> f, final Comparator<? super T> targetComparator) {
-        return Comparator.comparing(f, Compare.<T>byOptional(targetComparator));
+    public static final <T extends Comparable<? super T>> Comparator<Optional<T>> byOptional() {
+        return byOptional(Comparator.naturalOrder());
     }
     
     /**
@@ -114,13 +119,27 @@ public abstract class Compare {
         };
     }
     
+    
+    
     public static final <L extends Comparable<? super L>,R extends Comparable<? super R>> Comparator<Either<L,R>> byEither() {
-        return byOptional( (Either<L,R> x) -> x.left).thenComparing(x -> x.right, Compare.<R>byOptional());
+        return Comparator.<Either<L,R>,Optional<L>>comparing(x -> x.left, Compare.<L>byOptional()).thenComparing(x -> x.right, Compare.<R>byOptional());
+    }
+    
+    public static final <L,R> Comparator<Either<L,R>> byEither(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
+        return Comparator.<Either<L,R>,Optional<L>>comparing(x -> x.left, Compare.byOptional(leftComparator)).thenComparing(x -> x.right, Compare.byOptional(rightComparator));
+    }
+    
+    
+    
+    public static final <L,M,R> Comparator<Either3<L,M,R>> byEither3(final Comparator<? super L> leftComparator, final Comparator<? super M> middleComparator, final Comparator<? super R> rightComparator) {
+        return Comparator.<Either3<L,M,R>,Optional<L>>comparing(x -> x.left, Compare.byOptional(leftComparator))
+                         .thenComparing(x -> x.middle, Compare.byOptional(middleComparator))
+                         .thenComparing(x -> x.right, Compare.byOptional(rightComparator));
     }
     
     public static final <L extends Comparable<? super L>,M extends Comparable<? super M>,R extends Comparable<? super R>> Comparator<Either3<L,M,R>> byEither3() {
-        return byOptional( (Either3<L,M,R> x) -> x.left).thenComparing(
-               byOptional( (Either3<L,M,R> x) -> x.middle).thenComparing(
-               byOptional(x -> x.right)));
+        return Comparator.<Either3<L,M,R>,Optional<L>>comparing(x -> x.left, Compare.byOptional())
+                         .thenComparing(x -> x.middle, Compare.byOptional())
+                         .thenComparing(x -> x.right, Compare.byOptional());
     }
 }
