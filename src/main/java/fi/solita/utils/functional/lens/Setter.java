@@ -45,7 +45,7 @@ public class Setter<T,F> {
             public D apply(D d, final java.util.function.Function<S, S> f) {
                 return setter.modify(d, new java.util.function.Function<Optional<E>,Optional<E>>() {
                     public Optional<E> apply(Optional<E> c) {
-                        return c.map(x -> setter2.modify(x, f));
+                        return c == null ? null : c.map(x -> setter2.modify(x, f));
                     };
                 });
             }

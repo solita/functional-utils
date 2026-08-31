@@ -87,6 +87,9 @@ public final class Lens<T,F> extends Setter<T,F> implements java.util.function.F
                                 @SuppressWarnings("unchecked")
                                 @Override
                                 public S apply(S t) {
+                                    if (t == null) {
+                                        return null;
+                                    }
                                     Object ret = f.apply(Optional.of(t));
                                     return ret instanceof Optional ? ((Optional<S>)ret).get() : (S)ret;
                                 }
