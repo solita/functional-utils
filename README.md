@@ -4,6 +4,10 @@ Code generation (https://github.com/solita/meta-utils) is highly recommended sin
 
 ![Build and test and package](https://github.com/solita/functional-utils/workflows/Build%20and%20test%20and%20package/badge.svg?branch=master)
 
+## Java6?
+
+Looking for Java6 compatible version? See branch `java6`.
+
 ## Installing
 
 Add the following file (or the latest version) to classpath:
