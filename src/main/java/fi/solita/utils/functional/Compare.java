@@ -9,8 +9,12 @@ import java.util.Optional;
 
 public abstract class Compare {
     
+    public static final <T extends Comparable<? super T>> Comparator<T> naturalNullsLast() {
+        return Comparator.nullsLast(Comparator.naturalOrder());
+    }
+    
     public static final <K extends Comparable<? super K>, V extends Comparable<? super V>> Comparator<Map<K,V>> byMap() {
-        return byMap(Comparator.naturalOrder(), Comparator.naturalOrder());
+        return byMap(naturalNullsLast(), naturalNullsLast());
     }
     
     public static final <K, V> Comparator<Map<K,V>> byMap(final Comparator<? super K> keyComparator, final Comparator<? super V> valueComparator) {
@@ -20,7 +24,7 @@ public abstract class Compare {
     
     
     public static final <L extends Comparable<? super L>, R extends Comparable<? super R>> Comparator<Map.Entry<L,R>> byEntry() {
-        return Comparator.comparing( (Map.Entry<L,R> e) -> e.getKey(), Comparator.naturalOrder()).thenComparing(e -> e.getValue(), Comparator.naturalOrder());
+        return Comparator.comparing( (Map.Entry<L,R> e) -> e.getKey(), naturalNullsLast()).thenComparing(e -> e.getValue(), naturalNullsLast());
     }
     
     public static final <L, R> Comparator<Map.Entry<L,R>> byEntry(final Comparator<? super L> leftComparator, final Comparator<? super R> rightComparator) {
@@ -31,7 +35,7 @@ public abstract class Compare {
     
     @SuppressWarnings("unchecked")
     public static final <L extends Comparable<? super L>, R extends Comparable<? super R>> Comparator<Pair<L,R>> byPair() {
-        return (Comparator<Pair<L,R>>)(Object)byEntry(Comparator.naturalOrder(), Comparator.naturalOrder());
+        return (Comparator<Pair<L,R>>)(Object)byEntry(naturalNullsLast(), naturalNullsLast());
     }
     
     @SuppressWarnings("unchecked")
@@ -55,7 +59,7 @@ public abstract class Compare {
      * @return Comparator for iterables containing elements with natural Comparator.
      */
     public static final <T extends Comparable<? super T>> Comparator<Iterable<T>> byIterable() {
-        return byIterable(Comparator.<T>naturalOrder());
+        return byIterable(Compare.<T>naturalNullsLast());
     }
     
     /**
@@ -94,7 +98,7 @@ public abstract class Compare {
      * @return Comparator for an optional element with natural Comparator.
      */
     public static final <T extends Comparable<? super T>> Comparator<Optional<T>> byOptional() {
-        return byOptional(Comparator.naturalOrder());
+        return byOptional(naturalNullsLast());
     }
     
     /**
